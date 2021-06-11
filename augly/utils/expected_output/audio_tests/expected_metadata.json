@@ -1,0 +1,653 @@
+{
+    "compose": [
+      {
+        "dst_duration": 0.21334375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.21334375,
+            "start": 0.0
+          }
+        ],
+        "duration_factor": 0.25,
+        "end_sample": 6827,
+        "intensity": 75.0,
+        "name": "clip",
+        "offset_factor": 0.0,
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.21334374999999994,
+            "start": 0.0
+          }
+        ],
+        "start_sample": 0
+      },
+      {
+        "dst_duration": 0.21334375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.21334375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 9.090909090909092,
+        "name": "change_volume",
+        "output_path": null,
+        "src_duration": 0.21334375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.21334374999999994,
+            "start": 0.0
+          }
+        ],
+        "volume_db": 10.0
+      }
+    ],
+    "compose2": [
+      {
+        "background_audio": null,
+        "background_duration": 0.853375,
+        "dst_duration": 1.70675,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 1.02405,
+            "start": 0.17067500000000002
+          }
+        ],
+        "intensity": 50.0,
+        "name": "insert_in_background",
+        "offset": 5461,
+        "offset_factor": 0.2,
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      },
+      {
+        "dst_duration": 0.4266875,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.1706749999999999,
+            "start": 0.0
+          }
+        ],
+        "duration_factor": 0.25,
+        "end_sample": 40962,
+        "intensity": 75.0,
+        "name": "clip",
+        "offset_factor": 0.5,
+        "output_path": null,
+        "src_duration": 1.70675,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.6827
+          }
+        ],
+        "start_sample": 27308
+      },
+      {
+        "dst_duration": 0.106671875,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 128000,
+        "dst_segments": [
+          {
+            "end": 0.04266874999999998,
+            "start": 0.0
+          }
+        ],
+        "intensity": 40.0,
+        "name": "speed",
+        "output_path": null,
+        "src_duration": 0.4266875,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.6827
+          }
+        ],
+        "factor": 4.0
+      }
+    ],
+    "add_background_noise2": [
+      {
+        "background_audio": null,
+        "background_duration": 0.853375,
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 90.9090909090909,
+        "name": "add_background_noise",
+        "output_path": null,
+        "snr_level_db": 10.0,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "apply_lambda": [
+      {
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 100.0,
+        "name": "apply_lambda",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "aug_function": "<lambda>"
+      }
+    ],
+    "change_volume": [
+      {
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 9.090909090909092,
+        "name": "change_volume",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "volume_db": 10.0
+      }
+    ],
+    "clicks": [
+      {
+        "clicks_duration": 0.6,
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 98.26515151515153,
+        "name": "clicks",
+        "output_path": null,
+        "seconds_between_clicks": 0.5,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "clip": [
+      {
+        "dst_duration": 0.4266875,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.42668750000000005,
+            "start": 0
+          }
+        ],
+        "duration_factor": 0.5,
+        "end_sample": 20481,
+        "intensity": 50.0,
+        "name": "clip",
+        "offset_factor": 0.25,
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.64003125,
+            "start": 0.21334375
+          }
+        ],
+        "start_sample": 6827
+      }
+    ],
+    "harmonic": [
+      {
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 100.0,
+        "kernel_size": 31,
+        "margin": 1.0,
+        "name": "harmonic",
+        "output_path": null,
+        "power": 2.0,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "high_pass_filter": [
+      {
+        "alpha": 0.6293073640480998,
+        "cutoff_hz": 3000,
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 15.0,
+        "name": "high_pass_filter",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "insert_in_background2": [
+      {
+        "background_audio": null,
+        "background_duration": 0.853375,
+        "dst_duration": 1.70675,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 1.1093875,
+            "start": 0.2560125
+          }
+        ],
+        "intensity": 50.0,
+        "name": "insert_in_background",
+        "offset": 8192,
+        "offset_factor": 0.3,
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "invert_channels": [
+      {
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 0.0,
+        "name": "invert_channels",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "low_pass_filter": [
+      {
+        "alpha": 0.08939812957705753,
+        "cutoff_hz": 500,
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 97.5,
+        "name": "low_pass_filter",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "normalize": [
+      {
+        "axis": 0,
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "fill": null,
+        "intensity": 100.0,
+        "name": "normalize",
+        "norm": "inf",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "threshold": null
+      }
+    ],
+    "peaking_equalizer": [
+      {
+        "center_hz": 500.0,
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "gain_db": -20.0,
+        "intensity": 17.786561264822133,
+        "name": "peaking_equalizer",
+        "output_path": null,
+        "q": 1.0,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "percussive": [
+      {
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 100.0,
+        "kernel_size": 31,
+        "margin": 1.0,
+        "name": "percussive",
+        "output_path": null,
+        "power": 2.0,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "pitch_shift": [
+      {
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 4.761904761904762,
+        "n_steps": 4,
+        "name": "pitch_shift",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "reverb": [
+      {
+        "dst_duration": 0.853375,
+        "dst_num_channels": 2,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "hf_damping": 50.0,
+        "intensity": 100.0,
+        "name": "reverb",
+        "output_path": null,
+        "pre_delay": 0.0,
+        "reverberance": 100.0,
+        "room_scale": 100.0,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "stereo_depth": 100.0,
+        "wet_gain": 0.0,
+        "wet_only": false
+      }
+    ],
+    "speed": [
+      {
+        "dst_duration": 0.2844583333333333,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 96000,
+        "dst_segments": [
+          {
+            "end": 0.2844583333333333,
+            "start": 0.0
+          }
+        ],
+        "factor": 3.0,
+        "intensity": 30.0,
+        "name": "speed",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "tempo": [
+      {
+        "dst_duration": 0.4266875,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.4266875,
+            "start": 0.0
+          }
+        ],
+        "factor": 2.0,
+        "intensity": 20.0,
+        "name": "tempo",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "time_stretch": [
+      {
+        "dst_duration": 0.56890625,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.56890625,
+            "start": 0.0
+          }
+        ],
+        "intensity": 15.0,
+        "name": "time_stretch",
+        "output_path": null,
+        "rate": 1.5,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ],
+    "to_mono": [
+      {
+        "dst_duration": 0.853375,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ],
+        "intensity": 0.0,
+        "name": "to_mono",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0
+          }
+        ]
+      }
+    ]
+}

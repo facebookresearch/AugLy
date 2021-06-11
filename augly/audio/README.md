@@ -1,0 +1,62 @@
+# Audio
+
+## Augmentations
+
+For a full list of available augmentations, see [here](augly/audio/__init__.py).
+
+Our audio augmentations use librosa, torchaudio, and NumPy as the backend. All functions accept an audio path or an audio array to be augmented as input and return the augmented audio array. If an output path is specified, the audio will also be saved to a file.
+
+### Function-based
+
+You can call the functional augmentations like so:
+```python
+import aml.augly.audio as audaugs
+
+audio_path = "your_audio_path.flac"
+output_path = "your_output_path.flac"
+
+# Augmentation functions can accept audio paths as input and
+# always return the resulting augmented audio array & sample rate
+aug_audio, sample_rate = audaugs.change_volume(audio_path, volume_db=10.0)
+
+# Augmentation functions can also accept np.ndarray as input
+# (but then you have to provide the sample rate, too, since it
+# won't be inferred when loading the audio file)
+aug_audio, sample_rate = audaugs.low_pass_filter(
+	aug_audio,
+	sample_rate=sample_rate,
+	cutoff_hz=500,
+)
+
+# If an output path is specified, the audio will also be saved to a file
+aug_audio, sample_rate = audaugs.normalize(
+	aug_audio,
+	sample_rate=sample_rate,
+	output_path=output_path,
+)
+```
+
+### Class-based
+
+You can also call any augmentation as a Transform class, including composing them together and applying them with a given probability:
+```python
+TRANSFORMS = audaugs.Compose([
+    audaugs.Clip(duration_factor=0.25),
+    audaugs.ChangeVolume(volume_db=10.0, p=0.5),
+    audaugs.OneOf(
+        [audaugs.Speed(factor=3.0), audaugs.TimeStretch(rate=3.0)]
+    ),
+])
+
+# aug_audio is a NumPy array with your augmentations applied!
+audio_array = librosa.load("your_audio_path.flac", sr=None, mono=False)
+aug_audio = TRANSFORMS(audio_array)
+```
+
+## Unit Tests
+
+You can run our audio unit tests if you have cloned `augly` [here](augly/README.md)) by running the following:
+```bash
+python augly/tests/audio_tests:functional_unit_tests.py
+python augly/tests/audio_tests:transforms_unit_tests.py
+```

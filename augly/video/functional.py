@@ -1,0 +1,1965 @@
+#!/usr/bin/env python3
+# Copyright (c) Facebook, Inc. and its affiliates.
+
+import functools
+import math
+import os
+import shutil
+import tempfile
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+
+import augly.image as imaugs
+import augly.utils as utils
+import augly.video.augmenters.cv2 as ac
+import augly.video.augmenters.ffmpeg as af
+import augly.video.helpers as helpers
+import augly.video.utils as vdutils
+import numpy as np
+
+
+def add_noise(
+    video_path: str,
+    output_path: Optional[str] = None,
+    level: int = 25,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Adds noise to a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param level: noise strength for specific pixel component. Default value is
+        25. Allowed range is [0, 100], where 0 indicates no change
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    noise_aug = af.VideoAugmenterByNoise(level)
+    vdutils.apply_ffmpeg_augmenter(noise_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="add_noise", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def apply_lambda(
+    video_path: str,
+    output_path: Optional[str] = None,
+    aug_function: Callable[..., Any] = helpers.identity_function,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    **kwargs,
+) -> str:
+    """
+    Apply a user-defined lambda on a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param aug_function: the augmentation function to be applied onto the video
+        (should expect a video path and output path as input and output the augmented
+        video to the output path. Nothing needs to be returned)
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param **kwargs: the input attributes to be passed into `aug_function`
+
+    @returns: the path to the augmented video
+    """
+    assert callable(aug_function), (
+        repr(type(aug_function).__name__) + " object is not callable"
+    )
+
+    func_kwargs = helpers.get_func_kwargs(
+        metadata, locals(), video_path, aug_function=aug_function.__name__
+    )
+
+    aug_function(video_path, output_path or video_path, **kwargs)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="apply_lambda", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def audio_swap(
+    video_path: str,
+    audio_path: str,
+    output_path: Optional[str] = None,
+    offset: float = 0.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Swaps the video audio for the audio passed in provided an offset
+
+    @param video_path: the path to the video to be augmented
+
+    @param audio_path: the iopath uri to the audio you'd like to swap with the
+        video's audio
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param offset: starting point in seconds such that an audio clip of offset to
+        offset + video_duration is used in the audio swap. Default value is zero
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    audio_swap_aug = af.VideoAugmenterByAudioSwap(audio_path, offset)
+    vdutils.apply_ffmpeg_augmenter(audio_swap_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="audio_swap", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def blend_videos(
+    video_path: str,
+    overlay_path: str,
+    output_path: Optional[str] = None,
+    opacity: float = 0.5,
+    overlay_size: float = 1.0,
+    x_pos: float = 0.0,
+    y_pos: float = 0.0,
+    use_second_audio: bool = True,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Overlays a video onto another video at position (width * x_pos, height * y_pos)
+    at a lower opacity
+
+    @param video_path: the path to the video to be augmented
+
+    @param overlay_path: the path to the video that will be overlaid onto the
+        background video
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param opacity: the lower the opacity, the more transparent the overlaid video
+
+    @param overlay_size: size of the overlaid video is overlay_size * height of
+        the background video
+
+    @param x_pos: postion of overlaid video relative to the background video width
+
+    @param y_pos: postion of overlaid video relative to the background video height
+
+    @param use_second_audio: use the audio of the overlaid video rather than the audio
+        of the background video
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    blend_func = functools.partial(
+        imaugs.overlay_image,
+        opacity=opacity,
+        overlay_size=overlay_size,
+        x_pos=x_pos,
+        y_pos=y_pos,
+    )
+
+    vdutils.apply_to_frames(
+        blend_func, video_path, overlay_path, output_path, use_second_audio
+    )
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="blend_videos", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def blur(
+    video_path: str,
+    output_path: Optional[str] = None,
+    sigma: float = 1,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Blurs a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param sigma: horizontal sigma, standard deviation of Gaussian blur
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    blur_aug = af.VideoAugmenterByBlur(sigma)
+    vdutils.apply_ffmpeg_augmenter(blur_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="blur", **func_kwargs)
+
+    return output_path or video_path
+
+
+def brightness(
+    video_path: str,
+    output_path: Optional[str] = None,
+    level: float = 0.15,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Brightens or darkens a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param level: the value must be a float value in range -1.0 to 1.0, where a
+        negative value darkens and positive brightens
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    brightness_aug = af.VideoAugmenterByBrightness(level)
+    vdutils.apply_ffmpeg_augmenter(brightness_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="brightness", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def change_aspect_ratio(
+    video_path: str,
+    output_path: Optional[str] = None,
+    ratio: Union[float, str] = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Changes the sample aspect ratio attribute of the video, and resizes the
+    video to reflect the new aspect ratio
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param ratio: aspect ratio of the new video, either as a float i.e. width/height,
+        or as a string representing the ratio in the form "num:denom"
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    aspect_ratio_aug = af.VideoAugmenterByAspectRatio(ratio)
+    vdutils.apply_ffmpeg_augmenter(aspect_ratio_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="change_aspect_ratio", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def change_video_speed(
+    video_path: str,
+    output_path: Optional[str] = None,
+    factor: float = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Changes the speed of the video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param factor: the factor by which to alter the speed of the video. A factor
+        less than one will slow down the video, a factor equal to one won't alter
+        the video, and a factor greater than one will speed up the video
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    speed_aug = af.VideoAugmenterBySpeed(factor)
+    vdutils.apply_ffmpeg_augmenter(speed_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="change_video_speed", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def color_jitter(
+    video_path: str,
+    output_path: Optional[str] = None,
+    brightness_factor: float = 0,
+    contrast_factor: float = 1.0,
+    saturation_factor: float = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Color jitters the video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param brightness_factor: set the brightness expression. The value must be a
+        float value in range -1.0 to 1.0. The default value is 0
+
+    @param contrast_factor: set the contrast expression. The value must be a float
+        value in range -1000.0 to 1000.0. The default value is 1
+
+    @param saturation_factor: set the saturation expression. The value must be a float
+        in range 0.0 to 3.0. The default value is 1
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    color_jitter_aug = af.VideoAugmenterByColorJitter(
+        brightness_level=brightness_factor,
+        contrast_level=contrast_factor,
+        saturation_level=saturation_factor,
+    )
+    vdutils.apply_ffmpeg_augmenter(color_jitter_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="color_jitter", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def concat(
+    video_paths: List[str],
+    output_path: Optional[str] = None,
+    src_video_path_index: int = 0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Concatenates videos together. Resizes all other videos to the size of the
+    `source` video (video_paths[src_video_path_index]), and modifies the sample
+    aspect ratios to match (ffmpeg will fail to concat if SARs don't match)
+
+    @param video_paths: a list of paths to all the videos to be concatenated (in order)
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param src_video_path_index: for metadata purposes, this indicates which video in
+        the list `video_paths` should be considered the `source` or original video
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(
+        metadata, locals(), video_paths[src_video_path_index]
+    )
+
+    concat_aug = af.VideoAugmenterByConcat(video_paths, src_video_path_index)
+    vdutils.apply_ffmpeg_augmenter(
+        concat_aug, video_paths[src_video_path_index], output_path
+    )
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata,
+            function_name="concat",
+            video_path=video_paths[src_video_path_index],
+            **func_kwargs,
+        )
+
+    return output_path or video_paths[src_video_path_index]
+
+
+def contrast(
+    video_path: str,
+    output_path: Optional[str] = None,
+    level: float = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Alters the contrast of a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param level: the value must be a float value in range -1000.0 to 1000.0,
+        where a negative value removes contrast and a positive value adds contrast
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    contrast_aug = af.VideoAugmenterByContrast(level)
+    vdutils.apply_ffmpeg_augmenter(contrast_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="contrast", **func_kwargs)
+
+    return output_path or video_path
+
+
+def crop(
+    video_path: str,
+    output_path: Optional[str] = None,
+    left: float = 0.25,
+    top: float = 0.25,
+    right: float = 0.75,
+    bottom: float = 0.75,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Crops the video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param left: left positioning of the crop; between 0 and 1, relative to
+        the video width
+
+    @param top: top positioning of the crop; between 0 and 1, relative to
+        the video height
+
+    @param right: right positioning of the crop; between 0 and 1, relative to
+        the video width
+
+    @param bottom: bottom positioning of the crop; between 0 and 1, relative to
+        the video height
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    crop_aug = af.VideoAugmenterByCrop(left, top, right, bottom)
+    vdutils.apply_ffmpeg_augmenter(crop_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="crop", **func_kwargs)
+
+    return output_path or video_path
+
+
+def encoding_quality(
+    video_path: str,
+    output_path: Optional[str] = None,
+    quality: int = 23,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Alters the encoding quality of a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param quality: CRF scale is 0–51, where 0 is lossless, 23 is the default,
+        and 51 is worst quality possible. A lower value generally leads to higher
+        quality, and a subjectively sane range is 17–28
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    encoding_aug = af.VideoAugmenterByQuality(quality)
+    vdutils.apply_ffmpeg_augmenter(encoding_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="encoding_quality", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def fps(
+    video_path: str,
+    output_path: Optional[str] = None,
+    fps: int = 15,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Alters the FPS of a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param fps: the desired output frame rate. Note that a FPS value greater than
+        the original FPS of the video will result in an unaltered video
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    fps_aug = af.VideoAugmenterByFPSChange(fps)
+    vdutils.apply_ffmpeg_augmenter(fps_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="fps", **func_kwargs)
+
+    return output_path or video_path
+
+
+def grayscale(
+    video_path: str,
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Changes a video to be grayscale
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    grayscale_aug = af.VideoAugmenterByGrayscale()
+    vdutils.apply_ffmpeg_augmenter(grayscale_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="grayscale", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def hflip(
+    video_path: str,
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Horizontally flips a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    hflip_aug = af.VideoAugmenterByHFlip()
+    vdutils.apply_ffmpeg_augmenter(hflip_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="hflip", **func_kwargs)
+
+    return output_path or video_path
+
+
+def hstack(
+    video_path: str,
+    second_video_path: str,
+    output_path: Optional[str] = None,
+    use_second_audio: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Horizontally stacks two videos
+
+    @param video_path: the path to the video that will be stacked to the left
+
+    @param second_video_path: the path to the video that will be stacked to the right
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param use_second_audio: if set to True, the audio of the right video will be
+        used instead of the left's
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    hstack_aug = af.VideoAugmenterByStack(second_video_path, use_second_audio, "hstack")
+    vdutils.apply_ffmpeg_augmenter(hstack_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="hstack", **func_kwargs)
+
+    return output_path or video_path
+
+
+def insert_in_background(
+    video_path: str,
+    output_path: Optional[str] = None,
+    background_path: Optional[str] = None,
+    offset_factor: float = 0.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Puts the video in the middle of the background video
+    (at offset_factor * background.duration)
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param background_path: the path to the video in which to insert the main
+        video. If set to None, the main video will play in the middle of a silent
+        video with black frames
+
+    @param offset_factor: the point in the background video in which the main video
+        starts to play (this factor is multiplied by the background video duration to
+        determine the start point)
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    utils.validate_video_path(video_path)
+    assert (
+        0.0 <= offset_factor <= 1.0
+    ), "Offset factor must be a value in the range [0.0, 1.0]"
+
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    video_info = helpers.get_video_info(video_path)
+    video_duration = float(video_info["duration"])
+    width, height = video_info["width"], video_info["height"]
+
+    video_paths = []
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_video_path = os.path.join(tmpdir, "in.mp4")
+        resized_bg_path = os.path.join(tmpdir, "bg.mp4")
+
+        helpers.add_silent_audio(video_path, tmp_video_path)
+
+        if background_path is None:
+            helpers.create_color_video(resized_bg_path, video_duration, height, width)
+        else:
+            resize(background_path, resized_bg_path, height, width)
+            helpers.add_silent_audio(resized_bg_path)
+
+        bg_video_info = helpers.get_video_info(resized_bg_path)
+        bg_video_duration = float(bg_video_info["duration"])
+        offset = bg_video_duration * offset_factor
+
+        if offset > 0:
+            before_path = os.path.join(tmpdir, "before.mp4")
+            trim(resized_bg_path, before_path, end=offset)
+            video_paths.append(before_path)
+            src_video_path_index = 1
+        else:
+            src_video_path_index = 0
+
+        video_paths.append(tmp_video_path)
+
+        after_path = os.path.join(tmpdir, "after.mp4")
+        trim(resized_bg_path, after_path, start=offset)
+        video_paths.append(after_path)
+
+        concat(video_paths, output_path or video_path, src_video_path_index)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata,
+            function_name="insert_in_background",
+            background_video_duration=bg_video_duration,
+            **func_kwargs,
+        )
+
+    return output_path or video_path
+
+
+def loop(
+    video_path: str,
+    output_path: Optional[str] = None,
+    num_loops: int = 0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Loops a video `num_loops` times
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param num_loops: the number of times to loop the video. 0 means that the video
+        will play once (i.e. no loops)
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    loop_aug = af.VideoAugmenterByLoops(num_loops)
+    vdutils.apply_ffmpeg_augmenter(loop_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="loop", **func_kwargs)
+
+    return output_path or video_path
+
+
+def meme_format(
+    video_path: str,
+    output_path: Optional[str] = None,
+    text: str = "LOL",
+    font_file: str = utils.MEME_DEFAULT_FONT,
+    opacity: float = 1.0,
+    text_color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+    caption_height: int = 250,
+    meme_bg_color: Tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Creates a new video that looks like a meme, given text and video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param text: the text to be overlaid/used in the meme. note: if using a very
+        long string, please add in newline characters such that the text remains
+        in a readable font size
+
+    @param font_file: iopath uri to the .ttf font file
+
+    @param opacity: the lower the opacity, the more transparent the text
+
+    @param text_color: color of the text in RGB values
+
+    @param caption_height: the height of the meme caption
+
+    @param meme_bg_color: background color of the meme caption in RGB values
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    meme_func = functools.partial(
+        imaugs.meme_format,
+        text=text,
+        font_file=font_file,
+        opacity=opacity,
+        text_color=text_color,
+        caption_height=caption_height,
+        meme_bg_color=meme_bg_color,
+    )
+
+    vdutils.apply_to_each_frame(meme_func, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="meme_format", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def overlay(
+    video_path: str,
+    overlay_path: str,
+    output_path: Optional[str] = None,
+    overlay_size: Optional[float] = None,
+    x_factor: float = 0.0,
+    y_factor: float = 0.0,
+    use_overlay_audio: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Overlays media onto the video at position (width * x_factor, height * y_factor)
+
+    @param video_path: the path to the video to be augmented
+
+    @param overlay_path: the path to the media (image or video) that will be
+        overlayed onto the video
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param overlay_size: size of the overlaid media with respect to the background
+        video. If set to None, the original size of the overlaid media is used
+
+    @param x_factor: specifies where the left side of the overlayed media should be
+        placed, relative to the video width
+
+    @param y_factor: specifies where the top side of the overlayed media should be
+        placed, relative to the video height
+
+    @param use_overlay_audio: if set to True and the media type is a video, the audio
+        of the overlayed video will be used instead of the main/background video's audio
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    overlay_path = utils.pathmgr.get_local_path(overlay_path)
+    tmp_overlay_path = None
+    if overlay_size is not None:
+        assert 0 < overlay_size <= 1, "overlay_size must be a value in the range (0, 1]"
+
+        video_info = helpers.get_video_info(video_path)
+        overlay_h = int(video_info["height"] * overlay_size)
+        overlay_w = int(video_info["width"] * overlay_size)
+
+        _, tmp_overlay_path = tempfile.mkstemp(suffix=os.path.splitext(overlay_path)[1])
+
+        if utils.is_image_file(overlay_path):
+            imaugs.resize(overlay_path, tmp_overlay_path, overlay_w, overlay_h)
+        else:
+            resize(overlay_path, tmp_overlay_path, overlay_h, overlay_w)
+
+    overlay_aug = af.VideoAugmenterByOverlay(
+        tmp_overlay_path or overlay_path, x_factor, y_factor, use_overlay_audio
+    )
+    vdutils.apply_ffmpeg_augmenter(overlay_aug, video_path, output_path)
+
+    if tmp_overlay_path:
+        os.remove(tmp_overlay_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="overlay", **func_kwargs)
+
+    return output_path or video_path
+
+
+def overlay_dots(
+    video_path: str,
+    output_path: Optional[str] = None,
+    num_dots: int = 100,
+    dot_type: str = "colored",
+    random_movement: bool = True,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    **kwargs,
+) -> str:
+    """
+    Overlays dots onto a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param num_dots: the number of dots to add to each frame
+
+    @param dot_type: specify if you would like "blur" or "colored"
+
+    @param random_movement: whether or not you want the dots to randomly move around
+        across the frame or to move across in a "linear" way
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    dots_aug = ac.VideoDistractorByDots(num_dots, dot_type, random_movement)
+    vdutils.apply_cv2_augmenter(dots_aug, video_path, output_path, **kwargs)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="overlay_dots", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def overlay_emoji(
+    video_path: str,
+    output_path: Optional[str] = None,
+    emoji_path: str = utils.EMOJI_PATH,
+    x_factor: float = 0.4,
+    y_factor: float = 0.4,
+    opacity: float = 1.0,
+    emoji_size: float = 0.15,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Overlays an emoji onto each frame of a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param emoji_path: iopath uri to the emoji image
+
+    @param x_factor: specifies where the left side of the emoji should be placed,
+        relative to the video width
+
+    @param y_factor: specifies where the top side of the emoji should be placed,
+        relative to the video height
+
+    @param opacity: opacity of the emoji image
+
+    @param emoji_size: emoji size relative to the height of the video frame
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    utils.validate_video_path(video_path)
+    video_info = helpers.get_video_info(video_path)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        local_emoji_path = utils.pathmgr.get_local_path(emoji_path, cache_dir=tmpdir)
+        utils.validate_image_path(local_emoji_path)
+
+        emoji_output_path = os.path.join(tmpdir, "modified_emoji.png")
+
+        imaugs.resize(
+            local_emoji_path,
+            output_path=emoji_output_path,
+            height=int(emoji_size * video_info["height"]),
+            width=int(emoji_size * video_info["height"]),
+        )
+        imaugs.opacity(emoji_output_path, output_path=emoji_output_path, level=opacity)
+
+        overlay(
+            video_path,
+            emoji_output_path,
+            output_path,
+            x_factor=x_factor,
+            y_factor=y_factor,
+        )
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="overlay_emoji", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def overlay_onto_background_video(
+    video_path: str,
+    background_path: str,
+    output_path: Optional[str] = None,
+    overlay_size: Optional[float] = 0.7,
+    x_factor: float = 0.0,
+    y_factor: float = 0.0,
+    use_background_audio: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Overlays the video onto a background video, pointed to by background_path.
+
+    @param video_path: the path to the video to be augmented
+
+    @param background_path: the path to the background video
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param overlay_size: size of the overlaid media with respect to the background
+        video. If set to None, the original size of the overlaid media is used
+
+    @param x_factor: specifies where the left side of the overlayed media should be
+        placed, relative to the video width
+
+    @param y_factor: specifies where the top side of the overlayed media should be
+        placed, relative to the video height
+
+    @param use_background_audio: if set to True and the media type is a video, the
+        audio of the background video will be used instead of the src video's audio
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    overlay(
+        video_path=background_path,
+        overlay_path=video_path,
+        output_path=output_path or video_path,
+        overlay_size=overlay_size,
+        x_factor=x_factor,
+        y_factor=y_factor,
+        use_overlay_audio=not use_background_audio,
+    )
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata,
+            function_name="overlay_onto_background_video",
+            **func_kwargs,
+        )
+
+    return output_path or video_path
+
+
+def overlay_onto_screenshot(
+    video_path: str,
+    output_path: Optional[str] = None,
+    template_filepath: str = utils.TEMPLATE_PATH,
+    template_bboxes_filepath: str = utils.BBOXES_PATH,
+    max_image_size_pixels: Optional[int] = None,
+    crop_src_to_fit: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Overlays the video onto a screenshot template so it looks like it was
+    screen-recorded on Instagram
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param template_filepath: iopath uri to the screenshot template
+
+    @param template_bboxes_filepath: iopath uri to the file containing the bounding
+        box for each template
+
+    @param max_image_size_pixels: if provided, the template image and/or src video
+        will be scaled down to avoid an output image with an area greater than this
+        size (in pixels)
+
+    @param crop_src_to_fit: if True, the src image will be cropped if necessary to
+        fit into the template image. If False, the src image will instead be resized
+        if necessary
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    sc_func = functools.partial(
+        imaugs.overlay_onto_screenshot,
+        template_filepath=template_filepath,
+        template_bboxes_filepath=template_bboxes_filepath,
+        max_image_size_pixels=max_image_size_pixels,
+        crop_src_to_fit=crop_src_to_fit,
+    )
+
+    vdutils.apply_to_each_frame(sc_func, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="overlay_onto_screenshot", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def overlay_shapes(
+    video_path: str,
+    output_path: Optional[str] = None,
+    num_shapes: int = 1,
+    shape_type: Optional[str] = None,
+    colors: Optional[List[Tuple[int, int, int]]] = None,
+    thickness: Optional[int] = None,
+    radius: Optional[float] = None,
+    random_movement: bool = True,
+    topleft: Optional[Tuple[float, float]] = None,
+    bottomright: Optional[Tuple[float, float]] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    **kwargs,
+) -> str:
+    """
+    Overlays random shapes onto a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param num_shapes: the number of shapes to add to each frame
+
+    @param shape_type: specify if you would like circles or rectangles
+
+    @param colors: list of (R, G, B) colors to sample from
+
+    @param thickness: specify the thickness desired for the shapes
+
+    @param random_movement: whether or not you want the shapes to randomly move
+        around across the frame or to move across in a "linear" way
+
+    @param topleft: specifying the boundary of shape region. The boundary are all
+        floats [0, 1] representing the fraction w.r.t width/height
+
+    @param bottomright: specifying the boundary of shape region. The boundary are all
+        floats [0, 1] representing the fraction w.r.t width/height
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    shapes_aug = ac.VideoDistractorByShapes(
+        num_shapes,
+        shape_type,
+        colors,
+        thickness,
+        radius,
+        random_movement,
+        topleft,
+        bottomright,
+    )
+    vdutils.apply_cv2_augmenter(shapes_aug, video_path, output_path, **kwargs)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="overlay_shapes", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def overlay_text(
+    video_path: str,
+    output_path: Optional[str] = None,
+    text_len: int = 10,
+    text_change_nth: Optional[int] = None,
+    fonts: Optional[List[Tuple[Any, Optional[str]]]] = None,
+    fontscales: Optional[Tuple[float, float]] = None,
+    colors: Optional[List[Tuple[int, int, int]]] = None,
+    thickness: Optional[int] = None,
+    random_movement: bool = False,
+    topleft: Optional[Tuple[float, float]] = None,
+    bottomright: Optional[Tuple[float, float]] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    **kwargs,
+) -> str:
+    """
+    Overlays random text onto a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param text_len: length of string for randomized texts.
+
+    @param text_change_nth: change random text every nth frame. None means
+        using same text for all frames.
+
+    @param fonts: list of fonts to sample from. Each font can be a cv2 fontFace,
+        a PIL ImageFont, or a path to a PIL ImageFont file. Each font is coupled with
+        a chars file (the second item in the tuple) - a path to a file which contains
+        the characters associated with the given font. For example, non-western
+        alphabets have different valid characters than the roman alphabet, and these
+        must be specified in order to construct random valid text in that font. If the
+        chars file path is None, the roman alphabet will be used.
+
+    @param fontscales: 2-tuple of float (min_scale, max_scale).
+
+    @param colors: list of (R, G, B) colors to sample from
+
+    @param thickness: specify the thickness desired for the text.
+
+    @param random_movement: whether or not you want the text to randomly move around
+        across frame or to move across in a "linear" way
+
+    @param topleft: specifying the boundary of text region. The boundary are all
+        floats [0, 1] representing the fraction w.r.t width/height
+
+    @param bottomright: specifying the boundary of text region. The boundary are all
+        floats [0, 1] representing the fraction w.r.t width/height
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    text_aug = ac.VideoDistractorByText(
+        text_len,
+        text_change_nth,
+        fonts,
+        fontscales,
+        colors,
+        thickness,
+        random_movement,
+        topleft,
+        bottomright,
+    )
+    vdutils.apply_cv2_augmenter(text_aug, video_path, output_path, **kwargs)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="overlay_text", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def pad(
+    video_path: str,
+    output_path: Optional[str] = None,
+    w_factor: float = 0.25,
+    h_factor: float = 0.25,
+    color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Pads the video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param w_factor: pad right and left with w_factor * frame width
+
+    @param h_factor: pad bottom and top with h_factor * frame height
+
+    @param color: RGB color of the padded margin
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    pad_aug = af.VideoAugmenterByPadding(w_factor, h_factor, color)
+    vdutils.apply_ffmpeg_augmenter(pad_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="pad", **func_kwargs)
+
+    return output_path or video_path
+
+
+def perspective_transform_and_shake(
+    video_path: str,
+    output_path: Optional[str] = None,
+    sigma: float = 50.0,
+    shake_radius: float = 0.0,
+    seed: Optional[int] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Apply a perspective transform to the video so it looks like it was taken
+    as a photo from another device (e.g. taking a video from your phone of a
+    video on a computer). Also has a shake factor to mimic the shakiness of
+    someone holding a phone.
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param sigma: the standard deviation of the distribution of destination coordinates.
+        The larger the sigma value, the more intense the transform
+
+    @param shake_radius: determines the amount by which to "shake" the video; the larger
+        the radius, the more intense the shake.
+
+    @param seed: if provided, this will set the random seed to ensure consistency
+        between runs
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    perspective_func = functools.partial(
+        imaugs.perspective_transform, sigma=sigma, seed=seed
+    )
+
+    duration = float(helpers.get_video_info(video_path)["duration"])
+    rng = np.random.RandomState(seed) if seed is not None else np.random
+
+    def get_dx_dy(frame_number: int) -> Dict:
+        u = math.sin(frame_number / duration * math.pi) ** 2
+        return {
+            "dx": u * rng.normal(0, shake_radius),
+            "dy": u * rng.normal(0, shake_radius),
+        }
+
+    vdutils.apply_to_each_frame(perspective_func, video_path, output_path, get_dx_dy)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata,
+            function_name="perspective_transform_and_shake",
+            **func_kwargs,
+        )
+
+    return output_path or video_path
+
+
+def pixelization(
+    video_path: str,
+    output_path: Optional[str] = None,
+    ratio: float = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Pixelizes the video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param ratio: smaller values result in a more pixelated video, 1.0 indicates
+        no change, and any value above one doesn't have a noticeable effect
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    assert ratio > 0, "Expected 'ratio' to be a positive number"
+    video_info = helpers.get_video_info(video_path)
+    width, height = video_info["width"], video_info["height"]
+
+    output_path = output_path or video_path
+    resize(video_path, output_path, height * ratio, width * ratio)
+    resize(output_path, output_path, height, width)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="pixelization", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def remove_audio(
+    video_path: str,
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Removes the audio stream from a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    remove_audio_aug = af.VideoAugmenterByRemovingAudio()
+    vdutils.apply_ffmpeg_augmenter(remove_audio_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="remove_audio", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def replace_with_color_frames(
+    video_path: str,
+    output_path: Optional[str] = None,
+    offset_factor: float = 0.0,
+    duration_factor: float = 1.0,
+    color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Replaces part of the video with frames of the specified color
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param offset_factor: start point of the replacement relative to the video
+        duration (this parameter is multiplied by the video duration)
+
+    @param duration_factor: the length of the replacement relative to the video
+        duration (this parameter is multiplied by the video duration)
+
+    @param color: RGB color of the replaced frames. Default color is black
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    utils.validate_video_path(video_path)
+    assert (
+        0.0 <= offset_factor <= 1.0 and 0.0 <= duration_factor <= 1.0
+    ), "Both offset & duration factors must be values in the range [0.0, 1.0]"
+
+    func_kwargs = {
+        **helpers.get_func_kwargs(metadata, locals(), video_path),
+        "function_name": "replace_with_color_frames",
+    }
+
+    video_info = helpers.get_video_info(video_path)
+    video_duration = float(video_info["duration"])
+    width, height = video_info["width"], video_info["height"]
+
+    offset = video_duration * offset_factor
+    duration = video_duration * duration_factor
+    output_path = output_path or video_path
+
+    if duration == 0 or offset == video_duration:
+        if output_path != video_path:
+            shutil.copy(video_path, output_path)
+        if metadata is not None:
+            helpers.get_metadata(metadata=metadata, **func_kwargs)
+        return output_path or video_path
+
+    video_paths = []
+    src_video_path_index = 0 if offset > 0 else 2
+    with tempfile.TemporaryDirectory() as tmpdir:
+        color_duration = (
+            video_duration - offset if offset + duration >= video_duration else duration
+        )
+        color_path = os.path.join(tmpdir, "color_frames.mp4")
+        helpers.create_color_video(color_path, color_duration, height, width, color)
+
+        if helpers.has_audio_stream(video_path):
+            audio_path = os.path.join(tmpdir, "audio.aac")
+            helpers.extract_audio_to_file(video_path, audio_path)
+            audio_swap(color_path, audio_path, offset=offset)
+
+        if offset_factor == 0 and duration_factor == 1.0:
+            shutil.copy(color_path, output_path)
+            if metadata is not None:
+                helpers.get_metadata(metadata=metadata, **func_kwargs)
+            return output_path or video_path
+
+        if offset > 0:
+            before_path = os.path.join(tmpdir, "before.mp4")
+            trim(video_path, before_path, end=offset)
+            video_paths.append(before_path)
+
+        video_paths.append(color_path)
+
+        if offset + duration < video_duration:
+            after_path = os.path.join(tmpdir, "after.mp4")
+            trim(video_path, after_path, start=offset + duration)
+            video_paths.append(after_path)
+
+        concat(video_paths, output_path, src_video_path_index=src_video_path_index)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, **func_kwargs)
+
+    return output_path or video_path
+
+
+def resize(
+    video_path: str,
+    output_path: Optional[str] = None,
+    height: Optional[int] = None,
+    width: Optional[int] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Resizes a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param height: the height in which the video should be resized to. If None,
+        the original video height will be used
+
+    @param width: the width in which the video should be resized to. If None,
+        the original video width will be used
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    resize_aug = af.VideoAugmenterByResize(height, width)
+    vdutils.apply_ffmpeg_augmenter(resize_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="resize", **func_kwargs)
+
+    return output_path or video_path
+
+
+def rotate(
+    video_path: str,
+    output_path: Optional[str] = None,
+    degrees: float = 15.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Rotates a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param degrees: expression for the angle by which to rotate the input video
+        clockwise, expressed in degrees (supports negative values as well)
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    rotate_aug = af.VideoAugmenterByRotation(degrees)
+    vdutils.apply_ffmpeg_augmenter(rotate_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="rotate", **func_kwargs)
+
+    return output_path or video_path
+
+
+def scale(
+    video_path: str,
+    output_path: Optional[str] = None,
+    factor: float = 0.5,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Alters the resolution of a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param factor: the ratio by which the video should be downscaled or upscaled
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    scale_aug = af.VideoAugmenterByResolution(factor)
+    vdutils.apply_ffmpeg_augmenter(scale_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="scale", **func_kwargs)
+
+    return output_path or video_path
+
+
+def shift(
+    video_path: str,
+    output_path: Optional[str] = None,
+    x_factor: float = 0.0,
+    y_factor: float = 0.0,
+    color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Shifts the original frame position from the center by a vector
+    (width * x_factor, height * y_factor) and pads the rest with a
+    colored margin
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param x_factor: the horizontal amount that the video should be shifted,
+        relative to the width of the video
+
+    @param y_factor: the vertical amount that the video should be shifted,
+        relative to the height of the video
+
+    @param color: RGB color of the margin generated by the shift. Default color is black
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    utils.validate_video_path(video_path)
+    video_info = helpers.get_video_info(video_path)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        background_path = os.path.join(tmpdir, "background.mp4")
+        helpers.create_color_video(
+            background_path,
+            float(video_info["duration"]),
+            video_info["height"],
+            video_info["width"],
+            color,
+        )
+
+        overlay(
+            background_path,
+            video_path,
+            output_path,
+            x_factor=x_factor,
+            y_factor=y_factor,
+            use_overlay_audio=True,
+        )
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="shift", **func_kwargs)
+
+    return output_path or video_path
+
+
+def time_crop(
+    video_path: str,
+    output_path: Optional[str] = None,
+    offset_factor: float = 0.0,
+    duration_factor: float = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Crops the video using the specified offset and duration factors
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param offset_factor: start point of the crop relative to the video duration
+        (this parameter is multiplied by the video duration)
+
+    @param duration_factor: the length of the crop relative to the video duration
+        (this parameter is multiplied by the video duration)
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    time_crop_aug = af.VideoAugmenterByTrim(
+        offset_factor=offset_factor, duration_factor=duration_factor
+    )
+    vdutils.apply_ffmpeg_augmenter(time_crop_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="time_crop", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def time_decimate(
+    video_path: str,
+    output_path: Optional[str] = None,
+    on_factor: float = 0.2,
+    off_factor: float = 0.5,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Removes evenly sized (off) chunks, and concatenates evenly spaced (on)
+    chunks from the video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param on_factor: relative to the video duration; the amount of time each
+        "on" video chunk should be
+
+    @param off_factor: relative to the "on" duration; the amount of time each
+        "off" video chunk should be
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    assert 0 < on_factor <= 1, "on_factor must be a value in the range (0, 1]"
+    assert 0 <= off_factor <= 1, "off_factor must be a value in the range [0, 1]"
+    utils.validate_video_path(video_path)
+
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    video_info = helpers.get_video_info(video_path)
+    _, video_ext = os.path.splitext(video_path)
+
+    duration = float(video_info["duration"])
+    on_segment = duration * on_factor
+    off_segment = on_segment * off_factor
+
+    subclips = []
+    n = int(duration / (on_segment + off_segment))
+
+    # let a = on_segment and b = off_segment
+    # subclips: 0->a, a+b -> 2*a + b, 2a+2b -> 3a+2b, .., na+nb -> (n+1)a + nb
+    with tempfile.TemporaryDirectory() as tmpdir:
+        for i in range(n):
+            subclips.append(os.path.join(tmpdir, f"{i}{video_ext}"))
+            trim(
+                video_path,
+                subclips[-1],
+                start=i * on_segment + i * off_segment,
+                end=min(duration, (i + 1) * on_segment + i * off_segment),
+            )
+
+        concat(subclips, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata, function_name="time_decimate", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def trim(
+    video_path: str,
+    output_path: Optional[str] = None,
+    start: Optional[float] = None,
+    end: Optional[float] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Trims the video using the specified start and end parameters
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param start: starting point in seconds of when the trimmed video should start.
+        If None, start will be 0
+
+    @param end: ending point in seconds of when the trimmed video should end.
+        If None, the end will be the duration of the video
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    trim_aug = af.VideoAugmenterByTrim(start=start, end=end)
+    vdutils.apply_ffmpeg_augmenter(trim_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="trim", **func_kwargs)
+
+    return output_path or video_path
+
+
+def vflip(
+    video_path: str,
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Vertically flips a video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    vflip_aug = af.VideoAugmenterByVFlip()
+    vdutils.apply_ffmpeg_augmenter(vflip_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
+
+    return output_path or video_path
+
+
+def vstack(
+    video_path: str,
+    second_video_path: str,
+    output_path: Optional[str] = None,
+    use_second_audio: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Vertically stacks two videos
+
+    @param video_path: the path to the video that will be stacked on top
+
+    @param second_video_path: the path to the video that will be stacked on the bottom
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param use_second_audio: if set to True, the audio of the bottom video will be used
+        instead of the top's
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    vstack_aug = af.VideoAugmenterByStack(second_video_path, use_second_audio, "vstack")
+    vdutils.apply_ffmpeg_augmenter(vstack_aug, video_path, output_path)
+
+    if metadata is not None:
+        helpers.get_metadata(metadata=metadata, function_name="vstack", **func_kwargs)
+
+    return output_path or video_path

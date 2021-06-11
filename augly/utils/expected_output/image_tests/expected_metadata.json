@@ -1,0 +1,497 @@
+{
+    "apply_lambda": [
+        {
+            "aug_function": "<lambda>",
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "kwargs": {},
+            "name": "apply_lambda",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "blur": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "radius": 2.0,
+            "intensity": 2.0,
+            "name": "blur",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "brightness": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 1.0,
+            "intensity": 0.0,
+            "name": "brightness",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "change_aspect_ratio": [
+        {
+            "dst_height": 1440,
+            "dst_width": 1440,
+            "ratio": 1.0,
+            "intensity": 10.0,
+            "name": "change_aspect_ratio",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "color_jitter": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "brightness_factor": 1.0,
+            "contrast_factor": 1.0,
+            "saturation_factor": 1.0,
+            "intensity": 0.0,
+            "name": "color_jitter",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "contrast": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 1.0,
+            "intensity": 0.0,
+            "name": "contrast",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "convert_color": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "colors": 256,
+            "dither": null,
+            "matrix": null,
+            "mode": "L",
+            "palette": 0,
+            "intensity": 100.0,
+            "name": "convert_color",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "crop": [
+        {
+            "dst_height": 540,
+            "dst_width": 960,
+            "x1": 0.25,
+            "x2": 0.75,
+            "y1": 0.25,
+            "y2": 0.75,
+            "intensity": 75.0,
+            "name": "crop",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "encoding_quality": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "quality": 30,
+            "intensity": 70.0,
+            "name": "encoding_quality",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "grayscale": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "mode": "luminosity",
+            "intensity": 100.0,
+            "name": "grayscale",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "hflip": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "hflip",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "masked_composite": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "transform_function": "Brightness",
+            "mask": "masks/dfdc_mask.png",
+            "intensity": 50.0,
+            "name": "masked_composite",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "meme_format": [
+        {
+            "dst_height": 1330,
+            "dst_width": 1920,
+            "caption_height": 250,
+            "font_file": "fonts/Raleway-ExtraBold.ttf",
+            "meme_bg_color": [255, 255, 255],
+            "opacity": 1.0,
+            "text": "LOL",
+            "text_color": [0, 0, 0],
+            "intensity": 18.796992481203006,
+            "name": "meme_format",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "opacity": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "level": 1.0,
+            "intensity": 0.0,
+            "name": "opacity",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "overlay_emoji": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "opacity": 1.0,
+            "emoji_path": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "emoji_size": 0.15,
+            "x_pos": 0.4,
+            "y_pos": 0.8,
+            "intensity": 2.25,
+            "name": "overlay_emoji",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "overlay_image": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "opacity": 1.0,
+            "overlay": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "overlay_size": 0.15,
+            "x_pos": 0.4,
+            "y_pos": 0.8,
+            "intensity": 2.25,
+            "name": "overlay_image",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "overlay_onto_screenshot": [
+        {
+            "dst_height": 4759,
+            "dst_width": 2195,
+            "intensity": 96.59655533383336,
+            "max_image_size_pixels": null,
+            "crop_src_to_fit": false,
+            "name": "overlay_onto_screenshot",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920,
+            "template_bboxes_filepath": "screenshot_templates/bboxes.json",
+            "template_filepath": "excluded"
+        }
+    ],
+    "overlay_stripes": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 24.81515775034294,
+            "line_angle": 0,
+            "line_color": [255, 255, 255],
+            "line_density": 0.5,
+            "line_opacity": 1.0,
+            "line_type": "solid",
+            "line_width": 0.5,
+            "name": "overlay_stripes",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "overlay_text": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "color": [255, 0, 0],
+            "font_file": "fonts/NotoNaskhArabic-Regular.ttf",
+            "font_size": 0.15,
+            "opacity": 1.0,
+            "text": [5, 3, 1, 2, 1000, 221],
+            "x_pos": 0.0,
+            "y_pos": 0.5,
+            "intensity": 2.25,
+            "name": "overlay_text",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "pad": [
+        {
+            "dst_height": 1620,
+            "dst_width": 2880,
+            "color": [0, 0, 0],
+            "h_factor": 0.25,
+            "w_factor": 0.25,
+            "intensity": 55.55555555555556,
+            "name": "pad",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "pad_square": [
+        {
+            "dst_height": 1920,
+            "dst_width": 1920,
+            "color": [0, 0, 0],
+            "intensity": 43.75,
+            "name": "pad_square",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "perspective_transform": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "crop_out_black_border": false,
+            "dx": 0.0,
+            "dy": 0.0,
+            "seed": 42,
+            "sigma": 100.0,
+            "intensity": 100.0,
+            "name": "perspective_transform",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "pixelization": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "ratio": 1.0,
+            "intensity": 0.0,
+            "name": "pixelization",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "random_noise": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "mean": 0.0,
+            "seed": 42,
+            "var": 0.01,
+            "intensity": 0.01,
+            "name": "random_noise",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomAspectRatio": [
+        {
+            "dst_height": 1082,
+            "dst_width": 1916,
+            "ratio": 1.771150605405849,
+            "intensity": 17.71150605405849,
+            "name": "change_aspect_ratio",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomBlur": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "radius": 8.474337369372327,
+            "intensity": 8.474337369372327,
+            "name": "blur",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomBrightness": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 1.6948674738744653,
+            "intensity": 16.948674738744653,
+            "name": "brightness",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomEmojiOverlay": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "emoji_path": "twemojis/smileys/beating_heart.png",
+            "emoji_size": 0.15,
+            "opacity": 1.0,
+            "x_pos": 0.4,
+            "y_pos": 0.4,
+            "intensity": 2.25,
+            "name": "overlay_emoji",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomPixelization": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "ratio": 0.8626903632435095,
+            "intensity": 13.730963675649054,
+            "name": "pixelization",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomRotation": [
+        {
+            "dst_height": 609,
+            "dst_width": 1171,
+            "degrees": 152.53807264870187,
+            "intensity": 84.74337369372326,
+            "name": "rotate",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "resize": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "height": null,
+            "width": null,
+            "intensity": 0.0,
+            "name": "resize",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "rotate": [
+        {
+            "dst_height": 631,
+            "dst_width": 1819,
+            "degrees": 15.0,
+            "intensity": 8.333333333333332,
+            "name": "rotate",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "saturation": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 0.5,
+            "intensity": 20.0,
+            "name": "saturation",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "scale": [
+        {
+            "dst_height": 540,
+            "dst_width": 960,
+            "factor": 0.5,
+            "interpolation": null,
+            "intensity": 20.0,
+            "name": "scale",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "sharpen": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 2.0,
+            "intensity": 20.0,
+            "name": "sharpen",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "shuffle_pixels": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 0.5,
+            "seed": 10,
+            "intensity": 50.0,
+            "name": "shuffle_pixels",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "vflip": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "vflip",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ]
+}

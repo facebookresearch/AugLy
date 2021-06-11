@@ -1,0 +1,160 @@
+{
+    "apply_lambda": [
+        {
+            "aug_function": "<lambda>",
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 100.0,
+            "kwargs": {},
+            "name": "apply_lambda",
+            "src_length": 1
+        }
+    ],
+    "get_baseline": [
+        {
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 0.0,
+            "name": "get_baseline",
+            "src_length": 1
+        }
+    ],
+    "insert_punctuation_chars": [
+        {
+            "cadence": 1.0,
+            "dst_length": 1,
+            "granularity": "all",
+            "input_type": "list",
+            "intensity": 100.0,
+            "name": "insert_punctuation_chars",
+            "src_length": 1,
+            "vary_chars": false
+        }
+    ],
+    "insert_zero_width_chars": [
+        {
+            "cadence": 1.0,
+            "dst_length": 1,
+            "granularity": "all",
+            "input_type": "list",
+            "intensity": 100.0,
+            "name": "insert_zero_width_chars",
+            "src_length": 1,
+            "vary_chars": false
+        }
+    ],
+    "replace_bidirectional": [
+        {
+            "dst_length": 1,
+            "granularity": "all",
+            "input_type": "list",
+            "intensity": 100.0,
+            "name": "replace_bidirectional",
+            "split_word": false,
+            "src_length": 1
+        }
+    ],
+    "replace_fun_fonts": [
+        {
+            "aug_max": 10000,
+            "aug_min": 1,
+            "aug_p": 0.8,
+            "dst_length": 1,
+            "fonts_path": "text/fun_fonts.json",
+            "granularity": "all",
+            "input_type": "list",
+            "intensity": 100.0,
+            "n": 1,
+            "name": "replace_fun_fonts",
+            "priority_words": null,
+            "src_length": 1,
+            "vary_fonts": false
+        }
+    ],
+    "replace_similar_chars": [
+        {
+            "aug_char_max": 1000,
+            "aug_char_min": 1,
+            "aug_char_p": 0.3,
+            "aug_word_max": 1000,
+            "aug_word_min": 1,
+            "aug_word_p": 0.3,
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 9.0,
+            "mapping_path": null,
+            "min_char": 2,
+            "n": 1,
+            "name": "replace_similar_chars",
+            "priority_words": null,
+            "src_length": 1
+        }
+    ],
+    "replace_similar_unicode_chars": [
+        {
+            "aug_char_max": 1000,
+            "aug_char_min": 1,
+            "aug_char_p": 0.3,
+            "aug_word_max": 1000,
+            "aug_word_min": 1,
+            "aug_word_p": 0.3,
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 9.0,
+            "mapping_path": "text/letter_unicode_mapping.json",
+            "min_char": 2,
+            "n": 1,
+            "name": "replace_similar_unicode_chars",
+            "priority_words": null,
+            "src_length": 1
+        }
+    ],
+    "replace_upside_down": [
+        {
+            "aug_max": 1000,
+            "aug_min": 1,
+            "aug_p": 0.3,
+            "dst_length": 1,
+            "granularity": "all",
+            "input_type": "list",
+            "intensity": 100.0,
+            "n": 1,
+            "name": "replace_upside_down",
+            "src_length": 1
+        }
+    ],
+    "simulate_typos": [
+        {
+            "aug_char_max": 1,
+            "aug_char_min": 1,
+            "aug_char_p": 0.3,
+            "aug_word_max": 1000,
+            "aug_word_min": 1,
+            "aug_word_p": 0.3,
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 9.0,
+            "min_char": 2,
+            "misspelling_dict_path": "text/misspelling.json",
+            "n": 1,
+            "name": "simulate_typos",
+            "priority_words": null,
+            "src_length": 1
+        }
+    ],
+    "split_words": [
+        {
+            "aug_word_max": 1000,
+            "aug_word_min": 1,
+            "aug_word_p": 0.3,
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 30.0,
+            "min_char": 4,
+            "n": 1,
+            "name": "split_words",
+            "priority_words": null,
+            "src_length": 1
+        }
+    ]
+}
