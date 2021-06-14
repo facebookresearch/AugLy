@@ -2,11 +2,11 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import os
-import sys
 
+MODULE_BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 # asset paths
-ASSETS_BASE_DIR = os.path.join(sys.path[1], "assets")
+ASSETS_BASE_DIR = os.path.join(MODULE_BASE_PATH, "assets")
 
 AUDIO_ASSETS_DIR = os.path.join(ASSETS_BASE_DIR, "audio")
 TEXT_DIR = os.path.join(ASSETS_BASE_DIR, "text")
@@ -19,8 +19,9 @@ TEMPLATE_PATH = os.path.join(SCREENSHOT_TEMPLATES_DIR, "web.png")
 TEST_URI = os.path.join(ASSETS_BASE_DIR, "tests")
 
 # test paths
-METADATA_BASE_PATH = os.path.join(sys.path[1], "augly", "utils", "expected_output")
+METADATA_BASE_PATH = os.path.join(MODULE_BASE_PATH, "augly", "utils", "expected_output")
 METADATA_FILENAME = "expected_metadata.json"
+
 AUDIO_METADATA_PATH = os.path.join(METADATA_BASE_PATH, "audio_tests", METADATA_FILENAME)
 IMAGE_METADATA_PATH = os.path.join(METADATA_BASE_PATH, "image_tests", METADATA_FILENAME)
 TEXT_METADATA_PATH = os.path.join(METADATA_BASE_PATH, "text_tests", METADATA_FILENAME)
