@@ -71,6 +71,8 @@ np_aug_img = aug_np_wrapper(np_image, overlay_emoji, **{'opacity': 0.5, 'y_pos':
 
 You can run our image unit tests if you have cloned `augly` (see [here](augly/README.md)) by running the following:
 ```bash
-python augly/tests/image_tests:functional_unit_tests.py
-python augly/tests/image_tests:transforms_unit_tests.py
+python augly/tests/image_tests/functional_unit_tests.py
+python augly/tests/image_tests/transforms_unit_tests.py
 ```
+
+Note: Some of the unit tests may fail depending which specific versions of some libraries you are running, because the behavior of some functions is slightly different and causes slightly different output image files.

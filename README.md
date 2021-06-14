@@ -50,4 +50,4 @@ If you use AugLy in your work, please cite:
 
 ## License
 
-AugLy is MIT licensed, as found in the [LICENSE](LICENSE) file.
+AugLy is MIT licensed, as found in the [LICENSE](LICENSE) file. Please note that some of the dependencies AugLy uses may be licensed under different terms.
