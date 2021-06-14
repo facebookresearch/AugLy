@@ -24,6 +24,13 @@ git clone git@github.com:facebookresearch/AugLy.git
 pip install -r requirements.txt
 ```
 
+After installing the pip requirements, there are a few additional dependencies you'll need to install using conda:
+```bash
+conda install -c conda-forge python-magic
+conda install -c conda-forge opencv=4.5.2
+export PYTHONPATH="${PYTHONPATH}:/<absolute_path_to_AugLy>/augly"
+```
+
 ## Documentation
 
 To find documentation about each sub-library, please review the READMEs in their respective directories.
@@ -50,4 +57,4 @@ If you use AugLy in your work, please cite:
 
 ## License
 
-AugLy is MIT licensed, as found in the [LICENSE](LICENSE) file.
+AugLy is MIT licensed, as found in the [LICENSE](LICENSE) file. Please note that some of the dependencies AugLy uses may be licensed under different terms.

@@ -57,6 +57,6 @@ aug_audio = TRANSFORMS(audio_array)
 
 You can run our audio unit tests if you have cloned `augly` [here](augly/README.md)) by running the following:
 ```bash
-python augly/tests/audio_tests:functional_unit_tests.py
-python augly/tests/audio_tests:transforms_unit_tests.py
+python -m unittest augly.tests.audio_tests.functional_unit_tests
+python -m unittest augly.tests.audio_tests.transforms_unit_tests
 ```
