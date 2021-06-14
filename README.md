@@ -24,11 +24,11 @@ git clone git@github.com:facebookresearch/AugLy.git
 pip install -r requirements.txt
 ```
 
-After installing the pip requirements, there are a few dependencies you'll need to install using conda:
+After installing the pip requirements, there are a few additional dependencies you'll need to install using conda:
 ```bash
-conda install -c intel mkl_fft && conda install -c conda-forge mkl_random=1.2.1
-conda install -c conda-forge brotlipy && conda install -c conda-forge python-magic
-conda install -c conda-forge opencv=4.5.2 && conda install -c conda-forge libsndfile=1.0.31
+conda install -c conda-forge python-magic
+conda install -c conda-forge opencv=4.5.2
+conda install -c conda-forge libsndfile=1.0.31
 export PYTHONPATH="${PYTHONPATH}:/home/{user}/augly"
 ```
 
