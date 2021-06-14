@@ -75,4 +75,3 @@ python -m unittest augly.tests.image_tests.functional_unit_tests
 python -m unittest augly.tests.image_tests.transforms_unit_tests
 ```
 
-Note: Some of the unit tests may fail depending which specific versions of some libraries you are running, because the behavior of some functions is slightly different and causes slightly different output image files.
