@@ -18,7 +18,7 @@ import soundfile as sf  # fmt: off
 
 
 def are_equal_audios(a: np.ndarray, b: np.ndarray) -> bool:
-    return a.size == b.size and np.allclose(a, b)
+    return a.size == b.size and np.allclose(a, b, atol=1e-4)
 
 
 class BaseAudioUnitTest(unittest.TestCase):
