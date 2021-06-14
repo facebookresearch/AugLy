@@ -28,8 +28,7 @@ After installing the pip requirements, there are a few additional dependencies y
 ```bash
 conda install -c conda-forge python-magic
 conda install -c conda-forge opencv=4.5.2
-conda install -c conda-forge libsndfile=1.0.31
-export PYTHONPATH="${PYTHONPATH}:/home/{user}/augly"
+export PYTHONPATH="${PYTHONPATH}:/<absolute_path_to_AugLy>/augly"
 ```
 
 ## Documentation
