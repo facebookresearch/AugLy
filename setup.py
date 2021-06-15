@@ -20,10 +20,8 @@ setuptools.setup(
     url="https://github.com/facebookresearch/AugLy",
     author="zpapakipos",
     author_email="zoep@fb.com",
-    packages=setuptools.find_packages(exclude=["tests*"]),
-#     package_data={
-#         "augly": ["assets/audio*", "assets/fonts*", "assets/masks*", "assets/screenshot_templates*", "assets/text*", "assets/twemojis*"]
-#     },
+    packages=setuptools.find_packages(exclude=["augly.tests"]),
+    include_package_data=True,
     install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -32,4 +30,3 @@ setuptools.setup(
     ],
     python_requires=">=3.7",
 )
-

@@ -3,5 +3,5 @@ include augly/assets/fonts/*
 include augly/assets/masks/*
 include augly/assets/screenshot_templates/*
 include augly/assets/text/*
-include augly/assets/twemojis/*
-
+include augly/assets/tests/*/inputs/*
+include augly/assets/twemojis/*/*
