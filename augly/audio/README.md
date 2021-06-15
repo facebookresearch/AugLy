@@ -2,9 +2,9 @@
 
 ## Augmentations
 
-For a full list of available augmentations, see [here](augly/audio/__init__.py).
+For a full list of available augmentations, see [here](__init__.py).
 
-Our audio augmentations use librosa, torchaudio, and NumPy as the backend. All functions accept an audio path or an audio array to be augmented as input and return the augmented audio array. If an output path is specified, the audio will also be saved to a file.
+Our audio augmentations use `librosa`, `torchaudio`, and NumPy as their backend. All functions accept an audio path or an audio array to be augmented as input and return the augmented audio array. If an output path is specified, the audio will also be saved to a file.
 
 ### Function-based
 
@@ -55,7 +55,7 @@ aug_audio = TRANSFORMS(audio_array)
 
 ## Unit Tests
 
-You can run our audio unit tests if you have cloned `augly` [here](augly/README.md)) by running the following:
+You can run our audio unit tests if you have cloned `augly` [here](../../README.md)) by running the following:
 ```bash
 python -m unittest augly.tests.audio_tests.functional_unit_tests
 python -m unittest augly.tests.audio_tests.transforms_unit_tests

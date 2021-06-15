@@ -2,9 +2,9 @@
 
 ## Augmentations
 
-For a full list of available augmentations, see [here](augly/image/__init__.py).
+For a full list of available augmentations, see [here](__init__.py).
 
-Our image augmentations use PIL as the backend. All functions accept a path to the image or a PIL Image object to be augmented as input and return the augmented PIL Image object. If an output path is specified, the image will also be saved to a file.
+Our image augmentations use `PIL` as their backend. All functions accept a path to the image or a PIL Image object to be augmented as input and return the augmented PIL Image object. If an output path is specified, the image will also be saved to a file.
 
 ### Function-based
 
@@ -69,7 +69,7 @@ np_aug_img = aug_np_wrapper(np_image, overlay_emoji, **{'opacity': 0.5, 'y_pos':
 
 ## Unit Tests
 
-You can run our image unit tests if you have cloned `augly` (see [here](augly/README.md)) by running the following:
+You can run our image unit tests if you have cloned `augly` (see [here](../../README.md)) by running the following:
 ```bash
 python -m unittest augly.tests.image_tests.functional_unit_tests
 python -m unittest augly.tests.image_tests.transforms_unit_tests
