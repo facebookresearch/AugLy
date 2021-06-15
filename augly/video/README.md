@@ -2,24 +2,24 @@
 
 ## Installation Notes
 
-In order to run the video tests and/or use the augmentations, please install ffmpeg. If you're using conda you can do this with:
+In order to run the video tests and/or use the augmentations, please install `ffmpeg`. If you're using conda you can do this with:
 ```bash
 conda install -c conda-forge ffmpeg
 ```
 
-You also have to make sure your ffmpeg & ffprobe binaries are available in the right locations:
+Then, export the `AUGLY_FFMPEG_PATH` and `AUGLY_FFPROBE_PATH` environment variables such that we can access the intended `ffmpeg` version.
 ```bash
 which ffmpeg
-sudo ln -s <ffmpeg_path> /usr/local/bin/ffmpeg
+export AUGLY_FFMPEG_PATH='<ffmpeg_path>'
 which ffprobe
-sudo ln -s <ffprobe_path> /usr/local/bin/ffprobe
+export AUGLY_FFPROBE_PATH='<ffprobe_path>'
 ```
 
 ## Augmentations
 
-For a full list of available augmentations, see [here](augly/video/__init__.py).
+For a full list of available augmentations, see [here](__init__.py).
 
-Our video augmentations use FFMPEG & OpenCV as the backend. All functions accept a path to the video to be augmented as input and output a file containing the augmented video. If no output path is specified, the original video input path will be overwritten. The file path to which the augmented video was written will also be returned by all augmentations.
+Our video augmentations use `ffmpeg` & OpenCV as their backend. All functions accept a path to the video to be augmented as input and output a file containing the augmented video. If no output path is specified, the original video input path will be overwritten. The file path to which the augmented video was written will also be returned by all augmentations.
 
 ### Function-based
 
@@ -71,7 +71,7 @@ video_tensor, audio_tensor, info = TENSOR_TRANSFORMS(video_path)
 
 ## Unit Tests
 
-You can run our video unit tests by cloning `augly` (see [here](augly/README.md)) and then running the following:
+You can run our video unit tests by cloning `augly` (see [here](../../README.md)) and then running the following:
 ```bash
 python -m unittest augly.tests.video_tests.functional.composite_tests
 python -m unittest augly.tests.video_tests.functional.cv2_tests
