@@ -18,7 +18,7 @@ setuptools.setup(
     version="0.0.5",
     description="A data augmentations library for audio, image, text, & video.",
     url="https://github.com/facebookresearch/AugLy",
-    author="zpapakipos",
+    author="Zoe Papakipos and Joanna Bitton",
     author_email="zoep@fb.com",
     packages=setuptools.find_packages(exclude=["augly.tests"]),
     include_package_data=True,
