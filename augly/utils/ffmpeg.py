@@ -4,9 +4,16 @@
 import os
 from typing import Tuple
 
-FFMPEG_BIN_DIR = "/usr/local/bin"
-FFMPEG_PATH = os.path.join(FFMPEG_BIN_DIR, "ffmpeg")
-FFPROBE_PATH = os.path.join(FFMPEG_BIN_DIR, "ffprobe")
+FFMPEG_PATH = os.environ.get("AUGLY_FFMPEG_PATH")
+FFPROBE_PATH = os.environ.get("AUGLY_FFPROBE_PATH")
+
+assert (
+    FFMPEG_PATH is not None
+), "Please set the AUGLY_FFMPEG_PATH environment variable before running AugLy Video"
+
+assert (
+    FFPROBE_PATH is not None
+), "Please set the AUGLY_FFPROBE_PATH environment variable before running AugLy Video"
 
 
 def get_conditional_for_skipping_video_tests() -> Tuple[bool, str]:
