@@ -73,15 +73,10 @@ video_tensor, audio_tensor, info = TENSOR_TRANSFORMS(video_path)
 
 You can run our video unit tests by cloning `augly` (see [here](../../README.md)) and then running the following:
 ```bash
-python -m unittest augly.tests.video_tests.functional.composite_tests
-python -m unittest augly.tests.video_tests.functional.cv2_tests
-python -m unittest augly.tests.video_tests.functional.ffmpeg_tests
-python -m unittest augly.tests.video_tests.functional.image_based_tests
-
-python -m unittest augly.tests.video_tests.functional.composite_tests
-python -m unittest augly.tests.video_tests.functional.cv2_tests
-python -m unittest augly.tests.video_tests.functional.ffmpeg_tests
-python -m unittest augly.tests.video_tests.functional.image_based_tests
+python -m unittest augly.tests.video_tests.transforms.composite_tests
+python -m unittest augly.tests.video_tests.transforms.cv2_tests
+python -m unittest augly.tests.video_tests.transforms.ffmpeg_tests
+python -m unittest augly.tests.video_tests.transforms.image_based_tests
 ```
 
 Note: Some of the unit tests may fail depending which specific versions of some libraries you are running, because the behavior of some functions is slightly different and causes slightly different output video files.

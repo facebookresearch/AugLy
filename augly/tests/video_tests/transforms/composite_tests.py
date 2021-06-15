@@ -46,7 +46,11 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
 
     def test_RandomEmojiOverlay(self):
         random.seed(1)
-        self.evaluate_class(vidaugs.RandomEmojiOverlay(), fname="RandomEmojiOverlay")
+        self.evaluate_class(
+            vidaugs.RandomEmojiOverlay(),
+            fname="RandomEmojiOverlay",
+            metadata_exclude_keys=["emoji_path"],
+        )
 
     def test_RandomPixelization(self):
         random.seed(1)
