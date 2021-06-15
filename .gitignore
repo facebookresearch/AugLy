@@ -29,3 +29,6 @@ _ext
 
 slurm-*
 log.txt
+
+# OSX-specific
+.DS_Store
