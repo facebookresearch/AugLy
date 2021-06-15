@@ -2,9 +2,9 @@
 
 ## Augmentations
 
-For a full list of available augmentations, see [here](augly/text/__init__.py).
+For a full list of available augmentations, see [here](__init__.py).
 
-Our text augmentations use nlpaug as its backbone. All functions accept a list of original texts to be augmented as input and return the list of augmented texts.
+Our text augmentations use `nlpaug` as their backbone. All functions accept a list of original texts to be augmented as input and return the list of augmented texts.
 
 ### Function-based
 
@@ -35,7 +35,7 @@ aug_texts = transform(texts)
 
 ## Unit Tests
 
-You can run our text unit tests if you have cloned `augly` (see [here](augly/README.md)) by running the following:
+You can run our text unit tests if you have cloned `augly` (see [here](../../README.md)) by running the following:
 ```
 python -m unittest augly.tests.text_tests.functional_unit_tests
 python -m unittest augly.tests.text_tests.transforms_unit_tests
