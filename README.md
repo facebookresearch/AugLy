@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="logo.svg" alt="logo" width="70%" />
+</p>
+
+----------------------
+
 # AugLy
 
 AugLy is a data augmentations library that currently supports four modalities ([audio](augly/audio), [image](augly/image), [text](augly/text) & [video](augly/video)) and over 100 augmentations. Each modality’s augmentations are contained within its own sub-library. These sub-libraries include both function-based and class-based transforms, composition operators, and have the option to provide metadata about the transform applied, including its intensity.
