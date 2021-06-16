@@ -3,10 +3,10 @@
 
 import os
 
-MODULE_BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+MODULE_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # asset paths
-ASSETS_BASE_DIR = os.path.join(MODULE_BASE_PATH, "assets")
+ASSETS_BASE_DIR = os.path.join(MODULE_BASE_DIR, "assets")
 
 AUDIO_ASSETS_DIR = os.path.join(ASSETS_BASE_DIR, "audio")
 TEXT_DIR = os.path.join(ASSETS_BASE_DIR, "text")
@@ -19,7 +19,7 @@ TEMPLATE_PATH = os.path.join(SCREENSHOT_TEMPLATES_DIR, "web.png")
 TEST_URI = os.path.join(ASSETS_BASE_DIR, "tests")
 
 # test paths
-METADATA_BASE_PATH = os.path.join(MODULE_BASE_PATH, "augly", "utils", "expected_output")
+METADATA_BASE_PATH = os.path.join(MODULE_BASE_DIR, "utils", "expected_output")
 METADATA_FILENAME = "expected_metadata.json"
 
 AUDIO_METADATA_PATH = os.path.join(METADATA_BASE_PATH, "audio_tests", METADATA_FILENAME)

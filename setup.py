@@ -15,13 +15,13 @@ requirements = [
 
 setuptools.setup(
     name="augly",
-    version="1.0.0",
+    version="0.0.5",
     description="A data augmentations library for audio, image, text, & video.",
-    long_description=open("README.md").read(),
     url="https://github.com/facebookresearch/AugLy",
-    author="zpapakipos",
+    author="Zoe Papakipos and Joanna Bitton",
     author_email="zoep@fb.com",
-    packages=["augly"],
+    packages=setuptools.find_packages(exclude=["augly.tests"]),
+    include_package_data=True,
     install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3",
