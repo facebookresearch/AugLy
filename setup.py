@@ -15,7 +15,7 @@ requirements = [
 
 setuptools.setup(
     name="augly",
-    version="0.0.5",
+    version="0.0.6",
     description="A data augmentations library for audio, image, text, & video.",
     url="https://github.com/facebookresearch/AugLy",
     author="Zoe Papakipos and Joanna Bitton",
