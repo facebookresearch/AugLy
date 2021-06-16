@@ -31,7 +31,7 @@ Our video augmentations use `ffmpeg` & OpenCV as their backend. All functions ac
 
 You can call the functional augmentations like so:
 ```python
-import aml.augly.video as vidaugs
+import augly.video as vidaugs
 
 video_path = "your_vid_path.mp4"
 output_path = "your_output_path.mp4"
@@ -42,10 +42,9 @@ vidaugs.rotate(output_path, degrees=30)   # output_path will be overwritten
 
 ### Class-based
 
-We have also defined class-based versions of all augmentations as well. We have also added special Compose and ToTensor operators to facilitate using these augmentations with PyTorch:
+We have also defined class-based versions of all augmentations, as well as a Compose operator used to combine transforms.
 ```python
-import aml.augly.video as vidaugs
-from aml.augly.video import torchaugs
+import augly.video as vidaugs
 
 COLOR_JITTER_PARAMS = {
     "brightness_factor": 0.15,
@@ -66,13 +65,11 @@ AUGMENTATIONS = [
 ]
 
 TRANSFORMS = vidaugs.Compose(AUGMENTATIONS)
-TENSOR_TRANSFORMS = torchaugs.Compose(AUGMENTATIONS + [torchaugs.ToTensor()])
 
 video_path = "your_vid_path.mp4"
 out_video_path = "your_output_path.mp4"
 
 TRANSFORMS(video_path, out_video_path)  # transformed video now stored in `out_video_path`
-video_tensor, audio_tensor, info = TENSOR_TRANSFORMS(video_path)
 ```
 
 ## Unit Tests
@@ -84,5 +81,3 @@ python -m unittest augly.tests.video_tests.transforms.cv2_tests
 python -m unittest augly.tests.video_tests.transforms.ffmpeg_tests
 python -m unittest augly.tests.video_tests.transforms.image_based_tests
 ```
-
-Note: Some of the unit tests may fail depending which specific versions of some libraries you are running, because the behavior of some functions is slightly different and causes slightly different output video files.

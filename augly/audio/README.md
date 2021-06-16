@@ -10,7 +10,7 @@ Our audio augmentations use `librosa`, `torchaudio`, and NumPy as their backend.
 
 You can call the functional augmentations like so:
 ```python
-import aml.augly.audio as audaugs
+import augly.audio as audaugs
 
 audio_path = "your_audio_path.flac"
 output_path = "your_output_path.flac"

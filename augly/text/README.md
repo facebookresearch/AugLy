@@ -10,7 +10,7 @@ Our text augmentations use `nlpaug` as their backbone. All functions accept a li
 
 You can call the functional augmentations like so:
 ```python
-import aml.augly.text as txtaugs
+import augly.text as txtaugs
 
 texts = ["hello world", "bye planet"]
 
@@ -26,7 +26,7 @@ augmented_synonyms = txtaugs.insert_punctuation_chars(
 
 You can also call any augmentation as a Transform class with a given probability:
 ```python
-import aml.augly.text as txtaugs
+import augly.text as txtaugs
 
 texts = ["hello world", "bye planet"]
 transform = InsertPunctuationChars(granularity="all", p=0.5)
