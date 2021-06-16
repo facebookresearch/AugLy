@@ -10,7 +10,7 @@ Our image augmentations use `PIL` as their backend. All functions accept a path 
 
 You can call the functional augmentations like so:
 ```python
-import aml.augly.image as imaugs
+import augly.image as imaugs
 
 image_path = "your_img_path.png"
 output_path = "your_output_path.png"
@@ -31,7 +31,7 @@ aug_image = imaugs.overlay_onto_screenshot(aug_image, output_path=output_path)
 You can also call any augmentation as a Transform class, including composing them together and applying them with a given probability. This also means that you can easily integrate with PyTorch transformations if needed:
 ```python
 import torchvision.transforms as transforms
-import aml.augly.image as imaugs
+import augly.image as imaugs
 
 COLOR_JITTER_PARAMS = {
     "brightness_factor": 1.2,
@@ -60,7 +60,7 @@ aug_tensor_image = TENSOR_TRANSFORMS(image)
 ### Numpy Wrapper
 If your image is currently in the form of a NumPy array and you don't want to save the image as a file before using the augmentation functions, you can use our NumPy wrapper:
 ```python
-from aml.augly.image import aug_np_wrapper, overlay_emoji
+from augly.image import aug_np_wrapper, overlay_emoji
 
 np_image = np.zeros((300, 300))
 # pass in function arguments as kwargs
@@ -75,3 +75,7 @@ python -m unittest augly.tests.image_tests.functional_unit_tests
 python -m unittest augly.tests.image_tests.transforms_unit_tests
 ```
 
+You can also run the pytorch unit test, but note that you must have torchvision installed in order to run it (which you will need anyway if you're interested in integrating AugLy transforms with PyTorch):
+```bash
+python -m unittest augly.tests.image_tests.pytorch_test
+```
