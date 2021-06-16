@@ -20,7 +20,7 @@ ffmpeg_paths_error = (
 )
 
 assert (
-    FFMPEG_PATH is not None or FFPROBE_PATH is not None
+    FFMPEG_PATH is not None and FFPROBE_PATH is not None
 ), ffmpeg_paths_error.format("AUGLY_FFMPEG_PATH", "AUGLY_FFPROBE_PATH")
 
 
