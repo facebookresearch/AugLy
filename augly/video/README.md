@@ -9,6 +9,7 @@ conda install -c conda-forge ffmpeg
 
 If you aren't using conda, you can run:
 ```bash
+sudo add-apt-repository ppa:jonathonf/ffmpeg-4
 apt install ffmpeg
 ```
 
