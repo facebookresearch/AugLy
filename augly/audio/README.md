@@ -23,16 +23,16 @@ aug_audio, sample_rate = audaugs.change_volume(audio_path, volume_db=10.0)
 # (but then you have to provide the sample rate, too, since it
 # won't be inferred when loading the audio file)
 aug_audio, sample_rate = audaugs.low_pass_filter(
-	aug_audio,
-	sample_rate=sample_rate,
-	cutoff_hz=500,
+    aug_audio,
+    sample_rate=sample_rate,
+    cutoff_hz=500,
 )
 
 # If an output path is specified, the audio will also be saved to a file
 aug_audio, sample_rate = audaugs.normalize(
-	aug_audio,
-	sample_rate=sample_rate,
-	output_path=output_path,
+    aug_audio,
+    sample_rate=sample_rate,
+    output_path=output_path,
 )
 ```
 
@@ -60,4 +60,3 @@ You can run our audio unit tests if you have cloned `augly` [here](../../README.
 python -m unittest augly.tests.audio_tests.functional_unit_tests
 python -m unittest augly.tests.audio_tests.transforms_unit_tests
 ```
-
