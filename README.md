@@ -23,13 +23,17 @@ Or clone AugLy if you want to be able to run our unit tests, contribute a pull r
 ```bash
 git clone git@github.com:facebookresearch/AugLy.git
 [Optional, but recommended] conda create -n augly && conda activate augly && conda install pip
-pip install -r requirements.txt
-export PYTHONPATH="${PYTHONPATH}:/<absolute_path_to_AugLy>/AugLy"
+pip install -e AugLy/
 ```
 
 *NOTE*: In some environments, `pip` doesn't install `python-magic` as expected. In that case, you will need to additionally run:
 ```bash
 conda install -c conda-forge python-magic
+```
+
+Or if you aren't using conda:
+```bash
+sudo apt-get install python3-magic
 ```
 
 ## Documentation

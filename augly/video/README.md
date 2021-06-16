@@ -7,6 +7,12 @@ In order to run the video tests and/or use the augmentations, please install `ff
 conda install -c conda-forge ffmpeg
 ```
 
+If you aren't using conda, you can run:
+```bash
+sudo add-apt-repository ppa:jonathonf/ffmpeg-4
+apt install ffmpeg
+```
+
 AugLy Video uses `distutils.spawn.find_executable()` to automatically find your `ffmpeg` & `ffprobe` paths. If you would prefer to use another specific version of `ffmpeg`, export the `AUGLY_FFMPEG_PATH` and `AUGLY_FFPROBE_PATH` environment variables such that we can access the intended `ffmpeg` version:
 ```bash
 which ffmpeg
