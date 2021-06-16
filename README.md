@@ -2,7 +2,7 @@
 
 AugLy is a data augmentations library that currently supports four modalities ([audio](augly/audio), [image](augly/image), [text](augly/text) & [video](augly/video)) and over 100 augmentations. Each modality’s augmentations are contained within its own sub-library. These sub-libraries include both function-based and class-based transforms, composition operators, and have the option to provide metadata about the transform applied, including its intensity.
 
-AugLy is a great library to utilize for augmenting your data for model training, or to evaluate the robustness gaps of your model!
+AugLy is a great library to utilize for augmenting your data in model training, or to evaluate the robustness gaps of your model!
 
 The library is Python-based and requires at least Python 3.7, as we use dataclasses.
 
@@ -13,22 +13,23 @@ The library is Python-based and requires at least Python 3.7, as we use dataclas
 
 ## Installation
 
+`AugLy` is a Python 3.7+ library. It can be installed with:
+
 ```bash
 pip install augly
 ```
 
-Or clone augly if you want to be able to run our unit tests, contribute a pull request, etc:
+Or clone AugLy if you want to be able to run our unit tests, contribute a pull request, etc:
 ```bash
 git clone git@github.com:facebookresearch/AugLy.git
-[Optional] conda create -n augly && conda activate augly && conda install pip
+[Optional, but recommended] conda create -n augly && conda activate augly && conda install pip
 pip install -r requirements.txt
+export PYTHONPATH="${PYTHONPATH}:/<absolute_path_to_AugLy>/AugLy"
 ```
 
-After installing the pip requirements, there are a few additional dependencies you'll need to install using conda:
+*NOTE*: In some environments, `pip` doesn't install `python-magic` as expected. In that case, you will need to additionally run:
 ```bash
 conda install -c conda-forge python-magic
-conda install -c conda-forge opencv=4.5.2
-export PYTHONPATH="${PYTHONPATH}:/<absolute_path_to_AugLy>/augly"
 ```
 
 ## Documentation
