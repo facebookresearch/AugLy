@@ -7,7 +7,7 @@ In order to run the video tests and/or use the augmentations, please install `ff
 conda install -c conda-forge ffmpeg
 ```
 
-Then, export the `AUGLY_FFMPEG_PATH` and `AUGLY_FFPROBE_PATH` environment variables such that we can access the intended `ffmpeg` version:
+AugLy Video uses `distutils.spawn.find_executable()` to automatically find your `ffmpeg` & `ffprobe` paths. If you would prefer to use another specific version of `ffmpeg`, export the `AUGLY_FFMPEG_PATH` and `AUGLY_FFPROBE_PATH` environment variables such that we can access the intended `ffmpeg` version:
 ```bash
 which ffmpeg
 export AUGLY_FFMPEG_PATH='<ffmpeg_path>'
