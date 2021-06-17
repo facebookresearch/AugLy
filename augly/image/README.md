@@ -2,6 +2,8 @@
 
 ## Augmentations
 
+Try running some AugLy image augmentations in [Colab](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_image.ipynb)!
+
 For a full list of available augmentations, see [here](__init__.py).
 
 Our image augmentations use `PIL` as their backend. All functions accept a path to the image or a PIL Image object to be augmented as input and return the augmented PIL Image object. If an output path is specified, the image will also be saved to a file.

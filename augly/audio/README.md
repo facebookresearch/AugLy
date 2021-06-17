@@ -2,6 +2,8 @@
 
 ## Augmentations
 
+Try running some AugLy audio augmentations in [Colab](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_audio.ipynb)!
+
 For a full list of available augmentations, see [here](__init__.py).
 
 Our audio augmentations use `librosa`, `torchaudio`, and NumPy as their backend. All functions accept an audio path or an audio array to be augmented as input and return the augmented audio array. If an output path is specified, the audio will also be saved to a file.
