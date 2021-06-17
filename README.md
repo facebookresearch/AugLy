@@ -10,6 +10,10 @@ AugLy is a great library to utilize for augmenting your data in model training, 
 
 The library is Python-based and requires at least Python 3.7, as we use dataclasses.
 
+<p align="center">
+  <img src="image_visual.png" alt="image_visual" width="70%" />
+</p>
+
 ## Authors
 [**Joanna Bitton**](https://www.linkedin.com/in/joanna-bitton/) — Software Engineer at Facebook AI
 
