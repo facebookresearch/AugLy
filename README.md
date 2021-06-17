@@ -61,7 +61,7 @@ We provide various media assets to use with some of our augmentations. These ass
 If you use AugLy in your work, please cite:
 
 ```bibtex
-@misc{bitton2020augly,
+@misc{bitton2021augly,
   author =       {Bitton, Joanna and Papakipos, Zoe},
   title =        {AugLy: A data augmentations library for audio, image, text, and video.},
   howpublished = {\url{https://github.com/facebookresearch/AugLy}},
