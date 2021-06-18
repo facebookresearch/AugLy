@@ -62,7 +62,7 @@ class FunFontsAugmenter(Augmenter):
         """
         local_fonts_path = pathmgr.get_local_path(fonts_path)
 
-        with open(local_fonts_path) as text_file:
+        with open(local_fonts_path, encoding='utf-8') as text_file:
             font_dictionary = json.load(text_file)
             return list(font_dictionary.values())
 
