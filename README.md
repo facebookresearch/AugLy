@@ -56,6 +56,12 @@ We provide various media assets to use with some of our augmentations. These ass
 2. [Fonts](augly/assets/fonts/) ([Noto fonts](https://www.google.com/get/noto/)) - Noto is a trademark of Google Inc. Noto fonts are open source. All Noto fonts are published under the SIL Open Font License, Version 1.1.
 3. [Screenshot Templates](augly/assets/screenshot_templates/) - Images created by a designer at Facebook specifically to use with AugLy. You can use these with the `overlay_onto_screenshot` augmentation in both the image and video libraries to make it look like your source image/video was screenshotted in a social media feed similar to Facebook or Instagram.
 
+## Links
+
+1. Facebook AI blog post: https://ai.facebook.com/blog/augly-a-new-data-augmentation-library-to-help-build-more-robust-ai-models/
+2. PyPi package: https://pypi.org/project/augly/
+3. Examples: https://github.com/facebookresearch/AugLy/tree/main/examples
+
 ## Citation
 
 If you use AugLy in your work, please cite:
