@@ -7,6 +7,7 @@ import os
 import pickle
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+import cv2
 
 import augly.image.utils as imutils
 import augly.utils as utils
@@ -1786,3 +1787,64 @@ def vflip(
     imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path)
+
+
+def xskew(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Shearing or Skewing an image with respect to x-axis
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
+    image = imutils.validate_and_load_image(image)
+    rows, cols, dim = image.shape
+    M = np.float32([[1, 0.5, 0],
+                    [0, 1  , 0],
+                    [0, 0  , 1]])             
+    xsheared_img = cv2.warpPerspective(image, M, (int(cols*1.5), int(rows*1.5)))
+
+    return imutils.ret_and_save_image(sheared_img, output_path)
+
+
+def yskew(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Shearing or Skewing an image with respect to y-axis
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
+    image = imutils.validate_and_load_image(image)
+    rows, cols, dim = image.shape
+    M = np.float32([[1,   0, 0],
+            	    [0.5, 1, 0],
+            	    [0,   0, 1]])            
+    ysheared_img = cv2.warpPerspective(image, M, (int(cols*1.5), int(rows*1.5)))
+
+    return imutils.ret_and_save_image(sheared_img, output_path)
+
