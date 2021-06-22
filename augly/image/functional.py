@@ -1791,10 +1791,10 @@ def vflip(
 def skew(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
+    level: float = 5.0,
+    max_level: float = 10.0,
+    axis: str = "x_axis",
     metadata: Optional[List[Dict[str, Any]]] = None,
-    level: float, 
-    max_level,
-    axis: str
 ) -> Image.Image:
     
     """
