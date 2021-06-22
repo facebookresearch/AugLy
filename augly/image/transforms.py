@@ -216,7 +216,7 @@ class Skew(BaseTransform):
     def __init__(self, level: float = 5.0, max_level: float = 10.0, axis: str = "x-axis"):
         
         """
-         @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
+        @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
     
         @param max_level: Maximum value that the operation can have. This will be
             scaled to level / PARAMETER_MAX.
