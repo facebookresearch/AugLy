@@ -41,6 +41,7 @@ from augly.image.intensity import (
     apply_lambda_intensity,
     blur_intensity,
     brightness_intensity,
+    skew_intensity,
     change_aspect_ratio_intensity,
     color_jitter_intensity,
     contrast_intensity,
