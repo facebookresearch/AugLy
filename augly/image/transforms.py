@@ -212,7 +212,38 @@ class Brightness(BaseTransform):
         """
         return F.brightness(image, factor=self.factor, metadata=metadata)
 
-
+class Skew(BaseTransform):
+    def __init__(self, level: float = 5.0, max_level: float = 10.0, axis: str = "x-axis"):
+        
+        """
+         @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
+    
+        @param max_level: Maximum value that the operation can have. This will be
+            scaled to level / PARAMETER_MAX.
+            
+        @param axis: Axis with respect to x-axis or y-axis
+        """
+        self.level = level
+        self.max_level = max_level
+        self.axis = axis
+        
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
+        """
+        Skewing of Image
+        
+        @param image: PIL Image to be augmented
+        
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+            
+        @returns: Augmented PIL Image
+        """
+        return F.skew(image, level=self.level, max_level=self.max_level, axis=self.axis, metadata=metadata)
+    
+    
 class ChangeAspectRatio(BaseTransform):
     def __init__(self, ratio: float = 1.0, p: float = 1.0):
         """
