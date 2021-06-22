@@ -1807,6 +1807,8 @@ def skew(
     
     @param max_level: Maximum value that the operation can have. This will be
         scaled to level / PARAMETER_MAX.
+        
+    @param axis: Axis with respect to change like x-axis or y-axis
                 
     @param output_path: the path in which the resulting image will be stored.
         If None, the resulting PIL Image will still be returned
