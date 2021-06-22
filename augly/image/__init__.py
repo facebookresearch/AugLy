@@ -34,6 +34,7 @@ from augly.image.functional import (
     sharpen,
     shuffle_pixels,
     vflip,
+    skew,
 )
 from augly.image.helpers import aug_np_wrapper
 from augly.image.intensity import (
@@ -73,6 +74,7 @@ from augly.image.transforms import (
     ApplyLambda,
     Blur,
     Brightness,
+    Skew,
     ChangeAspectRatio,
     ColorJitter,
     Contrast,
@@ -150,6 +152,7 @@ __all__ = [
     "Sharpen",
     "ShufflePixels",
     "VFlip",
+    "Skew",
     "apply_lambda",
     "aug_np_wrapper",
     "blur",
