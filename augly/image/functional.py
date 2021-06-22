@@ -1819,31 +1819,21 @@ def skew(
     """
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     image = imutils.validate_and_load_image(image)
+    
+    level = float(np.random.uniform(low=0.1, high=level)) * max_level / 10
+    w = image.size[0]
+    h = image.size[1]
+    
+    if np.random.uniform() > 0.5:
+        level = -level
+        
     if axis == 'x-axis':
-        try:
-            level = float(np.random.uniform(low=0.1, high=level)) * max_level / 10
-            w = image.size[0]
-            h = image.size[1]
-            if np.random.uniform() > 0.5:
-                level = -level
-            aug_img = image.transform((w, h),Image.AFFINE, (1, level, 0, 0, 1, 0),
-                                    resample=Image.BILINEAR)
-            imutils.get_metadata(metadata=metadata, function_name="skew", aug_img=aug_img, **func_kwargs)
-            return aug_img
-        except:
-            print("Error")
-            return image
+        aug_img = image.transform((w, h),Image.AFFINE, (1, level, 0, 0, 1, 0),
+                                resample=Image.BILINEAR)
+        imutils.get_metadata(metadata=metadata, function_name="skew", aug_img=aug_img, **func_kwargs)
+        return aug_img
     elif axis == 'y-axis':
-        try:
-            level = float(np.random.uniform(low=0.1, high=level)) * max_level / 10
-            w = image.size[0]
-            h = image.size[1]
-            if np.random.uniform() > 0.5:
-                level = -level
-            aug_img = image.transform((w, h),Image.AFFINE, (1, 0, 0, level, 1, 0),
-                                    resample=Image.BILINEAR)
-            imutils.get_metadata(metadata=metadata, function_name="skew", aug_img=aug_img, **func_kwargs)
-            return aug_img
-        except:
-            print("Error")
-            return image
+        aug_img = image.transform((w, h),Image.AFFINE, (1, 0, 0, level, 1, 0),
+                                resample=Image.BILINEAR)
+        imutils.get_metadata(metadata=metadata, function_name="skew", aug_img=aug_img, **func_kwargs)
+        return aug_img
