@@ -211,22 +211,18 @@ class Brightness(BaseTransform):
         @returns: Augmented PIL Image
         """
         return F.brightness(image, factor=self.factor, metadata=metadata)
-
+    
 class Skew(BaseTransform):
-    def __init__(self, level: float = 1.0, max_level: float = 10.0, axis: str = "x-axis"):
+    def __init__(self, level: float = 5.0, max_level: float = 10.0, axis: str = "x-axis"):
         
         """
-        @param level: Level of the operation that will be in [0, the maximum level]
-
-        @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
+         @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
     
         @param max_level: Maximum value that the operation can have. This will be
             scaled to level / PARAMETER_MAX.
             
         @param axis: Axis with respect to x-axis or y-axis
         """
-
-        super().__init__(p)
         self.level = level
         self.max_level = max_level
         self.axis = axis

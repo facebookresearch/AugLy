@@ -217,15 +217,12 @@ class Skew(BaseTransform):
         
         """
         @param level: Level of the operation that will be in [0, the maximum level]
-
-        @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
     
         @param max_level: Maximum value that the operation can have. This will be
             scaled to level / PARAMETER_MAX.
             
         @param axis: Axis with respect to x-axis or y-axis
         """
-
         super().__init__(p)
         self.level = level
         self.max_level = max_level
@@ -246,6 +243,7 @@ class Skew(BaseTransform):
         @returns: Augmented PIL Image
         """
         return F.skew(image, level=self.level, max_level=self.max_level, axis=self.axis, metadata=metadata)
+    
 
 class ChangeAspectRatio(BaseTransform):
     def __init__(self, ratio: float = 1.0, p: float = 1.0):
