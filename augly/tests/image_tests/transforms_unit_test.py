@@ -7,7 +7,11 @@ import unittest
 
 import augly.image as imaugs
 from augly.tests.image_tests.base_unit_test import BaseImageUnitTest
-from augly.utils import EMOJI_PATH, IMAGE_METADATA_PATH, IMG_MASK_PATH
+from augly.utils import (
+    EMOJI_PATH,
+    IMAGE_METADATA_PATH,
+    IMG_MASK_PATH,
+)
 
 
 class TransformsImageUnitTest(BaseImageUnitTest):
@@ -20,6 +24,9 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_ApplyLambda(self):
         self.evaluate_class(imaugs.ApplyLambda(), fname="apply_lambda")
 
+    def test_ApplyPILFilter(self):
+        self.evaluate_class(imaugs.ApplyPILFilter(), fname="apply_pil_filter")
+
     def test_Blur(self):
         self.evaluate_class(imaugs.Blur(), fname="blur")
 
@@ -29,8 +36,32 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_ChangeAspectRatio(self):
         self.evaluate_class(imaugs.ChangeAspectRatio(), fname="change_aspect_ratio")
 
+    def test_ClipImageSize(self):
+        self.evaluate_class(
+            imaugs.ClipImageSize(max_resolution=1500000), fname="clip_image_size"
+        )
+
     def test_ColorJitter(self):
         self.evaluate_class(imaugs.ColorJitter(), fname="color_jitter")
+
+    def test_Compose(self):
+        random.seed(1)
+        self.evaluate_class(
+            imaugs.Compose(
+                [
+                    imaugs.Blur(),
+                    imaugs.ColorJitter(saturation_factor=1.5),
+                    imaugs.OneOf(
+                        [
+                            imaugs.OverlayOntoScreenshot(),
+                            imaugs.OverlayEmoji(),
+                            imaugs.OverlayText(),
+                        ]
+                    ),
+                ]
+            ),
+            fname="compose",
+        )
 
     def test_Contrast(self):
         self.evaluate_class(imaugs.Contrast(), fname="contrast")
@@ -73,25 +104,33 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_OverlayImage(self):
         self.evaluate_class(
-            imaugs.OverlayImage(
-                overlay=EMOJI_PATH, overlay_size=0.15, y_pos=0.8
-            ),
+            imaugs.OverlayImage(overlay=EMOJI_PATH, overlay_size=0.15, y_pos=0.8),
             fname="overlay_image",
+        )
+
+    def test_OverlayOntoBackgroundImage(self):
+        self.evaluate_class(
+            imaugs.OverlayOntoBackgroundImage(
+                background_image=EMOJI_PATH, overlay_size=0.5, scale_bg=True
+            ),
+            fname="overlay_onto_background_image",
         )
 
     def test_OverlayOntoScreenshot(self):
         self.evaluate_class(
-            imaugs.OverlayOntoScreenshot(),
+            imaugs.OverlayOntoScreenshot(resize_src_to_match_template=False),
             fname="overlay_onto_screenshot",
             metadata_exclude_keys=[
-                "dst_height", "dst_width", "intensity", "template_filepath"
+                "dst_bboxes",
+                "dst_height",
+                "dst_width",
+                "intensity",
+                "template_filepath",
             ],
         )
 
     def test_OverlayStripes(self):
-        self.evaluate_class(
-            imaugs.OverlayStripes(), fname="overlay_stripes"
-        )
+        self.evaluate_class(imaugs.OverlayStripes(), fname="overlay_stripes")
 
     @unittest.skip("Failing on some envs, will fix")
     def test_OverlayText(self):
@@ -157,9 +196,6 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_ShufflePixels(self):
         self.evaluate_class(imaugs.ShufflePixels(factor=0.5), fname="shuffle_pixels")
-
-    def test_Skew(self):
-        self.evaluate_class(imaugs.Skew(), fname="skew")
 
     def test_VFlip(self):
         self.evaluate_class(imaugs.VFlip(), fname="vflip")
