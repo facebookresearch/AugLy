@@ -11,6 +11,7 @@ requirements = [
     if '@' not in r
 ]
 
+<<<<<<< 2448851309b563f00a0f165bc919b6a858de1267
 extra_requirements = {
     "av": [
         r
@@ -19,13 +20,19 @@ extra_requirements = {
     ]
 }
 
+=======
+>>>>>>> Update `torchaudio` to 0.9 for `tensorflow-gpu` compatibility (#43)
 with open("README.md", encoding="utf8") as f:
     readme = f.read()
 
 
 setuptools.setup(
     name="augly",
+<<<<<<< 2448851309b563f00a0f165bc919b6a858de1267
     version="0.1.6",
+=======
+    version="0.1.2",
+>>>>>>> Update `torchaudio` to 0.9 for `tensorflow-gpu` compatibility (#43)
     description="A data augmentations library for audio, image, text, & video.",
     long_description=readme,
     long_description_content_type="text/markdown",
