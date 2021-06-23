@@ -29,29 +29,28 @@ If your changes touch the `audio` module, please run all of the `audio` tests an
 
 ### Audio
 ```bash
-python -m unittest augly.tests.audio_tests.functional_unit_tests
-python -m unittest augly.tests.audio_tests.transforms_unit_tests
+python -m unittest discover -s augly/tests/audio_tests/ -p "*"
 ```
 
 ### Image
 ```bash
-python -m unittest augly.tests.image_tests.functional_unit_tests
-python -m unittest augly.tests.image_tests.transforms_unit_tests
-python -m unittest augly.tests.image_tests.pytorch_test  # Note: must have torchvision installed
+python -m unittest discover -s augly/tests/image_tests/ -p "*_tests.py"
+# Or `python -m unittest discover -s augly/tests/image_tests/ -p "*.py"` to run pytorch test too (must install `torchvision` to run)
 ```
 
 ### Text
 ```bash
-python -m unittest augly.tests.text_tests.functional_unit_tests
-python -m unittest augly.tests.text_tests.transforms_unit_tests
+python -m unittest discover -s augly/tests/text_tests/ -p "*"
 ```
 
 ### Video
 ```bash
-python -m unittest augly.tests.video_tests.transforms.composite_tests
-python -m unittest augly.tests.video_tests.transforms.cv2_tests
-python -m unittest augly.tests.video_tests.transforms.ffmpeg_tests
-python -m unittest augly.tests.video_tests.transforms.image_based_tests
+python -m unittest discover -s augly/tests/video_tests/ -p "*"
+```
+
+### All
+```bash
+python -m unittest discover -s augly/tests/ -p "*"
 ```
 
 ## Other testing
