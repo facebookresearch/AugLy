@@ -132,7 +132,7 @@ def apply_lambda(
     @param sample_rate: the audio sample rate of the inputted audio
 
     @param aug_function: the augmentation function to be applied onto the audio (should
-        expect the audio nd.nparray & sample rate int as input, and return the
+        expect the audio np.nparray & sample rate int as input, and return the
         transformed audio & sample rate)
 
     @param output_path: the path in which the resulting audio will be stored. If None,
@@ -701,7 +701,7 @@ def normalize(
 
     @param norm: the type of norm to compute:
         - np.inf: maximum absolute value
-        - -np.inf: mininum absolute value
+        - -np.inf: minimum absolute value
         - 0: number of non-zeros (the support)
         - float: corresponding l_p norm
         - None: no normalization is performed
