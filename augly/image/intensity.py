@@ -43,7 +43,7 @@ def brightness_intensity(factor: float, **kwargs) -> float:
     return mult_factor_intensity_helper(factor)
 
 def skew_intensity(level: float, **kwargs):
-    MAX_LEVEL = 100.0  # Please CHANGE this to something that you think makes sense.
+    MAX_LEVEL = 100.0
     return min((level / MAX_LEVEL) * 100.0, 100.0)
 
 def change_aspect_ratio_intensity(
