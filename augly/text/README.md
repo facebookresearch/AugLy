@@ -39,6 +39,5 @@ aug_texts = transform(texts)
 
 You can run our text unit tests if you have cloned `augly` (see [here](../../README.md)) by running the following:
 ```
-python -m unittest augly.tests.text_tests.functional_unit_tests
-python -m unittest augly.tests.text_tests.transforms_unit_tests
+python -m unittest discover -s augly/tests/text_tests/ -p "*"
 ```
