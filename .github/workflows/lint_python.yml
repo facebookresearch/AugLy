@@ -16,7 +16,7 @@ jobs:
       - run: pip install torchvision -r requirements.txt
       - run: pip install -e .
       - run: mypy --ignore-missing-imports . || true
-      - run: python -m unittest augly.tests.audio_tests.functional_unit_tests
+      # - run: python -m unittest augly.tests.audio_tests.functional_unit_tests
       - run: python -m unittest discover
       - run: pytest .
                --ignore-glob="*/audio_tests/base_unit_test.py"
