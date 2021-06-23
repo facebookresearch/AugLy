@@ -13,9 +13,11 @@ jobs:
       - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
       - run: flake8 . --count --exit-zero --max-complexity=15 --max-line-length=90 --show-source --statistics
       - run: isort --check-only --profile black . || true
-      - run: pip install -r requirements.txt
+      - run: pip install torchvision -r requirements.txt
       - run: pip install -e .
       - run: mypy --ignore-missing-imports . || true
+      - run: python -m unittest augly.tests.audio_tests.functional_unit_tests
+      - run: python -m unittest discover
       - run: pytest .
                --ignore-glob="*/audio_tests/base_unit_test.py"
                --ignore-glob="*/image_tests/pytorch_test.py"
