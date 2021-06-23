@@ -62,6 +62,11 @@ We provide various media assets to use with some of our augmentations. These ass
 2. PyPi package: https://pypi.org/project/augly/
 3. Examples: https://github.com/facebookresearch/AugLy/tree/main/examples
 
+## Uses of AugLy in the wild
+1. [Image Similarity Challenge](https://ai.facebook.com/blog/the-image-similarity-challenge-and-data-set-for-detecting-image-manipulation) - a NeurIPS 2021 competition run by Facebook AI with $200k in prizes, currently open for sign ups; also produced the DISC21 dataset, which will be made publicly available after the challenge concludes!
+2. [DeepFake Detection Challenge](https://ai.facebook.com/datasets/dfdc/) - a Kaggle competition run by Facebook AI in 2020 with $1 million in prizes; also produced the [DFDC dataset](https://dfdc.ai)
+3. [SimSearchNet](https://ai.facebook.com/blog/using-ai-to-detect-covid-19-misinformation-and-exploitative-content/) - a near-duplicate detection model developed at Facebook AI to identify infringing content on our platforms
+
 ## Citation
 
 If you use AugLy in your work, please cite:
