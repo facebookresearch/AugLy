@@ -24,8 +24,6 @@ Steps to reproduce the behavior:
 
 ## Environment
 
-```
-
  - AugLy Version (e.g., 0.1.2):
  - OS (e.g., Linux):
  - How you installed AugLy (`pip install augly`, clone & `pip install -e AugLy`):
