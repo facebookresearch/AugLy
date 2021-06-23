@@ -26,7 +26,7 @@ jobs:
           python-version: '3.9'
       - name: Set up requirements
         run: |
-	  $CONDA/bin/conda create -n augly_test
+          $CONDA/bin/conda create -n augly_test
           $CONDA/bin/conda activate augly_test
           $CONDA/bin/conda install pip
           pip install -e .
