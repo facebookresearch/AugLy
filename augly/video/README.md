@@ -78,7 +78,12 @@ TRANSFORMS(video_path, out_video_path)  # transformed video now stored in `out_v
 
 ## Unit Tests
 
-You can run our video unit tests by cloning `augly` (see [here](../../README.md)) and then running the following:
+You can run our video unit tests if you have cloned `augly` (see [here](../../README.md)) by running the following:
+```bash
+python -m unittest discover -s augly/tests/video_tests/ -p "*"
+```
+
+Note: some of the video tests take a while to run (up to a few minutes). If you want to run the 4 test suites individually, you can run any of the following commands (listed in order of increasing runtime):
 ```bash
 python -m unittest augly.tests.video_tests.transforms.composite_tests
 python -m unittest augly.tests.video_tests.transforms.cv2_tests
