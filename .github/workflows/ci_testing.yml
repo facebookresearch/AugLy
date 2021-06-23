@@ -15,26 +15,21 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Set up requirements
-        with: 
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
           python-version: '3.9'
+      - name: Set up requirements
         run: |
-          python -m pip install --upgrade pip
+          $CONDA/bin/conda install pip
           pip install -e .
-          sudo apt-get install python3-magic
-          sudo add-apt-repository ppa:jonathonf/ffmpeg-4
-          apt install ffmpeg
-          pip install torchvision
+          $CONDA/bin/conda install -c conda-forge python-magic
+          $CONDA/bin/conda install -c conda-forge ffmpeg
+          $CONDA/bin/conda install -c pytorch torchvision
       - name: Run unit tests
         run: python -m unittest discover -s augly/tests/ -p "*"
