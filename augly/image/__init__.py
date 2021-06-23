@@ -117,7 +117,6 @@ __all__ = [
     "ApplyLambda",
     "Blur",
     "Brightness",
-    "Skew",
     "ChangeAspectRatio",
     "ColorJitter",
     "Compose",
@@ -216,5 +215,6 @@ __all__ = [
     "scale_intensity",
     "sharpen_intensity",
     "shuffle_pixels_intensity",
+    "Skew",
     "vflip_intensity",
 ]
