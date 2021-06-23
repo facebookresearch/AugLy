@@ -1819,10 +1819,9 @@ def skew(
 
     @returns: the augmented PIL Image
     """
-    func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    func_kwargs = imutils.get_func_kwargs(metadata, locals())
     
     image = imutils.validate_and_load_image(image)
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
     
     level = float(np.random.uniform(low=0.1, high=level)) * max_level / 10
     w = image.size[0]
