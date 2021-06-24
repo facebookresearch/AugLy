@@ -1,23 +1,21 @@
 name: lint_python
-on: [pull_request, push]
+on:
+  pull_request:
+    branches: main
+  push:
+    branches: main
 jobs:
   lint_python:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - run: sudo apt-get update
-      - run: sudo apt-get install --fix-missing ffmpeg python3-magic python3-soundfile
-      - run: pip install bandit black codespell flake8 isort pyre-check pytest pyupgrade safety torchvision
+      - run: pip install bandit black codespell flake8 isort pyre-check pytest pyupgrade safety
       - run: bandit --recursive --skip B101,B301,B303,B311,B403 .
       - run: black --check . || true
       - run: codespell --ignore-words-list="tha" --skip="*/text_tests,*/misspelling.json"
       - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
       - run: flake8 . --count --exit-zero --max-complexity=15 --max-line-length=90 --show-source --statistics
       - run: isort --check-only --profile black . || true
-      - run: pip install -e .
-      - run: brew install watchman
-      - run: pyre --source-directory "." --noninteractive check || true
-      - run: pytest . --ignore=augly/tests/image_tests/pytorch_test.py  # Until PR #59 lands
       - run: shopt -s globstar && pyupgrade --py36-plus **/*.py || true
       - run: safety check

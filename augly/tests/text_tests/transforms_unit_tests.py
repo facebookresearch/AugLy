@@ -41,7 +41,6 @@ def are_equal_metadata(
     return True
 
 
-
 class TransformsTextUnitTest(unittest.TestCase):
     def test_import(self) -> None:
         try:
