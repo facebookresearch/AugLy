@@ -8,17 +8,15 @@ jobs:
       - uses: actions/setup-python@v2
       - run: sudo apt-get update
       - run: sudo apt-get install --fix-missing ffmpeg python3-magic python3-soundfile
-      - run: pip install bandit black codespell flake8 isort mypy pytest pyupgrade safety
+      - run: pip install bandit black codespell flake8 isort pyre pytest pyupgrade safety torchvision
       - run: bandit --recursive --skip B101,B301,B303,B311,B403 .
       - run: black --check . || true
-      - run: codespell --ignore-words-list="tha" --skip="*/text_tests,*/misspelling.json" || true  # Until #51 lands
+      - run: codespell --ignore-words-list="tha" --skip="*/text_tests,*/misspelling.json"
       - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
       - run: flake8 . --count --exit-zero --max-complexity=15 --max-line-length=90 --show-source --statistics
       - run: isort --check-only --profile black . || true
-      - run: pip install torchvision -r requirements.txt
       - run: pip install -e .
-      - run: mypy --ignore-missing-imports . || true
-      - run: python -m unittest discover -s augly/tests/image_tests/ -p "*" || true
-      - run: pytest . || true
+      - run: pyre . || true
+      - run: pytest . --ignore=augly/tests/image_tests/pytorch_test.py  # Until PR #59 lands
       - run: shopt -s globstar && pyupgrade --py36-plus **/*.py || true
       - run: safety check
