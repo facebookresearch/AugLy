@@ -758,7 +758,7 @@ def overlay_emoji(
 
     @param emoji_size: size of the emoji is emoji_size * height of the original image
 
-    @param x_pos: postion of emoji relative to the image width
+    @param x_pos: position of emoji relative to the image width
 
     @param y_pos: position of emoji relative to the image height
 
@@ -821,7 +821,7 @@ def overlay_image(
     @param overlay_size: size of the overlaid image is overlay_size * height
         of the original image
 
-    @param x_pos: postion of overlaid image relative to the image width
+    @param x_pos: position of overlaid image relative to the image width
 
     @param y_pos: position of overlaid image relative to the image height
 
