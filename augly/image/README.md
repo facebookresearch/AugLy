@@ -42,7 +42,7 @@ COLOR_JITTER_PARAMS = {
 }
 
 AUGMENTATIONS = [
-    imaugs.IGFilter(),
+    imaugs.Blur(),
     imaugs.ColorJitter(**COLOR_JITTER_PARAMS),
     imaugs.OneOf(
         [imaugs.ScreenshotOverlay(), imaugs.EmojiOverlay(), imaugs.TextOverlay()]
