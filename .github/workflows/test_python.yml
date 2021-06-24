@@ -16,4 +16,4 @@ jobs:
       - run: pip install -e .
       - run: brew install watchman  # ~2 minutes
       - run: pyre --source-directory "." --noninteractive check || true
-      - run: pytest . --ignore=augly/tests/image_tests/pytorch_test.py  # Until PR #59 lands
+      - run: pytest .
