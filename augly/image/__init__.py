@@ -184,6 +184,7 @@ __all__ = [
     "scale",
     "sharpen",
     "shuffle_pixels",
+    "skew",
     "vflip",
     "apply_lambda_intensity",
     "blur_intensity",
@@ -215,6 +216,6 @@ __all__ = [
     "scale_intensity",
     "sharpen_intensity",
     "shuffle_pixels_intensity",
-    "Skew",
+    "Skew_intensity",
     "vflip_intensity",
 ]
