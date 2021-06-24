@@ -219,6 +219,8 @@ class Skew(BaseTransform):
         @param level: Level of the operation that will be in [0, the maximum level]
 
         @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
+
+        @param level: Level of the operation that will be in [0, The maximum value of level]
     
         @param max_level: Maximum value that the operation can have. This will be
             scaled to level / PARAMETER_MAX.
