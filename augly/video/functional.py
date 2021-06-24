@@ -166,9 +166,9 @@ def blend_videos(
     @param overlay_size: size of the overlaid video is overlay_size * height of
         the background video
 
-    @param x_pos: postion of overlaid video relative to the background video width
+    @param x_pos: position of overlaid video relative to the background video width
 
-    @param y_pos: postion of overlaid video relative to the background video height
+    @param y_pos: position of overlaid video relative to the background video height
 
     @param use_second_audio: use the audio of the overlaid video rather than the audio
         of the background video
@@ -883,7 +883,7 @@ def overlay(
     @param video_path: the path to the video to be augmented
 
     @param overlay_path: the path to the media (image or video) that will be
-        overlayed onto the video
+        overlaid onto the video
 
     @param output_path: the path in which the resulting video will be stored.
         If not passed in, the original video file will be overwritten
@@ -891,14 +891,14 @@ def overlay(
     @param overlay_size: size of the overlaid media with respect to the background
         video. If set to None, the original size of the overlaid media is used
 
-    @param x_factor: specifies where the left side of the overlayed media should be
+    @param x_factor: specifies where the left side of the overlaid media should be
         placed, relative to the video width
 
-    @param y_factor: specifies where the top side of the overlayed media should be
+    @param y_factor: specifies where the top side of the overlaid media should be
         placed, relative to the video height
 
     @param use_overlay_audio: if set to True and the media type is a video, the audio
-        of the overlayed video will be used instead of the main/background video's audio
+        of the overlaid video will be used instead of the main/background video's audio
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
@@ -1075,10 +1075,10 @@ def overlay_onto_background_video(
     @param overlay_size: size of the overlaid media with respect to the background
         video. If set to None, the original size of the overlaid media is used
 
-    @param x_factor: specifies where the left side of the overlayed media should be
+    @param x_factor: specifies where the left side of the overlaid media should be
         placed, relative to the video width
 
-    @param y_factor: specifies where the top side of the overlayed media should be
+    @param y_factor: specifies where the top side of the overlaid media should be
         placed, relative to the video height
 
     @param use_background_audio: if set to True and the media type is a video, the
