@@ -152,6 +152,7 @@ __all__ = [
     "Scale",
     "Sharpen",
     "ShufflePixels",
+    "Skew",
     "VFlip",
     "apply_lambda",
     "aug_np_wrapper",
