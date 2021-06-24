@@ -17,8 +17,7 @@ jobs:
       - run: isort --check-only --profile black . || true
       - run: pip install -e .
       - run: brew install watchman
-      - run: pyre init
-      - run: pyre || true
+      - run: pyre --source-directory "." --noninteractive check || true
       - run: pytest . --ignore=augly/tests/image_tests/pytorch_test.py  # Until PR #59 lands
       - run: shopt -s globstar && pyupgrade --py36-plus **/*.py || true
       - run: safety check
