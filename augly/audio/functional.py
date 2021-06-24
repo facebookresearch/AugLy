@@ -132,7 +132,7 @@ def apply_lambda(
     @param sample_rate: the audio sample rate of the inputted audio
 
     @param aug_function: the augmentation function to be applied onto the audio (should
-        expect the audio np.nparray & sample rate int as input, and return the
+        expect the audio np.ndarray & sample rate int as input, and return the
         transformed audio & sample rate)
 
     @param output_path: the path in which the resulting audio will be stored. If None,

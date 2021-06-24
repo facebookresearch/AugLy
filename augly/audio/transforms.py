@@ -144,7 +144,7 @@ class ApplyLambda(BaseTransform):
     ):
         """
         @param aug_function: the augmentation function to be applied onto the audio
-            (should expect the audio np.nparray & sample rate int as input, and return
+            (should expect the audio np.ndarray & sample rate int as input, and return
             the transformed audio & sample rate)
 
         @param p: the probability of the transform being applied; default value is 1.0
