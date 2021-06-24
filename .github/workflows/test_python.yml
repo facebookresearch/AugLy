@@ -1,0 +1,19 @@
+name: test_python
+on:
+  pull_request:
+    branches: main
+  push:
+    branches: main
+jobs:
+  test_python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: sudo apt-get update
+      - run: sudo apt-get install --fix-missing ffmpeg python3-soundfile
+      - run: pip torchvision
+      - run: pip install -e .
+      - run: brew install watchman  # ~2 minutes
+      - run: pyre --source-directory "." --noninteractive check || true
+      - run: pytest . --ignore=augly/tests/image_tests/pytorch_test.py  # Until PR #59 lands
