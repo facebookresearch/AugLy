@@ -6,7 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - run: sudo apt-get install ffmpeg python3-magic python3-soundfile
+      - run: sudo apt-get update
+      - run: sudo apt-get install --fix-missing ffmpeg python3-magic python3-soundfile
       - run: pip install bandit black codespell flake8 isort mypy pytest pyupgrade safety
       - run: bandit --recursive --skip B101,B301,B303,B311,B403 .
       - run: black --check . || true
