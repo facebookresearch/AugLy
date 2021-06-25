@@ -2,7 +2,7 @@
 
 ## Installation Notes
 
-Try running some AugLy video augmentations in [Colab](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_video.ipynb)!
+Try running some AugLy video augmentations in [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_video.ipynb)!
 
 For a full list of available augmentations, see [here](__init__.py).
 

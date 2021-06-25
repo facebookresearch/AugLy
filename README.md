@@ -9,6 +9,9 @@
   <a href="https://pypi.python.org/pypi/augly">
     <img alt="PyPI Version" src="https://img.shields.io/pypi/v/augly"/>
   </a>
+  <a href="https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_image.ipynb">
+    <img alt="Image Colab notebook" src="https://colab.research.google.com/assets/colab-badge.svg"/>
+  </a>
   <a href="https://doi.org/10.5281/zenodo.5014032">
     <img  alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.5014032.svg">
   </a>
