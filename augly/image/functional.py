@@ -1824,8 +1824,7 @@ def skew(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     
     level = float(np.random.uniform(low=0.1, high=level)) * max_level / 10
-    w = image.size[0]
-    h = image.size[1]
+    w, h = image.size
     
     if np.random.uniform() > 0.5:
         level = -level
