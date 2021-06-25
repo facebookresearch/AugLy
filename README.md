@@ -12,7 +12,7 @@ AugLy is a great library to utilize for augmenting your data in model training, 
 
 To see more examples of augmentations, open the Colab notebooks in the README for each modality! (e.g. image [README](augly/image) & [Colab](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_image.ipynb))
 
-The library is Python-based and requires at least Python 3.6, as we use dataclasses.
+The library is Python-based and requires at least Python 3.7, as we use dataclasses.
 
 ## Authors
 
@@ -22,7 +22,7 @@ The library is Python-based and requires at least Python 3.6, as we use dataclas
 
 ## Installation
 
-`AugLy` is a Python 3.6+ library. It can be installed with:
+`AugLy` is a Python 3.7+ library. It can be installed with:
 
 ```bash
 pip install augly
