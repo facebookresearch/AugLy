@@ -73,10 +73,11 @@ If you use AugLy in your work, please cite:
 
 ```bibtex
 @misc{bitton2021augly,
-  author =       {Bitton, Joanna and Papakipos, Zoe},
-  title =        {AugLy: A data augmentations library for audio, image, text, and video.},
+  author       = {Joanna Bitton and Zoe Papakipos},
+  title        = {AugLy: A data augmentations library for audio, image, text, and video.},
+  year         = {2021},
   howpublished = {\url{https://github.com/facebookresearch/AugLy}},
-  year =         {2021}
+  doi          = {10.5281/zenodo.5014032}
 }
 ```
 
