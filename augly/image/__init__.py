@@ -217,6 +217,6 @@ __all__ = [
     "scale_intensity",
     "sharpen_intensity",
     "shuffle_pixels_intensity",
-    "Skew_intensity",
+    "skew_intensity",
     "vflip_intensity",
 ]
