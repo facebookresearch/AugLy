@@ -42,7 +42,7 @@ COLOR_JITTER_PARAMS = {
 }
 
 AUGMENTATIONS = [
-    imaugs.IGFilter(),
+    imaugs.Blur(),
     imaugs.ColorJitter(**COLOR_JITTER_PARAMS),
     imaugs.OneOf(
         [imaugs.ScreenshotOverlay(), imaugs.EmojiOverlay(), imaugs.TextOverlay()]
@@ -71,13 +71,12 @@ np_aug_img = aug_np_wrapper(np_image, overlay_emoji, **{'opacity': 0.5, 'y_pos':
 
 ## Unit Tests
 
-You can run our image unit tests if you have cloned `augly` (see [here](../../README.md)) by running the following:
+You can run our normal image unit tests if you have cloned `augly` (see [here](../../README.md)) by running the following:
 ```bash
-python -m unittest augly.tests.image_tests.functional_unit_tests
-python -m unittest augly.tests.image_tests.transforms_unit_tests
+python -m unittest discover -s augly/tests/image_tests/ -p "*_tests.py"
 ```
 
-You can also run the pytorch unit test, but note that you must have torchvision installed in order to run it (which you will need anyway if you're interested in integrating AugLy transforms with PyTorch):
+Note: If you want to additionally run the pytorch unit test (you must have torchvision installed), you can run:
 ```bash
-python -m unittest augly.tests.image_tests.pytorch_test
+python -m unittest discover -s augly/tests/image_tests/ -p "*"
 ```

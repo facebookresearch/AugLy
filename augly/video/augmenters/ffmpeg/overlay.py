@@ -20,7 +20,7 @@ class VideoAugmenterByOverlay(BaseFFMPEGAugmenter):
     ):
         assert is_image_file(overlay_path) or is_video_file(
             overlay_path
-        ), "Overlayed media type not supported: please overlay either an image or video"
+        ), "Overlaid media type not supported: please overlay either an image or video"
         assert 0 <= x_factor <= 1, "x_factor must be a value in the range [0, 1]"
         assert 0 <= y_factor <= 1, "y_factor must be a value in the range [0, 1]"
         assert (

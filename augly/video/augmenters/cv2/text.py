@@ -121,7 +121,7 @@ class VideoDistractorByText(BaseCV2Augmenter):
         height, width = raw_frame.shape[:2]
 
         text = next(self.texts)
-        font, chars = next(self.fonts) # pyre-ignore
+        font, chars = next(self.fonts)  # pyre-ignore
         fontscale = next(self.fontscales)
         color = next(self.colors)
         thickness = next(self.thickness)

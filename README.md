@@ -2,6 +2,21 @@
   <img src="logo.svg" alt="logo" width="70%" />
 </p>
 
+<div align="center">
+  <a href="https://github.com/facebookresearch/AugLy/actions">
+    <img alt="Github Actions" src="https://github.com/facebookresearch/AugLy/actions/workflows/test_python.yml/badge.svg"/>
+  </a>
+  <a href="https://pypi.python.org/pypi/augly">
+    <img alt="PyPI Version" src="https://img.shields.io/pypi/v/augly"/>
+  </a>
+  <a href="https://doi.org/10.5281/zenodo.5014032">
+    <img  alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.5014032.svg">
+  </a>
+  <a href="https://github.com/facebookresearch/AugLy/blob/main/CONTRIBUTING.md">
+    <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"/>
+  </a>
+</div>
+
 ----------------------
 
 AugLy is a data augmentations library that currently supports four modalities ([audio](augly/audio), [image](augly/image), [text](augly/text) & [video](augly/video)) and over 100 augmentations. Each modality’s augmentations are contained within its own sub-library. These sub-libraries include both function-based and class-based transforms, composition operators, and have the option to provide metadata about the transform applied, including its intensity.
@@ -62,16 +77,22 @@ We provide various media assets to use with some of our augmentations. These ass
 2. PyPi package: https://pypi.org/project/augly/
 3. Examples: https://github.com/facebookresearch/AugLy/tree/main/examples
 
+## Uses of AugLy in the wild
+1. [Image Similarity Challenge](https://ai.facebook.com/blog/the-image-similarity-challenge-and-data-set-for-detecting-image-manipulation) - a NeurIPS 2021 competition run by Facebook AI with $200k in prizes, currently open for sign ups; also produced the DISC21 dataset, which will be made publicly available after the challenge concludes!
+2. [DeepFake Detection Challenge](https://ai.facebook.com/datasets/dfdc/) - a Kaggle competition run by Facebook AI in 2020 with $1 million in prizes; also produced the [DFDC dataset](https://dfdc.ai)
+3. [SimSearchNet](https://ai.facebook.com/blog/using-ai-to-detect-covid-19-misinformation-and-exploitative-content/) - a near-duplicate detection model developed at Facebook AI to identify infringing content on our platforms
+
 ## Citation
 
 If you use AugLy in your work, please cite:
 
 ```bibtex
 @misc{bitton2021augly,
-  author =       {Bitton, Joanna and Papakipos, Zoe},
-  title =        {AugLy: A data augmentations library for audio, image, text, and video.},
+  author       = {Joanna Bitton and Zoe Papakipos},
+  title        = {AugLy: A data augmentations library for audio, image, text, and video.},
+  year         = {2021},
   howpublished = {\url{https://github.com/facebookresearch/AugLy}},
-  year =         {2021}
+  doi          = {10.5281/zenodo.5014032}
 }
 ```
 

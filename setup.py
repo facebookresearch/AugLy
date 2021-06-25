@@ -3,20 +3,24 @@
 
 import setuptools
 from pathlib import Path
-from typing import Dict
 
 
 requirements = [
     r
-    for r in Path(f"requirements.txt").read_text().splitlines()
+    for r in Path("requirements.txt").read_text().splitlines()
     if '@' not in r
 ]
+
+with open("README.md", encoding="utf8") as f:
+    readme = f.read()
 
 
 setuptools.setup(
     name="augly",
-    version="0.1.1",
+    version="0.1.2",
     description="A data augmentations library for audio, image, text, & video.",
+    long_description=readme,
+    long_description_content_type="text/markdown",
     url="https://github.com/facebookresearch/AugLy",
     author="Zoe Papakipos and Joanna Bitton",
     author_email="zoep@fb.com",
