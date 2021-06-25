@@ -2,6 +2,21 @@
   <img src="logo.svg" alt="logo" width="70%" />
 </p>
 
+<div align="center">
+  <a href="https://github.com/facebookresearch/AugLy/actions">
+    <img alt="Github Actions" src="https://github.com/facebookresearch/AugLy/actions/workflows/test_python.yml/badge.svg"/>
+  </a>
+  <a href="https://pypi.python.org/pypi/augly">
+    <img alt="PyPI Version" src="https://img.shields.io/pypi/v/augly"/>
+  </a>
+  <a href="https://doi.org/10.5281/zenodo.5014032">
+    <img  alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.5014032.svg">
+  </a>
+  <a href="https://github.com/facebookresearch/AugLy/blob/main/CONTRIBUTING.md">
+    <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"/>
+  </a>
+</div>
+
 ----------------------
 
 AugLy is a data augmentations library that currently supports four modalities ([audio](augly/audio), [image](augly/image), [text](augly/text) & [video](augly/video)) and over 100 augmentations. Each modality’s augmentations are contained within its own sub-library. These sub-libraries include both function-based and class-based transforms, composition operators, and have the option to provide metadata about the transform applied, including its intensity.
