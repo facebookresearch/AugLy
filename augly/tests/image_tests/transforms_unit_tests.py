@@ -25,8 +25,8 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_Brightness(self):
         self.evaluate_class(imaugs.Brightness(), fname="brightness")
-
-    def test_skew(self):
+    
+    def test_Skew(self):
         self.evaluate_class(imaugs.Skew(), fname="skew")
 
     def test_ChangeAspectRatio(self):
