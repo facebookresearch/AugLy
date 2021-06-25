@@ -17,7 +17,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        with open(VIDEO_METADATA_PATH, "r") as f:
+        with open(VIDEO_METADATA_PATH) as f:
             cls.metadata = json.load(f)
 
     def test_ApplyLambda(self):

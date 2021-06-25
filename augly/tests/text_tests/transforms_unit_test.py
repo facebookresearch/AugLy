@@ -58,7 +58,7 @@ class TransformsTextUnitTest(unittest.TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        with open(TEXT_METADATA_PATH, "r") as f:
+        with open(TEXT_METADATA_PATH) as f:
             cls.expected_metadata = json.load(f)
 
         cls.texts = [

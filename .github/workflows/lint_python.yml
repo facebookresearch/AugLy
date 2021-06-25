@@ -17,5 +17,5 @@ jobs:
       - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
       - run: flake8 . --count --exit-zero --max-complexity=15 --max-line-length=90 --show-source --statistics
       - run: isort --check-only --profile black . || true
-      - run: shopt -s globstar && pyupgrade --py36-plus **/*.py || true
+      - run: shopt -s globstar && pyupgrade --py36-plus **/*.py
       - run: safety check

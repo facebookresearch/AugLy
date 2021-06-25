@@ -16,7 +16,7 @@ class TransformsAudioUnitTest(BaseAudioUnitTest):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        with open(AUDIO_METADATA_PATH, "r") as f:
+        with open(AUDIO_METADATA_PATH) as f:
             cls.metadata = json.load(f)
 
     def test_AddBackgroundNoise(self):

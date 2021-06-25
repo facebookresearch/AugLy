@@ -17,7 +17,7 @@ Base Classes for Transforms
 """
 
 
-class BaseTransform(object):
+class BaseTransform:
     def __init__(self, p: float = 1.0):
         """
         @param p: the probability of the transform being applied; default value is 1.0

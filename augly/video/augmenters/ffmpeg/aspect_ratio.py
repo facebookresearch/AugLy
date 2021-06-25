@@ -34,7 +34,7 @@ class VideoAugmenterByAspectRatio(BaseFFMPEGAugmenter):
         if isinstance(self.aspect_ratio, float):
             aspect_ratio = float(self.aspect_ratio)
         else:
-            num, denom = [int(x) for x in str(self.aspect_ratio).split(":")]
+            num, denom = (int(x) for x in str(self.aspect_ratio).split(":"))
             aspect_ratio = num / denom
 
         new_w = int(math.sqrt(area * aspect_ratio))

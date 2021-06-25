@@ -27,7 +27,7 @@ CHARACTER_TYPES = {
 }
 
 
-class InsertionAugmenter(object):
+class InsertionAugmenter:
     """
     Inserts various types of characters (including zero-width or punctuation),
     which in turn breaks up the text.
