@@ -20,6 +20,7 @@ Utility Functions: Augmentation Application Functions
 - For Applying Image Functions to Each Frame
 """
 
+
 def apply_ffmpeg_augmenter(
     augmenter: af.BaseFFMPEGAugmenter, video_path: str, output_path: Optional[str]
 ) -> None:
