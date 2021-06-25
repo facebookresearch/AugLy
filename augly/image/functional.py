@@ -1830,13 +1830,18 @@ def skew(
     if np.random.uniform() > 0.5:
         level = -level
         
-    if axis == 'x-axis':
-        aug_img = image.transform((w, h),Image.AFFINE, (1, level, 0, 0, 1, 0),
-                                resample=Image.BILINEAR)
-        imutils.get_metadata(metadata=metadata, function_name="skew", aug_img=aug_img, **func_kwargs)
-        return aug_img
-    elif axis == 'y-axis':
-        aug_img = image.transform((w, h),Image.AFFINE, (1, 0, 0, level, 1, 0),
-                                resample=Image.BILINEAR)
-        imutils.get_metadata(metadata=metadata, function_name="skew", aug_img=aug_img, **func_kwargs)
-        return aug_img
+    if axis == "x-axis":
+        data = (1, level, 0, 0, 1, 0)
+    elif axis == "y-axis":
+        data = (1, 0, 0, level, 1, 0)
+    else:
+        raise AssertionError(
+            f"Invalid 'axis' value: Got '{axis}', expected 'x-axis' or 'y-axis'"
+        )
+    
+    aug_image = image.transform((w, h),Image.AFFINE, data, resample=Image.BILINEAR)
+    imutils.get_metadata(
+        metadata=metadata, function_name="skew", aug_img=aug_img, **func_kwargs)
+    )
+    
+    return aug_image
