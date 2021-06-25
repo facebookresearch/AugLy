@@ -4,13 +4,16 @@
 
 <div align="center">
   <a href="https://github.com/facebookresearch/AugLy/actions">
-  <img alt="Github Actions" src="https://github.com/facebookresearch/AugLy/actions/workflows/test_python.yml/badge.svg"/>
+    <img alt="Github Actions" src="https://github.com/facebookresearch/AugLy/actions/workflows/test_python.yml/badge.svg"/>
   </a>
   <a href="https://pypi.python.org/pypi/augly">
-  <img alt="PyPI Version" src="https://img.shields.io/pypi/v/augly"/>
+    <img alt="PyPI Version" src="https://img.shields.io/pypi/v/augly"/>
+  </a>
+  <a href="https://doi.org/10.5281/zenodo.5014032">
+    <img  alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.5014032.svg">
   </a>
   <a href="https://github.com/facebookresearch/AugLy/blob/main/CONTRIBUTING.md">
-  <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"/>
+    <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"/>
   </a>
 </div>
 
