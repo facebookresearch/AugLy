@@ -225,7 +225,7 @@ class Skew(BaseTransform):
         @param max_level: Maximum value that the operation can have. This will be
             scaled to level / PARAMETER_MAX.
             
-        @param axis: Axis with respect to x-axis or y-axis
+        @param axis: Axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
         """
         super().__init__(p)
         self.level = level
