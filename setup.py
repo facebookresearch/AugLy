@@ -1,38 +1,28 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-import setuptools
 from pathlib import Path
+
+import setuptools
 
 
 requirements = [
-    r
-    for r in Path("requirements.txt").read_text().splitlines()
-    if '@' not in r
+    r for r in Path("requirements.txt").read_text().splitlines() if "@" not in r
 ]
 
-<<<<<<< 2448851309b563f00a0f165bc919b6a858de1267
 extra_requirements = {
     "av": [
-        r
-        for r in Path("av_requirements.txt").read_text().splitlines()
-        if '@' not in r
+        r for r in Path("av_requirements.txt").read_text().splitlines() if "@" not in r
     ]
 }
 
-=======
->>>>>>> Update `torchaudio` to 0.9 for `tensorflow-gpu` compatibility (#43)
 with open("README.md", encoding="utf8") as f:
     readme = f.read()
 
 
 setuptools.setup(
     name="augly",
-<<<<<<< 2448851309b563f00a0f165bc919b6a858de1267
-    version="0.1.6",
-=======
-    version="0.1.2",
->>>>>>> Update `torchaudio` to 0.9 for `tensorflow-gpu` compatibility (#43)
+    version="0.1.9",
     description="A data augmentations library for audio, image, text, & video.",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -46,7 +36,7 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent"
+        "Operating System :: OS Independent",
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.6",
 )
