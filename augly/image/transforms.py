@@ -213,7 +213,7 @@ class Brightness(BaseTransform):
         return F.brightness(image, factor=self.factor, metadata=metadata)
 
 class Skew(BaseTransform):
-    def __init__(self, level: float = 1.0, max_level: float = 10.0, axis: str = "x-axis"):
+    def __init__(self, level: float = 1.0, max_level: float = 10.0, axis: str = "x-axis", p: float = 1.0):
         
         """
         @param level: Level of the operation that will be in [0, the maximum level]
