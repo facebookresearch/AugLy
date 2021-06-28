@@ -1840,7 +1840,6 @@ def skew(
     
     aug_image = image.transform((w, h),Image.AFFINE, data, resample=Image.BILINEAR)
     imutils.get_metadata(
-        metadata=metadata, function_name="skew", aug_img=aug_img, **func_kwargs)
-    )
+        metadata=metadata, function_name="skew", aug_img=aug_image, **func_kwargs)
     
     return aug_image
