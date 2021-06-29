@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
+import os
 import setuptools
 from pathlib import Path
 
@@ -33,7 +34,7 @@ with open("README.md", encoding="utf8") as f:
 
 setuptools.setup(
     name="augly",
-    version="0.1.3",
+    version="0.1.4",
     description="A data augmentations library for audio, image, text, & video.",
     long_description=readme,
     long_description_content_type="text/markdown",
