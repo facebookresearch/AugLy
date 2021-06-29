@@ -1,0 +1,6 @@
+audioread==2.1.9
+librosa==0.8.1
+SoundFile==0.10.3.post1
+torch==1.9.0
+torchaudio==0.9.0
+
