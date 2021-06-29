@@ -1,8 +1,18 @@
 # Video
 
-## Installation Notes
+## Installation
 
-In order to run the video tests and/or use the augmentations, please install `ffmpeg`. If you're using conda you can do this with:
+If you plan to use only the video augmentations from AugLy, you can install using the following command:   
+```bash 
+pip install augly[video]
+```
+
+Otherwise if you want to use other modealities as well, you can install AugLy with the required dependencies for all modalities, which just means the installation will be a bit heavier:
+```bash
+pip install augly[all]
+```
+
+In order to run the video tests and/or use the augmentations, you will also need to install `ffmpeg`. If you're using conda you can do this with:
 ```bash
 conda install -c conda-forge ffmpeg
 ```

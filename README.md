@@ -43,17 +43,19 @@ The library is Python-based and requires at least Python 3.6, as we use dataclas
 `AugLy` is a Python 3.6+ library. It can be installed with:
 
 ```bash
-pip install augly
+pip install augly[all]
 ```
 
 Or clone AugLy if you want to be able to run our unit tests, contribute a pull request, etc:
 ```bash
-git clone git@github.com:facebookresearch/AugLy.git
+git clone git@github.com:facebookresearch/AugLy.git && cd AugLy
 [Optional, but recommended] conda create -n augly && conda activate augly && conda install pip
-pip install -e AugLy/
+pip install -e .[all]
 ```
 
-*NOTE*: In some environments, `pip` doesn't install `python-magic` as expected. In that case, you will need to additionally run:
+**Note**: If you want to only use one modality of AugLy, you can install just the audio dependencies for example with `pip install augly[audio]`. See the `audio`, `text`, `image`, or `video` READMEs for more modality-specific information.
+
+In some environments, `pip` doesn't install `python-magic` as expected. In that case, you will need to additionally run:
 ```bash
 conda install -c conda-forge python-magic
 ```
