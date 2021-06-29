@@ -2,10 +2,6 @@
 
 ## Installation Notes
 
-Try running some AugLy video augmentations in [Colab](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_video.ipynb)!
-
-For a full list of available augmentations, see [here](__init__.py).
-
 In order to run the video tests and/or use the augmentations, please install `ffmpeg`. If you're using conda you can do this with:
 ```bash
 conda install -c conda-forge ffmpeg
@@ -26,8 +22,9 @@ export AUGLY_FFPROBE_PATH='<ffprobe_path>'
 ```
 
 ## Augmentations
+[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_video.ipynb)
 
-For a full list of available augmentations, see [here](__init__.py).
+Try running some AugLy video augmentations in Colab! For a full list of available augmentations, see [here](__init__.py).
 
 Our video augmentations use `ffmpeg` & OpenCV as their backend. All functions accept a path to the video to be augmented as input and output a file containing the augmented video. If no output path is specified, the original video input path will be overwritten. The file path to which the augmented video was written will also be returned by all augmentations.
 
