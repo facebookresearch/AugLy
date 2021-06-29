@@ -6,7 +6,7 @@ If you plan to use only the audio augmentations from AugLy, you can install usin
 pip install augly[audio]
 ```
 
-Otherwise if you want to use other modealities as well, you can install AugLy with the required dependencies for all modalities, which just means the installation will be a bit heavier:
+Otherwise if you want to use other modalities as well, you can install AugLy with the required dependencies for all modalities, which just means the installation will be a bit heavier:
 ```bash
 pip install augly[all]
 ```
