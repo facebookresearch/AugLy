@@ -1762,6 +1762,8 @@ def shuffle_pixels(
 def vflip(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
+    level: float = 0.5,
+    axis: str = "x-axis",
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> Image.Image:
     """
@@ -1773,6 +1775,10 @@ def vflip(
     @param output_path: the path in which the resulting image will be stored.
         If None, the resulting PIL Image will still be returned
 
+    @param level: Level of the operation that will be in [0, The maximum value of level]
+
+    @param axis: Axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
@@ -1781,6 +1787,21 @@ def vflip(
     """
     image = imutils.validate_and_load_image(image)
     aug_image = image.transpose(Image.FLIP_TOP_BOTTOM)
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
+    w, h = image.size
+
+    if np.random.uniform() > 0.5:
+        level = -level
+
+    if axis == "x-axis":
+        data = (1, level, 0, 0, 1, 0)
+    elif axis == "y-axis":
+        data = (1, 0, 0, level, 1, 0)
+    else:
+        raise AssertionError(
+            f"Invalid 'axis' value: Got '{axis}', expected 'x-axis' or 'y-axis'"
+        )
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
