@@ -38,15 +38,14 @@
     ],
     "skew": [
         {
-            "dst_height": 252,
-            "dst_width": 222,
-            "level": 1.0,
-            "max_level": 10.0,
-            "intensity": 1.0,
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "level": 0.5,
+            "intensity": 0.5,
             "name": "skew",
             "output_path": null,
-            "src_height": 1333,
-            "src_width": 1000
+            "src_height": 1080,
+            "src_width": 1920
         }
     ],
     "change_aspect_ratio": [
