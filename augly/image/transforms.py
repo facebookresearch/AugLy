@@ -221,6 +221,9 @@ class Skew(BaseTransform):
         @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
 
         @param level: Level of the operation that will be in [0, The maximum value of level]
+
+        @param level: the level of skew to apply to the image; a larger value means the skew
+            will be more intense
             
         @param axis: Axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
         """
