@@ -40,7 +40,7 @@ The library is Python-based and requires at least Python 3.6, as we use dataclas
 
 ## Installation
 
-`AugLy` is a Python 3.6+ library. It can be installed with:
+`AugLy` is a Python 3.7+ library. It can be installed with:
 
 ```bash
 pip install augly
