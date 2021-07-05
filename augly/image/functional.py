@@ -1792,9 +1792,6 @@ def vflip(
 
     w, h = image.size
 
-    if np.random.uniform() > 0.5:
-        level = -level
-
     if axis == "x-axis":
         data = (1, level, 0, 0, 1, 0)
     elif axis == "y-axis":
