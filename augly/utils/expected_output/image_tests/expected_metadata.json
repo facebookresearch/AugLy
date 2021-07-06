@@ -36,18 +36,6 @@
             "src_width": 1920
         }
     ],
-    "skew": [
-        {
-            "dst_height": 1080,
-            "dst_width": 1920,
-            "level": 0.5,
-            "intensity": 0.5,
-            "name": "skew",
-            "output_path": null,
-            "src_height": 1080,
-            "src_width": 1920
-        }
-    ],
     "change_aspect_ratio": [
         {
             "dst_height": 1440,
@@ -490,6 +478,19 @@
             "seed": 10,
             "intensity": 50.0,
             "name": "shuffle_pixels",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "skew": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "level": 0.5,
+            "axis": "x-axis",
+            "intensity": 0.5,
+            "name": "skew",
             "output_path": null,
             "src_height": 1080,
             "src_width": 1920
