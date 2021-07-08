@@ -225,7 +225,9 @@ class ApplyLambda(BaseTransform):
 
         @returns: the path to the augmented video
         """
-        return self.aug_function(video_path, output_path, metadata=metadata, **self.kwargs)
+        return self.aug_function(
+            video_path, output_path, metadata=metadata, **self.kwargs
+        )
 
 
 class AudioSwap(BaseTransform):
@@ -436,7 +438,9 @@ class ChangeAspectRatio(BaseTransform):
 
         @returns: the path to the augmented video
         """
-        return F.change_aspect_ratio(video_path, output_path, self.ratio, metadata=metadata)
+        return F.change_aspect_ratio(
+            video_path, output_path, self.ratio, metadata=metadata
+        )
 
 
 class ChangeVideoSpeed(BaseTransform):
@@ -471,7 +475,9 @@ class ChangeVideoSpeed(BaseTransform):
 
         @returns: the path to the augmented video
         """
-        return F.change_video_speed(video_path, output_path, self.factor, metadata=metadata)
+        return F.change_video_speed(
+            video_path, output_path, self.factor, metadata=metadata
+        )
 
 
 class ColorJitter(BaseTransform):
@@ -531,7 +537,10 @@ class ColorJitter(BaseTransform):
 
 class Concat(BaseTransform):
     def __init__(
-        self, other_video_paths: List[str], src_video_path_index: int = 0, p: float = 1.0
+        self,
+        other_video_paths: List[str],
+        src_video_path_index: int = 0,
+        p: float = 1.0,
     ):
         """
         @param other_video_paths: a list of paths to the videos to be concatenated (in
@@ -570,9 +579,9 @@ class Concat(BaseTransform):
         @returns: the path to the augmented video
         """
         video_paths = (
-            self.other_video_paths[:self.src_video_path_index]
+            self.other_video_paths[: self.src_video_path_index]
             + [video_path]
-            + self.other_video_paths[self.src_video_path_index:]
+            + self.other_video_paths[self.src_video_path_index :]
         )
         return F.concat(
             video_paths, output_path, self.src_video_path_index, metadata=metadata
@@ -703,7 +712,9 @@ class EncodingQuality(BaseTransform):
 
         @returns: the path to the augmented video
         """
-        return F.encoding_quality(video_path, output_path, self.quality, metadata=metadata)
+        return F.encoding_quality(
+            video_path, output_path, self.quality, metadata=metadata
+        )
 
 
 class FPS(BaseTransform):
@@ -1638,6 +1649,64 @@ class RemoveAudio(BaseTransform):
         return F.remove_audio(video_path, output_path, metadata=metadata)
 
 
+class ReplaceWithBackground(BaseTransform):
+    def __init__(
+        self,
+        background_path: Optional[str] = None,
+        source_offset: float = 0.0,
+        background_offset: float = 0.0,
+        source_percentage: float = 0.5,
+        p: float = 1.0,
+    ):
+        """
+        @param background_path: the path to the video in which to insert the main
+            video. If set to None, the main video will play in the middle of a silent
+            video with black frames
+
+        @param offset_factor: the point in the background video in which the main video
+            starts to play (this factor is multiplied by the background video duration
+            to determine the start point)
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.background_path = background_path
+        self.source_offset = source_offset
+        self.background_offset = background_offset
+        self.source_percentage = source_percentage
+
+    def apply_transform(
+        self,
+        video_path: str,
+        output_path: str,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> str:
+        """
+        Puts the video in the middle of the background video
+        (at offset_factor * background.duration)
+
+        @param video_path: the path to the video to be augmented
+
+        @param output_path: the path in which the resulting video will be stored.
+            If not passed in, the original video file will be overwritten
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest duration, fps, etc. will be appended
+            to the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the path to the augmented video
+        """
+        return F.replace_with_background(
+            video_path,
+            output_path,
+            background_path=self.background_path,
+            source_offset=self.source_offset,
+            background_offset=self.background_offset,
+            source_percentage=self.source_percentage,
+            metadata=metadata,
+        )
+
+
 class ReplaceWithColorFrames(BaseTransform):
     def __init__(
         self,
@@ -1901,9 +1970,7 @@ class TimeCrop(BaseTransform):
 
 
 class TimeDecimate(BaseTransform):
-    def __init__(
-        self, on_factor: float = 0.2, off_factor: float = 0.5, p: float = 1.0
-    ):
+    def __init__(self, on_factor: float = 0.2, off_factor: float = 0.5, p: float = 1.0):
         """
         @param on_factor: relative to the video duration; the amount of time each
             "on" video chunk should be
@@ -2139,7 +2206,9 @@ class RandomBlur(BaseRandomRangeTransform):
 
         @returns: the path to the augmented video
         """
-        return F.blur(video_path, output_path, sigma=self.chosen_value, metadata=metadata)
+        return F.blur(
+            video_path, output_path, sigma=self.chosen_value, metadata=metadata
+        )
 
 
 class RandomBrightness(BaseRandomRangeTransform):
