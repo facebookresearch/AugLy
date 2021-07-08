@@ -692,6 +692,8 @@ def insert_in_background(
     output_path: Optional[str] = None,
     background_path: Optional[str] = None,
     offset_factor: float = 0.0,
+    source_percentage: Optional[float] = None,
+    seed: Optional[int] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -711,9 +713,18 @@ def insert_in_background(
         starts to play (this factor is multiplied by the background video duration to
         determine the start point)
 
-    @param metadata: if set to be a list, metadata about the function execution
-        including its name, the source & dest duration, fps, etc. will be appended
-        to the inputted list. If set to None, no metadata will be appended or returned
+    @param source_percentage: when set, source_percentage of the duration
+        of the final video (background + source) will be taken up by the
+        source video. Randomly crops the background video to the correct duration.
+        If the background video isn't long enough to get the desired source_percentage,
+        it will be looped.
+
+    @param seed: if provided, this will set the random seed to ensure consistency
+        between runs
+
+    @param metadata: if set to be a list, metadata about the function execution including
+        its name, the source & dest duration, fps, etc. will be appended to the inputted
+        list. If set to None, no metadata will be appended or returned
 
     @returns: the path to the augmented video
     """
@@ -727,6 +738,8 @@ def insert_in_background(
     video_info = helpers.get_video_info(video_path)
     video_duration = float(video_info["duration"])
     width, height = video_info["width"], video_info["height"]
+
+    rng = np.random.RandomState(seed) if seed is not None else np.random
 
     video_paths = []
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -743,11 +756,29 @@ def insert_in_background(
 
         bg_video_info = helpers.get_video_info(resized_bg_path)
         bg_video_duration = float(bg_video_info["duration"])
-        offset = bg_video_duration * offset_factor
+
+        bg_start = 0
+        bg_end = bg_video_duration
+        desired_bg_duration = bg_video_duration
+        if source_percentage is not None:
+            # desired relationship: percent * (bg_len + s_len) = s_len
+            # solve for bg_len -> bg_len = s_len / percent - s_len
+            desired_bg_duration = video_duration / source_percentage - video_duration
+
+            # if background vid isn't long enough, loop
+            num_loops_needed = math.ceil(desired_bg_duration / bg_video_duration)
+            if num_loops_needed > 1:
+                loop(resized_bg_path, num_loops=num_loops_needed)
+                bg_video_duration*=num_loops_needed
+
+            bg_start = rng.uniform(0, bg_video_duration - desired_bg_duration)
+            bg_end = bg_start + desired_bg_duration
+
+        offset = desired_bg_duration * offset_factor
 
         if offset > 0:
             before_path = os.path.join(tmpdir, "before.mp4")
-            trim(resized_bg_path, before_path, end=offset)
+            trim(resized_bg_path, before_path, start=bg_start, end=bg_start + offset)
             video_paths.append(before_path)
             src_video_path_index = 1
         else:
@@ -756,7 +787,7 @@ def insert_in_background(
         video_paths.append(tmp_video_path)
 
         after_path = os.path.join(tmpdir, "after.mp4")
-        trim(resized_bg_path, after_path, start=offset)
+        trim(resized_bg_path, after_path, start=bg_start + offset, end=bg_end)
         video_paths.append(after_path)
 
         concat(video_paths, output_path or video_path, src_video_path_index)
@@ -765,7 +796,7 @@ def insert_in_background(
         helpers.get_metadata(
             metadata=metadata,
             function_name="insert_in_background",
-            background_video_duration=bg_video_duration,
+            background_video_duration=desired_bg_duration,
             **func_kwargs,
         )
 
