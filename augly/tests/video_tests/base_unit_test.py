@@ -121,7 +121,6 @@ class BaseVideoUnitTest(unittest.TestCase):
 
         self.assertTrue(
             are_equal_metadata(metadata, self.metadata[fname], metadata_exclude_keys),
-	    f"Got {metadata}, expected {self.metadata[fname]}",
         )
 
     def get_ref_video(self, fname: str) -> str:
