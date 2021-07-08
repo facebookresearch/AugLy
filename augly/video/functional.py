@@ -692,6 +692,8 @@ def insert_in_background(
     output_path: Optional[str] = None,
     background_path: Optional[str] = None,
     offset_factor: float = 0.0,
+    source_percentage: Optional[float] = None,
+    seed: Optional[int] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -711,9 +713,18 @@ def insert_in_background(
         starts to play (this factor is multiplied by the background video duration to
         determine the start point)
 
-    @param metadata: if set to be a list, metadata about the function execution
-        including its name, the source & dest duration, fps, etc. will be appended
-        to the inputted list. If set to None, no metadata will be appended or returned
+    @param source_percentage: when set, source_percentage of the duration
+        of the final video (background + source) will be taken up by the
+        source video. Randomly crops the background video to the correct duration.
+        If the background video isn't long enough to get the desired source_percentage,
+        it will be looped.
+
+    @param seed: if provided, this will set the random seed to ensure consistency
+        between runs
+
+    @param metadata: if set to be a list, metadata about the function execution including
+        its name, the source & dest duration, fps, etc. will be appended to the inputted
+        list. If set to None, no metadata will be appended or returned
 
     @returns: the path to the augmented video
     """
@@ -722,11 +733,18 @@ def insert_in_background(
         0.0 <= offset_factor <= 1.0
     ), "Offset factor must be a value in the range [0.0, 1.0]"
 
+    if source_percentage is not None:
+        assert (
+            0.0 <= source_percentage <= 1.0
+        ), "Source percentage must be a value in the range [0.0, 1.0]"
+
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     video_info = helpers.get_video_info(video_path)
     video_duration = float(video_info["duration"])
     width, height = video_info["width"], video_info["height"]
+
+    rng = np.random.RandomState(seed) if seed is not None else np.random
 
     video_paths = []
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -743,11 +761,29 @@ def insert_in_background(
 
         bg_video_info = helpers.get_video_info(resized_bg_path)
         bg_video_duration = float(bg_video_info["duration"])
-        offset = bg_video_duration * offset_factor
+
+        bg_start = 0
+        bg_end = bg_video_duration
+        desired_bg_duration = bg_video_duration
+        if source_percentage is not None:
+            # desired relationship: percent * (bg_len + s_len) = s_len
+            # solve for bg_len -> bg_len = s_len / percent - s_len
+            desired_bg_duration = video_duration / source_percentage - video_duration
+
+            # if background vid isn't long enough, loop
+            num_loops_needed = math.ceil(desired_bg_duration / bg_video_duration)
+            if num_loops_needed > 1:
+                loop(resized_bg_path, num_loops=num_loops_needed)
+                bg_video_duration*=num_loops_needed
+
+            bg_start = rng.uniform(0, bg_video_duration - desired_bg_duration)
+            bg_end = bg_start + desired_bg_duration
+
+        offset = desired_bg_duration * offset_factor
 
         if offset > 0:
             before_path = os.path.join(tmpdir, "before.mp4")
-            trim(resized_bg_path, before_path, end=offset)
+            trim(resized_bg_path, before_path, start=bg_start, end=bg_start + offset)
             video_paths.append(before_path)
             src_video_path_index = 1
         else:
@@ -756,7 +792,7 @@ def insert_in_background(
         video_paths.append(tmp_video_path)
 
         after_path = os.path.join(tmpdir, "after.mp4")
-        trim(resized_bg_path, after_path, start=offset)
+        trim(resized_bg_path, after_path, start=bg_start + offset, end=bg_end)
         video_paths.append(after_path)
 
         concat(video_paths, output_path or video_path, src_video_path_index)
@@ -765,7 +801,145 @@ def insert_in_background(
         helpers.get_metadata(
             metadata=metadata,
             function_name="insert_in_background",
-            background_video_duration=bg_video_duration,
+            background_video_duration=desired_bg_duration,
+            **func_kwargs,
+        )
+
+    return output_path or video_path
+
+
+def replace_with_background(
+    video_path: str,
+    output_path: Optional[str] = None,
+    background_path: Optional[str] = None,
+    source_offset: float = 0.0,
+    background_offset: float = 0.0,
+    source_percentage: float = 0.5,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+):
+    """
+    Replaces the beginning and end of the source video with the background video, keeping the
+    total duration of the output video equal to the original duration of the source video
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored. If not
+        passed in, the original video file will be overwritten
+
+    @param background_path: the path to the video in which to insert the main video.
+        If set to None, the main video will play in the middle of a silent video with
+        black frames
+
+    @param source_offset: the starting point where the background video transitions to
+        the source video. Prior to this point, the source video is replaced with the
+        background video. A value of 0 means all background is at the beginning. A value
+        of 1 means all background is at the end of the video
+
+    @param background_offset: the starting point from which the background video starts
+        to play, as a proportion of the background video duration (i.e. this factor is
+        multiplied by the background video duration to determine the start point)
+
+    @param source_percentage: the percentage of the source video that remains unreplaced
+        by the background video. The source percentage plus source offset should be less
+        than 1. If it is greater, the output video duration will be longer than the source.
+        If the background video is not long enough to get the desired source percentage,
+        it will be looped
+
+    @param metadata: if set to be a list, metadata about the function execution including
+        its name, the source & dest duration, fps, etc. will be appended to the inputted
+        list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    utils.validate_video_path(video_path)
+    assert (
+        0.0 <= source_offset <= 1.0
+    ), "Source offset factor must be a value in the range [0.0, 1.0]"
+
+    assert (
+        0.0 <= background_offset <= 1.0
+    ), "Background offset factor must be a value in the range [0.0, 1.0]"
+
+    assert (
+        0.0 <= source_percentage <= 1.0
+    ), "Source percentage must be a value in the range [0.0, 1.0]"
+
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+
+    video_info = helpers.get_video_info(video_path)
+    video_duration = float(video_info["duration"])
+    width, height = video_info["width"], video_info["height"]
+
+    video_paths = []
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_video_path = os.path.join(tmpdir, "in.mp4")
+        resized_bg_path = os.path.join(tmpdir, "bg.mp4")
+
+        # create bg video
+        if background_path is None:
+            helpers.create_color_video(resized_bg_path, video_duration, height, width)
+        else:
+            resize(background_path, resized_bg_path, height, width)
+            helpers.add_silent_audio(resized_bg_path)
+
+        bg_video_info = helpers.get_video_info(resized_bg_path)
+        bg_video_duration = float(bg_video_info["duration"])
+        src_video_path_index = 1
+
+        final_bg_len = video_duration * (1 - source_percentage)
+        # if desired bg video too short, loop bg video
+        num_loops_needed = math.ceil(final_bg_len / bg_video_duration)
+        if num_loops_needed > 1:
+            loop(resized_bg_path, num_loops=num_loops_needed)
+
+        first_bg_segment_len = source_offset * final_bg_len
+        last_bg_segment_len = final_bg_len - first_bg_segment_len
+        # calculate bg start and end times of bg in output video
+        bg_start = background_offset * bg_video_duration
+        src_start = first_bg_segment_len
+        src_length = source_percentage * video_duration
+        src_end = src_start + src_length
+
+        # add pre src background segment
+        if source_offset > 0:
+            before_path = os.path.join(tmpdir, "before.mp4")
+            trim(
+                resized_bg_path,
+                before_path,
+                start=bg_start,
+                end=bg_start + first_bg_segment_len,
+            )
+            video_paths.append(before_path)
+            src_video_path_index = 1
+        else:
+            src_video_path_index = 0
+
+        # trim source to length satisfying source_percentage
+        helpers.add_silent_audio(video_path, tmp_video_path)
+        trimmed_src_path = os.path.join(tmpdir, "trim_src.mp4")
+        trim(tmp_video_path, trimmed_src_path, start=src_start, end=src_end)
+        video_paths.append(trimmed_src_path)
+
+        # add post src background segment
+        if source_offset < 1:
+            after_path = os.path.join(tmpdir, "after.mp4")
+            trim(
+                resized_bg_path,
+                after_path,
+                start=bg_start + src_start,
+                end=bg_start + src_start + last_bg_segment_len,
+            )
+            video_paths.append(after_path)
+
+        concat(video_paths, output_path or video_path, src_video_path_index)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata,
+            function_name="replace_with_background",
+            starting_background_duration=first_bg_segment_len,
+            source_duration=src_length,
+            ending_background_duration=last_bg_segment_len,
             **func_kwargs,
         )
 
