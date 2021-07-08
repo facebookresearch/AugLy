@@ -58,6 +58,16 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
             vidaugs.RandomPixelization(max_ratio=0.2), fname="RandomPixelization"
         )
 
+    def test_ReplaceWithBackground(self):
+        self.evaluate_class(
+            vidaugs.ReplaceWithBackground(
+                source_offset=0.1,
+                background_offset=0,
+                source_percentage=0.7,
+            ),
+            fname="replace_with_background",
+        )
+
     def test_ReplaceWithColorFrames(self):
         self.evaluate_class(
             vidaugs.ReplaceWithColorFrames(), fname="replace_with_color_frames"
