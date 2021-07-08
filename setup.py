@@ -13,20 +13,12 @@ requirements = [
 ]
 
 extra_requirements = {
-    module: [
-	r
-        for r in Path(
-	    os.path.join("augly", module, "requirements.txt")
-	).read_text().splitlines()
+    "av": [
+        r
+        for r in Path("av_requirements.txt").read_text().splitlines()
         if '@' not in r
     ]
-    for module in ["audio", "image", "text", "video"]
 }
-
-extra_requirements["all"] = [req for reqs in extra_requirements.values() for req in reqs]
-
-# The video module has a dependency on the image module
-extra_requirements["video"] = extra_requirements["video"] + extra_requirements["image"]
 
 with open("README.md", encoding="utf8") as f:
     readme = f.read()

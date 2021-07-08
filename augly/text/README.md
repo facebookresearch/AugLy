@@ -1,14 +1,9 @@
 # Text
 
 ## Installation   
-If you plan to use only the text augmentations from AugLy, you can install using the following command:   
+If you plan to use the text augmentations from AugLy, you can install using the following command:   
 ```bash 
-pip install augly[text]
-```
-
-Otherwise if you want to use other modalities as well, you can install AugLy with the required dependencies for all modalities, which just means the installation will be a bit heavier:
-```bash
-pip install augly[all]
+pip install augly
 ```
 
 ## Augmentations

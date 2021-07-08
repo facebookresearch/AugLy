@@ -1,17 +1,16 @@
 # Audio
 
 ## Installation
-If you plan to use only the audio augmentations from AugLy, you can install using the following command:
+
+If you plan to use the audio augmentations from AugLy, you can install using the following command:
 ```bash
-pip install augly[audio]
+pip install augly[av]
 ```
 
-Otherwise if you want to use other modalities as well, you can install AugLy with the required dependencies for all modalities, which just means the installation will be a bit heavier:
-```bash
-pip install augly[all]
-```
+This ensures that not only the base dependencies, but also the heavier dependencies required for audio & video processing, are installed.
 
 ## Augmentations
+
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_audio.ipynb)
 
 Try running some AugLy audio augmentations in Colab! For a full list of available augmentations, see [here](__init__.py).
