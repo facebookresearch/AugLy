@@ -215,7 +215,6 @@ class Brightness(BaseTransform):
    
 class Skew(BaseTransform):
     def __init__(self, level: float = 0.5, axis: str = "x-axis", p: float = 1.0):
-        
         """
         @param level: Level of the operation that will be in [0, the maximum level]
 
