@@ -42,9 +42,6 @@ def blur_intensity(radius: int, **kwargs) -> float:
 def brightness_intensity(factor: float, **kwargs) -> float:
     return mult_factor_intensity_helper(factor)
 
-def skew_intensity(level: float, **kwargs):
-    return min(level, 2.0)
-
 def change_aspect_ratio_intensity(
     ratio: float, metadata: Dict[str, Any], **kwargs
 ) -> float:
@@ -288,6 +285,8 @@ def sharpen_intensity(factor: float, **kwargs) -> float:
 def shuffle_pixels_intensity(factor: float, **kwargs) -> float:
     return factor * 100.0
 
+def skew_intensity(level: float, **kwargs):
+    return min(level, 2.0)
 
 def vflip_intensity(**kwargs) -> float:
     return 100.0
