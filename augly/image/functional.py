@@ -1808,7 +1808,8 @@ def vflip(
     imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
     aug_image = image.transform((w, h), Image.AFFINE, data, resample=Image.BILINEAR)
     imutils.get_metadata(
-        metadata=metadata, function_name="skew", aug_image=aug_image, **func_kwargs)
+        metadata=metadata, function_name="skew", aug_image=aug_image, **func_kwargs
+    )
 
     return imutils.ret_and_save_image(aug_image, output_path)
 
