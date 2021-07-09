@@ -225,7 +225,7 @@ class Skew(BaseTransform):
         @param level: the level of skew to apply to the image; a larger value means the skew
             will be more intense
             
-        @param axis: Axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
+        @param axis: the axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
         """
         super().__init__(p)
         self.level = level
