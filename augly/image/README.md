@@ -1,7 +1,7 @@
 # Image
 
 ## Installation   
-If you want to use the image augmentations from AugLy, you can install using the following command:   
+If you would like to use the image augmentations, please install AugLy using the following command:
 ```bash
 pip install augly
 ```
