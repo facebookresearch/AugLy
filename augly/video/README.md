@@ -1,7 +1,7 @@
 # Video
 
 ## Installation
-If you plan to use the video augmentations from AugLy, you can install using the following command:
+If you would like to use the video augmentations, please install AugLy using the following command:
 ```bash
 pip install augly[av]
 ```
