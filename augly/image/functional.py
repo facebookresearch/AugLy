@@ -1779,7 +1779,7 @@ def vflip(
         If None, the resulting PIL Image will still be returned
 
     @param level: the level of skew to apply to the image; a larger value means the skew
-        will be more intense
+        will be more intense and range between [0, 1]
 
     @param axis: the axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
 
