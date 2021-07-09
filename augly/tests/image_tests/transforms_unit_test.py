@@ -25,9 +25,6 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_Brightness(self):
         self.evaluate_class(imaugs.Brightness(), fname="brightness")
-    
-    def test_Skew(self):
-        self.evaluate_class(imaugs.Skew(), fname="skew")
 
     def test_ChangeAspectRatio(self):
         self.evaluate_class(imaugs.ChangeAspectRatio(), fname="change_aspect_ratio")
@@ -160,7 +157,10 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_ShufflePixels(self):
         self.evaluate_class(imaugs.ShufflePixels(factor=0.5), fname="shuffle_pixels")
-
+    
+    def test_Skew(self):
+        self.evaluate_class(imaugs.Skew(), fname="skew")
+    
     def test_VFlip(self):
         self.evaluate_class(imaugs.VFlip(), fname="vflip")
 
