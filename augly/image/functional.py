@@ -1781,7 +1781,7 @@ def vflip(
     @param level: the level of skew to apply to the image; a larger value means the skew
         will be more intense
 
-    @param axis: Axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
+    @param axis: the axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
