@@ -247,6 +247,7 @@ class Skew(BaseTransform):
         """
         return F.skew(image, level=self.level, axis=self.axis, metadata=metadata)
 
+
 class ChangeAspectRatio(BaseTransform):
     def __init__(self, ratio: float = 1.0, p: float = 1.0):
         """
@@ -1344,7 +1345,34 @@ class ShufflePixels(BaseTransform):
             image, factor=self.factor, seed=self.seed, metadata=metadata
         )
 
-
+class Skew(BaseTransform):
+    def __init__(self, level: float = 0.5, axis: str = "x-axis", p: float = 1.0):
+        """
+        @param level: the level of skew to apply to the image; a larger value means the skew
+            will be more intense and range between [-2, 2]
+            
+        @param axis: the axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
+        """
+        super().__init__(p)
+        self.level = level
+        self.axis = axis
+        
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
+        """
+        Skews an image with respect to its x or y-axis
+        
+        @param image: PIL Image to be augmented
+        
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+            
+        @returns: Augmented PIL Image
+        """
+        return F.skew(image, level=self.level, axis=self.axis, metadata=metadata)
+    
 class VFlip(BaseTransform):
     def apply_transform(
         self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
