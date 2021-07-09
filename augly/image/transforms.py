@@ -211,7 +211,8 @@ class Brightness(BaseTransform):
         @returns: Augmented PIL Image
         """
         return F.brightness(image, factor=self.factor, metadata=metadata)
-
+   
+   
 class Skew(BaseTransform):
     def __init__(self, level: float = 0.5, axis: str = "x-axis", p: float = 1.0):
         
