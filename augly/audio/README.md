@@ -2,7 +2,7 @@
 
 ## Installation
 
-If you plan to use the audio augmentations from AugLy, you can install using the following command:
+If you would like to use the audio augmentations, please install AugLy using the following command:
 ```bash
 pip install augly[av]
 ```
