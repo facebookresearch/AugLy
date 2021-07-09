@@ -236,7 +236,7 @@ class Skew(BaseTransform):
         self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
     ) -> Image.Image:
         """
-        Skew image with respect to X-axis or Y-axis
+        Skews an image with respect to its x or y-axis
         
         @param image: PIL Image to be augmented
         
