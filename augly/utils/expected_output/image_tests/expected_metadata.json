@@ -489,7 +489,7 @@
             "dst_width": 1920,
             "level": 0.5,
             "axis": "x-axis",
-            "intensity": 0.5,
+            "intensity": 25.0,
             "name": "skew",
             "output_path": null,
             "src_height": 1080,
