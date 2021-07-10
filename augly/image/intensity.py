@@ -286,7 +286,7 @@ def shuffle_pixels_intensity(factor: float, **kwargs) -> float:
     return factor * 100.0
 
 def skew_intensity(level: float, **kwargs) -> float:
-    return min(level, 100)
+    return min(level, 100.0)
 
 def vflip_intensity(**kwargs) -> float:
     return 100.0
