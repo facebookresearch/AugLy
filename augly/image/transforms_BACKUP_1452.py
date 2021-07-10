@@ -211,31 +211,21 @@ class Brightness(BaseTransform):
         @returns: Augmented PIL Image
         """
         return F.brightness(image, factor=self.factor, metadata=metadata)
-<<<<<<< 13947d519a1ef9ec1f0a5cda8ae4c4d7a28f54fa
 
-class Skew(BaseTransform):
-    def __init__(self, level: float = 1.0, max_level: float = 10.0, axis: str = "x-axis"):
-        
-        """
-        @param level: Level of the operation that will be in [0, the maximum level]
-=======
     
 class Skew(BaseTransform):
     def __init__(self, level: float = 5.0, max_level: float = 10.0, axis: str = "x-axis"):
         
         """
-         @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
->>>>>>> Update transforms.py
+        @param level: Level of the operation that will be in [0, `PARAMETER_MAX`]
     
         @param max_level: Maximum value that the operation can have. This will be
             scaled to level / PARAMETER_MAX.
             
         @param axis: Axis with respect to x-axis or y-axis
         """
-<<<<<<< 13947d519a1ef9ec1f0a5cda8ae4c4d7a28f54fa
+
         super().__init__(p)
-=======
->>>>>>> Update transforms.py
         self.level = level
         self.max_level = max_level
         self.axis = axis
@@ -255,10 +245,6 @@ class Skew(BaseTransform):
         @returns: Augmented PIL Image
         """
         return F.skew(image, level=self.level, max_level=self.max_level, axis=self.axis, metadata=metadata)
-<<<<<<< 13947d519a1ef9ec1f0a5cda8ae4c4d7a28f54fa
-    
-=======
->>>>>>> Update transforms.py
 
 class ChangeAspectRatio(BaseTransform):
     def __init__(self, ratio: float = 1.0, p: float = 1.0):
