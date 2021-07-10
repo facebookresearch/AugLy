@@ -248,7 +248,6 @@ class Skew(BaseTransform):
         return F.skew(image, level=self.level, axis=self.axis, metadata=metadata)
 
 
-    
 class ChangeAspectRatio(BaseTransform):
     def __init__(self, ratio: float = 1.0, p: float = 1.0):
         """
