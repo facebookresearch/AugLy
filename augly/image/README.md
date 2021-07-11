@@ -51,7 +51,7 @@ AUGMENTATIONS = [
     imaugs.Blur(),
     imaugs.ColorJitter(**COLOR_JITTER_PARAMS),
     imaugs.OneOf(
-        [imaugs.ScreenshotOverlay(), imaugs.EmojiOverlay(), imaugs.TextOverlay()]
+        [imaugs.OverlayOntoScreenshot(), imaugs.OverlayEmoji(), imaugs.OverlayText()]
     ),
 ]
 
