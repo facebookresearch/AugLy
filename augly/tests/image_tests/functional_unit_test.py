@@ -17,10 +17,7 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
 
     def test_brightness(self):
         self.evaluate_function(imaugs.brightness)
-    
-    def test_skew(self):
-        self.evaluate_function(imaugs.skew)
-        
+
     def test_change_aspect_ratio(self):
         self.evaluate_function(imaugs.change_aspect_ratio)
 
@@ -108,10 +105,7 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
     
     def test_skew(self):
         self.evaluate_function(imaugs.skew)
-   
-    def test_skew(self):
-        self.evaluate_function(imaugs.skew)
-
+        
     def test_vflip(self):
         self.evaluate_function(imaugs.vflip)
 
