@@ -1349,8 +1349,8 @@ class ShufflePixels(BaseTransform):
 class Skew(BaseTransform):
     def __init__(self, level: float = 0.5, axis: str = "x-axis", p: float = 1.0):
         """
-        @param level: the level of skew to apply to the image; a larger value means the skew
-            will be more intense. Recommended range is between [-2, 2]
+        @param level: the level of skew to apply to the image; a larger absolute value will
+            result in a more intense skew. Recommended range is between [-2, 2]
             
         @param axis: the axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
         """
