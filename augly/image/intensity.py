@@ -42,6 +42,7 @@ def blur_intensity(radius: int, **kwargs) -> float:
 def brightness_intensity(factor: float, **kwargs) -> float:
     return mult_factor_intensity_helper(factor)
 
+
 def change_aspect_ratio_intensity(
     ratio: float, metadata: Dict[str, Any], **kwargs
 ) -> float:
