@@ -75,6 +75,7 @@ class VideoDistractorByText(BaseCV2Augmenter):
         while True:
             if text_change_nth and iframe % text_change_nth == 0:
                 text = random_text(text_len)
+            # pyre-fixme[61]: `text` may not be initialized here.
             yield text
             iframe += 1
 

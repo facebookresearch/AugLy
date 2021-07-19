@@ -673,6 +673,7 @@ def meme_format(
     draw.multiline_text(
         (x_pos, y_pos),
         text,
+        # pyre-fixme[61]: `font` may not be initialized here.
         font=font,
         fill=(text_color[0], text_color[1], text_color[2], round(opacity * 255)),
         align="center",

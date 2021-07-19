@@ -109,6 +109,7 @@ def add_background_noise(
             function_name="add_background_noise",
             dst_audio=aug_audio,
             dst_sample_rate=sample_rate,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
@@ -338,6 +339,7 @@ def clip(
             dst_sample_rate=sample_rate,
             start_sample=start,
             end_sample=end,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
@@ -410,6 +412,7 @@ def harmonic(
             function_name="harmonic",
             dst_audio=aug_audio,
             dst_sample_rate=sample_rate,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
@@ -479,6 +482,7 @@ def high_pass_filter(
             dst_audio=high_pass_array,
             dst_sample_rate=sample_rate,
             alpha=alpha,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
@@ -559,6 +563,7 @@ def insert_in_background(
             dst_sample_rate=sample_rate,
             background_duration=background_audio.shape[-1] / sample_rate,
             offset=offset,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
@@ -675,6 +680,7 @@ def low_pass_filter(
             dst_audio=low_pass_array,
             dst_sample_rate=sample_rate,
             alpha=alpha,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
@@ -749,6 +755,7 @@ def normalize(
             function_name="normalize",
             dst_audio=aug_audio,
             dst_sample_rate=sample_rate,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
@@ -818,6 +825,7 @@ def peaking_equalizer(
             function_name="peaking_equalizer",
             dst_audio=aug_audio,
             dst_sample_rate=out_sample_rate,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
@@ -889,6 +897,7 @@ def percussive(
             function_name="percussive",
             dst_audio=aug_audio,
             dst_sample_rate=sample_rate,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
@@ -1055,6 +1064,7 @@ def reverb(
             function_name="reverb",
             dst_audio=aug_audio,
             dst_sample_rate=out_sample_rate,
+            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
