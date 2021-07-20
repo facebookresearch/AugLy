@@ -25,7 +25,7 @@ output_path = "your_output_path.png"
 
 # Augmentation functions can accept image paths as input and
 # always return the resulting augmented PIL Image
-aug_image = imaugs.apply_ig_filter(image_path, filter_name="clarendon")
+aug_image = imaugs.overlay_emoji(image_path, opacity=1.0, emoji_size=0.15)
 
 # Augmentation functions can also accept PIL Images as input
 aug_image = imaugs.pad_square(aug_image)
