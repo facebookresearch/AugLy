@@ -1,6 +1,13 @@
 # Image
 
+## Installation   
+If you would like to use the image augmentations, please install AugLy using the following command:
+```bash
+pip install augly
+```
+
 ## Augmentations
+
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_image.ipynb)
 
 Try running some AugLy image augmentations! For a full list of available augmentations, see [here](__init__.py).
@@ -44,7 +51,7 @@ AUGMENTATIONS = [
     imaugs.Blur(),
     imaugs.ColorJitter(**COLOR_JITTER_PARAMS),
     imaugs.OneOf(
-        [imaugs.ScreenshotOverlay(), imaugs.EmojiOverlay(), imaugs.TextOverlay()]
+        [imaugs.OverlayOntoScreenshot(), imaugs.OverlayEmoji(), imaugs.OverlayText()]
     ),
 ]
 

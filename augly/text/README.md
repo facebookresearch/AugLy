@@ -1,5 +1,11 @@
 # Text
 
+## Installation   
+If you would like to use the text augmentations, please install AugLy using the following command:
+```bash 
+pip install augly
+```
+
 ## Augmentations
 
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_text.ipynb)

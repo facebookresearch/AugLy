@@ -1,0 +1,7 @@
+audioread>=2.1.9
+ffmpeg-python>=0.2.0
+librosa>=0.8.1
+opencv-python>=4.5.2.54
+SoundFile>=0.10.3.post1
+torch>=1.9.0
+torchaudio>=0.9.0

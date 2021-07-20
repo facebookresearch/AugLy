@@ -430,6 +430,8 @@
       "background_video_duration": 10.1,
       "offset_factor": 0.25,
       "name": "insert_in_background",
+      "seed": null,
+      "source_percentage": null,
       "src_duration": 10.027855,
       "src_fps": 29.916666666666668,
       "src_height": 1080,
@@ -1201,6 +1203,29 @@
         }
       ],
       "src_width": 1920
+    }
+  ],
+  "replace_with_background": [
+    {
+      "name": "replace_with_background",
+      "src_duration": 10.027855,
+      "dst_duration": 10.3,
+      "src_fps": 29.916666666666668,
+      "dst_fps": 10.0,
+      "src_width": 1920,
+      "src_height": 1080,
+      "dst_width": 1920,
+      "dst_height": 1080,
+      "src_segments": [{"start": 0.0, "end": 10.027855}],
+      "dst_segments": [{"start": 0.30083565000000007, "end": 7.32033415}],
+      "starting_background_duration": 0.30083565000000007,
+      "source_duration": 7.0194985,
+      "ending_background_duration": 2.7075208500000003,
+      "background_path": null,
+      "source_offset": 0.1,
+      "background_offset": 0,
+      "source_percentage": 0.7,
+      "intensity": 30.000000000000004
     }
   ],
   "replace_with_color_frames": [
