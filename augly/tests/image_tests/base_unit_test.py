@@ -69,9 +69,7 @@ class BaseImageUnitTest(unittest.TestCase):
 
         img_path, img_file = cls.config.get_input_path()
         cls.local_img_path = pathmgr.get_local_path(img_path)
-
-    def setUp(self):
-        self.img = Image.open(self.local_img_path)
+        cls.img = Image.open(cls.local_img_path)
 
     def evaluate_function(self, aug_function: Callable[..., Image.Image], **kwargs):
         ref = self.get_ref_image(aug_function.__name__)
