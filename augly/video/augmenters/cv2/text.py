@@ -135,6 +135,9 @@ class VideoDistractorByText(BaseCV2Augmenter):
         distract_frame = raw_frame.copy()
         if isinstance(font, str):
             with pathmgr.open(font, "rb") as f:
+                # pyre-fixme[6]: Expected `Union[None,
+                #  _typeshed.SupportsRead[bytes], bytes, str]` for 1st param but got
+                #  `Union[typing.IO[bytes], typing.IO[str]]`.
                 font = ImageFont.truetype(f, int(fontscale * 100))
         if isinstance(
             font,
@@ -143,6 +146,9 @@ class VideoDistractorByText(BaseCV2Augmenter):
             # To use an ImageFont, we need to convert into PIL
             distract_frame_rgb = cv2.cvtColor(distract_frame, cv2.COLOR_BGR2RGB)
             distract_frame_pil = Image.fromarray(distract_frame_rgb)
+            # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 3rd param but
+            #  got `Union[ImageFont.FreeTypeFont, ImageFont.ImageFont,
+            #  ImageFont.TransposedFont]`.
             ImageDraw.Draw(distract_frame_pil).text((x, y), text_str, font=font)
             distract_frame = cv2.cvtColor(np.array(distract_frame_pil), cv2.COLOR_RGB2BGR)
         else:
