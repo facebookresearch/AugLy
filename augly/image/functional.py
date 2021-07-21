@@ -1033,16 +1033,17 @@ def overlay_stripes(
     mask = Image.fromarray(np.uint8(binary_mask * line_opacity * 255))
 
     foreground = Image.new("RGB", image.size, line_color)
-    image.paste(foreground, (0, 0), mask=mask)
+    aug_image = image.copy()  # to avoid modifying the input image
+    aug_image.paste(foreground, (0, 0), mask=mask)
 
     imutils.get_metadata(
         metadata=metadata,
         function_name="overlay_stripes",
-        aug_image=image,
+        aug_image=aug_image,
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path)
 
 
 def overlay_text(
