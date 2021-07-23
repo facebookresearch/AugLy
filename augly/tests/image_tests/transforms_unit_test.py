@@ -32,6 +32,25 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_ColorJitter(self):
         self.evaluate_class(imaugs.ColorJitter(), fname="color_jitter")
 
+    def test_Compose(self):
+        random.seed(1)
+        self.evaluate_class(
+            imaugs.Compose(
+                [
+                    imaugs.Blur(),
+                    imaugs.ColorJitter(saturation_factor=1.5),
+                    imaugs.OneOf(
+                        [
+                            imaugs.OverlayOntoScreenshot(),
+                            imaugs.OverlayEmoji(),
+                            imaugs.OverlayText(),
+                        ]
+                    ),
+                ]
+            ),
+            fname="compose",
+        )
+
     def test_Contrast(self):
         self.evaluate_class(imaugs.Contrast(), fname="contrast")
 

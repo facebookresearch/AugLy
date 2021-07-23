@@ -62,6 +62,44 @@
             "src_width": 1920
         }
     ],
+    "compose": [
+        {
+            "name": "blur",
+            "src_width": 1920,
+            "src_height": 1080,
+            "dst_width": 1920,
+            "dst_height": 1080,
+            "output_path": null,
+            "radius": 2.0,
+            "intensity": 2.0
+        },
+        {
+            "name": "color_jitter",
+            "src_width": 1920,
+            "src_height": 1080,
+            "dst_width": 1920,
+            "dst_height": 1080,
+            "output_path": null,
+            "brightness_factor": 1.0,
+            "contrast_factor": 1.0,
+            "saturation_factor": 1.5,
+            "intensity": 0.0
+        },
+        {
+            "name": "overlay_emoji",
+            "src_width": 1920,
+            "src_height": 1080,
+            "dst_width": 1920,
+            "dst_height": 1080,
+            "output_path": null,
+            "emoji_path": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "opacity": 1.0,
+            "emoji_size": 0.15,
+            "x_pos": 0.4,
+            "y_pos": 0.8,
+            "intensity": 2.25
+        }
+    ],
     "contrast": [
         {
             "dst_height": 1080,
