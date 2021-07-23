@@ -10,6 +10,50 @@
             "src_length": 1
         }
     ],
+    "compose": [
+        {
+            "aug_char_max": 1,
+            "aug_char_min": 1,
+            "aug_char_p": 0.3,
+            "aug_word_max": 1000,
+            "aug_word_min": 1,
+            "aug_word_p": 0.3,
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 9.0,
+            "min_char": 2,
+            "misspelling_dict_path": "text/misspelling.json",
+            "n": 1,
+            "name": "simulate_typos",
+            "priority_words": null,
+            "src_length": 1
+        },
+        {
+            "cadence": 1.0,
+            "dst_length": 1,
+            "granularity": "all",
+            "input_type": "list",
+            "intensity": 100.0,
+            "name": "insert_punctuation_chars",
+            "src_length": 1,
+            "vary_chars": false
+        },
+        {
+            "aug_max": 10000,
+            "aug_min": 1,
+            "aug_p": 0.3,
+            "dst_length": 1,
+            "fonts_path": "text/fun_fonts.json",
+            "granularity": "all",
+            "input_type": "list",
+            "intensity": 100.0,
+            "n": 1,
+            "name": "replace_fun_fonts",
+            "priority_words": null,
+            "src_length": 1,
+            "vary_fonts": false
+        }
+    ],
     "get_baseline": [
         {
             "dst_length": 1,
