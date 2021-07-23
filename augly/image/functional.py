@@ -1762,16 +1762,44 @@ def shuffle_pixels(
 def vflip(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Vertically flips an image
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+
+    """
+    image = imutils.validate_and_load_image(image)
+    aug_image = image.transpose(Image.FLIP_TOP_BOTTOM)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
+def skew(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
     level: float = 0.5,
     axis: str = "x-axis",
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> Image.Image:
-
     """
-    Vertically flips an image
 
     Skews an image with respect to its x or y-axis
-
+    
     @param image: the path to an image or a variable of type PIL.Image.Image
         to be augmented
 
@@ -1780,9 +1808,9 @@ def vflip(
 
     @param level: the level of skew to apply to the image; a larger absolute value will
         result in a more intense skew. Recommended range is between [-2, 2]
-
+        
     @param axis: the axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
-
+    
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
@@ -1790,7 +1818,6 @@ def vflip(
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
-    aug_image = image.transpose(Image.FLIP_TOP_BOTTOM)
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
     w, h = image.size
@@ -1804,71 +1831,9 @@ def vflip(
             f"Invalid 'axis' value: Got '{axis}', expected 'x-axis' or 'y-axis'"
         )
 
-    func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
     aug_image = image.transform((w, h), Image.AFFINE, data, resample=Image.BILINEAR)
     imutils.get_metadata(
         metadata=metadata, function_name="skew", aug_image=aug_image, **func_kwargs
     )
-
-    return imutils.ret_and_save_image(aug_image, output_path)
-
-
-def skew(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    level: float = 1.0,
-    max_level: float = 10.0,
-    axis: str = "x_axis",
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Image.Image:
-    
-    """
-    Skew image with respect to X-axis or Y-axis
-    
-    @param image: the path to an image or a variable of type PIL.Image.Image
-        to be augmented
-        
-    @param output_path: the path in which the resulting image will be stored.
-        If None, the resulting PIL Image will still be returned
-
-    @param level: Level of the operation that will be in [0, The maximum value of level]
-    
-    @param max_level: Maximum value that the operation can have. This will be
-        scaled to level / PARAMETER_MAX.
-        
-    @param axis: Axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
-
-    @param metadata: if set to be a list, metadata about the function execution
-        including its name, the source & dest width, height, etc. will be appended
-        to the inputted list. If set to None, no metadata will be appended or returned
-
-    @returns: the augmented PIL Image
-    """
-    
-    image = imutils.validate_and_load_image(image)
-    func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    
-    level = float(np.random.uniform(low=0.1, high=level)) * max_level / 10
-    w, h = image.size
-    
-    if np.random.uniform() > 0.5:
-        level = -level
-        
-    if axis == "x-axis":
-        data = (1, level, 0, 0, 1, 0)
-    elif axis == "y-axis":
-        data = (1, 0, 0, level, 1, 0)
-    else:
-        raise AssertionError(
-            f"Invalid 'axis' value: Got '{axis}', expected 'x-axis' or 'y-axis'"
-        )
-    
-    aug_image = image.transform((w, h),Image.AFFINE, data, resample=Image.BILINEAR)
-    imutils.get_metadata(
-        metadata=metadata, function_name="skew", aug_img=aug_image, **func_kwargs)
-    
-    return aug_image
-    imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path)
