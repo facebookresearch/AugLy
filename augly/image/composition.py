@@ -2,7 +2,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import random
-from typing import List
+from typing import Any, Dict, List, Optional
 
 from augly.image.transforms import BaseTransform
 from PIL import Image
@@ -23,12 +23,12 @@ probabilities of the individual transforms.
 Example:
 
  >>> Compose([
- >>>     IGFilter(),
- >>>     ColorJitter(saturation_factor=1.5)
+ >>>     Blur(),
+ >>>     ColorJitter(saturation_factor=1.5),
  >>>     OneOf([
- >>>         ScreenshotOverlay(),
- >>>         EmojiOverlay(),
- >>>         TextOverlay(),
+ >>>         OverlayOntoScreenshot(),
+ >>>         OverlayEmoji(),
+ >>>         OverlayText(),
  >>>     ]),
  >>> ])
 """
@@ -52,11 +52,17 @@ class BaseComposition(object):
 
 
 class Compose(BaseComposition):
-    def __call__(self, image: Image.Image) -> Image.Image:
+    def __call__(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
         """
         Applies the list of transforms in order to the image
 
         @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
 
         @returns: Augmented PIL Image
         """
@@ -64,7 +70,7 @@ class Compose(BaseComposition):
             return image
 
         for transform in self.transforms:
-            image = transform(image)
+            image = transform(image, metadata=metadata)
 
         return image
 
@@ -82,11 +88,17 @@ class OneOf(BaseComposition):
         probs_sum = sum(transform_probs)
         self.transform_probs = [t / probs_sum for t in transform_probs]
 
-    def __call__(self, image: Image.Image) -> Image.Image:
+    def __call__(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
         """
         Applies one of the transforms to the image
 
         @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
 
         @returns: Augmented PIL Image
         """
@@ -94,4 +106,4 @@ class OneOf(BaseComposition):
             return image
 
         transform = random.choices(self.transforms, self.transform_probs)[0]
-        return transform(image, force=True)
+        return transform(image, force=True, metadata=metadata)
