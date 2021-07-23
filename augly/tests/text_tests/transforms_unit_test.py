@@ -76,6 +76,24 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(self.metadata, self.expected_metadata["apply_lambda"]),
         )
 
+    def test_Compose(self) -> None:
+        random.seed(1)
+        augmented_compose = txtaugs.Compose(
+            [
+                txtaugs.OneOf([txtaugs.ReplaceSimilarChars(), txtaugs.SimulateTypos()]),
+                txtaugs.InsertPunctuationChars(),
+                txtaugs.ReplaceFunFonts(),
+            ]
+        )(self.texts, metadata=self.metadata)
+
+        self.assertTrue(
+            augmented_compose[0]
+            == "T̴ -̴ h̴ -̴ e̴ -̴ -̴ u̴ -̴ q̴ -̴ i̴ -̴ c̴ -̴ k̴ -̴ -̴ b̴ -̴ r̴ -̴ o̴ -̴ w̴ -̴ n̴ -̴ -̴ '̴ -̴ f̴ -̴ o̴ -̴ x̴ -̴ '̴ -̴ -̴ c̴ -̴ o̴ -̴ u̴ -̴ ,̴ -̴ d̴ -̴ n̴ -̴ '̴ -̴ -̴ t̴ -̴ -̴ j̴ -̴ u̴ -̴ m̴ -̴ p̴ -̴ -̴ v̴ -̴ o̴ -̴ e̴ -̴ r̴ -̴ -̴ t̴ -̴ g̴ -̴ h̴ -̴ e̴ -̴ -̴ g̴ -̴ r̴ -̴ e̴ -̴ e̴ -̴ n̴ -̴ ,̴ -̴ -̴ g̴ -̴ r̴ -̴ a̴ -̴ s̴ -̴ s̴ -̴ y̴ -̴ -̴ n̴ -̴ i̴ -̴ l̴ -̴ l̴ -̴.̴",
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["compose"]),
+        )
+
     def test_GetBaseline(self) -> None:
         augmented_baseline = txtaugs.GetBaseline()(self.texts, metadata=self.metadata)
 
