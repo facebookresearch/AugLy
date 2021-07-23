@@ -145,6 +145,13 @@ def compute_changed_segments(
             new_dst_segments.append(
                 Segment(dst_segment.start + offset, dst_segment.end + offset)
             )
+        elif name == "replace_with_background":
+            new_src_segments.append(src_segment)
+            clip_start = kwargs["starting_background_duration"]
+            duration = kwargs["source_duration"]
+            new_dst_segments.append(
+                Segment(dst_segment.start + clip_start, dst_segment.start + clip_start + duration)
+            )
         elif name == "change_video_speed":
             # speed_factor > 1 if speedup, < 1 if slow down
             speed_factor *= src_duration / dst_duration
@@ -271,6 +278,7 @@ def compute_segments(
 
     if name in [
         "insert_in_background",
+        "replace_with_background",
         "change_video_speed",
         "loop",
         "time_crop",

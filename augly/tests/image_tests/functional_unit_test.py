@@ -102,7 +102,7 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
 
     def test_shuffle_pixels(self):
         self.evaluate_function(imaugs.shuffle_pixels, factor=0.5)
-    
+
     def test_skew(self):
         self.evaluate_function(imaugs.skew)
         

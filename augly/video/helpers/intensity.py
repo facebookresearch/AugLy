@@ -153,7 +153,7 @@ def identity_function_intensity(**kwargs) -> float:
     return 0.0
 
 
-def insert_in_background_intensity(metadata: Dict[str, Any], **kwargs):
+def insert_in_background_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
@@ -283,6 +283,16 @@ def pixelization_intensity(ratio: float, **kwargs) -> float:
 def remove_audio_intensity(**kwargs) -> float:
     return 100.0
 
+def replace_with_background_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+    """
+    The intensity of replace_with_background is the fraction of the source video duration
+    that was replaced with background. Because the overall duration of the video is preserved,
+    the background segments together must be shorter than the source duration so the intensity is never
+    greater than 100.
+    """
+    src_duration = metadata["src_duration"]
+    total_bg_duration = metadata["starting_background_duration"] + metadata["ending_background_duration"]
+    return min((total_bg_duration / src_duration) * 100.0, 100.0)
 
 def replace_with_color_frames_intensity(
     duration_factor: float, offset_factor: float, **kwargs

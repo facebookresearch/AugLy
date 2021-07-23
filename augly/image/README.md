@@ -1,7 +1,14 @@
 # Image
 
+## Installation   
+If you would like to use the image augmentations, please install AugLy using the following command:
+```bash
+pip install augly
+```
+
 ## Augmentations
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_image.ipynb)
+
 
 Try running some AugLy image augmentations! For a full list of available augmentations, see [here](__init__.py).
 
@@ -18,7 +25,7 @@ output_path = "your_output_path.png"
 
 # Augmentation functions can accept image paths as input and
 # always return the resulting augmented PIL Image
-aug_image = imaugs.apply_ig_filter(image_path, filter_name="clarendon")
+aug_image = imaugs.overlay_emoji(image_path, opacity=1.0, emoji_size=0.15)
 
 # Augmentation functions can also accept PIL Images as input
 aug_image = imaugs.pad_square(aug_image)
@@ -44,7 +51,7 @@ AUGMENTATIONS = [
     imaugs.Blur(),
     imaugs.ColorJitter(**COLOR_JITTER_PARAMS),
     imaugs.OneOf(
-        [imaugs.ScreenshotOverlay(), imaugs.EmojiOverlay(), imaugs.TextOverlay()]
+        [imaugs.OverlayOntoScreenshot(), imaugs.OverlayEmoji(), imaugs.OverlayText()]
     ),
 ]
 
