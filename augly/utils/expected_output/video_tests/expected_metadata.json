@@ -191,6 +191,51 @@
       "src_width": 1920
     }
   ],
+  "compose": [
+    {
+      "name": "vflip",
+      "src_duration": 10.027855,
+      "dst_duration": 10.027855,
+      "src_fps": 29.916666666666668,
+      "dst_fps": 29.916666666666668,
+      "src_width": 1920,
+      "src_height": 1080,
+      "dst_width": 1920,
+      "dst_height": 1080,
+      "src_segments": [{"start": 0.0, "end": 10.027855}],
+      "dst_segments": [{"start": 0.0, "end": 10.027855}],
+      "intensity": 100.0
+    },
+    {
+      "name": "brightness",
+      "src_duration": 10.027855,
+      "dst_duration": 10.027855,
+      "src_fps": 29.916666666666668,
+      "dst_fps": 29.916666666666668,
+      "src_width": 1920,
+      "src_height": 1080,
+      "dst_width": 1920,
+      "dst_height": 1080,
+      "src_segments": [{"start": 0.0, "end": 10.027855}],
+      "dst_segments": [{"start": 0.0, "end": 10.027855}],
+      "level": 0.15,
+      "intensity": 15.0
+    },
+    {
+      "name": "grayscale",
+      "src_duration": 10.027855,
+      "dst_duration": 10.027855,
+      "src_fps": 29.916666666666668,
+      "dst_fps": 29.916666666666668,
+      "src_width": 1920,
+      "src_height": 1080,
+      "dst_width": 1920,
+      "dst_height": 1080,
+      "src_segments": [{"start": 0.0, "end": 10.027855}],
+      "dst_segments": [{"start": 0.0, "end": 10.027855}],
+      "intensity": 100.0
+    }
+  ],
   "contrast": [
     {
       "dst_duration": 10.027855,
