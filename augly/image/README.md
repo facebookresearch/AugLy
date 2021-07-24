@@ -7,8 +7,8 @@ pip install augly
 ```
 
 ## Augmentations
-[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_image.ipynb)
 
+[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_image.ipynb)
 
 Try running some AugLy image augmentations! For a full list of available augmentations, see [here](__init__.py).
 
