@@ -1765,36 +1765,6 @@ def shuffle_pixels(
     return imutils.ret_and_save_image(aug_image, output_path)
 
 
-def vflip(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Image.Image:
-    """
-    Vertically flips an image
-
-    @param image: the path to an image or a variable of type PIL.Image.Image
-        to be augmented
-
-    @param output_path: the path in which the resulting image will be stored.
-        If None, the resulting PIL Image will still be returned
-
-    @param metadata: if set to be a list, metadata about the function execution
-        including its name, the source & dest width, height, etc. will be appended
-        to the inputted list. If set to None, no metadata will be appended or returned
-
-    @returns: the augmented PIL Image
-
-    """
-    image = imutils.validate_and_load_image(image)
-    aug_image = image.transpose(Image.FLIP_TOP_BOTTOM)
-
-    func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
-
-    return imutils.ret_and_save_image(aug_image, output_path)
-
-
 def skew(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
@@ -1841,5 +1811,35 @@ def skew(
     imutils.get_metadata(
         metadata=metadata, function_name="skew", aug_image=aug_image, **func_kwargs
     )
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
+def vflip(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Vertically flips an image
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+
+    """
+    image = imutils.validate_and_load_image(image)
+    aug_image = image.transpose(Image.FLIP_TOP_BOTTOM)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path)
