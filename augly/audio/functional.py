@@ -1269,3 +1269,45 @@ def to_mono(
     )
 
     return audutils.ret_and_save_audio(aug_audio, output_path, sample_rate)
+
+
+def resample(
+    audio: Union[str, np.ndarray],
+    sample_rate: int = DEFAULT_SAMPLE_RATE,
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    target_sample_rate: int = 16000,
+) -> Tuple[np.ndarray, int]:
+    """
+    Resampling of the Sample Rate of audio
+    
+    @param audio: the path to the audio or a variable of type np.ndarray that
+        will be augmented
+
+    @param sample_rate: the audio sample rate of the inputted audio
+
+    @param output_path: the path in which the resulting audio will be stored. If None,
+        the resulting np.ndarray will still be returned
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, sample rates, etc. will be
+        appended to the inputted list. If set to None, no metadata will be appended
+    
+    @param target_sample rate: the target sample rate of audio
+
+    @returns: the augmented audio array and sample rate
+    """
+    audio, sample_rate = audutils.validate_and_load_audio(audio, sample_rate)
+    aug_audio = librosa.resample(y=audio, orig_sr=sample_rate, target_sr=target_sample_rate)
+
+    audutils.get_metadata(
+        metadata=metadata,
+        function_name="resample",
+        audio=audio,
+        sample_rate=sample_rate,
+        dst_audio=aug_audio,
+        dst_sample_rate=target_sample_rate,
+        output_path=output_path,
+    )
+
+    return audutils.ret_and_save_audio(aug_audio, output_path, target_sample_rate)
