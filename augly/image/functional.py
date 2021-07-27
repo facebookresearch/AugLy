@@ -1834,7 +1834,6 @@ def vflip(
         to the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the augmented PIL Image
-
     """
     image = imutils.validate_and_load_image(image)
     aug_image = image.transpose(Image.FLIP_TOP_BOTTOM)
