@@ -10,8 +10,8 @@ pip install augly[av]
 This ensures that not only the base dependencies, but also the heavier dependencies required for audio & video processing, are installed.
 
 ## Augmentations
-[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_audio.ipynb)
 
+[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_audio.ipynb)
 
 Try running some AugLy audio augmentations in Colab! For a full list of available augmentations, see [here](__init__.py).
 
