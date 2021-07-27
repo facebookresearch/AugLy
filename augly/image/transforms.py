@@ -211,7 +211,7 @@ class Brightness(BaseTransform):
         @returns: Augmented PIL Image
         """
         return F.brightness(image, factor=self.factor, metadata=metadata)
-   
+
 
 class ChangeAspectRatio(BaseTransform):
     def __init__(self, ratio: float = 1.0, p: float = 1.0):
