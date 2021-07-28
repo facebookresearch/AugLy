@@ -1773,7 +1773,6 @@ def skew(
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> Image.Image:
     """
-
     Skews an image with respect to its x or y-axis
     
     @param image: the path to an image or a variable of type PIL.Image.Image
