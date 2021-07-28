@@ -1803,7 +1803,7 @@ def skew(
         data = (1, 0, 0, level, 1, 0)
     else:
         raise AssertionError(
-            f"Invalid 'axis' value: Got '{axis}', expected '0 for x-axis' or '1 for y-axis'"
+            f"Invalid 'axis' value: Got '{axis}', expected 0 for 'x-axis' or 1 for 'y-axis'"
         )
 
     aug_image = image.transform((w, h), Image.AFFINE, data, resample=Image.BILINEAR)
