@@ -1769,7 +1769,7 @@ def skew(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
     level: float = 0.5,
-    axis: str = "x-axis",
+    axis: int = 0,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> Image.Image:
     """
@@ -1784,7 +1784,7 @@ def skew(
     @param level: the level of skew to apply to the image; a larger absolute value will
         result in a more intense skew. Recommended range is between [-2, 2]
         
-    @param axis: the axis along which the image will be skewed; can be 'x-axis' or 'y-axis'
+    @param axis: the axis along which the image will be skewed; can be 0 for 'x-axis' or 1 for 'y-axis'
     
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -1797,13 +1797,13 @@ def skew(
 
     w, h = image.size
 
-    if axis == "x-axis":
+    if axis == 0:
         data = (1, level, 0, 0, 1, 0)
-    elif axis == "y-axis":
+    elif axis == 1:
         data = (1, 0, 0, level, 1, 0)
     else:
         raise AssertionError(
-            f"Invalid 'axis' value: Got '{axis}', expected 'x-axis' or 'y-axis'"
+            f"Invalid 'axis' value: Got '{axis}', expected '0 for x-axis' or '1 for y-axis'"
         )
 
     aug_image = image.transform((w, h), Image.AFFINE, data, resample=Image.BILINEAR)
