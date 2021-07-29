@@ -1781,7 +1781,7 @@ def skew(
     @param output_path: the path in which the resulting image will be stored.
         If None, the resulting PIL Image will still be returned
 
-    @param level: the level of skew to apply to the image; a larger absolute value will
+    @param skew_factor: the level of skew to apply to the image; a larger absolute value will
         result in a more intense skew. Recommended range is between [-2, 2]
         
     @param axis: the axis along which the image will be skewed; can be set to 0 (x-axis)
@@ -1799,9 +1799,9 @@ def skew(
     w, h = image.size
 
     if axis == 0:
-        data = (1, level, -level*h/2, 0, 1, 0)
+        data = (1, skew_factor, -skew_factor*h/2, 0, 1, 0)
     elif axis == 1:
-        data = (1, 0, 0, level, 1, -level*w/2)
+        data = (1, 0, 0, skew_factor, 1, -skew_factor*w/2)
     else:
         raise AssertionError(
             f"Invalid 'axis' value: Got '{axis}', expected 0 for 'x-axis' or 1 for 'y-axis'"
