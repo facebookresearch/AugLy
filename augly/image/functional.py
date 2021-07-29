@@ -1768,7 +1768,7 @@ def shuffle_pixels(
 def skew(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
-    level: float = 0.5,
+    skew_factor: float = 0.5,
     axis: int = 0,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> Image.Image:
