@@ -1317,7 +1317,8 @@ class Skew(BaseTransform):
         @param level: the level of skew to apply to the image; a larger absolute value will
             result in a more intense skew. Recommended range is between [-2, 2]
             
-        @param axis: the axis along which the image will be skewed; can be 0 for 'x-axis' or 1 for 'y-axis'
+        @param axis: the axis along which the image will be skewed; can be set to 0 (x-axis)
+            or 1 (y-axis)
         """
         super().__init__(p)
         self.level = level
