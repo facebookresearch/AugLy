@@ -1799,9 +1799,9 @@ def skew(
     w, h = image.size
 
     if axis == 0:
-        data = (1, level, 0, 0, 1, 0)
+        data = (1, level, -level*h/2, 0, 1, 0)
     elif axis == 1:
-        data = (1, 0, 0, level, 1, 0)
+        data = (1, 0, 0, level, 1, -level*w/2)
     else:
         raise AssertionError(
             f"Invalid 'axis' value: Got '{axis}', expected 0 for 'x-axis' or 1 for 'y-axis'"
