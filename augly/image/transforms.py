@@ -1312,16 +1312,16 @@ class ShufflePixels(BaseTransform):
 
     
 class Skew(BaseTransform):
-    def __init__(self, level: float = 0.5, axis: int = 0, p: float = 1.0):
+    def __init__(self, skew_factor: float = 0.5, axis: int = 0, p: float = 1.0):
         """
-        @param level: the level of skew to apply to the image; a larger absolute value will
+        @param skew_factor: the level of skew to apply to the image; a larger absolute value will
             result in a more intense skew. Recommended range is between [-2, 2]
             
         @param axis: the axis along which the image will be skewed; can be set to 0 (x-axis)
             or 1 (y-axis)
         """
         super().__init__(p)
-        self.level = level
+        self.skew_factor = skew_factor
         self.axis = axis
         
     def apply_transform(
@@ -1338,7 +1338,7 @@ class Skew(BaseTransform):
             
         @returns: Augmented PIL Image
         """
-        return F.skew(image, level=self.level, axis=self.axis, metadata=metadata)
+        return F.skew(image, skew_factor=self.skew_factor, axis=self.axis, metadata=metadata)
 
 
 class VFlip(BaseTransform):
