@@ -287,9 +287,9 @@ def shuffle_pixels_intensity(factor: float, **kwargs) -> float:
     return factor * 100.0
 
 
-def skew_intensity(level: float, **kwargs) -> float:
-    max_level = 2.0
-    return min((abs(level) / max_level) * 100.0, 100.0)
+def skew_intensity(skew_factor: float, **kwargs) -> float:
+    max_skew_factor = 2.0
+    return min((abs(skew_factor) / max_skew_factor) * 100.0, 100.0)
 
 
 def vflip_intensity(**kwargs) -> float:
