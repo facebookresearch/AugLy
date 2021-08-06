@@ -15,7 +15,7 @@ We actively welcome your pull requests.
 
 ## Adding a New Augmentation
 
-Before adding a new augmentation, it would be great if you opened an associated issue such that we could ensure that (a) this functionality doesn't already exist in the library (b) it is in line with the kinds of augmentations we'd like to support.
+Before adding a new augmentation, please open an associated issue such that we could ensure that (a) this functionality doesn't already exist in the library (b) it is in line with the kinds of augmentations we'd like to support.
 
 If you're adding a new augmentation, please ensure that you have made all the necessary changes in the following files, where `<module>` is the module (`audio`, `text`, or `image`) where you added the new augmentation.
 - `augly/<module>/functional.py`
@@ -28,7 +28,7 @@ If you're adding a new augmentation, please ensure that you have made all the ne
 - for audio: `augly/assets/tests/audio/speech_commands_expected_output/{mono, stereo}/test_<aug_name>.wav`
 - for image: `augly/assets/tests/image/dfdc_expected_output/test_<aug_name>.png`
 
-Note about test files: The final file will be added, and should be the result of running the new augmentation with the args as specified in the new unit tests. The two new unit tests in `functional_unit_tests.py` & `transforms_unit_tests.py` should specify the same arguments for the new augmentation so they can use the same output file.
+Note about test files: The final file will be added, and should be the result of running the new augmentation with the args as specified in the new unit tests. The two new unit tests in `functional_unit_tests.py` & `transforms_unit_tests.py` should specify the same `args` for the new augmentation so they can use the same output file.
 
 Note about new video augmentations: You may also need to add an augmenter file in `augly/video/augmenters/` if your augmentation uses `cv2` or `ffmpeg`. Instead of `functional_unit_tests.py` or `transforms_unit_tests.py`, you should choose which test file to add the unit test for your new augmentation to based on which category it best fits in to. If the augmentation is implemented using `cv2` or `ffmpeg`, you should add the unit test to `cv2_tests.py` or `ffmpeg_tests.py` respectively. If the augmentation is implemented by applying a function to each frame of the video, you should add the unit test to `image_based_tests.py`. If the augmentation is a combination of multiple video augmentations, you should add the unit test to `composite_tests.py`.
 
