@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
+from augly.text.composition import Compose, OneOf
+
 from augly.text.functional import (
     apply_lambda,
     get_baseline,
@@ -44,6 +46,8 @@ from augly.text.transforms import (
 )
 
 __all__ = [
+    "Compose",
+    "OneOf",
     "ApplyLambda",
     "GetBaseline",
     "InsertPunctuationChars",

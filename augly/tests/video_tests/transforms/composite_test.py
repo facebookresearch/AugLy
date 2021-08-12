@@ -30,6 +30,19 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
             metadata_exclude_keys=["dst_duration", "dst_fps", "intensity"],
         )
 
+    def test_Compose(self):
+        random.seed(1)
+        self.evaluate_class(
+            vidaugs.Compose(
+                [
+                    vidaugs.VFlip(),
+                    vidaugs.Brightness(),
+                    vidaugs.OneOf([vidaugs.Grayscale(), vidaugs.ApplyLambda()]),
+                ]
+            ),
+            fname="compose",
+        )
+
     def test_OverlayEmoji(self):
         self.evaluate_class(vidaugs.OverlayEmoji(), fname="overlay_emoji")
 
