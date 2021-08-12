@@ -25,6 +25,10 @@ is assumed in the intensity function below.
 """
 
 
+def apply_pil_filter_intensity(**kwargs) -> float:
+    return 100.0
+
+
 def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
     intensity_func = globals().get(f"{aug_function}_intensity")
     return intensity_func(**kwargs) if intensity_func else 100.0

@@ -67,6 +67,54 @@ def apply_lambda(
     return imutils.ret_and_save_image(aug_image, output_path)
 
 
+def apply_pil_filter(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    filter_type: Union[Callable, ImageFilter.Filter] = ImageFilter.EDGE_ENHANCE_MORE,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Applies a given PIL filter to the input image using `Image.filter()`
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param filter_type: the PIL ImageFilter to apply to the image
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = deepcopy(locals())
+
+    ftr = filter_type() if isinstance(filter_type, Callable) else filter_type
+    assert (
+        isinstance(ftr, ImageFilter.Filter)
+    ), "Filter type must be a PIL.ImageFilter.Filter class"
+
+    func_kwargs = imutils.get_func_kwargs(
+        metadata, func_kwargs, filter_type=getattr(ftr, "name", filter_type)
+    )
+
+    aug_image = image.filter(ftr)  # pyre-ignore PIL.ImageFilter.Filter isn't recognized
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="apply_pil_filter",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
 def blur(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,

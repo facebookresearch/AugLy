@@ -12,6 +12,9 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
     def test_apply_lambda(self):
         self.evaluate_function(imaugs.apply_lambda)
 
+    def test_apply_pil_filter(self):
+        self.evaluate_function(imaugs.apply_pil_filter)
+
     def test_blur(self):
         self.evaluate_function(imaugs.blur)
 

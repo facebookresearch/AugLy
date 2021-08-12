@@ -12,6 +12,18 @@
             "src_width": 1920
         }
     ],
+    "apply_pil_filter": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "filter_type": "Edge-enhance More",
+            "intensity": 100.0,
+            "name": "apply_pil_filter",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
     "blur": [
         {
             "dst_height": 1080,
