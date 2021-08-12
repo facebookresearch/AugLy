@@ -70,10 +70,14 @@ def color_jitter_intensity(
         isinstance(saturation_factor, (float, int)) and saturation_factor >= 0
     ), "saturation_factor must be a nonnegative number"
 
-    brightness_intensity = mult_factor_intensity_helper(brightness_factor)
-    contrast_intensity = mult_factor_intensity_helper(contrast_factor)
-    saturation_intensity = mult_factor_intensity_helper(saturation_factor)
-    return (brightness_intensity * contrast_intensity * saturation_intensity) * 100.0
+    max_total_factor = 30
+
+    brightness_factor = normalize_mult_factor(brightness_factor)
+    contrast_factor = normalize_mult_factor(contrast_factor)
+    saturation_factor = normalize_mult_factor(saturation_factor)
+    total_factor = brightness_factor + contrast_factor + saturation_factor
+
+    return min((total_factor / max_total_factor) * 100.0, 100.0)
 
 
 def contrast_intensity(factor: float, **kwargs) -> float:
@@ -291,7 +295,7 @@ def vflip_intensity(**kwargs) -> float:
     return 100.0
 
 
-def mult_factor_intensity_helper(factor: float) -> float:
+def normalize_mult_factor(factor: float) -> float:
     assert (
         isinstance(factor, (float, int)) and factor >= 0
     ), "factor must be a non-negative number"
@@ -299,8 +303,12 @@ def mult_factor_intensity_helper(factor: float) -> float:
     if factor == 1:
         return 0.0
 
+    return factor if factor >= 1 else 1 / factor
+
+
+def mult_factor_intensity_helper(factor: float) -> float:
+    factor = normalize_mult_factor(factor)
     max_factor = 10
-    factor = factor if factor >= 1 else 1 / factor
     return min((factor / max_factor) * 100.0, 100.0)
 
 

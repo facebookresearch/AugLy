@@ -71,16 +71,22 @@
             "output_path": null,
             "radius": 2.0,
             "src_height": 1080,
-            "src_width": 1920}, {"brightness_factor": 1.0,
+            "src_width": 1920
+        },
+        {
+            "brightness_factor": 1.0,
             "contrast_factor": 1.0,
             "dst_height": 1080,
             "dst_width": 1920,
-            "intensity": 0.0,
+            "intensity": 5.0,
             "name": "color_jitter",
             "output_path": null,
             "saturation_factor": 1.5,
             "src_height": 1080,
-            "src_width": 1920}, {"dst_height": 1080,
+            "src_width": 1920
+        },
+        {
+            "dst_height": 1080,
             "dst_width": 1920,
             "emoji_path": "twemojis/smileys/smiling_face_with_heart_eyes.png",
             "emoji_size": 0.15,
