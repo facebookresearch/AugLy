@@ -101,6 +101,14 @@ class TransformsImageUnitTest(BaseImageUnitTest):
             fname="overlay_image",
         )
 
+    def test_OverlayOntoBackgroundImage(self):
+        self.evaluate_class(
+            imaugs.OverlayOntoBackgroundImage(
+                background_image=EMOJI_PATH, overlay_size=0.5, scale_bg=True
+            ),
+            fname="overlay_onto_background_image",
+        )
+
     def test_OverlayOntoScreenshot(self):
         self.evaluate_class(
             imaugs.OverlayOntoScreenshot(),
