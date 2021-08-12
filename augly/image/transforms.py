@@ -893,6 +893,71 @@ class OverlayOntoBackgroundImage(BaseTransform):
         )
 
 
+class OverlayOntoBackgroundImageWithBlurredMask(BaseTransform):
+    def __init__(
+        self,
+        background_image: Union[str, Image.Image],
+        overlay_size: float = 1.0,
+        x_pos: float = 0.1,
+        y_pos: float = 0.1,
+        scale_bg: bool = False,
+        seed: int = 123,
+        p: float = 1.0,
+    ):
+        """
+        @param background_image: the path to an image or a variable of type
+            PIL.Image.Image onto which the source image will be overlaid
+
+        @param overlay_size: size of the overlaid image is overlay_size * height
+            of the background image
+
+        @param x_pos: position of overlaid image relative to the background image width
+
+        @param y_pos: position of overlaid image relative to the background image height
+
+        @param scale_bg: if True, the background image will be scaled up or down so that
+            overlay_size is respected; if False, the source image will be scaled instead
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.background_image = background_image
+        self.overlay_size = overlay_size
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+        self.scale_bg = scale_bg
+        self.seed = seed
+
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
+        """
+        Overlays the image onto a given background image at position
+        (width * x_pos, height * y_pos) using a mask with blurred edges
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: Augmented PIL Image
+        """
+        return F.overlay_onto_background_image_with_blurred_mask(
+            image,
+            background_image=self.background_image,
+            overlay_size=self.overlay_size,
+            x_pos=self.x_pos,
+            y_pos=self.y_pos,
+            scale_bg=self.scale_bg,
+            seed=self.seed,
+            metadata=metadata,
+        )
+
+
 class OverlayOntoScreenshot(BaseTransform):
     def __init__(
         self,

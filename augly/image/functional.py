@@ -1067,6 +1067,112 @@ def overlay_onto_background_image(
     return imutils.ret_and_save_image(aug_image, output_path)
 
 
+def overlay_onto_background_image_with_blurred_mask(
+    image: Union[str, Image.Image],
+    background_image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    overlay_size: float = 0.8,
+    x_pos: float = 0.1,
+    y_pos: float = 0.1,
+    scale_bg: bool = False,
+    seed: int = 123,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Overlays the image onto a given background image at position
+    (width * x_pos, height * y_pos) using a mask with blurred edges
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param background_image: the path to an image or a variable of type PIL.Image.Image
+        onto which the source image will be overlaid
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param opacity: the lower the opacity, the more transparent the overlaid image
+
+    @param overlay_size: size of the overlaid image is overlay_size * height
+        of the background image
+
+    @param x_pos: position of overlaid image relative to the background image width
+
+    @param y_pos: position of overlaid image relative to the background image height
+
+    @param scale_bg: if True, the background image will be scaled up or down so that
+        overlay_size is respected; if False, the source image will be scaled instead
+
+    @param seed: the random seed will be set to this before calling any random functions
+        to ensure consistency between runs
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
+    def make_mask(rs, xd, yd):
+        """
+        Creates a mask with blurred edges which will be applied to the source image
+        when overlaid onto the background image
+        """
+        xf = np.linspace(0, 2 * np.pi, xd)
+        yf = np.linspace(0, 2 * np.pi, yd)
+        mask = (1 - np.cos(yf))[:, None] * (1 - np.cos(xf))[None, :] / 4
+        xx, yy = np.meshgrid(xf, yf)
+        a = rs.random() * 2 * np.pi
+        s = 1 + np.tan(rs.random() * np.pi)
+        xx2 = (xx * np.cos(a) - yy * np.sin(a)) * s + rs.random() * 2 * np.pi
+        yy2 = (xx * np.sin(a) + yy * np.cos(a)) * s + rs.random() * 2 * np.pi
+        mask = mask * 0.7 + 0.3 * rs.random() * (np.sin(xx2) * np.sin(yy2) / 4)
+        mask = np.clip(mask, 0, None)
+        mask = mask ** rs.random()
+        mask = np.clip(mask * (1 + 2 * rs.random()), None, 1.0)
+        return mask
+
+    bg_image = imutils.validate_and_load_image(background_image)
+    rs = np.random.RandomState(seed)
+
+    if scale_bg:
+        bg_image = resize(
+            bg_image,
+            width=math.floor(image.width / overlay_size),
+            height=math.floor(image.height / overlay_size),
+        )
+    else:
+        image = resize(
+            image,
+            width=math.floor(overlay_size * bg_image.width),
+            height=math.floor(overlay_size * bg_image.height),
+        )
+
+    mask = make_mask(rs, image.width, image.height)
+    alpha = Image.fromarray((mask * 255).astype("uint8"))
+
+    aug_image = bg_image
+    aug_image.paste(
+        image,
+        (
+            int(x_pos * (bg_image.width - image.width)),
+            int(y_pos * (bg_image.height - image.height)),
+        ),
+        alpha,
+    )
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="overlay_onto_background_image_with_blurred_mask",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
 def overlay_onto_screenshot(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,

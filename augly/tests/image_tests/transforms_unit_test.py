@@ -6,6 +6,7 @@ import random
 import unittest
 
 import augly.image as imaugs
+from augly.tests.base_configs import ImageAugConfig
 from augly.tests.image_tests.base_unit_test import BaseImageUnitTest
 from augly.utils import EMOJI_PATH, IMAGE_METADATA_PATH, IMG_MASK_PATH
 
@@ -112,6 +113,16 @@ class TransformsImageUnitTest(BaseImageUnitTest):
                 background_image=EMOJI_PATH, overlay_size=0.5, scale_bg=True
             ),
             fname="overlay_onto_background_image",
+        )
+
+    def test_OverlayOntoBackgroundImageWithBlurredMask(self):
+        self.evaluate_class(
+            imaugs.OverlayOntoBackgroundImageWithBlurredMask(
+                background_image=ImageAugConfig(input_file_index=1).get_input_path()[0],
+                overlay_size=0.6,
+                scale_bg=True,
+            ),
+            fname="overlay_onto_background_image_with_blurred_mask",
         )
 
     def test_OverlayOntoScreenshot(self):

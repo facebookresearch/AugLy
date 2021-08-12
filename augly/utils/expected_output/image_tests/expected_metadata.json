@@ -288,6 +288,23 @@
             "y_pos": 0.4
         }
     ],
+    "overlay_onto_background_image_with_blurred_mask": [
+        {
+            "background_image": "tests/image/inputs/dfdc_2.jpg",
+            "dst_height": 1800,
+            "dst_width": 3200,
+            "intensity": 64.0,
+            "name": "overlay_onto_background_image_with_blurred_mask",
+            "output_path": null,
+            "overlay_size": 0.6,
+            "scale_bg": true,
+            "seed": 123,
+            "src_height": 1080,
+            "src_width": 1920,
+            "x_pos": 0.1,
+            "y_pos": 0.1
+        }
+    ],
     "overlay_onto_screenshot": [
         {
             "crop_src_to_fit": false,

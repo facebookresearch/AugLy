@@ -165,6 +165,14 @@ def overlay_onto_background_image_intensity(
     return 100.0 - overlay_media_intensity_helper(opacity, overlay_size)
 
 
+def overlay_onto_background_image_with_blurred_mask_intensity(
+    overlay_size: float, **kwargs
+) -> float:
+    return 100.0 - overlay_media_intensity_helper(
+        opacity=1.0, overlay_content_size=overlay_size
+    )
+
+
 def overlay_onto_screenshot_intensity(
     template_filepath: str,
     template_bboxes_filepath: str,
