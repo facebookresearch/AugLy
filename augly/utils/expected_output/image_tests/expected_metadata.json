@@ -60,6 +60,19 @@
             "src_width": 1920
         }
     ],
+    "clip_image_size": [
+        {
+            "dst_height": 918,
+            "dst_width": 1632,
+            "intensity": 27.750000000000004,
+            "name": "clip_image_size",
+            "output_path": null,
+            "min_resolution": null,
+            "max_resolution": 1500000,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
     "color_jitter": [
         {
             "brightness_factor": 1.0,

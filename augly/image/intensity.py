@@ -61,6 +61,10 @@ def change_aspect_ratio_intensity(
     return min((ratio / max_ratio) * 100.0, 100.0)
 
 
+def clip_image_size_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+    return resize_intensity_helper(metadata)
+
+
 def color_jitter_intensity(
     brightness_factor: float, contrast_factor: float, saturation_factor: float, **kwargs
 ) -> float:

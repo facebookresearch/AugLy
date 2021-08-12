@@ -24,6 +24,9 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
     def test_change_aspect_ratio(self):
         self.evaluate_function(imaugs.change_aspect_ratio)
 
+    def test_clip_image_size(self):
+        self.evaluate_function(imaugs.clip_image_size, max_resolution=1500000)
+
     def test_color_jitter(self):
         self.evaluate_function(imaugs.color_jitter)
 

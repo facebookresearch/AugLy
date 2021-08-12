@@ -237,6 +237,72 @@ def change_aspect_ratio(
     return imutils.ret_and_save_image(aug_image, output_path)
 
 
+def clip_image_size(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    min_resolution: Optional[int] = None,
+    max_resolution: Optional[int] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Scales the image up or down if necessary to fit in the given min and max resolution
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param min_resolution: the minimum resolution, i.e. width * height, that the
+        augmented image should have; if the input image has a lower resolution than this,
+        the image will be scaled up as necessary
+
+    @param max_resolution: the maximum resolution, i.e. width * height, that the
+        augmented image should have; if the input image has a higher resolution than
+        this, the image will be scaled down as necessary
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
+    assert min_resolution is None or (
+        isinstance(min_resolution, int) and min_resolution >= 0
+    ), "Min resolution must be None or a nonnegative int"
+    assert max_resolution is None or (
+        isinstance(max_resolution, int) and max_resolution >= 0
+    ), "Max resolution must be None or a nonnegative int"
+    assert not (
+        min_resolution is not None
+        and max_resolution is not None
+        and min_resolution > max_resolution
+    ), "Min resolution cannot be greater than max resolution"
+
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
+    aug_image = image
+
+    if min_resolution is not None and image.width * image.height < min_resolution:
+        resize_factor = math.sqrt(min_resolution / (image.width * image.height))
+        aug_image = scale(aug_image, factor=resize_factor)
+
+    if max_resolution is not None and image.width * image.height > max_resolution:
+        resize_factor = math.sqrt(max_resolution / (image.width * image.height))
+        aug_image = scale(aug_image, factor=resize_factor)
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="clip_image_size",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
 def color_jitter(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
