@@ -5,6 +5,7 @@ import random
 import unittest
 
 import augly.text as txtaugs
+from augly.utils import FUN_FONTS_GREEK_PATH
 
 
 class FunctionalTextUnitTest(unittest.TestCase):
@@ -213,6 +214,20 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertTrue(
             augmented_fun_fonts_word_targetted[0]
             == "T͓̽h͓̽e͓̽ quick brown 'fox' couldn't jump over the 𝘨𝘳𝘦𝘦𝘯, g̳r̳a̳s̳s̳y̳ h̴i̴l̴l̴."
+        )
+        augmented_fun_fonts_greek = txtaugs.replace_fun_fonts(
+            [
+                "Η γρήγορη καφέ αλεπού δεν μπορούσε να πηδήξει πάνω από τον καταπράσινο λόφο."
+            ],
+            granularity="word",
+            aug_p=0.3,
+            vary_fonts=True,
+            fonts_path=FUN_FONTS_GREEK_PATH,
+            n=1.0,
+        )
+        self.assertTrue(
+            augmented_fun_fonts_greek[0]
+            == "𝝜 γρήγορη καφέ αλεπού 𝛿𝜀𝜈 μπορούσε να πηδήξει πάνω από 𝞽𝞸𝞶 𝝹𝝰𝞃𝝰𝝿𝞀ά𝞂𝝸𝝼𝝾 λόφο."
         )
 
     def test_replace_similar_chars(self) -> None:
