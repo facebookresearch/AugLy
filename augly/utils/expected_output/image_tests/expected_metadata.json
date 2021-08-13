@@ -264,6 +264,23 @@
             "y_pos": 0.8
         }
     ],
+    "overlay_onto_background_image": [
+        {
+            "background_image": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "dst_height": 2160,
+            "dst_width": 3840,
+            "intensity": 75.0,
+            "name": "overlay_onto_background_image",
+            "opacity": 1.0,
+            "output_path": null,
+            "overlay_size": 0.5,
+            "scale_bg": true,
+            "src_height": 1080,
+            "src_width": 1920,
+            "x_pos": 0.4,
+            "y_pos": 0.4
+        }
+    ],
     "overlay_onto_screenshot": [
         {
             "crop_src_to_fit": false,
