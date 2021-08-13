@@ -273,6 +273,7 @@
             "max_image_size_pixels": null,
             "name": "overlay_onto_screenshot",
             "output_path": null,
+            "resize_src_to_match_template": false,
             "src_height": 1080,
             "src_width": 1920,
             "template_bboxes_filepath": "screenshot_templates/bboxes.json",

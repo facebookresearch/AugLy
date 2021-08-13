@@ -930,6 +930,7 @@ def overlay_onto_screenshot(
     template_bboxes_filepath: str = utils.BBOXES_PATH,
     max_image_size_pixels: Optional[int] = None,
     crop_src_to_fit: bool = False,
+    resize_src_to_match_template: bool = True,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> Image.Image:
     """
@@ -952,7 +953,14 @@ def overlay_onto_screenshot(
         size (in pixels)
 
     @param crop_src_to_fit: if True, the src image will be cropped if necessary to fit
-        into the template image. If False, the src image will instead be resized if needed
+        into the template image if the aspect ratios are different. If False, the src
+        image will instead be resized if needed
+
+    @param resize_src_to_match_template: if True, the src image will be resized if it is
+        too big or small in both dimensions to better match the template image. If False,
+        the template image will be resized to match the src image instead. It can be
+        useful to set this to True if the src image is very large so that the augmented
+        image isn't huge, but instead is the same size as the template image
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -968,15 +976,20 @@ def overlay_onto_screenshot(
         template_filepath, template_bboxes_filepath
     )
 
-    template, bbox = imutils.scale_template_image(
-        image.size[0],
-        image.size[1],
-        template,
-        bbox,
-        max_image_size_pixels,
-        crop_src_to_fit,
-    )
-    bbox_w, bbox_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    if resize_src_to_match_template:
+        bbox_w, bbox_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        image = scale(image, factor=min(bbox_w / image.width, bbox_h / image.height))
+    else:
+        template, bbox = imutils.scale_template_image(
+            image.size[0],
+            image.size[1],
+            template,
+            bbox,
+            max_image_size_pixels,
+            crop_src_to_fit,
+        )
+        bbox_w, bbox_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+
     cropped_src = imutils.resize_and_pad_to_given_size(
         image, bbox_w, bbox_h, crop=crop_src_to_fit
     )
