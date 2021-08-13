@@ -1101,7 +1101,7 @@ def overlay_stripes(
 def overlay_text(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
-    text: List[int] = utils.DEFAULT_TEXT_INDICES,
+    text: List[Union[int, List[int]]] = utils.DEFAULT_TEXT_INDICES,
     font_file: str = utils.FONT_PATH,
     font_size: float = 0.15,
     opacity: float = 1.0,
@@ -1119,7 +1119,9 @@ def overlay_text(
     @param output_path: the path in which the resulting image will be stored.
         If None, the resulting PIL Image will still be returned
 
-    @param text: indices (into the file) of the characters to be overlaid
+    @param text: indices (into the file) of the characters to be overlaid. Each line of
+        text is represented as a list of int indices; if a list of lists is supplied,
+        multiple lines of text will be overlaid
 
     @param font_file: iopath uri to the .ttf font file
 
@@ -1150,6 +1152,15 @@ def overlay_text(
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
+    text_lists = text if all(isinstance(t, list) for t in text) else [text]
+    assert (
+        all(isinstance(t, list) for t in text_lists)
+        and all(
+            all(isinstance(t, int) for t in text_l)  # pyre-ignore text_l is a List[int]
+            for text_l in text_lists
+        )
+    ), "Text must be a list of ints or a list of list of ints for multiple lines"
+
     image = image.convert('RGBA')
     width, height = image.size
 
@@ -1164,22 +1175,24 @@ def overlay_text(
         chars = pickle.load(f)
 
     try:
-        text_str = "".join([chr(chars[c % len(chars)]) for c in text])
+        text_strs = (
+            ["".join([chr(chars[c % len(chars)]) for c in t]) for t in text_lists]
+        )
     except Exception:
         raise IndexError("Invalid text indices specified")
 
     draw = ImageDraw.Draw(image)
-
-    draw.text(
-        xy=(x_pos * width, y_pos * height),
-        text=text_str,
-        # pyre-fixme[6]: Expected `Union[None, Tuple[int, int, int], int, str]` for
-        #  3rd param but got `Tuple[int, int, int, int]`.
-        fill=(color[0], color[1], color[2], round(opacity * 255)),
-        # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 4th param but got
-        #  `FreeTypeFont`.
-        font=font,
-    )
+    for i, text_str in enumerate(text_strs):
+        draw.text(
+            xy=(x_pos * width, y_pos * height + i * (font_size + 5)),
+            text=text_str,
+            # pyre-fixme[6]: Expected `Union[None, Tuple[int, int, int], int, str]` for
+            #  3rd param but got `Tuple[int, int, int, int]`.
+            fill=(color[0], color[1], color[2], round(opacity * 255)),
+            # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 4th param but got
+            #  `FreeTypeFont`.
+            font=font,
+        )
 
     imutils.get_metadata(
         metadata=metadata,

@@ -894,7 +894,7 @@ class OverlayStripes(BaseTransform):
 class OverlayText(BaseTransform):
     def __init__(
         self,
-        text: List[int] = utils.DEFAULT_TEXT_INDICES,
+        text: List[Union[int, List[int]]] = utils.DEFAULT_TEXT_INDICES,
         font_file: str = utils.FONT_PATH,
         font_size: float = 0.15,
         opacity: float = 1.0,
@@ -904,7 +904,9 @@ class OverlayText(BaseTransform):
         p: float = 1.0,
     ):
         """
-        @param text: indices (into the file) of the characters to be overlaid
+        @param text: indices (into the file) of the characters to be overlaid. Each line
+            of text is represented as a list of int indices; if a list of lists is
+            supplied, multiple lines of text will be overlaid
 
         @param font_file: iopath uri to the .ttf font file
 
