@@ -66,6 +66,15 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
         self.evaluate_function(
             imaugs.overlay_image, overlay=EMOJI_PATH, overlay_size=0.15, y_pos=0.8
         )
+
+    def test_overlay_onto_background_image(self):
+        self.evaluate_function(
+            imaugs.overlay_onto_background_image,
+            background_image=EMOJI_PATH,
+            overlay_size=0.5,
+            scale_bg=True,
+        )
+
     def test_overlay_onto_screenshot(self):
         self.evaluate_function(
             imaugs.overlay_onto_screenshot, resize_src_to_match_template=False

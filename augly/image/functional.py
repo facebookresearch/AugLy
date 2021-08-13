@@ -923,6 +923,83 @@ def overlay_image(
     return imutils.ret_and_save_image(aug_image, output_path)
 
 
+def overlay_onto_background_image(
+    image: Union[str, Image.Image],
+    background_image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    opacity: float = 1.0,
+    overlay_size: float = 1.0,
+    x_pos: float = 0.4,
+    y_pos: float = 0.4,
+    scale_bg: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Overlays the image onto a given background image at position
+    (width * x_pos, height * y_pos)
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param background_image: the path to an image or a variable of type PIL.Image.Image
+        onto which the source image will be overlaid
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param opacity: the lower the opacity, the more transparent the overlaid image
+
+    @param overlay_size: size of the overlaid image is overlay_size * height
+        of the background image
+
+    @param x_pos: position of overlaid image relative to the background image width with
+        respect to the x-axis
+
+    @param y_pos: position of overlaid image relative to the background image height with
+        respect to the y-axis
+
+    @param scale_bg: if True, the background image will be scaled up or down so that
+        overlay_size is respected; if False, the source image will be scaled instead
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
+    assert 0.0 <= overlay_size <= 1.0, "Image size must be a value in the range [0, 1]"
+
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
+    if scale_bg:
+        background_image = resize(
+            background_image,
+            width=math.floor(image.width / overlay_size),
+            height=math.floor(image.height / overlay_size),
+        )
+
+    aug_image = overlay_image(
+        background_image,
+        overlay=image,
+        output_path=output_path,
+        opacity=opacity,
+        overlay_size=overlay_size,
+        x_pos=x_pos,
+        y_pos=y_pos,
+    )
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="overlay_onto_background_image",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
 def overlay_onto_screenshot(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
