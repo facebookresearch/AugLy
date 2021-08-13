@@ -49,7 +49,6 @@ class FunctionalTextUnitTest(unittest.TestCase):
         augmented_per_word = txtaugs.insert_punctuation_chars(
             self.texts, "word", 1.0, False
         )
-
         # Each word uses a different separator; no separators around whitespace.
         self.assertEqual(
             augmented_per_word,
@@ -61,7 +60,6 @@ class FunctionalTextUnitTest(unittest.TestCase):
         augmented_wider_cadence = txtaugs.insert_punctuation_chars(
             self.texts, "all", 2.7, False
         )
-
         # Separators are every 2-3 (avg. 2.7) characters.
         self.assertEqual(
             augmented_wider_cadence,
@@ -79,6 +77,54 @@ class FunctionalTextUnitTest(unittest.TestCase):
             [
                 "Th?e ,qu,ic!k .br,ow.n :'f.ox!' ;co...ul.dn?'t' j.um...p :ov!er' "
                 "t-he, g're?en:, ;gr'as!sy, h-il;l."
+            ],
+        )
+
+    def test_insert_whitespace_chars(self) -> None:
+        augmented_every_char = txtaugs.insert_whitespace_chars(
+            self.texts, "all", 1.0, False
+        )
+        # Separator inserted between every character (including spaces/punctuation).
+        self.assertEqual(
+            augmented_every_char,
+            [
+                "T h e   q u i c k   b r o w n   ' f o x '   c o u l d n ' t   "
+                "j u m p   o v e r   t h e   g r e e n ,   g r a s s y   h i l l ."
+            ],
+        )
+        augmented_per_word = txtaugs.insert_whitespace_chars(
+            self.texts, "word", 1.0, False
+        )
+        # Each word uses a different separator; no separators around whitespace.
+        self.assertEqual(
+            augmented_per_word,
+            [
+                "T\nh\ne q u i c k b\rr\ro\rw\rn '\nf\no\nx\n' c o u l d n ' t "
+                "j u m p o\rv\re\rr t\x0bh\x0be g\x0br\x0be\x0be\x0bn\x0b, "
+                "g\nr\na\ns\ns\ny h\ni\nl\nl\n."
+            ],
+        )
+        augmented_wider_cadence = txtaugs.insert_whitespace_chars(
+            self.texts, "all", 2.7, False
+        )
+        # Separators are every 2-3 (avg. 2.7) characters.
+        self.assertEqual(
+            augmented_wider_cadence,
+            [
+                "The  qu ick  b row n ' fo x'  cou ld n't  ju mp  ov er  the  "
+                "g ree n,  gr ass y h ill ."
+            ],
+        )
+        augmented_varying_char = txtaugs.insert_whitespace_chars(
+            self.texts, "all", 2.0, True
+        )
+        # Each separator is chosen independently.
+        self.assertEqual(
+            augmented_varying_char,
+            [
+                "Th e \nqu\nic\tk  br\now n \r'f ox\t' \nco\x0cul dn 't\x0b "
+                "j um\x0cp \rov\ter\x0c t\x0bhe\n g\x0bre\ten\r, "
+                "\rgr\x0bas\tsy\n h\x0bil\rl."
             ],
         )
 

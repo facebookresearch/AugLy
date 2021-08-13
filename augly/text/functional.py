@@ -136,6 +136,51 @@ def insert_punctuation_chars(
     return aug_texts
 
 
+def insert_whitespace_chars(
+    texts: Union[str, List[str]],
+    granularity: str = "all",
+    cadence: float = 1.0,
+    vary_chars: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Inserts whitespace characters in each input text
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param granularity: 'all' or 'word' -- if 'word', a new char is picked and
+        the cadence resets for each word in the text
+
+    @param cadence: how frequent (i.e. between this many characters) to insert a
+        whitespace character. Must be at least 1.0. Non-integer values are used
+        as an 'average' cadence
+
+    @param vary_chars: if true, picks a different whitespace char each time one
+        is used instead of just one per word/text
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented texts
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    whitespace_aug = a.InsertionAugmenter(
+        "whitespace", granularity, cadence, vary_chars
+    )
+    aug_texts = whitespace_aug.augment(texts)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="insert_whitespace_chars",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
 def insert_zero_width_chars(
     texts: Union[str, List[str]],
     granularity: str = "all",
