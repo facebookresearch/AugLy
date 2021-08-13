@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import augly.image.functional as F
 import augly.utils as utils
-from PIL import Image
+from PIL import Image, ImageFilter
 
 
 """
@@ -155,6 +155,37 @@ class ApplyLambda(BaseTransform):
         return F.apply_lambda(
             image, aug_function=self.aug_function, metadata=metadata, **self.kwargs
         )
+
+
+class ApplyPILFilter(BaseTransform):
+    def __init__(
+        self,
+        filter_type: Union[Callable, ImageFilter.Filter] = ImageFilter.EDGE_ENHANCE_MORE,
+        p: float = 1.0,
+    ):
+        """
+        @param filter_type: the PIL ImageFilter to apply to the image
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.filter_type = filter_type
+
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
+        """
+        Applies a given PIL filter to the input image using `Image.filter()`
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: Augmented PIL Image
+        """
+        return F.apply_pil_filter(image, filter_type=self.filter_type, metadata=metadata)
 
 
 class Blur(BaseTransform):

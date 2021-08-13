@@ -20,6 +20,9 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_ApplyLambda(self):
         self.evaluate_class(imaugs.ApplyLambda(), fname="apply_lambda")
 
+    def test_ApplyPILFilter(self):
+        self.evaluate_class(imaugs.ApplyPILFilter(), fname="apply_pil_filter")
+
     def test_Blur(self):
         self.evaluate_class(imaugs.Blur(), fname="blur")
 
