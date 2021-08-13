@@ -67,7 +67,9 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
             imaugs.overlay_image, overlay=EMOJI_PATH, overlay_size=0.15, y_pos=0.8
         )
     def test_overlay_onto_screenshot(self):
-        self.evaluate_function(imaugs.overlay_onto_screenshot)
+        self.evaluate_function(
+            imaugs.overlay_onto_screenshot, resize_src_to_match_template=False
+        )
 
     def test_overlay_stripes(self):
         self.evaluate_function(imaugs.overlay_stripes)

@@ -790,6 +790,9 @@ class OverlayOntoScreenshot(BaseTransform):
         self,
         template_filepath: str = utils.TEMPLATE_PATH,
         template_bboxes_filepath: str = utils.BBOXES_PATH,
+        max_image_size_pixels: Optional[int] = None,
+        crop_src_to_fit: bool = False,
+        resize_src_to_match_template: bool = True,
         p: float = 1.0,
     ):
         """
@@ -798,11 +801,28 @@ class OverlayOntoScreenshot(BaseTransform):
         @param template_bboxes_filepath: iopath uri to the file containing the
             bounding box for each template
 
+        @param max_image_size_pixels: if provided, the template image and/or src image
+            will be scaled down to avoid an output image with an area greater than this
+            size (in pixels)
+
+        @param crop_src_to_fit: if True, the src image will be cropped if necessary to
+            fit into the template image if the aspect ratios are different. If False, the
+            src image will instead be resized if needed
+
+        @param resize_src_to_match_template: if True, the src image will be resized if it
+            is too big or small in both dimensions to better match the template image. If
+            False, the template image will be resized to match the src image instead. It
+            can be useful to set this to True if the src image is very large so that the
+            augmented image isn't huge, but instead is the same size as the template image
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.template_filepath = template_filepath
         self.template_bboxes_filepath = template_bboxes_filepath
+        self.max_image_size_pixels = max_image_size_pixels
+        self.crop_src_to_fit = crop_src_to_fit
+        self.resize_src_to_match_template = resize_src_to_match_template
 
     def apply_transform(
         self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
@@ -823,6 +843,9 @@ class OverlayOntoScreenshot(BaseTransform):
             image,
             template_filepath=self.template_filepath,
             template_bboxes_filepath=self.template_bboxes_filepath,
+            max_image_size_pixels=self.max_image_size_pixels,
+            crop_src_to_fit=self.crop_src_to_fit,
+            resize_src_to_match_template=self.resize_src_to_match_template,
             metadata=metadata,
         )
 

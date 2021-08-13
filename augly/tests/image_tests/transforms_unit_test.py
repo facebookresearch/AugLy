@@ -103,7 +103,7 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_OverlayOntoScreenshot(self):
         self.evaluate_class(
-            imaugs.OverlayOntoScreenshot(),
+            imaugs.OverlayOntoScreenshot(resize_src_to_match_template=False),
             fname="overlay_onto_screenshot",
             metadata_exclude_keys=[
                 "dst_height", "dst_width", "intensity", "template_filepath"
