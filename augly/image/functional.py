@@ -751,14 +751,14 @@ def meme_format(
 
     @returns: the augmented PIL Image
     """
-    assert type(text) == str, "Expected variable `text` to be a string"
+    assert isinstance(text, str), "Expected variable `text` to be a string"
     assert 0.0 <= opacity <= 1.0, "Opacity must be a value in the range [0.0, 1.0]"
+    assert caption_height > 10, "Your caption height must be greater than 10"
 
     utils.validate_rgb_color(text_color)
     utils.validate_rgb_color(meme_bg_color)
 
     image = imutils.validate_and_load_image(image)
-
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
     width, height = image.size
