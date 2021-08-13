@@ -4,6 +4,7 @@
 from augly.image.composition import Compose, OneOf
 from augly.image.functional import (
     apply_lambda,
+    apply_pil_filter,
     blur,
     brightness,
     change_aspect_ratio,
@@ -38,6 +39,7 @@ from augly.image.functional import (
 from augly.image.helpers import aug_np_wrapper
 from augly.image.intensity import (
     apply_lambda_intensity,
+    apply_pil_filter_intensity,
     blur_intensity,
     brightness_intensity,
     change_aspect_ratio_intensity,
@@ -71,6 +73,7 @@ from augly.image.intensity import (
 )
 from augly.image.transforms import (
     ApplyLambda,
+    ApplyPILFilter,
     Blur,
     Brightness,
     ChangeAspectRatio,
@@ -112,6 +115,7 @@ from augly.image.transforms import (
 
 __all__ = [
     "ApplyLambda",
+    "ApplyPILFilter",
     "Blur",
     "Brightness",
     "ChangeAspectRatio",
@@ -151,6 +155,7 @@ __all__ = [
     "ShufflePixels",
     "VFlip",
     "apply_lambda",
+    "apply_pil_filter",
     "aug_np_wrapper",
     "blur",
     "brightness",
@@ -183,6 +188,7 @@ __all__ = [
     "shuffle_pixels",
     "vflip",
     "apply_lambda_intensity",
+    "apply_pil_filter_intensity",
     "blur_intensity",
     "brightness_intensity",
     "change_aspect_ratio_intensity",
