@@ -86,9 +86,14 @@ class TransformsTextUnitTest(unittest.TestCase):
             ]
         )(self.texts, metadata=self.metadata)
 
-        self.assertTrue(
-            augmented_compose[0]
-            == "T̴ -̴ h̴ -̴ e̴ -̴ -̴ u̴ -̴ q̴ -̴ i̴ -̴ c̴ -̴ k̴ -̴ -̴ b̴ -̴ r̴ -̴ o̴ -̴ w̴ -̴ n̴ -̴ -̴ '̴ -̴ f̴ -̴ o̴ -̴ x̴ -̴ '̴ -̴ -̴ c̴ -̴ o̴ -̴ u̴ -̴ ,̴ -̴ d̴ -̴ n̴ -̴ '̴ -̴ -̴ t̴ -̴ -̴ j̴ -̴ u̴ -̴ m̴ -̴ p̴ -̴ -̴ v̴ -̴ o̴ -̴ e̴ -̴ r̴ -̴ -̴ t̴ -̴ g̴ -̴ h̴ -̴ e̴ -̴ -̴ g̴ -̴ r̴ -̴ e̴ -̴ e̴ -̴ n̴ -̴ ,̴ -̴ -̴ g̴ -̴ r̴ -̴ a̴ -̴ s̴ -̴ s̴ -̴ y̴ -̴ -̴ n̴ -̴ i̴ -̴ l̴ -̴ l̴ -̴.̴",
+        self.assertEqual(
+            augmented_compose,
+            [
+                "T̶ -̶ h̶ -̶ e̶ -̶ -̶ u̶ -̶ q̶ -̶ i̶ -̶ c̶ -̶ k̶ -̶ -̶ b̶ -̶ r̶ -̶ o̶ -̶ w̶ -̶ n̶ -̶ -̶ '̶ -̶ "
+                "f̶ -̶ o̶ -̶ x̶ -̶ '̶ -̶ -̶ c̶ -̶ o̶ -̶ u̶ -̶ ,̶ -̶ d̶ -̶ n̶ -̶ '̶ -̶ -̶ t̶ -̶ -̶ j̶ -̶ u̶ -̶ "
+                "m̶ -̶ p̶ -̶ -̶ v̶ -̶ o̶ -̶ e̶ -̶ r̶ -̶ -̶ t̶ -̶ g̶ -̶ h̶ -̶ e̶ -̶ -̶ g̶ -̶ r̶ -̶ e̶ -̶ e̶ -̶ "
+                "n̶ -̶ ,̶ -̶ -̶ g̶ -̶ r̶ -̶ a̶ -̶ s̶ -̶ s̶ -̶ y̶ -̶ -̶ n̶ -̶ i̶ -̶ l̶ -̶ l̶ -̶.̶"
+            ],
         )
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["compose"]),
