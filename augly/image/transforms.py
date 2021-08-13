@@ -271,6 +271,51 @@ class ChangeAspectRatio(BaseTransform):
         return F.change_aspect_ratio(image, ratio=self.ratio, metadata=metadata)
 
 
+class ClipImageSize(BaseTransform):
+    def __init__(
+        self,
+        min_resolution: Optional[int] = None,
+        max_resolution: Optional[int] = None,
+        p: float = 1.0,
+    ):
+        """
+        @param min_resolution: the minimum resolution, i.e. width * height, that the
+            augmented image should have; if the input image has a lower resolution than this,
+            the image will be scaled up as necessary
+
+        @param max_resolution: the maximum resolution, i.e. width * height, that the
+            augmented image should have; if the input image has a higher resolution than
+            this, the image will be scaled down as necessary
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.min_resolution = min_resolution
+        self.max_resolution = max_resolution
+
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
+        """
+        Scales the image up or down if necessary to fit in the given min and max
+        resolution
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: Augmented PIL Image
+        """
+        return F.clip_image_size(
+            image,
+            min_resolution=self.min_resolution,
+            max_resolution=self.max_resolution,
+            metadata=metadata,
+        )
+
+
 class ColorJitter(BaseTransform):
     def __init__(
         self,

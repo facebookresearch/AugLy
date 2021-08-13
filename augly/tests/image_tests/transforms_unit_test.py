@@ -32,6 +32,11 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_ChangeAspectRatio(self):
         self.evaluate_class(imaugs.ChangeAspectRatio(), fname="change_aspect_ratio")
 
+    def test_ClipImageSize(self):
+        self.evaluate_class(
+            imaugs.ClipImageSize(max_resolution=1500000), fname="clip_image_size"
+        )
+
     def test_ColorJitter(self):
         self.evaluate_class(imaugs.ColorJitter(), fname="color_jitter")
 
