@@ -193,14 +193,14 @@ class FunctionalTextUnitTest(unittest.TestCase):
         )
         self.assertTrue(
             augmented_fun_fonts_char[0]
-            == "ᴛhe̷ 𝒒uic̾k 𝙗r𝓸wn 'fo̶x' coul̴dn'̴t jump over t̳h̴e green, g͓̽ra̷ss̾y̷ h͓̽ill."
+            == "T̷he̳ 𝒒uiᴄk 𝙗r𝓸wn 'fo̲x' coul͎dn't jump over t̶h̷e green, 𝑔ra͎ss̳𝒚 ʜill."
         )
         augmented_fun_fonts_all = txtaugs.replace_fun_fonts(
             self.texts, granularity="all", aug_p=1.0, vary_fonts=False, n=1
         )
         self.assertTrue(
             augmented_fun_fonts_all[0]
-            == "𝐓𝐡𝐞 𝐪𝐮𝐢𝐜𝐤 𝐛𝐫𝐨𝐰𝐧 '𝐟𝐨𝐱' 𝐜𝐨𝐮𝐥𝐝𝐧'𝐭 𝐣𝐮𝐦𝐩 𝐨𝐯𝐞𝐫 𝐭𝐡𝐞 𝐠𝐫𝐞𝐞𝐧, 𝐠𝐫𝐚𝐬𝐬𝐲 𝐡𝐢𝐥𝐥."
+            == "𝕋𝕙𝕖 𝕢𝕦𝕚𝕔𝕜 𝕓𝕣𝕠𝕨𝕟 '𝕗𝕠𝕩' 𝕔𝕠𝕦𝕝𝕕𝕟'𝕥 𝕛𝕦𝕞𝕡 𝕠𝕧𝕖𝕣 𝕥𝕙𝕖 𝕘𝕣𝕖𝕖𝕟, 𝕘𝕣𝕒𝕤𝕤𝕪 𝕙𝕚𝕝𝕝."
         )
         augmented_fun_fonts_word_targetted = txtaugs.replace_fun_fonts(
             self.texts,
@@ -212,7 +212,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
         )
         self.assertTrue(
             augmented_fun_fonts_word_targetted[0]
-            == "The quick brown 'fox' c̲o̲u̲l̲d̲n̲'̲t̲ jump over the g̴r̴e̴e̴n̴, 𝙜𝙧𝙖𝙨𝙨𝙮 h͎i͎l͎l͎."
+            == "T͓̽h͓̽e͓̽ quick brown 'fox' couldn't jump over the 𝘨𝘳𝘦𝘦𝘯, g̳r̳a̳s̳s̳y̳ h̴i̴l̴l̴."
         )
 
     def test_replace_similar_chars(self) -> None:
