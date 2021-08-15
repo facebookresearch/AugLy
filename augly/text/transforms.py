@@ -195,6 +195,57 @@ class InsertPunctuationChars(BaseTransform):
         )
 
 
+class InsertWhitespaceChars(BaseTransform):
+    def __init__(
+        self,
+        granularity: str = "all",
+        cadence: float = 1.0,
+        vary_chars: bool = False,
+        p: float = 1.0,
+    ):
+        """
+        @param granularity: 'all' or 'word' -- if 'word', a new char is picked and
+            the cadence resets for each word in the text
+
+        @param cadence: how frequent (i.e. between this many characters) to insert
+            a whitespace character. Must be at least 1.0. Non-integer values
+            are used as an 'average' cadence
+
+        @param vary_chars: if true, picks a different whitespace char each time
+            one is used instead of just one per word/text
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.granularity = granularity
+        self.cadence = cadence
+        self.vary_chars = vary_chars
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Inserts whitespace characters in each input text
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.insert_whitespace_chars(
+            texts,
+            granularity=self.granularity,
+            cadence=self.cadence,
+            vary_chars=self.vary_chars,
+            metadata=metadata,
+        )
+
+
 class InsertZeroWidthChars(BaseTransform):
     def __init__(
         self,

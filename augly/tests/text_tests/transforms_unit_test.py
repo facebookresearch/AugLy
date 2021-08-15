@@ -129,6 +129,25 @@ class TransformsTextUnitTest(unittest.TestCase):
             ),
         )
 
+    def test_InsertWhitespaceChars(self) -> None:
+        aug_whitespace_text = txtaugs.InsertWhitespaceChars("all", 1.0, False)(
+            self.texts, metadata=self.metadata
+        )
+
+        # Separator inserted between every character (including spaces/punctuation).
+        self.assertEqual(
+            aug_whitespace_text,
+            [
+                "T h e   q u i c k   b r o w n   ' f o x '   c o u l d n ' t   "
+                "j u m p   o v e r   t h e   g r e e n ,   g r a s s y   h i l l ."
+            ],
+        )
+        self.assertTrue(
+            are_equal_metadata(
+                self.metadata, self.expected_metadata["insert_whitespace_chars"]
+            ),
+        )
+
     def test_InsertZeroWidthChars(self) -> None:
         aug_unicode_text = txtaugs.InsertZeroWidthChars("all", 1.0, False)(
             self.texts, metadata=self.metadata

@@ -18,6 +18,12 @@ def insert_punctuation_chars_intensity(
     return char_insertion_intensity_helper(granularity, cadence)
 
 
+def insert_whitespace_chars_intensity(
+    granularity: str, cadence: float, **kwargs
+) -> float:
+    return char_insertion_intensity_helper(granularity, cadence)
+
+
 def insert_zero_width_chars_intensity(
     granularity: str, cadence: float, **kwargs
 ) -> float:

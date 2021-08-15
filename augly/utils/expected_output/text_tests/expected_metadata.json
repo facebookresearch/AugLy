@@ -75,6 +75,18 @@
             "vary_chars": false
         }
     ],
+    "insert_whitespace_chars": [
+        {
+            "cadence": 1.0,
+            "dst_length": 1,
+            "granularity": "all",
+            "input_type": "list",
+            "intensity": 100.0,
+            "name": "insert_whitespace_chars",
+            "src_length": 1,
+            "vary_chars": false
+        }
+    ],
     "insert_zero_width_chars": [
         {
             "cadence": 1.0,
