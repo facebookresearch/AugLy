@@ -62,5 +62,6 @@ MEME_DEFAULT_FONT = os.path.join(FONTS_DIR, "Raleway-ExtraBold.ttf")
 
 # text augmentation assets
 FUN_FONTS_PATH = os.path.join(TEXT_DIR, "fun_fonts.json")
+FUN_FONTS_GREEK_PATH = os.path.join(TEXT_DIR, "fun_fonts_greek.json")
 UNICODE_MAPPING_PATH = os.path.join(TEXT_DIR, "letter_unicode_mapping.json")
 MISSPELLING_DICTIONARY_PATH = os.path.join(TEXT_DIR, "misspelling.json")
