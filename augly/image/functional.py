@@ -138,7 +138,7 @@ def blur(
 
     @returns: the augmented PIL Image
     """
-    assert radius > 0, "Radius cannot be negative"
+    assert radius >= 0, "Radius should be greater than 0"
 
     image = imutils.validate_and_load_image(image)
 
