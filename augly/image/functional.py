@@ -215,7 +215,7 @@ def change_aspect_ratio(
 
     @returns: the augmented PIL Image
     """
-    assert ratio > 0, "Ratio cannot be negative"
+    assert ratio >= 0, "Ratio should be greater than 0"
 
     image = imutils.validate_and_load_image(image)
 
@@ -1588,7 +1588,7 @@ def pixelization(
 
     @returns: the augmented PIL Image
     """
-    assert ratio > 0, "Expected 'ratio' to be a positive number"
+    assert ratio >= 0, "Ratio should be a positive number greater than 0"
 
     image = imutils.validate_and_load_image(image)
 
@@ -1845,7 +1845,7 @@ def scale(
 
     @returns: the augmented PIL Image
     """
-    assert factor > 0, "Expected 'factor' to be a positive number"
+    assert factor >= 0, "Factor should be a positive number greater than 0"
     assert interpolation in [
         Image.NEAREST,
         Image.BOX,
