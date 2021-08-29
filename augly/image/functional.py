@@ -1640,6 +1640,8 @@ def random_noise(
     assert type(mean) in [float, int], "Mean must be an integer or a float"
     assert type(var) in [float, int], "Variance must be an integer or a float"
     assert type(seed) == int, "Seed must be an integer"
+    
+    assert 0.0 <= mean <= 1.0, "mean must be a value in the range [0.0, 1.0]"
 
     image = imutils.validate_and_load_image(image)
 
