@@ -65,3 +65,14 @@ FUN_FONTS_PATH = os.path.join(TEXT_DIR, "fun_fonts.json")
 FUN_FONTS_GREEK_PATH = os.path.join(TEXT_DIR, "fun_fonts_greek.json")
 UNICODE_MAPPING_PATH = os.path.join(TEXT_DIR, "letter_unicode_mapping.json")
 MISSPELLING_DICTIONARY_PATH = os.path.join(TEXT_DIR, "misspelling.json")
+
+"""
+Text fairness augmentation assets: the feminine & masculine word lists were provided to
+us by Adina Williams and are the same ones used in Dinan et al., 2020
+(https://arxiv.org/pdf/2005.00614.pdf), which aggregated such word lists from
+Zhao et al., 2018b, 2019 (https://aclanthology.org/D18-1521.pdf) and Hoyle et al., 2019
+(https://aclanthology.org/P19-1167.pdf). We constructed the gendered words mapping file
+from the feminine & masculine word lists for ease of use with the `swap_gendered_words`
+augmentation to avoid having to re-compute the mapping
+"""
+GENDERED_WORDS_MAPPING = os.path.join(TEXT_DIR, "gendered_words_mapping.json")

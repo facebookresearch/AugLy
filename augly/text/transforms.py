@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 import augly.text.functional as F
 from augly.utils import (
     FUN_FONTS_PATH,
+    GENDERED_WORDS_MAPPING,
     MISSPELLING_DICTIONARY_PATH,
     UNICODE_MAPPING_PATH,
 )
@@ -850,6 +851,75 @@ class SplitWords(BaseTransform):
             aug_word_min=self.aug_word_min,
             aug_word_max=self.aug_word_max,
             n=self.n,
+            priority_words=self.priority_words,
+            metadata=metadata,
+        )
+
+
+class SwapGenderedWords(BaseTransform):
+    def __init__(
+        self,
+        aug_word_p: float = 0.3,
+        aug_word_min: int = 1,
+        aug_word_max: int = 1000,
+        n: int = 1,
+        mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
+        priority_words: Optional[List[str]] = None,
+        p: float = 1.0,
+    ):
+        """
+        @param aug_word_p: probability of words to be augmented
+
+        @param aug_word_min: minimum # of words to be augmented
+
+        @param aug_word_max: maximum # of words to be augmented
+
+        @param n: number of augmentations to be performed for each text
+
+        @param mapping: a mapping of words from one gender to another; a mapping can be
+            supplied either directly as a dict or as a filepath to a json file containing
+            the dict
+
+        @param priority_words: list of target words that the augmenter should
+            prioritize to augment first
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.aug_word_p = aug_word_p
+        self.aug_word_min = aug_word_min
+        self.aug_word_max = aug_word_max
+        self.n = n
+        self.mapping = mapping
+        self.priority_words = priority_words
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Replaces words in each text based on a provided `mapping`, which can either be a
+        dict already constructed mapping words from one gender to another or a file path
+        to a dict. Note: the logic in this augmentation was originally written by
+        Adina Williams and has been used in influential work, e.g.
+        https://arxiv.org/pdf/2005.00614.pdf
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.swap_gendered_words(
+            texts,
+            aug_word_p=self.aug_word_p,
+            aug_word_min=self.aug_word_min,
+            aug_word_max=self.aug_word_max,
+            n=self.n,
+            mapping=self.mapping,
             priority_words=self.priority_words,
             metadata=metadata,
         )
