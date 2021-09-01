@@ -138,7 +138,7 @@ def blur(
 
     @returns: the augmented PIL Image
     """
-    assert radius > 0, "Radius cannot be negative"
+    assert radius >= 0, "Radius should be greater than 0"
 
     image = imutils.validate_and_load_image(image)
 
@@ -215,7 +215,7 @@ def change_aspect_ratio(
 
     @returns: the augmented PIL Image
     """
-    assert ratio > 0, "Ratio cannot be negative"
+    assert ratio >= 0, "Ratio should be greater than 0"
 
     image = imutils.validate_and_load_image(image)
 
@@ -1588,7 +1588,7 @@ def pixelization(
 
     @returns: the augmented PIL Image
     """
-    assert ratio > 0, "Expected 'ratio' to be a positive number"
+    assert ratio >= 0, "Ratio should be a positive number greater than 0"
 
     image = imutils.validate_and_load_image(image)
 
@@ -1640,6 +1640,8 @@ def random_noise(
     assert type(mean) in [float, int], "Mean must be an integer or a float"
     assert type(var) in [float, int], "Variance must be an integer or a float"
     assert type(seed) == int, "Seed must be an integer"
+    
+    assert 0.0 <= mean <= 1.0, "mean must be a value in the range [0.0, 1.0]"
 
     image = imutils.validate_and_load_image(image)
 
@@ -1845,7 +1847,7 @@ def scale(
 
     @returns: the augmented PIL Image
     """
-    assert factor > 0, "Expected 'factor' to be a positive number"
+    assert factor >= 0, "Factor should be a positive number greater than 0"
     assert interpolation in [
         Image.NEAREST,
         Image.BOX,
