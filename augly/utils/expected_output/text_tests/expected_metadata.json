@@ -227,5 +227,20 @@
             "priority_words": null,
             "src_length": 1
         }
+    ],
+    "swap_gendered_words": [
+        {
+            "aug_word_max": 1000,
+            "aug_word_min": 1,
+            "aug_word_p": 0.3,
+            "dst_length": 1,
+            "mapping": "text/gendered_words_mapping.json",
+            "input_type": "list",
+            "intensity": 30.0,
+            "n": 1,
+            "name": "swap_gendered_words",
+            "priority_words": null,
+            "src_length": 1
+        }
     ]
 }

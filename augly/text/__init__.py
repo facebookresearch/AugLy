@@ -17,6 +17,7 @@ from augly.text.functional import (
     replace_words,
     simulate_typos,
     split_words,
+    swap_gendered_words,
 )
 
 from augly.text.intensity import (
@@ -33,6 +34,7 @@ from augly.text.intensity import (
     replace_words_intensity,
     simulate_typos_intensity,
     split_words_intensity,
+    swap_gendered_words_intensity,
 )
 
 from augly.text.transforms import (
@@ -49,6 +51,7 @@ from augly.text.transforms import (
     ReplaceWords,
     SimulateTypos,
     SplitWords,
+    SwapGenderedWords,
 )
 
 __all__ = [
@@ -67,6 +70,7 @@ __all__ = [
     "ReplaceWords",
     "SimulateTypos",
     "SplitWords",
+    "SwapGenderedWords",
     "apply_lambda",
     "get_baseline",
     "insert_punctuation_chars",
@@ -80,6 +84,7 @@ __all__ = [
     "replace_words",
     "simulate_typos",
     "split_words",
+    "swap_gendered_words",
     "apply_lambda_intensity",
     "get_baseline_intensity",
     "insert_punctuation_chars_intensity",
@@ -93,4 +98,5 @@ __all__ = [
     "replace_words_intensity",
     "simulate_typos_intensity",
     "split_words_intensity",
+    "swap_gendered_words_intensity",
 ]

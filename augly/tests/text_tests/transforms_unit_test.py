@@ -66,6 +66,10 @@ class TransformsTextUnitTest(unittest.TestCase):
         ]
         cls.priority_words = ["green", "grassy", "hill"]
 
+        cls.fairness_texts = [
+            "The king and queen have a son named Raj and a daughter named Amanda.",
+        ]
+
     def test_ApplyLambda(self) -> None:
         augmented_apply_lambda = txtaugs.ApplyLambda()(
             self.texts, metadata=self.metadata
@@ -284,6 +288,19 @@ class TransformsTextUnitTest(unittest.TestCase):
         )
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["split_words"]),
+        )
+
+    def test_SwapGenderedWords(self) -> None:
+        augmented_words = txtaugs.SwapGenderedWords()(
+            self.fairness_texts, metadata=self.metadata
+        )
+
+        self.assertTrue(
+            augmented_words[0]
+            == "The queen and king have a daughter named Raj and a son named Amanda.",
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["swap_gendered_words"]),
         )
 
 

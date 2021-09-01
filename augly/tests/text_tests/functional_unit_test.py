@@ -19,9 +19,13 @@ class FunctionalTextUnitTest(unittest.TestCase):
     def setUp(self):
         random.seed(123)
         self.texts = [
-            "The quick brown 'fox' couldn't jump over the green, grassy hill."
+            "The quick brown 'fox' couldn't jump over the green, grassy hill.",
         ]
         self.priority_words = ["green", "grassy", "hill"]
+
+        self.fairness_texts = [
+            "The king and queen have a son named Raj and a daughter named Amanda.",
+        ]
 
     def test_apply_lambda(self) -> None:
         augmented_apply_lambda = txtaugs.apply_lambda(self.texts)
@@ -405,6 +409,15 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertTrue(
             augmented_split_words_targetted[1]
             == "The quick brown 'fox' couldn't jump ov er the g reen, g rassy hi ll."
+        )
+
+    def test_swap_gendered_words(self) -> None:
+        augmented_gender_swap_words = txtaugs.swap_gendered_words(
+            self.fairness_texts[0], aug_word_p=0.3
+        )
+        self.assertTrue(
+            augmented_gender_swap_words
+            == "The queen and king have a daughter named Raj and a son named Amanda.",
         )
 
 

@@ -8,6 +8,7 @@ import augly.text.augmenters as a
 import augly.text.utils as txtutils
 from augly.utils import (
     FUN_FONTS_PATH,
+    GENDERED_WORDS_MAPPING,
     MISSPELLING_DICTIONARY_PATH,
     UNICODE_MAPPING_PATH,
 )
@@ -683,6 +684,64 @@ def split_words(
     txtutils.get_metadata(
         metadata=metadata,
         function_name="split_words",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
+def swap_gendered_words(
+    texts: Union[str, List[str]],
+    aug_word_p: float = 0.3,
+    aug_word_min: int = 1,
+    aug_word_max: int = 1000,
+    n: int = 1,
+    mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
+    priority_words: Optional[List[str]] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Replaces words in each text based on a provided `mapping`, which can either be a dict
+    already constructed mapping words from one gender to another or a file path to a
+    dict. Note: the logic in this augmentation was originally written by Adina Williams
+    and has been used in influential work, e.g. https://arxiv.org/pdf/2005.00614.pdf
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param aug_word_p: probability of words to be augmented
+
+    @param aug_word_min: minimum # of words to be augmented
+
+    @param aug_word_max: maximum # of words to be augmented
+
+    @param n: number of augmentations to be performed for each text
+
+    @param mapping: a mapping of words from one gender to another; a mapping can be
+        supplied either directly as a dict or as a filepath to a json file containing the
+        dict
+
+    @param priority_words: list of target words that the augmenter should
+        prioritize to augment first
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    mapping = txtutils.get_gendered_words_mapping(mapping)
+
+    word_aug = a.WordReplacementAugmenter(
+        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words
+    )
+    aug_texts = word_aug.augment(texts, n)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="swap_gendered_words",
         aug_texts=aug_texts,
         **func_kwargs,
     )
