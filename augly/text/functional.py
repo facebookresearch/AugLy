@@ -512,6 +512,58 @@ def replace_upside_down(
     return aug_texts
 
 
+def replace_words(
+    texts: Union[str, List[str]],
+    aug_word_p: float = 0.3,
+    aug_word_min: int = 1,
+    aug_word_max: int = 1000,
+    n: int = 1,
+    mapping: Optional[Union[str, Dict[str, Any]]] = None,
+    priority_words: Optional[List[str]] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Replaces words in each text based on a given mapping
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param aug_word_p: probability of words to be augmented
+
+    @param aug_word_min: minimum # of words to be augmented
+
+    @param aug_word_max: maximum # of words to be augmented
+
+    @param n: number of augmentations to be performed for each text
+
+    @param mapping: either a dictionary representing the mapping or an iopath uri where
+        the mapping is stored
+
+    @param priority_words: list of target words that the augmenter should prioritize to
+        augment first
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    word_aug = a.WordReplacementAugmenter(
+        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words
+    )
+    aug_texts = word_aug.augment(texts, n)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="replace_words",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
 def simulate_typos(
     texts: Union[str, List[str]],
     aug_char_p: float = 0.3,

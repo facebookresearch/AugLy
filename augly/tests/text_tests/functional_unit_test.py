@@ -357,6 +357,10 @@ class FunctionalTextUnitTest(unittest.TestCase):
             == "Ʇɥǝ qnᴉɔk qɹown 'fox' conldn,t jnɯp over the gɹeen, grassy ɥᴉll ˙"
         )
 
+    def test_replace_words(self) -> None:
+        augmented_words = txtaugs.replace_words(self.texts, aug_word_p=0.3)
+        self.assertTrue(augmented_words[0] == self.texts[0])
+
     def test_simulate_typos(self) -> None:
         augmented_typos = txtaugs.simulate_typos(
             self.texts[0], aug_word_p=0.3, aug_char_p=0.3, n=2

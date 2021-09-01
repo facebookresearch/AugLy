@@ -14,6 +14,7 @@ from augly.text.functional import (
     replace_similar_chars,
     replace_similar_unicode_chars,
     replace_upside_down,
+    replace_words,
     simulate_typos,
     split_words,
 )
@@ -29,6 +30,7 @@ from augly.text.intensity import (
     replace_similar_chars_intensity,
     replace_similar_unicode_chars_intensity,
     replace_upside_down_intensity,
+    replace_words_intensity,
     simulate_typos_intensity,
     split_words_intensity,
 )
@@ -44,6 +46,7 @@ from augly.text.transforms import (
     ReplaceSimilarChars,
     ReplaceSimilarUnicodeChars,
     ReplaceUpsideDown,
+    ReplaceWords,
     SimulateTypos,
     SplitWords,
 )
@@ -61,6 +64,7 @@ __all__ = [
     "ReplaceSimilarChars",
     "ReplaceSimilarUnicodeChars",
     "ReplaceUpsideDown",
+    "ReplaceWords",
     "SimulateTypos",
     "SplitWords",
     "apply_lambda",
@@ -73,6 +77,7 @@ __all__ = [
     "replace_similar_chars",
     "replace_similar_unicode_chars",
     "replace_upside_down",
+    "replace_words",
     "simulate_typos",
     "split_words",
     "apply_lambda_intensity",
@@ -85,6 +90,7 @@ __all__ = [
     "replace_similar_chars_intensity",
     "replace_similar_unicode_chars_intensity",
     "replace_upside_down_intensity",
+    "replace_words_intensity",
     "simulate_typos_intensity",
     "split_words_intensity",
 ]
