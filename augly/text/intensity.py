@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
+from typing import Any, Dict, Optional, Union
+
 
 def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
     intensity_func = globals().get(f"{aug_function}_intensity")
@@ -58,6 +60,19 @@ def replace_upside_down_intensity(
     aug_p: float, aug_max: int, granularity: str, **kwargs
 ) -> float:
     return 100.0 if granularity == "all" else replace_intensity_helper(aug_p, aug_max)
+
+
+def replace_words_intensity(
+    aug_word_p: float,
+    aug_word_max: int,
+    mapping: Optional[Union[str, Dict[str, Any]]],
+    **kwargs,
+) -> float:
+    return (
+        0.0
+        if not mapping
+        else replace_intensity_helper(aug_word_p, aug_word_max)
+    )
 
 
 def simulate_typos_intensity(

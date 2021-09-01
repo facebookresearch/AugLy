@@ -235,8 +235,9 @@ def get_aug_idxes(
     priority_words = getattr(augmenter, "priority_words", None)
 
     if mode == Method.WORD and priority_words is not None:
+        priority_words_set = set(priority_words)
         for i, token in enumerate(tokens):
-            if token in priority_words:
+            if token in priority_words_set:
                 if min_char is None or len(token) >= min_char:
                     priority_idxes.append(i)
 

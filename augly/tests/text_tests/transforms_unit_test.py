@@ -252,6 +252,14 @@ class TransformsTextUnitTest(unittest.TestCase):
             ),
         )
 
+    def test_ReplaceWords(self) -> None:
+        augmented_words = txtaugs.ReplaceWords()(self.texts, metadata=self.metadata)
+
+        self.assertTrue(augmented_words[0] == self.texts[0])
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["replace_words"]),
+        )
+
     def test_SimulateTypos(self) -> None:
         aug_typo_text = txtaugs.SimulateTypos(aug_word_p=0.3, aug_char_p=0.3)(
             self.texts, metadata=self.metadata
