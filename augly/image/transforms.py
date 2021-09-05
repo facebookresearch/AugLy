@@ -188,6 +188,40 @@ class ApplyPILFilter(BaseTransform):
         return F.apply_pil_filter(image, filter_type=self.filter_type, metadata=metadata)
 
 
+class BarrelDistortion(BaseTransform):
+    """
+    To see details refer to https://legacy.imagemagick.org/Usage/distorts/#barrel.
+    """
+
+    def __init__(self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1):
+        """
+        The values basically form a distortion equation such that...
+
+                        Rsrc = r * ( A*r3 + B*r2 + C*r + D )
+
+        Where "r" is the destination radius and "Rsrc" is the source pixel to get the pixel color from. the radii are
+        normalized so that radius = '1.0' for the half minimum width or height of the input image.
+        This may seem reversed but that is because the Reverse Pixel Mapping technique is used to ensure
+        complete coverage of the resulting image.
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.distortion_parameters = (a, b, c, d)
+
+    def apply_transform(self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None) -> Image.Image:
+        """
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+                including its name, the source & dest width, height, etc. will be appended to
+                the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: Augmented PIL Image
+        """
+        return F.distort()
+
+
 class Blur(BaseTransform):
     def __init__(self, radius: float = 2.0, p: float = 1.0):
         """

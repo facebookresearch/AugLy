@@ -12,6 +12,7 @@ import augly.image.utils as imutils
 import augly.utils as utils
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+from wand.image import Image as wImage
 
 
 def apply_lambda(
@@ -514,6 +515,35 @@ def crop(
     imutils.get_metadata(
         metadata=metadata,
         function_name="crop",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
+def distort(
+        image: Union[str, Image.Image],
+        output_path: Optional[str] = None,
+        distortion_type: str = "barrel",
+        a: float = 0.0,
+        b: float = 0.0,
+        c: float = 0.0,
+        d: float = 1.0,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+):
+    image = imutils.validate_and_load_image(image).convert("RGB")
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
+    image = np.array(image)
+    wimage = wImage.from_array(image)
+    distortion_args = (a, b, c, d)
+    wimage.distort(distortion_type, distortion_args)
+    aug_image = Image.fromarray(np.array(wimage))
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="distort",
         aug_image=aug_image,
         **func_kwargs,
     )
