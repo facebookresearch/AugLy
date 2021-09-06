@@ -167,9 +167,7 @@ def insert_whitespace_chars(
     """
     func_kwargs = txtutils.get_func_kwargs(metadata, locals())
 
-    whitespace_aug = a.InsertionAugmenter(
-        "whitespace", granularity, cadence, vary_chars
-    )
+    whitespace_aug = a.InsertionAugmenter("whitespace", granularity, cadence, vary_chars)
     aug_texts = whitespace_aug.augment(texts)
 
     txtutils.get_metadata(
@@ -212,9 +210,7 @@ def insert_zero_width_chars(
     """
     func_kwargs = txtutils.get_func_kwargs(metadata, locals())
 
-    zero_width_aug = a.InsertionAugmenter(
-        "zero_width", granularity, cadence, vary_chars
-    )
+    zero_width_aug = a.InsertionAugmenter("zero_width", granularity, cadence, vary_chars)
     aug_texts = zero_width_aug.augment(texts)
 
     txtutils.get_metadata(

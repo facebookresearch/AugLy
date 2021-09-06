@@ -12,7 +12,6 @@ import augly.image.utils as imutils
 import augly.utils as utils
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
-from wand.image import Image as wImage
 
 
 def apply_lambda(
@@ -96,8 +95,8 @@ def apply_pil_filter(
     func_kwargs = deepcopy(locals())
 
     ftr = filter_type() if isinstance(filter_type, Callable) else filter_type
-    assert (
-        isinstance(ftr, ImageFilter.Filter)
+    assert isinstance(
+        ftr, ImageFilter.Filter
     ), "Filter type must be a PIL.ImageFilter.Filter class"
 
     func_kwargs = imutils.get_func_kwargs(
@@ -186,9 +185,7 @@ def brightness(
     aug_image = ImageEnhance.Brightness(image).enhance(factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    imutils.get_metadata(
-        metadata=metadata, function_name="brightness", **func_kwargs
-    )
+    imutils.get_metadata(metadata=metadata, function_name="brightness", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path)
 
@@ -342,9 +339,7 @@ def color_jitter(
     aug_image = ImageEnhance.Color(aug_image).enhance(saturation_factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    imutils.get_metadata(
-        metadata=metadata, function_name="color_jitter", **func_kwargs
-    )
+    imutils.get_metadata(metadata=metadata, function_name="color_jitter", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path)
 
@@ -454,7 +449,9 @@ def convert_color(
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     imutils.get_metadata(
-        metadata=metadata, function_name="convert_color", **func_kwargs,
+        metadata=metadata,
+        function_name="convert_color",
+        **func_kwargs,
     )
 
     return imutils.ret_and_save_image(aug_image, output_path)
@@ -522,28 +519,55 @@ def crop(
     return imutils.ret_and_save_image(aug_image, output_path)
 
 
-def distort(
-        image: Union[str, Image.Image],
-        output_path: Optional[str] = None,
-        distortion_type: str = "barrel",
-        a: float = 0.0,
-        b: float = 0.0,
-        c: float = 0.0,
-        d: float = 1.0,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+def distort_barrel(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    a: float = 0.0,
+    b: float = 0.0,
+    c: float = 0.0,
+    d: float = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
 ):
     image = imutils.validate_and_load_image(image).convert("RGB")
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
-    image = np.array(image)
-    wimage = wImage.from_array(image)
-    distortion_args = (a, b, c, d)
-    wimage.distort(distortion_type, distortion_args)
-    aug_image = Image.fromarray(np.array(wimage))
+    aug_image = imutils.distort(
+        image=image,
+        distortion_type="barrel",
+        distortion_args=(a, b, c, d),
+    )
 
     imutils.get_metadata(
         metadata=metadata,
-        function_name="distort",
+        function_name="distort_barrel",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
+def distort_pincushion(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    a: float = 0.0,
+    b: float = 0.0,
+    c: float = 0.0,
+    d: float = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+):
+    image = imutils.validate_and_load_image(image).convert("RGB")
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
+    aug_image = imutils.distort(
+        image=image,
+        distortion_type="barrel_inverse",
+        distortion_args=(a, b, c, d),
+    )
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="distort_pincushion",
         aug_image=aug_image,
         **func_kwargs,
     )
@@ -673,9 +697,7 @@ def hflip(
     aug_image = image.transpose(Image.FLIP_LEFT_RIGHT)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    imutils.get_metadata(
-        metadata=metadata, function_name="hflip", **func_kwargs
-    )
+    imutils.get_metadata(metadata=metadata, function_name="hflip", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path)
 
@@ -1225,8 +1247,12 @@ def overlay_stripes(
     assert (
         -360.0 <= line_angle <= 360.0
     ), "Line angle must be a degree in the range [360.0, 360.0]"
-    assert 0.0 <= line_density <= 1.0, "Line density must be a value in the range [0.0, 1.0]"
-    assert 0.0 <= line_opacity <= 1.0, "Line opacity must be a value in the range [0.0, 1.0]"
+    assert (
+        0.0 <= line_density <= 1.0
+    ), "Line density must be a value in the range [0.0, 1.0]"
+    assert (
+        0.0 <= line_opacity <= 1.0
+    ), "Line opacity must be a value in the range [0.0, 1.0]"
     assert line_type in utils.SUPPORTED_LINE_TYPES, "Stripe type not supported"
     utils.validate_rgb_color(line_color)
 
@@ -1337,15 +1363,12 @@ def overlay_text(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
     text_lists = text if all(isinstance(t, list) for t in text) else [text]
-    assert (
-        all(isinstance(t, list) for t in text_lists)
-        and all(
-            all(isinstance(t, int) for t in text_l)  # pyre-ignore text_l is a List[int]
-            for text_l in text_lists
-        )
+    assert all(isinstance(t, list) for t in text_lists) and all(
+        all(isinstance(t, int) for t in text_l)  # pyre-ignore text_l is a List[int]
+        for text_l in text_lists
     ), "Text must be a list of ints or a list of list of ints for multiple lines"
 
-    image = image.convert('RGBA')
+    image = image.convert("RGBA")
     width, height = image.size
 
     local_font_path = utils.pathmgr.get_local_path(font_file)
@@ -1359,9 +1382,7 @@ def overlay_text(
         chars = pickle.load(f)
 
     try:
-        text_strs = (
-            ["".join([chr(chars[c % len(chars)]) for c in t]) for t in text_lists]
-        )
+        text_strs = ["".join([chr(chars[c % len(chars)]) for c in t]) for t in text_lists]
     except Exception:
         raise IndexError("Invalid text indices specified")
 

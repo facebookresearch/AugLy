@@ -46,9 +46,7 @@ def add_noise(
     vdutils.apply_ffmpeg_augmenter(noise_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="add_noise", **func_kwargs
-        )
+        helpers.get_metadata(metadata=metadata, function_name="add_noise", **func_kwargs)
 
     return output_path or video_path
 
@@ -131,9 +129,7 @@ def audio_swap(
     vdutils.apply_ffmpeg_augmenter(audio_swap_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="audio_swap", **func_kwargs
-        )
+        helpers.get_metadata(metadata=metadata, function_name="audio_swap", **func_kwargs)
 
     return output_path or video_path
 
@@ -263,9 +259,7 @@ def brightness(
     vdutils.apply_ffmpeg_augmenter(brightness_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="brightness", **func_kwargs
-        )
+        helpers.get_metadata(metadata=metadata, function_name="brightness", **func_kwargs)
 
     return output_path or video_path
 
@@ -613,9 +607,7 @@ def grayscale(
     vdutils.apply_ffmpeg_augmenter(grayscale_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="grayscale", **func_kwargs
-        )
+        helpers.get_metadata(metadata=metadata, function_name="grayscale", **func_kwargs)
 
     return output_path or video_path
 
@@ -774,7 +766,7 @@ def insert_in_background(
             num_loops_needed = math.ceil(desired_bg_duration / bg_video_duration)
             if num_loops_needed > 1:
                 loop(resized_bg_path, num_loops=num_loops_needed)
-                bg_video_duration*=num_loops_needed
+                bg_video_duration *= num_loops_needed
 
             bg_start = rng.uniform(0, bg_video_duration - desired_bg_duration)
             bg_end = bg_start + desired_bg_duration
@@ -1961,9 +1953,7 @@ def time_crop(
     vdutils.apply_ffmpeg_augmenter(time_crop_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="time_crop", **func_kwargs
-        )
+        helpers.get_metadata(metadata=metadata, function_name="time_crop", **func_kwargs)
 
     return output_path or video_path
 

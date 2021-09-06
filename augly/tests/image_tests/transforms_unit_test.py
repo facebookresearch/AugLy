@@ -23,6 +23,9 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_ApplyPILFilter(self):
         self.evaluate_class(imaugs.ApplyPILFilter(), fname="apply_pil_filter")
 
+    def test_BarrelDistortion(self):
+        self.evaluate_class(imaugs.BarrelDistortion(a=0.1), fname="distort_barrel")
+
     def test_Blur(self):
         self.evaluate_class(imaugs.Blur(), fname="blur")
 
@@ -69,9 +72,7 @@ class TransformsImageUnitTest(BaseImageUnitTest):
         self.evaluate_class(imaugs.Crop(), fname="crop")
 
     def test_EncodingQuality(self):
-        self.evaluate_class(
-            imaugs.EncodingQuality(quality=30), fname="encoding_quality"
-        )
+        self.evaluate_class(imaugs.EncodingQuality(quality=30), fname="encoding_quality")
 
     def test_Grayscale(self):
         self.evaluate_class(imaugs.Grayscale(), fname="grayscale")
@@ -100,9 +101,7 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_OverlayImage(self):
         self.evaluate_class(
-            imaugs.OverlayImage(
-                overlay=EMOJI_PATH, overlay_size=0.15, y_pos=0.8
-            ),
+            imaugs.OverlayImage(overlay=EMOJI_PATH, overlay_size=0.15, y_pos=0.8),
             fname="overlay_image",
         )
 
@@ -119,14 +118,15 @@ class TransformsImageUnitTest(BaseImageUnitTest):
             imaugs.OverlayOntoScreenshot(resize_src_to_match_template=False),
             fname="overlay_onto_screenshot",
             metadata_exclude_keys=[
-                "dst_height", "dst_width", "intensity", "template_filepath"
+                "dst_height",
+                "dst_width",
+                "intensity",
+                "template_filepath",
             ],
         )
 
     def test_OverlayStripes(self):
-        self.evaluate_class(
-            imaugs.OverlayStripes(), fname="overlay_stripes"
-        )
+        self.evaluate_class(imaugs.OverlayStripes(), fname="overlay_stripes")
 
     @unittest.skip("Failing on some envs, will fix")
     def test_OverlayText(self):
@@ -142,6 +142,11 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_PerspectiveTransform(self):
         self.evaluate_class(
             imaugs.PerspectiveTransform(sigma=100.0), fname="perspective_transform"
+        )
+
+    def test_PincushionDistortion(self):
+        self.evaluate_class(
+            imaugs.PincushionDistortion(a=0.1), fname="distort_pincushion"
         )
 
     def test_Pixelization(self):

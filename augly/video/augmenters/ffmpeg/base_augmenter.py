@@ -38,8 +38,10 @@ class BaseFFMPEGAugmenter(ABC):
         in_stream = ffmpeg.input(video_temp_path)
         kwargs = {"video_path": video_temp_path, **kwargs}
         video, outputargs = self.add_augmenter(in_stream, **kwargs)
-        video = video.filter(  # pyre-fixme[16]: `FilterableStream` has no attribute `filter`
-            "pad", **{"width": "ceil(iw/2)*2", "height": "ceil(ih/2)*2"}
+        video = (
+            video.filter(  # pyre-fixme[16]: `FilterableStream` has no attribute `filter`
+                "pad", **{"width": "ceil(iw/2)*2", "height": "ceil(ih/2)*2"}
+            )
         )
         audio = in_stream.audio
         output = (

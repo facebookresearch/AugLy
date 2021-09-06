@@ -6,16 +6,12 @@ from pathlib import Path
 
 
 requirements = [
-    r
-    for r in Path("requirements.txt").read_text().splitlines()
-    if '@' not in r
+    r for r in Path("requirements.txt").read_text().splitlines() if "@" not in r
 ]
 
 extra_requirements = {
     "av": [
-        r
-        for r in Path("av_requirements.txt").read_text().splitlines()
-        if '@' not in r
+        r for r in Path("av_requirements.txt").read_text().splitlines() if "@" not in r
     ]
 }
 
@@ -39,7 +35,7 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent"
+        "Operating System :: OS Independent",
     ],
     python_requires=">=3.7",
 )

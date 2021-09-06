@@ -21,8 +21,11 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
     def test_brightness(self):
         self.evaluate_function(imaugs.brightness)
 
-    def test_distort(self):
-        self.evaluate_function(imaugs.distort)
+    def test_distort_barrel(self):
+        self.evaluate_function(imaugs.distort_barrel, a=0.1)
+
+    def test_distort_pincushion(self):
+        self.evaluate_function(imaugs.distort_pincushion, a=0.1)
 
     def test_change_aspect_ratio(self):
         self.evaluate_function(imaugs.change_aspect_ratio)

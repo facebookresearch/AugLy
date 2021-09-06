@@ -27,11 +27,7 @@ DEFAULT_SAMPLE_RATE = 44100
 DEFAULT_TEXT_INDICES = [random.randrange(1, 1000) for _ in range(5)]
 
 # `overlay_stripes` constants
-SUPPORTED_LINE_TYPES = [
-    "dotted",
-    "dashed",
-    "solid"
-]
+SUPPORTED_LINE_TYPES = ["dotted", "dashed", "solid"]
 
 # screenshot augmentation assets
 BBOXES_PATH = os.path.join(SCREENSHOT_TEMPLATES_DIR, "bboxes.json")

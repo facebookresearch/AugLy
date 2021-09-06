@@ -35,9 +35,7 @@ def validate_and_load_audio(
         utils.validate_audio_path(local_path)
         return librosa.load(local_path, sr=None, mono=False)
 
-    assert isinstance(
-        audio, np.ndarray
-    ), "Expected type np.ndarray for variable 'audio'"
+    assert isinstance(audio, np.ndarray), "Expected type np.ndarray for variable 'audio'"
 
     assert (
         isinstance(sample_rate, int) and sample_rate > 0
@@ -85,9 +83,7 @@ def check_random_state(seed: Optional[RNGSeed]) -> RNG:
         return np.random.RandomState(seed)
     if isinstance(seed, (np.random.RandomState, np.random.Generator)):
         return seed
-    raise ValueError(
-        f"{seed} cannot be used to seed a numpy.random.RandomState instance"
-    )
+    raise ValueError(f"{seed} cannot be used to seed a numpy.random.RandomState instance")
 
 
 def get_metadata(
@@ -175,9 +171,7 @@ def compute_changed_segments(
             speed_factor = src_duration / dst_duration
             new_src_segments.append(src_segment)
             new_dst_segments.append(
-                Segment(
-                    dst_segment.start / speed_factor, dst_segment.end / speed_factor
-                )
+                Segment(dst_segment.start / speed_factor, dst_segment.end / speed_factor)
             )
     return new_src_segments, new_dst_segments
 

@@ -189,28 +189,44 @@ class ApplyPILFilter(BaseTransform):
 
 
 class BarrelDistortion(BaseTransform):
-    """
-    To see details refer to https://legacy.imagemagick.org/Usage/distorts/#barrel.
-    """
-
-    def __init__(self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1):
+    def __init__(
+        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1
+    ):
         """
-        The values basically form a distortion equation such that...
+        To see effects of the coefficients in detail refer to https://legacy.imagemagick.org/Usage/distorts/#barrel.
+        Below is a direct quotation from the document describing how barrel distortion parameter works.
 
-                        Rsrc = r * ( A*r3 + B*r2 + C*r + D )
+        >   The values basically form a distortion equation such that...
 
-        Where "r" is the destination radius and "Rsrc" is the source pixel to get the pixel color from. the radii are
-        normalized so that radius = '1.0' for the half minimum width or height of the input image.
-        This may seem reversed but that is because the Reverse Pixel Mapping technique is used to ensure
-        complete coverage of the resulting image.
+                Rsrc = r * ( A*r3 + B*r2 + C*r + D )
+
+            Where "r" is the destination radius and "Rsrc" is the source pixel to get the pixel color from. the radii
+            are normalized so that radius = '1.0' for the half minimum width or height of the input image.
+            This may seem reversed but that is because the Reverse Pixel Mapping technique is used to ensure
+            complete coverage of the resulting image.
+
+        @param a: Coefficient A in the equation Rsrc(r).
+
+        @param b: Coefficient B in the equation Rsrc(r).
+
+        @param c: Coefficient C in the equation Rsrc(r).
+
+        @param d: Coefficient D in the equation Rsrc(r).
 
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
-        self.distortion_parameters = (a, b, c, d)
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
 
-    def apply_transform(self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None) -> Image.Image:
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
         """
+        Applies barrel distortion to the image.
+
         @param image: PIL Image to be augmented
 
         @param metadata: if set to be a list, metadata about the function execution
@@ -219,7 +235,9 @@ class BarrelDistortion(BaseTransform):
 
         @returns: Augmented PIL Image
         """
-        return F.distort()
+        return F.distort_barrel(
+            image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata
+        )
 
 
 class Blur(BaseTransform):
@@ -1004,7 +1022,7 @@ class OverlayStripes(BaseTransform):
         line_density: float = 0.5,
         line_type: Optional[str] = "solid",
         line_opacity: float = 1.0,
-        p: float = 1.0
+        p: float = 1.0,
     ):
         """
         @param line_width: the width of individual stripes as a float value ranging
@@ -1055,7 +1073,7 @@ class OverlayStripes(BaseTransform):
             line_density=self.line_density,
             line_type=self.line_type,
             line_opacity=self.line_opacity,
-            metadata=metadata
+            metadata=metadata,
         )
 
 
@@ -1172,9 +1190,7 @@ class Pad(BaseTransform):
 
 
 class PadSquare(BaseTransform):
-    def __init__(
-        self, color: Tuple[int, int, int] = utils.DEFAULT_COLOR, p: float = 1.0
-    ):
+    def __init__(self, color: Tuple[int, int, int] = utils.DEFAULT_COLOR, p: float = 1.0):
         """
         @param color: color of the padded border in RGB values
 
@@ -1246,6 +1262,59 @@ class PerspectiveTransform(BaseTransform):
             dy=self.dy,
             seed=self.seed,
             metadata=metadata,
+        )
+
+
+class PincushionDistortion(BaseTransform):
+    def __init__(
+        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1
+    ):
+        """
+        To see effects of the coefficients in detail refer to
+        https://legacy.imagemagick.org/Usage/distorts/#barrelinverse. Below is a direct quotation from the document
+        describing how pincushion (barrel inverse) distortion parameter works.
+
+        >   The 'BarrelInverse' distortion method is very similar to the previous Barrel Distortion distortion method,
+         and in fact takes the same set of arguments. However the formula that is applied is slightly different,
+         with the main part of the equation dividing the radius. that is the Equation has been inverted.
+
+            Rsrc = r / ( A*r3 + B*r2 + C*r + D )
+
+            NOTE: This equation does NOT produce the 'reverse' the 'Barrel' distortion. You can NOT use it to 'undo'
+            the previous distortion.
+
+        @param a: Coefficient A in the equation Rsrc(r).
+
+        @param b: Coefficient B in the equation Rsrc(r).
+
+        @param c: Coefficient C in the equation Rsrc(r).
+
+        @param d: Coefficient D in the equation Rsrc(r).
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
+        """
+        Applies pinchusion distortion to the image.
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+                including its name, the source & dest width, height, etc. will be appended to
+                the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: Augmented PIL Image
+        """
+        return F.distort_pincushion(
+            image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata
         )
 
 
@@ -1576,9 +1645,7 @@ class RandomAspectRatio(BaseRandomRangeTransform):
 
 
 class RandomBlur(BaseRandomRangeTransform):
-    def __init__(
-        self, min_radius: float = 0.0, max_radius: float = 10.0, p: float = 1.0
-    ):
+    def __init__(self, min_radius: float = 0.0, max_radius: float = 10.0, p: float = 1.0):
         """
         @param min_radius: the lower value on the range of blur values to choose
             from. The larger the radius, the blurrier the image
@@ -1608,9 +1675,7 @@ class RandomBlur(BaseRandomRangeTransform):
 
 
 class RandomBrightness(BaseRandomRangeTransform):
-    def __init__(
-        self, min_factor: float = 0.0, max_factor: float = 2.0, p: float = 1.0
-    ):
+    def __init__(self, min_factor: float = 0.0, max_factor: float = 2.0, p: float = 1.0):
         """
         @param min_factor: the lower value on the range of brightness values to choose
             from. The lower the factor, the darker the image

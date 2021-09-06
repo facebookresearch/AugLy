@@ -92,9 +92,7 @@ def add_background_noise(
 
     while background_audio.shape[-1] < audio.shape[-1]:
         axis = 0 if background_audio.ndim == 1 else 1
-        background_audio = np.concatenate(
-            (background_audio, background_audio), axis=axis
-        )
+        background_audio = np.concatenate((background_audio, background_audio), axis=axis)
 
     background_audio = (
         background_audio[: audio.shape[-1]]

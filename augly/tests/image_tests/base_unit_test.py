@@ -45,7 +45,7 @@ def are_equal_metadata(
             if not (
                 isinstance(act_v, str)
                 and isinstance(exp_v, str)
-                and act_v[-len(exp_v):] == exp_v
+                and act_v[-len(exp_v) :] == exp_v
             ):
                 return False
 

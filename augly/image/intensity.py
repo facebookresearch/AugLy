@@ -100,6 +100,14 @@ def crop_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
+def distort_barrel_intensity(**kwargs) -> float:
+    return 100.0
+
+
+def distort_pincushion_intensity(**kwargs) -> float:
+    return 100.0
+
+
 def encoding_quality_intensity(quality: int, **kwargs):
     assert (
         isinstance(quality, int) and 0 <= quality <= 100
@@ -129,12 +137,14 @@ def masked_composite_intensity(
         mask_intensity = np.sum(mask_values > 0) / (
             mask_values.shape[0] * mask_values.shape[1]
         )
-    if metadata['transform_function'] is None:
+    if metadata["transform_function"] is None:
         aug_intensity = 0.0
     else:
         aug_intensity_func = globals().get(f"{metadata['transform_function']}_intensity")
         aug_intensity = (
-            aug_intensity_func(**kwargs) / 100.0 if aug_intensity_func is not None else 1.0
+            aug_intensity_func(**kwargs) / 100.0
+            if aug_intensity_func is not None
+            else 1.0
         )
     return (aug_intensity * mask_intensity) * 100.0
 
@@ -151,15 +161,11 @@ def opacity_intensity(level: float, **kwargs) -> float:
     return (1 - level) * 100.0
 
 
-def overlay_emoji_intensity(
-    emoji_size: float, opacity: float, **kwargs
-) -> float:
+def overlay_emoji_intensity(emoji_size: float, opacity: float, **kwargs) -> float:
     return overlay_media_intensity_helper(opacity, emoji_size)
 
 
-def overlay_image_intensity(
-    opacity: float, overlay_size: float, **kwargs
-) -> float:
+def overlay_image_intensity(opacity: float, overlay_size: float, **kwargs) -> float:
     return overlay_media_intensity_helper(opacity, overlay_size)
 
 
@@ -175,9 +181,7 @@ def overlay_onto_screenshot_intensity(
     metadata: Dict[str, Any],
     **kwargs,
 ) -> float:
-    _, bbox = imutils.get_template_and_bbox(
-        template_filepath, template_bboxes_filepath
-    )
+    _, bbox = imutils.get_template_and_bbox(template_filepath, template_bboxes_filepath)
     bbox_area = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
     dst_area = metadata["dst_width"] * metadata["dst_height"]
     return min(((dst_area - bbox_area) / dst_area) * 100.0, 100.0)
@@ -190,7 +194,8 @@ def overlay_stripes_intensity(
     line_type: str,
     line_opacity: float,
     metadata: Dict[str, Any],
-    **kwargs) -> float:
+    **kwargs,
+) -> float:
     binary_mask = imutils.compute_stripe_mask(
         src_w=metadata["src_width"],
         src_h=metadata["src_height"],
@@ -256,9 +261,7 @@ def pixelization_intensity(ratio: float, **kwargs) -> float:
 
 def random_noise_intensity(mean: float, var: float, **kwargs) -> float:
     assert isinstance(mean, (float, int)), "mean must be a number"
-    assert (
-        isinstance(var, (float, int)) and var >= 0
-    ), "var must be a non-negative number"
+    assert isinstance(var, (float, int)) and var >= 0, "var must be a non-negative number"
 
     max_mean_val = 100
     max_var_val = 10
@@ -326,15 +329,12 @@ def mult_factor_intensity_helper(factor: float) -> float:
     return min((factor / max_factor) * 100.0, 100.0)
 
 
-def overlay_media_intensity_helper(
-    opacity: float, overlay_content_size: float
-) -> float:
+def overlay_media_intensity_helper(opacity: float, overlay_content_size: float) -> float:
     assert (
         isinstance(opacity, (float, int)) and 0 <= opacity <= 1
     ), "opacity must be a number in [0, 1]"
     assert (
-        isinstance(overlay_content_size, (float, int))
-        and 0 <= overlay_content_size <= 1
+        isinstance(overlay_content_size, (float, int)) and 0 <= overlay_content_size <= 1
     ), "content size factor must be a number in [0, 1]"
 
     return (opacity * (overlay_content_size ** 2)) * 100.0

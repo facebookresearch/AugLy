@@ -169,10 +169,8 @@ def meme_format_intensity(metadata: Dict[str, Any], **kwargs) -> float:
 def overlay_intensity(
     overlay_size: Optional[float], overlay_path: str, metadata: Dict[str, Any], **kwargs
 ) -> float:
-    assert (
-        overlay_size is None or (
-            isinstance(overlay_size, (float, int)) and 0 < overlay_size <= 1
-        )
+    assert overlay_size is None or (
+        isinstance(overlay_size, (float, int)) and 0 < overlay_size <= 1
     ), "overlay_size must be a value in the range (0, 1]"
     if overlay_size is not None:
         return (overlay_size ** 2) * 100.0
@@ -283,6 +281,7 @@ def pixelization_intensity(ratio: float, **kwargs) -> float:
 def remove_audio_intensity(**kwargs) -> float:
     return 100.0
 
+
 def replace_with_background_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     """
     The intensity of replace_with_background is the fraction of the source video duration
@@ -291,8 +290,11 @@ def replace_with_background_intensity(metadata: Dict[str, Any], **kwargs) -> flo
     greater than 100.
     """
     src_duration = metadata["src_duration"]
-    total_bg_duration = metadata["starting_background_duration"] + metadata["ending_background_duration"]
+    total_bg_duration = (
+        metadata["starting_background_duration"] + metadata["ending_background_duration"]
+    )
     return min((total_bg_duration / src_duration) * 100.0, 100.0)
+
 
 def replace_with_color_frames_intensity(
     duration_factor: float, offset_factor: float, **kwargs

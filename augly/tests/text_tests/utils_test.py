@@ -37,9 +37,7 @@ class UtilsTest(unittest.TestCase):
 
     def test_split_words_on_whitespace(self) -> None:
         # Preserves the whitespace from the original text.
-        words, whitespace = split_words_on_whitespace(
-            "Can't stop\nthinkin'  about\tyou"
-        )
+        words, whitespace = split_words_on_whitespace("Can't stop\nthinkin'  about\tyou")
         self.assertEqual(words, ["Can't", "stop", "thinkin'", "about", "you"])
         self.assertEqual(whitespace, ["", " ", "\n", "  ", "\t", ""])
         self.assertEqual(

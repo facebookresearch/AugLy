@@ -11,6 +11,7 @@ import augly.image.intensity as imintensity
 import augly.utils as utils
 import numpy as np
 from PIL import Image
+from wand.image import Image as wImage
 
 JPEG_EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG"]
 
@@ -79,9 +80,7 @@ def get_metadata(
     assert isinstance(
         metadata, list
     ), "Expected `metadata` to be set to None or of type list"
-    assert (
-        image is not None
-    ), "Expected `image` to be passed in if metadata was provided"
+    assert image is not None, "Expected `image` to be passed in if metadata was provided"
     assert (
         aug_image is not None
     ), "Expected `aug_image` to be passed in if metadata was provided"
@@ -279,3 +278,16 @@ def compute_stripe_mask(
     binary_mask = softmax_mask > (math.cos(math.pi * line_width) + 1) / 2
 
     return binary_mask
+
+
+def distort(
+    image: Image.Image,
+    distortion_type: str,
+    distortion_args: Tuple,
+) -> Image.Image:
+    image = np.array(image)
+    wimage = wImage.from_array(image)
+    wimage.distort(distortion_type, distortion_args)
+    aug_image = Image.fromarray(np.array(wimage))
+
+    return aug_image

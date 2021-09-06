@@ -95,7 +95,9 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
         self.evaluate_class(vidaugs.Pad(), fname="pad")
 
     def test_RandomAspectRatio(self):
-        self.evaluate_class(vidaugs.RandomAspectRatio(), fname="RandomAspectRatio", seed=1)
+        self.evaluate_class(
+            vidaugs.RandomAspectRatio(), fname="RandomAspectRatio", seed=1
+        )
 
     def test_RandomBlur(self):
         self.evaluate_class(vidaugs.RandomBlur(), fname="RandomBlur", seed=1)

@@ -58,7 +58,9 @@ class TransformsAudioUnitTest(BaseAudioUnitTest):
         self.evaluate_class(
             audaugs.Compose(
                 [
-                    audaugs.InsertInBackground(offset_factor=0.2, background_audio=None, seed=random_generator),
+                    audaugs.InsertInBackground(
+                        offset_factor=0.2, background_audio=None, seed=random_generator
+                    ),
                     audaugs.Clip(offset_factor=0.5, duration_factor=0.25),
                     audaugs.Speed(factor=4.0),
                 ]
@@ -87,9 +89,7 @@ class TransformsAudioUnitTest(BaseAudioUnitTest):
         self.evaluate_class(audaugs.InvertChannels(), fname="invert_channels")
 
     def test_LowPassFilter(self):
-        self.evaluate_class(
-            audaugs.LowPassFilter(cutoff_hz=500), fname="low_pass_filter"
-        )
+        self.evaluate_class(audaugs.LowPassFilter(cutoff_hz=500), fname="low_pass_filter")
 
     def test_Normalize(self):
         self.evaluate_class(audaugs.Normalize(), fname="normalize")
@@ -97,9 +97,7 @@ class TransformsAudioUnitTest(BaseAudioUnitTest):
     def test_OneOf(self):
         random.seed(1)
         self.evaluate_class(
-            audaugs.OneOf(
-                [audaugs.PitchShift(n_steps=4), audaugs.TimeStretch(rate=1.5)]
-            ),
+            audaugs.OneOf([audaugs.PitchShift(n_steps=4), audaugs.TimeStretch(rate=1.5)]),
             fname="time_stretch",
         )
 

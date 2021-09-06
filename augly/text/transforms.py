@@ -120,9 +120,7 @@ class ApplyLambda(BaseTransform):
 
         @returns: the list of augmented text documents
         """
-        return F.apply_lambda(
-            texts, self.aug_function, **self.kwargs, metadata=metadata
-        )
+        return F.apply_lambda(texts, self.aug_function, **self.kwargs, metadata=metadata)
 
 
 class GetBaseline(BaseTransform):

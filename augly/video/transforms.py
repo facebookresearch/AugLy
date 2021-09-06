@@ -2206,9 +2206,7 @@ class RandomBlur(BaseRandomRangeTransform):
 
         @returns: the path to the augmented video
         """
-        return F.blur(
-            video_path, output_path, sigma=self.chosen_value, metadata=metadata
-        )
+        return F.blur(video_path, output_path, sigma=self.chosen_value, metadata=metadata)
 
 
 class RandomBrightness(BaseRandomRangeTransform):
@@ -2253,9 +2251,7 @@ class RandomBrightness(BaseRandomRangeTransform):
 
 
 class RandomContrast(BaseRandomRangeTransform):
-    def __init__(
-        self, min_factor: float = -5.0, max_factor: float = 5.0, p: float = 1.0
-    ):
+    def __init__(self, min_factor: float = -5.0, max_factor: float = 5.0, p: float = 1.0):
         """
         @param min_factor: the lower value on the range of contrast values to choose
             from. The lower the factor, the less contrast
@@ -2558,9 +2554,7 @@ class RandomRotation(BaseRandomRangeTransform):
 
 
 class RandomVideoSpeed(BaseRandomRangeTransform):
-    def __init__(
-        self, min_factor: float = 0.25, max_factor: float = 4.0, p: float = 1.0
-    ):
+    def __init__(self, min_factor: float = 0.25, max_factor: float = 4.0, p: float = 1.0):
         """
         @param min_factor: the lower value on the range of speed values to choose
             from. A factor less than one will slow down the video, a factor equal to

@@ -150,16 +150,17 @@ def compute_changed_segments(
             clip_start = kwargs["starting_background_duration"]
             duration = kwargs["source_duration"]
             new_dst_segments.append(
-                Segment(dst_segment.start + clip_start, dst_segment.start + clip_start + duration)
+                Segment(
+                    dst_segment.start + clip_start,
+                    dst_segment.start + clip_start + duration,
+                )
             )
         elif name == "change_video_speed":
             # speed_factor > 1 if speedup, < 1 if slow down
             speed_factor *= src_duration / dst_duration
             new_src_segments.append(src_segment)
             new_dst_segments.append(
-                Segment(
-                    dst_segment.start / speed_factor, dst_segment.end / speed_factor
-                )
+                Segment(dst_segment.start / speed_factor, dst_segment.end / speed_factor)
             )
         elif name == "concat":
             new_src_segments.append(src_segment)
