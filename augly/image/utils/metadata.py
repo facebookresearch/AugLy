@@ -97,6 +97,13 @@ def transform_bbox(
     left_factor, upper_factor, right_factor, lower_factor = bbox
     if function_name == "pad":
         return pad_bboxes_helper(bbox, **kwargs)
+    elif function_name == "pad_square":
+        w_factor, h_factor = 0, 0
+        if src_w < src_h:
+            w_factor = (src_h - src_w) / (2 * src_w)
+        else:
+            h_factor = (src_w - src_h) / (2 * src_h)
+        return pad_bboxes_helper(bbox, w_factor=w_factor, h_factor=h_factor)
     # TODO: add cases for all image transforms that modify the bboxes
     return bbox
 

@@ -441,7 +441,7 @@
         {
             "bbox_format": "yolo",
             "color": [0, 0, 0],
-            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.421875]],
             "dst_height": 1920,
             "dst_width": 1920,
             "intensity": 43.75,
