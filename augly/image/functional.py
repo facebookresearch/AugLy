@@ -2046,7 +2046,8 @@ def rotate(
     rotated_image = image.rotate(degrees, expand=True)
 
     center_x, center_y = rotated_image.width / 2, rotated_image.height / 2
-    wr, hr = imutils.rotated_rect_with_max_area(image, degrees)
+    image_w, image_h = image.size
+    wr, hr = imutils.rotated_rect_with_max_area(image_w, image_h, degrees)
     aug_image = rotated_image.crop(
         (
             int(center_x - wr / 2),

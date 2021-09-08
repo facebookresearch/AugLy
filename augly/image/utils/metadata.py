@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
+import math
 from copy import deepcopy
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -227,6 +228,90 @@ def pad_bboxes_helper(bbox: Tuple, w_factor: float, h_factor: float, **kwargs) -
     )
 
 
+def rotate_bboxes_helper(
+    bbox: Tuple, src_w: int, src_h: int, degrees: float, **kwargs
+) -> Tuple:
+    """
+    Computes the bbox that encloses the rotated bbox in the rotated image. This code was
+    informed by looking at the source code for PIL.Image.rotate
+    (https://pillow.readthedocs.io/en/stable/_modules/PIL/Image.html#Image.rotate).
+    Also uses the `crop_bboxes_helper` function since the image is cropped after being
+    rotated.
+    """
+    left_f, upper_f, right_f, lower_f = bbox
+    left, upper, right, lower = (
+        left_f * src_w, upper_f * src_h, right_f * src_w, lower_f * src_h
+    )
+    # top left, upper right, lower right, & lower left corner coefficients (in pixels)
+    bbox_corners = [(left, upper), (right, upper), (right, lower), (left, lower)]
+
+    def transform(x: int, y: int, matrix: List[float]) -> Tuple[float, float]:
+        (a, b, c, d, e, f) = matrix
+        return a * x + b * y + c, d * x + e * y + f
+
+    def get_enclosing_bbox(
+        corners: List[Tuple[int, int]], matrix: List[float]
+    ) -> Tuple[int, int, int, int]:
+        rotated_corners = [transform(x, y, matrix) for x, y in corners]
+        xs, ys = zip(*rotated_corners)
+        return (
+            math.floor(min(xs)),
+            math.floor(min(ys)),
+            math.ceil(max(xs)),
+            math.ceil(max(ys)),
+        )
+
+    # get rotated bbox corner coefficients
+    rotn_center = (src_w // 2, src_h // 2)
+    angle = -math.radians(degrees)
+    matrix = [
+        round(math.cos(angle), 15),
+        round(math.sin(angle), 15),
+        0.0,
+        round(-math.sin(angle), 15),
+        round(math.cos(angle), 15),
+        0.0,
+    ]
+    matrix[2], matrix[5] = transform(-rotn_center[0], -rotn_center[1], matrix)
+    matrix[2] += rotn_center[0]
+    matrix[5] += rotn_center[1]
+
+    # get rotated image dimensions
+    src_img_corners = [(0, 0), (src_w, 0), (src_w, src_h), (0, src_h)]
+    rotated_img_min_x, rotated_img_min_y, rotated_img_max_x, rotated_img_max_y = (
+        get_enclosing_bbox(src_img_corners, matrix)
+    )
+    rotated_img_w = rotated_img_max_x - rotated_img_min_x
+    rotated_img_h = rotated_img_max_y - rotated_img_min_y
+
+    # get enclosing box corners around rotated bbox (on rotated image)
+    new_bbox_left, new_bbox_upper, new_bbox_right, new_bbox_lower = get_enclosing_bbox(
+        bbox_corners, matrix
+    )
+    bbox_enclosing_bbox = (
+        new_bbox_left / rotated_img_w,
+        new_bbox_upper / rotated_img_h,
+        new_bbox_right / rotated_img_w,
+        new_bbox_lower / rotated_img_h,
+    )
+
+    # crop bbox as src image is cropped inside `rotate`
+    cropped_w, cropped_h = imutils.rotated_rect_with_max_area(src_w, src_h, degrees)
+    cropped_img_left, cropped_img_upper, cropped_img_right, cropped_img_lower = (
+        (rotated_img_w - cropped_w) // 2 + rotated_img_min_x,
+        (rotated_img_h - cropped_h) // 2 + rotated_img_min_y,
+        (rotated_img_w + cropped_w) // 2 + rotated_img_min_x,
+        (rotated_img_h + cropped_h) // 2 + rotated_img_min_y,
+    )
+    return crop_bboxes_helper(
+        bbox_enclosing_bbox,
+        x1=cropped_img_left / rotated_img_w,
+        y1=cropped_img_upper / rotated_img_h,
+        x2=cropped_img_right / rotated_img_w,
+        y2=cropped_img_lower / rotated_img_h,
+    )
+
+
 def transform_bbox(
     bbox: Tuple, function_name: str, src_w: int, src_h: int, **kwargs
 ) -> Tuple:
@@ -254,6 +339,8 @@ def transform_bbox(
         else:
             h_factor = (src_w - src_h) / (2 * src_h)
         return pad_bboxes_helper(bbox, w_factor=w_factor, h_factor=h_factor)
+    elif function_name == "rotate":
+        return rotate_bboxes_helper(bbox, src_w=src_w, src_h=src_h, **kwargs)
     elif function_name == "vflip":
         return (left_factor, 1 - lower_factor, right_factor, 1 - upper_factor)
     # TODO: add cases for all image transforms that modify the bboxes
