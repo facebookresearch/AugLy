@@ -47,7 +47,7 @@ def validate_and_normalize_bboxes(
 
 
 def convert_bboxes(
-    transformed_norm_bboxes: List[Tuple],
+    transformed_norm_bboxes: List[Optional[Tuple]],
     bboxes: List[Tuple],
     bbox_format: str,
     aug_w: int,
@@ -57,6 +57,9 @@ def convert_bboxes(
         return
 
     for i, bbox in enumerate(transformed_norm_bboxes):
+        if bbox is None:
+            continue
+
         left_norm, upper_norm, right_norm, lower_norm = bbox
         if bbox_format == "pascal_voc":
             # denormalize -> (left, upper, right, lower)
@@ -79,6 +82,18 @@ def convert_bboxes(
             bboxes[i] = (x_center_norm, y_center_norm, w_norm, h_norm)
 
 
+def overlay_onto_background_image_bboxes_helper(
+    bbox: Tuple, overlay_size: float, x_pos: float, y_pos: float, **kwargs
+) -> Tuple:
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    return (
+        max(0, left_factor * overlay_size + x_pos),
+        max(0, upper_factor * overlay_size + y_pos),
+        min(1, right_factor * overlay_size + x_pos),
+        min(1, lower_factor * overlay_size + y_pos),
+    )
+
+
 def pad_bboxes_helper(bbox: Tuple, w_factor: float, h_factor: float, **kwargs) -> Tuple:
     left_factor, upper_factor, right_factor, lower_factor = bbox
     new_w = 1 + 2 * w_factor
@@ -97,6 +112,8 @@ def transform_bbox(
     left_factor, upper_factor, right_factor, lower_factor = bbox
     if function_name == "hflip":
         return (1 - right_factor, upper_factor, 1 - left_factor, lower_factor)
+    elif function_name == "overlay_onto_background_image":
+        return overlay_onto_background_image_bboxes_helper(bbox, **kwargs)
     elif function_name == "pad":
         return pad_bboxes_helper(bbox, **kwargs)
     elif function_name == "pad_square":
@@ -110,6 +127,23 @@ def transform_bbox(
         return (left_factor, 1 - lower_factor, right_factor, 1 - upper_factor)
     # TODO: add cases for all image transforms that modify the bboxes
     return bbox
+
+
+def check_for_gone_bboxes(transformed_bboxes: List[Tuple]) -> List[Optional[Tuple]]:
+    """
+    When a bounding box is cropped out of the image or something is overlaid
+    which obfuscates it, we consider the bbox to no longer be visible/valid, so
+    we will return it as None
+    """
+    checked_bboxes = []
+    for i in range(len(transformed_bboxes)):
+        left_factor, upper_factor, right_factor, lower_factor = transformed_bboxes[i]
+        checked_bboxes.append(
+            None
+            if left_factor >= right_factor or upper_factor >= lower_factor
+            else transformed_bboxes[i]
+        )
+    return checked_bboxes
 
 
 def transform_bboxes(
@@ -135,6 +169,7 @@ def transform_bboxes(
         transform_bbox(bbox, function_name, src_w, src_h, **kwargs)
         for bbox in norm_bboxes
     ]
+    transformed_norm_bboxes = check_for_gone_bboxes(transformed_norm_bboxes)
     convert_bboxes(transformed_norm_bboxes, dst_bboxes, bbox_format, aug_w, aug_h)
 
 

@@ -344,7 +344,7 @@
         {
             "bbox_format": "yolo",
             "background_image": "twemojis/smileys/smiling_face_with_heart_eyes.png",
-            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_bboxes": [[0.65, 0.65, 0.125, 0.375]],
             "dst_height": 2160,
             "dst_width": 3840,
             "intensity": 75.0,
