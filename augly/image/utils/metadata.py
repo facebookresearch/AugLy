@@ -105,6 +105,39 @@ def meme_format_bboxes_helper(
     return left_f, (upper_f + y_off) / new_h, right_f, (lower_f + y_off) / new_h
 
 
+def overlay_image_bboxes_helper(
+    bbox: Tuple,
+    opacity: float,
+    overlay_size: float,
+    x_pos: float,
+    y_pos: float,
+    **kwargs,
+) -> Tuple:
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+
+    if opacity == 1.0:
+        occluded_left = x_pos < left_factor
+        occluded_upper = y_pos < upper_factor
+        occluded_right = x_pos + overlay_size > right_factor
+        occluded_lower = y_pos + overlay_size > lower_factor
+
+        if occluded_left and occluded_right:
+            if occluded_upper and occluded_lower:
+                return (0.0, 0.0, 0.0, 0.0)
+
+            if occluded_lower:
+                lower_factor = y_pos
+            elif occluded_upper:
+                upper_factor = y_pos + overlay_size
+        elif occluded_upper and occluded_lower:
+            if occluded_left:
+                right_factor = x_pos
+            elif occluded_right:
+                left_factor = x_pos + overlay_size
+
+    return left_factor, upper_factor, right_factor, lower_factor
+
+
 def overlay_onto_background_image_bboxes_helper(
     bbox: Tuple, overlay_size: float, x_pos: float, y_pos: float, **kwargs
 ) -> Tuple:
@@ -204,6 +237,8 @@ def transform_bbox(
         return (1 - right_factor, upper_factor, 1 - left_factor, lower_factor)
     elif function_name == "meme_format":
         return meme_format_bboxes_helper(bbox, src_w=src_w, src_h=src_h, **kwargs)
+    elif function_name == "overlay_image":
+        return overlay_image_bboxes_helper(bbox, **kwargs)
     elif function_name == "overlay_onto_background_image":
         return overlay_onto_background_image_bboxes_helper(bbox, **kwargs)
     elif function_name == "overlay_onto_screenshot":
