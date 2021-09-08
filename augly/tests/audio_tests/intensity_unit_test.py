@@ -9,7 +9,9 @@ import numpy as np
 
 class IntensityAudioUnitTest(unittest.TestCase):
     def test_add_background_noise_intensity(self):
-        intensity = audaugs.add_background_noise_intensity(metadata={}, snr_level_db=10.0)
+        intensity = audaugs.add_background_noise_intensity(
+            metadata={}, snr_level_db=10.0
+        )
         self.assertAlmostEqual(intensity, 90.90909091)
 
     def test_apply_lambda_intensity(self):

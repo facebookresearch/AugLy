@@ -80,7 +80,9 @@ class VideoDistractorByShapes(BaseCV2Augmenter):
         shapes = ["circle", "rectangle"]
 
         while True:
-            yield shape_type if shape_type else shapes[random.randint(0, len(shapes) - 1)]
+            yield shape_type if shape_type else shapes[
+                random.randint(0, len(shapes) - 1)
+            ]
 
     @staticmethod
     def random_thickness(thickness: Optional[int]) -> Iterator[int]:

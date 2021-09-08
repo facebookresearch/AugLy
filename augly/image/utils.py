@@ -80,7 +80,9 @@ def get_metadata(
     assert isinstance(
         metadata, list
     ), "Expected `metadata` to be set to None or of type list"
-    assert image is not None, "Expected `image` to be passed in if metadata was provided"
+    assert (
+        image is not None
+    ), "Expected `image` to be passed in if metadata was provided"
     assert (
         aug_image is not None
     ), "Expected `aug_image` to be passed in if metadata was provided"
@@ -281,9 +283,9 @@ def compute_stripe_mask(
 
 
 def distort(
-    image: Image.Image,
-    distortion_type: str,
-    distortion_args: Tuple,
+        image: Image.Image,
+        distortion_type: str,
+        distortion_args: Tuple,
 ) -> Image.Image:
     image = np.array(image)
     wimage = wImage.from_array(image)

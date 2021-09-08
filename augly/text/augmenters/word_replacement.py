@@ -29,6 +29,7 @@ class WordReplacement(object):
         else:
             self.mapping = {}
 
+
     def replace(self, word: str) -> str:
         new_word = self.mapping.get(word, None) or self.mapping.get(word.lower(), None)
         if new_word is not None and word[0].isupper():

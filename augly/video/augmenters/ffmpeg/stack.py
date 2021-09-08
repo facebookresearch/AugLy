@@ -11,7 +11,9 @@ from ffmpeg.nodes import FilterableStream
 
 
 class VideoAugmenterByStack(BaseFFMPEGAugmenter):
-    def __init__(self, second_video_path: str, use_second_audio: bool, orientation: str):
+    def __init__(
+        self, second_video_path: str, use_second_audio: bool, orientation: str
+    ):
         assert (
             type(use_second_audio) == bool
         ), "Expected a boolean value for use_second_audio"

@@ -75,7 +75,9 @@ class Compose(BaseComposition):
 
         @returns: the path to the augmented video
         """
-        video_path, output_path = validate_input_and_output_paths(video_path, output_path)
+        video_path, output_path = validate_input_and_output_paths(
+            video_path, output_path
+        )
 
         if video_path != output_path:
             shutil.copy(video_path, output_path)
@@ -125,7 +127,9 @@ class OneOf(BaseComposition):
 
         @returns: the path to the augmented video
         """
-        video_path, output_path = validate_input_and_output_paths(video_path, output_path)
+        video_path, output_path = validate_input_and_output_paths(
+            video_path, output_path
+        )
 
         if seed is not None:
             random.seed(seed)

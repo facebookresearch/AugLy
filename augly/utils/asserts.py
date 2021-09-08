@@ -36,8 +36,8 @@ def validate_audio_path(audio_path: str) -> None:
 
     # since `librosa` can extract audio from audio and video
     # paths, we check for both here
-    assert is_audio_file(audio_path) or is_video_file(
-        audio_path
+    assert (
+        is_audio_file(audio_path) or is_video_file(audio_path)
     ), f"Audio path invalid: {audio_path}"
 
 

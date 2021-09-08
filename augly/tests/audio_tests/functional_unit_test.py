@@ -47,7 +47,9 @@ class FunctionalAudioUnitTest(BaseAudioUnitTest):
         self.evaluate_function(audaugs.peaking_equalizer, gain_db=-20.0)
 
     def test_percussive(self):
-        self.evaluate_function(audaugs.percussive, kernel_size=31, power=2.0, margin=1.0)
+        self.evaluate_function(
+            audaugs.percussive, kernel_size=31, power=2.0, margin=1.0
+        )
 
     def test_pitch_shift(self):
         self.evaluate_function(audaugs.pitch_shift, n_steps=4)

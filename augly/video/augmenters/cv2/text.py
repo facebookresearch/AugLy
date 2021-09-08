@@ -153,13 +153,6 @@ class VideoDistractorByText(BaseCV2Augmenter):
             distract_frame = cv2.cvtColor(np.array(distract_frame_pil), cv2.COLOR_RGB2BGR)
         else:
             cv2.putText(
-                distract_frame,
-                text_str,
-                (x, y),
-                font,
-                fontscale,
-                color,
-                thickness,
-                cv2.LINE_AA,
+                distract_frame, text_str, (x, y), font, fontscale, color, thickness, cv2.LINE_AA
             )
         return distract_frame

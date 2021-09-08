@@ -68,7 +68,11 @@ def replace_words_intensity(
     mapping: Optional[Union[str, Dict[str, Any]]],
     **kwargs,
 ) -> float:
-    return 0.0 if not mapping else replace_intensity_helper(aug_word_p, aug_word_max)
+    return (
+        0.0
+        if not mapping
+        else replace_intensity_helper(aug_word_p, aug_word_max)
+    )
 
 
 def simulate_typos_intensity(

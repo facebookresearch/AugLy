@@ -34,10 +34,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
             vidaugs.OverlayOntoScreenshot(),
             fname="overlay_onto_screenshot",
             metadata_exclude_keys=[
-                "dst_height",
-                "dst_width",
-                "intensity",
-                "template_filepath",
+                "dst_height", "dst_width", "intensity", "template_filepath"
             ],
         )
 

@@ -59,8 +59,12 @@ def clicks_intensity(
     seconds_between_clicks_intensity = (
         max_seconds_between_clicks_val - seconds_between_clicks
     ) / max_seconds_between_clicks_val
-    snr_level_db_intensity = (max_snr_level_db_val - snr_level_db) / max_snr_level_db_val
-    return min((seconds_between_clicks_intensity * snr_level_db_intensity) * 100.0, 100.0)
+    snr_level_db_intensity = (
+        max_snr_level_db_val - snr_level_db
+    ) / max_snr_level_db_val
+    return min(
+        (seconds_between_clicks_intensity * snr_level_db_intensity) * 100.0, 100.0
+    )
 
 
 def clip_intensity(duration_factor: float = 1.0, **kwargs) -> float:
@@ -148,7 +152,9 @@ def reverb_intensity(
     max_reverberance_val = 100.0
     max_room_scale_val = 100.0
     return min(
-        (reverberance / max_reverberance_val) * (room_scale / max_room_scale_val) * 100.0,
+        (reverberance / max_reverberance_val)
+        * (room_scale / max_room_scale_val)
+        * 100.0,
         100.0,
     )
 
@@ -182,7 +188,9 @@ def tempo_intensity(factor: float = 2.0, **kwargs) -> float:
 
 
 def time_stretch_intensity(rate: float = 1.5, **kwargs) -> float:
-    assert isinstance(rate, (float, int)) and rate > 0, "factor must be a positive number"
+    assert (
+        isinstance(rate, (float, int)) and rate > 0
+    ), "factor must be a positive number"
 
     if rate == 1.0:
         return 0.0

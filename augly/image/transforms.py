@@ -189,9 +189,7 @@ class ApplyPILFilter(BaseTransform):
 
 
 class BarrelDistortion(BaseTransform):
-    def __init__(
-        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1
-    ):
+    def __init__(self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1):
         """
         To see effects of the coefficients in detail refer to https://legacy.imagemagick.org/Usage/distorts/#barrel.
         Below is a direct quotation from the document describing how barrel distortion parameter works.
@@ -221,9 +219,7 @@ class BarrelDistortion(BaseTransform):
         self.c = c
         self.d = d
 
-    def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
-    ) -> Image.Image:
+    def apply_transform(self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None) -> Image.Image:
         """
         Applies barrel distortion to the image.
 
@@ -235,9 +231,7 @@ class BarrelDistortion(BaseTransform):
 
         @returns: Augmented PIL Image
         """
-        return F.distort_barrel(
-            image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata
-        )
+        return F.distort_barrel(image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata)
 
 
 class Blur(BaseTransform):
@@ -1022,7 +1016,7 @@ class OverlayStripes(BaseTransform):
         line_density: float = 0.5,
         line_type: Optional[str] = "solid",
         line_opacity: float = 1.0,
-        p: float = 1.0,
+        p: float = 1.0
     ):
         """
         @param line_width: the width of individual stripes as a float value ranging
@@ -1073,7 +1067,7 @@ class OverlayStripes(BaseTransform):
             line_density=self.line_density,
             line_type=self.line_type,
             line_opacity=self.line_opacity,
-            metadata=metadata,
+            metadata=metadata
         )
 
 
@@ -1190,7 +1184,9 @@ class Pad(BaseTransform):
 
 
 class PadSquare(BaseTransform):
-    def __init__(self, color: Tuple[int, int, int] = utils.DEFAULT_COLOR, p: float = 1.0):
+    def __init__(
+        self, color: Tuple[int, int, int] = utils.DEFAULT_COLOR, p: float = 1.0
+    ):
         """
         @param color: color of the padded border in RGB values
 
@@ -1266,9 +1262,7 @@ class PerspectiveTransform(BaseTransform):
 
 
 class PincushionDistortion(BaseTransform):
-    def __init__(
-        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1
-    ):
+    def __init__(self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1):
         """
         To see effects of the coefficients in detail refer to
         https://legacy.imagemagick.org/Usage/distorts/#barrelinverse. Below is a direct quotation from the document
@@ -1299,9 +1293,7 @@ class PincushionDistortion(BaseTransform):
         self.c = c
         self.d = d
 
-    def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
-    ) -> Image.Image:
+    def apply_transform(self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None) -> Image.Image:
         """
         Applies pinchusion distortion to the image.
 
@@ -1313,9 +1305,7 @@ class PincushionDistortion(BaseTransform):
 
         @returns: Augmented PIL Image
         """
-        return F.distort_pincushion(
-            image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata
-        )
+        return F.distort_pincushion(image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata)
 
 
 class Pixelization(BaseTransform):
@@ -1645,7 +1635,9 @@ class RandomAspectRatio(BaseRandomRangeTransform):
 
 
 class RandomBlur(BaseRandomRangeTransform):
-    def __init__(self, min_radius: float = 0.0, max_radius: float = 10.0, p: float = 1.0):
+    def __init__(
+        self, min_radius: float = 0.0, max_radius: float = 10.0, p: float = 1.0
+    ):
         """
         @param min_radius: the lower value on the range of blur values to choose
             from. The larger the radius, the blurrier the image
@@ -1675,7 +1667,9 @@ class RandomBlur(BaseRandomRangeTransform):
 
 
 class RandomBrightness(BaseRandomRangeTransform):
-    def __init__(self, min_factor: float = 0.0, max_factor: float = 2.0, p: float = 1.0):
+    def __init__(
+        self, min_factor: float = 0.0, max_factor: float = 2.0, p: float = 1.0
+    ):
         """
         @param min_factor: the lower value on the range of brightness values to choose
             from. The lower the factor, the darker the image
