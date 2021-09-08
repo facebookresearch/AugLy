@@ -38,6 +38,15 @@ def are_equal_metadata(
             if act_v == exp_v:
                 continue
 
+            # Bboxes are tuples but stored as lists in expected metadata
+            if (
+                isinstance(act_v, list)
+                and all(isinstance(x, tuple) for x in zip(act_v, exp_v))
+                and len(act_v) == len(exp_v)
+                and all(list(x) == y for x, y in zip(act_v, exp_v))
+            ):
+                continue
+
             """
             Allow relative paths in expected metadata: just check that the end of the
             actual path matches the expected path
@@ -45,7 +54,7 @@ def are_equal_metadata(
             if not (
                 isinstance(act_v, str)
                 and isinstance(exp_v, str)
-                and act_v[-len(exp_v):] == exp_v
+                and act_v[-len(exp_v) :] == exp_v
             ):
                 return False
 
@@ -89,12 +98,17 @@ class BaseImageUnitTest(unittest.TestCase):
         metadata_exclude_keys: Optional[List[str]] = None,
     ):
         metadata = []
+        bboxes, bbox_format = [(0.5, 0.5, 0.25, 0.75)], "yolo"
         ref = self.get_ref_image(fname)
-        dst = transform_class(self.img, metadata=metadata)
+        dst = transform_class(
+            self.img, metadata=metadata, bboxes=bboxes, bbox_format=bbox_format
+        )
 
         self.assertTrue(
             are_equal_metadata(metadata, self.metadata[fname], metadata_exclude_keys),
+            metadata,
         )
+        self.assertTrue([list(bboxes[0])] == self.bboxes[fname], f"{[list(bboxes[0])]} != {self.bboxes[fname]}")
         self.assertTrue(are_equal_images(dst, ref))
 
     def get_ref_image(self, fname: str) -> Image.Image:

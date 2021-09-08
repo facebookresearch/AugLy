@@ -19,6 +19,8 @@ def apply_lambda(
     output_path: Optional[str] = None,
     aug_function: Callable[..., Image.Image] = lambda x: x,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
     **kwargs,
 ) -> Image.Image:
     """
@@ -39,6 +41,14 @@ def apply_lambda(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -72,6 +82,8 @@ def apply_pil_filter(
     output_path: Optional[str] = None,
     filter_type: Union[Callable, ImageFilter.Filter] = ImageFilter.EDGE_ENHANCE_MORE,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Applies a given PIL filter to the input image using `Image.filter()`
@@ -87,6 +99,14 @@ def apply_pil_filter(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -120,6 +140,8 @@ def blur(
     output_path: Optional[str] = None,
     radius: float = 2.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Blurs the image
@@ -135,6 +157,14 @@ def blur(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -162,6 +192,8 @@ def brightness(
     output_path: Optional[str] = None,
     factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes the brightness of the image
@@ -178,6 +210,14 @@ def brightness(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -197,6 +237,8 @@ def change_aspect_ratio(
     output_path: Optional[str] = None,
     ratio: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes the aspect ratio of the image
@@ -212,6 +254,14 @@ def change_aspect_ratio(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -243,6 +293,8 @@ def clip_image_size(
     min_resolution: Optional[int] = None,
     max_resolution: Optional[int] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Scales the image up or down if necessary to fit in the given min and max resolution
@@ -264,6 +316,14 @@ def clip_image_size(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -308,6 +368,8 @@ def color_jitter(
     contrast_factor: float = 1.0,
     saturation_factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Color jitters the image
@@ -332,6 +394,14 @@ def color_jitter(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
@@ -353,6 +423,8 @@ def contrast(
     output_path: Optional[str] = None,
     factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Alters the contrast of the image
@@ -370,6 +442,14 @@ def contrast(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: Image.Image - Augmented PIL Image
     """
@@ -416,6 +496,8 @@ def convert_color(
     palette: int = 0,
     colors: int = 256,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Converts the image in terms of color modes
@@ -446,6 +528,14 @@ def convert_color(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: Image.Image - Augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
@@ -467,6 +557,8 @@ def crop(
     x2: float = 0.75,
     y2: float = 0.75,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Crops the image
@@ -492,6 +584,14 @@ def crop(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -526,6 +626,8 @@ def encoding_quality(
     output_path: Optional[str] = None,
     quality: int = 50,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes the JPEG encoding quality level
@@ -541,6 +643,14 @@ def encoding_quality(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -569,6 +679,8 @@ def grayscale(
     output_path: Optional[str] = None,
     mode: str = "luminosity",
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes an image to be grayscale
@@ -585,6 +697,14 @@ def grayscale(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -623,6 +743,8 @@ def hflip(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Horizontally flips an image
@@ -636,6 +758,14 @@ def hflip(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -656,6 +786,8 @@ def masked_composite(
     mask: Optional[Union[str, Image.Image]] = None,
     transform_function: Optional[Callable] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Applies given augmentation function to the masked area of the image
@@ -677,6 +809,14 @@ def masked_composite(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -721,6 +861,8 @@ def meme_format(
     caption_height: int = 250,
     meme_bg_color: Tuple[int, int, int] = utils.WHITE_RGB_COLOR,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Creates a new image that looks like a meme, given text and an image
@@ -748,6 +890,14 @@ def meme_format(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -810,6 +960,8 @@ def opacity(
     output_path: Optional[str] = None,
     level: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Alter the opacity of an image
@@ -826,6 +978,14 @@ def opacity(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -859,6 +1019,8 @@ def overlay_emoji(
     x_pos: float = 0.4,
     y_pos: float = 0.8,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlay an emoji onto the original image
@@ -882,6 +1044,14 @@ def overlay_emoji(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -920,6 +1090,8 @@ def overlay_image(
     x_pos: float = 0.4,
     y_pos: float = 0.4,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlays an image onto another image at position (width * x_pos, height * y_pos)
@@ -945,6 +1117,14 @@ def overlay_image(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -997,6 +1177,8 @@ def overlay_onto_background_image(
     y_pos: float = 0.4,
     scale_bg: bool = False,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlays the image onto a given background image at position
@@ -1028,6 +1210,14 @@ def overlay_onto_background_image(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1073,6 +1263,8 @@ def overlay_onto_screenshot(
     crop_src_to_fit: bool = False,
     resize_src_to_match_template: bool = True,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlay the image onto a screenshot template so it looks like it was
@@ -1106,6 +1298,14 @@ def overlay_onto_screenshot(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1156,6 +1356,8 @@ def overlay_stripes(
     line_type: Optional[str] = "solid",
     line_opacity: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlay stripe pattern onto the image (by default, white horizontal
@@ -1188,6 +1390,14 @@ def overlay_stripes(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1263,6 +1473,8 @@ def overlay_text(
     x_pos: float = 0.0,
     y_pos: float = 0.5,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlay text onto the image (by default, text is randomly overlaid)
@@ -1293,6 +1505,14 @@ def overlay_text(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1365,6 +1585,8 @@ def pad(
     h_factor: float = 0.25,
     color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Pads the image
@@ -1386,6 +1608,14 @@ def pad(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1424,6 +1654,8 @@ def pad_square(
     output_path: Optional[str] = None,
     color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Pads the shorter edge of the image such that it is now square-shaped
@@ -1439,6 +1671,14 @@ def pad_square(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1479,6 +1719,8 @@ def perspective_transform(
     seed: Optional[int] = 42,
     crop_out_black_border: bool = False,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Apply a perspective transform to the image so it looks like it was taken
@@ -1510,6 +1752,14 @@ def perspective_transform(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1569,6 +1819,8 @@ def pixelization(
     output_path: Optional[str] = None,
     ratio: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Pixelizes an image
@@ -1585,6 +1837,14 @@ def pixelization(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1615,6 +1875,8 @@ def random_noise(
     var: float = 0.01,
     seed: int = 42,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Adds random noise to the image
@@ -1634,6 +1896,14 @@ def random_noise(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1681,6 +1951,8 @@ def resize(
     width: Optional[int] = None,
     height: Optional[int] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Resizes an image
@@ -1700,6 +1972,14 @@ def resize(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1728,6 +2008,8 @@ def rotate(
     output_path: Optional[str] = None,
     degrees: float = 15.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Rotates the image
@@ -1744,6 +2026,14 @@ def rotate(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1781,6 +2071,8 @@ def saturation(
     output_path: Optional[str] = None,
     factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Alters the saturation of the image
@@ -1798,6 +2090,14 @@ def saturation(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1823,6 +2123,8 @@ def scale(
     factor: float = 0.5,
     interpolation: Optional[int] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Alters the resolution of an image
@@ -1842,6 +2144,14 @@ def scale(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1885,6 +2195,8 @@ def sharpen(
     output_path: Optional[str] = None,
     factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes the sharpness of the image
@@ -1901,6 +2213,14 @@ def sharpen(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1919,6 +2239,8 @@ def shuffle_pixels(
     factor: float = 1.0,
     seed: int = 10,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Shuffles the pixels of an image with respect to the shuffling factor. The
@@ -1940,6 +2262,14 @@ def shuffle_pixels(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1988,6 +2318,8 @@ def vflip(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Vertically flips an image
@@ -2001,6 +2333,14 @@ def vflip(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """

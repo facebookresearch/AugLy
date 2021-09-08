@@ -26,3 +26,6 @@ AUDIO_METADATA_PATH = os.path.join(METADATA_BASE_PATH, "audio_tests", METADATA_F
 IMAGE_METADATA_PATH = os.path.join(METADATA_BASE_PATH, "image_tests", METADATA_FILENAME)
 TEXT_METADATA_PATH = os.path.join(METADATA_BASE_PATH, "text_tests", METADATA_FILENAME)
 VIDEO_METADATA_PATH = os.path.join(METADATA_BASE_PATH, "video_tests", METADATA_FILENAME)
+IMAGE_BBOXES_PATH = os.path.join(
+    METADATA_BASE_PATH, "image_tests", "expected_bboxes.json"
+)
