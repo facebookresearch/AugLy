@@ -95,7 +95,9 @@ def transform_bbox(
     bbox: Tuple, function_name: str, src_w: int, src_h: int, **kwargs
 ) -> Tuple:
     left_factor, upper_factor, right_factor, lower_factor = bbox
-    if function_name == "pad":
+    if function_name == "hflip":
+        return (1 - right_factor, upper_factor, 1 - left_factor, lower_factor)
+    elif function_name == "pad":
         return pad_bboxes_helper(bbox, **kwargs)
     elif function_name == "pad_square":
         w_factor, h_factor = 0, 0
