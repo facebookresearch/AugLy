@@ -104,6 +104,8 @@ def transform_bbox(
         else:
             h_factor = (src_w - src_h) / (2 * src_h)
         return pad_bboxes_helper(bbox, w_factor=w_factor, h_factor=h_factor)
+    elif function_name == "vflip":
+        return (left_factor, 1 - lower_factor, right_factor, 1 - upper_factor)
     # TODO: add cases for all image transforms that modify the bboxes
     return bbox
 
