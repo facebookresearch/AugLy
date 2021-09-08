@@ -530,6 +530,31 @@ def distort_barrel(
         d: float = 1.0,
         metadata: Optional[List[Dict[str, Any]]] = None,
 ):
+    """
+    Applies barrel distortion to the image with the following equation.
+
+        Rsrc = r * ( A*r3 + B*r2 + C*r + D )
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param a: Coefficient A in the equation Rsrc(r).
+
+    @param b: Coefficient B in the equation Rsrc(r).
+
+    @param c: Coefficient C in the equation Rsrc(r).
+
+    @param d: Coefficient D in the equation Rsrc(r).
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
     image = imutils.validate_and_load_image(image).convert("RGB")
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
@@ -558,6 +583,31 @@ def distort_pincushion(
         d: float = 1.0,
         metadata: Optional[List[Dict[str, Any]]] = None,
 ):
+    """
+    Applies pincushion distortion to the image with the following equation.
+
+        Rsrc = r / ( A*r3 + B*r2 + C*r + D )
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param a: Coefficient A in the equation Rsrc(r).
+
+    @param b: Coefficient B in the equation Rsrc(r).
+
+    @param c: Coefficient C in the equation Rsrc(r).
+
+    @param d: Coefficient D in the equation Rsrc(r).
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
     image = imutils.validate_and_load_image(image).convert("RGB")
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
