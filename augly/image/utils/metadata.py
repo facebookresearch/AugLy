@@ -82,6 +82,19 @@ def convert_bboxes(
             bboxes[i] = (x_center_norm, y_center_norm, w_norm, h_norm)
 
 
+def crop_bboxes_helper(
+    bbox: Tuple, x1: float, y1: float, x2: float, y2: float, **kwargs
+) -> Tuple:
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    new_w, new_h = x2 - x1, y2 - y1
+    return (
+        max(0, (left_factor - x1) / new_w),
+        max(0, (upper_factor - y1) / new_h),
+        min(1, 1 - (x2 - right_factor) / new_w),
+        min(1, 1 - (y2 - lower_factor) / new_h),
+    )
+
+
 def meme_format_bboxes_helper(
     bbox: Tuple, src_w: int, src_h: int, caption_height: int, **kwargs
 ) -> Tuple:
@@ -119,7 +132,9 @@ def transform_bbox(
     bbox: Tuple, function_name: str, src_w: int, src_h: int, **kwargs
 ) -> Tuple:
     left_factor, upper_factor, right_factor, lower_factor = bbox
-    if function_name == "hflip":
+    if function_name == "crop":
+        return crop_bboxes_helper(bbox, **kwargs)
+    elif function_name == "hflip":
         return (1 - right_factor, upper_factor, 1 - left_factor, lower_factor)
     elif function_name == "meme_format":
         return meme_format_bboxes_helper(bbox, src_w=src_w, src_h=src_h, **kwargs)
