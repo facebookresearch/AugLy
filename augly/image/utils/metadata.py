@@ -79,9 +79,24 @@ def convert_bboxes(
             bboxes[i] = (x_center_norm, y_center_norm, w_norm, h_norm)
 
 
+def pad_bboxes_helper(bbox: Tuple, w_factor: float, h_factor: float, **kwargs) -> Tuple:
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    new_w = 1 + 2 * w_factor
+    new_h = 1 + 2 * h_factor
+    return (
+        (left_factor + w_factor) / new_w,
+        (upper_factor + h_factor) / new_h,
+        (right_factor + w_factor) / new_w,
+        (lower_factor + h_factor) / new_h,
+    )
+
+
 def transform_bbox(
     bbox: Tuple, function_name: str, src_w: int, src_h: int, **kwargs
 ) -> Tuple:
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    if function_name == "pad":
+        return pad_bboxes_helper(bbox, **kwargs)
     # TODO: add cases for all image transforms that modify the bboxes
     return bbox
 
