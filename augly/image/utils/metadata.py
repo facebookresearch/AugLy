@@ -82,6 +82,15 @@ def convert_bboxes(
             bboxes[i] = (x_center_norm, y_center_norm, w_norm, h_norm)
 
 
+def meme_format_bboxes_helper(
+    bbox: Tuple, src_w: int, src_h: int, caption_height: int, **kwargs
+) -> Tuple:
+    left_f, upper_f, right_f, lower_f = bbox
+    y_off = caption_height / src_h
+    new_h = 1.0 + y_off
+    return left_f, (upper_f + y_off) / new_h, right_f, (lower_f + y_off) / new_h
+
+
 def overlay_onto_background_image_bboxes_helper(
     bbox: Tuple, overlay_size: float, x_pos: float, y_pos: float, **kwargs
 ) -> Tuple:
@@ -112,6 +121,8 @@ def transform_bbox(
     left_factor, upper_factor, right_factor, lower_factor = bbox
     if function_name == "hflip":
         return (1 - right_factor, upper_factor, 1 - left_factor, lower_factor)
+    elif function_name == "meme_format":
+        return meme_format_bboxes_helper(bbox, src_w=src_w, src_h=src_h, **kwargs)
     elif function_name == "overlay_onto_background_image":
         return overlay_onto_background_image_bboxes_helper(bbox, **kwargs)
     elif function_name == "pad":
