@@ -66,6 +66,10 @@ class TransformsTextUnitTest(unittest.TestCase):
         ]
         cls.priority_words = ["green", "grassy", "hill"]
 
+        cls.fairness_texts = [
+            "The king and queen have a son named Raj and a daughter named Amanda.",
+        ]
+
     def test_ApplyLambda(self) -> None:
         augmented_apply_lambda = txtaugs.ApplyLambda()(
             self.texts, metadata=self.metadata
@@ -86,9 +90,14 @@ class TransformsTextUnitTest(unittest.TestCase):
             ]
         )(self.texts, metadata=self.metadata)
 
-        self.assertTrue(
-            augmented_compose[0]
-            == "T̴ -̴ h̴ -̴ e̴ -̴ -̴ u̴ -̴ q̴ -̴ i̴ -̴ c̴ -̴ k̴ -̴ -̴ b̴ -̴ r̴ -̴ o̴ -̴ w̴ -̴ n̴ -̴ -̴ '̴ -̴ f̴ -̴ o̴ -̴ x̴ -̴ '̴ -̴ -̴ c̴ -̴ o̴ -̴ u̴ -̴ ,̴ -̴ d̴ -̴ n̴ -̴ '̴ -̴ -̴ t̴ -̴ -̴ j̴ -̴ u̴ -̴ m̴ -̴ p̴ -̴ -̴ v̴ -̴ o̴ -̴ e̴ -̴ r̴ -̴ -̴ t̴ -̴ g̴ -̴ h̴ -̴ e̴ -̴ -̴ g̴ -̴ r̴ -̴ e̴ -̴ e̴ -̴ n̴ -̴ ,̴ -̴ -̴ g̴ -̴ r̴ -̴ a̴ -̴ s̴ -̴ s̴ -̴ y̴ -̴ -̴ n̴ -̴ i̴ -̴ l̴ -̴ l̴ -̴.̴",
+        self.assertEqual(
+            augmented_compose,
+            [
+                "T̶ -̶ h̶ -̶ e̶ -̶ -̶ u̶ -̶ q̶ -̶ i̶ -̶ c̶ -̶ k̶ -̶ -̶ b̶ -̶ r̶ -̶ o̶ -̶ w̶ -̶ n̶ -̶ -̶ '̶ -̶ "
+                "f̶ -̶ o̶ -̶ x̶ -̶ '̶ -̶ -̶ c̶ -̶ o̶ -̶ u̶ -̶ ,̶ -̶ d̶ -̶ n̶ -̶ '̶ -̶ -̶ t̶ -̶ -̶ j̶ -̶ u̶ -̶ "
+                "m̶ -̶ p̶ -̶ -̶ v̶ -̶ o̶ -̶ e̶ -̶ r̶ -̶ -̶ t̶ -̶ g̶ -̶ h̶ -̶ e̶ -̶ -̶ g̶ -̶ r̶ -̶ e̶ -̶ e̶ -̶ "
+                "n̶ -̶ ,̶ -̶ -̶ g̶ -̶ r̶ -̶ a̶ -̶ s̶ -̶ s̶ -̶ y̶ -̶ -̶ n̶ -̶ i̶ -̶ l̶ -̶ l̶ -̶.̶"
+            ],
         )
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["compose"]),
@@ -121,6 +130,25 @@ class TransformsTextUnitTest(unittest.TestCase):
         self.assertTrue(
             are_equal_metadata(
                 self.metadata, self.expected_metadata["insert_punctuation_chars"]
+            ),
+        )
+
+    def test_InsertWhitespaceChars(self) -> None:
+        aug_whitespace_text = txtaugs.InsertWhitespaceChars("all", 1.0, False)(
+            self.texts, metadata=self.metadata
+        )
+
+        # Separator inserted between every character (including spaces/punctuation).
+        self.assertEqual(
+            aug_whitespace_text,
+            [
+                "T h e   q u i c k   b r o w n   ' f o x '   c o u l d n ' t   "
+                "j u m p   o v e r   t h e   g r e e n ,   g r a s s y   h i l l ."
+            ],
+        )
+        self.assertTrue(
+            are_equal_metadata(
+                self.metadata, self.expected_metadata["insert_whitespace_chars"]
             ),
         )
 
@@ -228,6 +256,14 @@ class TransformsTextUnitTest(unittest.TestCase):
             ),
         )
 
+    def test_ReplaceWords(self) -> None:
+        augmented_words = txtaugs.ReplaceWords()(self.texts, metadata=self.metadata)
+
+        self.assertTrue(augmented_words[0] == self.texts[0])
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["replace_words"]),
+        )
+
     def test_SimulateTypos(self) -> None:
         aug_typo_text = txtaugs.SimulateTypos(aug_word_p=0.3, aug_char_p=0.3)(
             self.texts, metadata=self.metadata
@@ -252,6 +288,19 @@ class TransformsTextUnitTest(unittest.TestCase):
         )
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["split_words"]),
+        )
+
+    def test_SwapGenderedWords(self) -> None:
+        augmented_words = txtaugs.SwapGenderedWords()(
+            self.fairness_texts, metadata=self.metadata
+        )
+
+        self.assertTrue(
+            augmented_words[0]
+            == "The queen and king have a daughter named Raj and a son named Amanda.",
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["swap_gendered_words"]),
         )
 
 

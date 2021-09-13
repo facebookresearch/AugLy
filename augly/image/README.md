@@ -1,6 +1,6 @@
 # Image
 
-## Installation   
+## Installation
 If you would like to use the image augmentations, please install AugLy using the following command:
 ```bash
 pip install augly
@@ -79,7 +79,7 @@ np_aug_img = aug_np_wrapper(np_image, overlay_emoji, **{'opacity': 0.5, 'y_pos':
 
 You can run our normal image unit tests if you have cloned `augly` (see [here](../../README.md)) by running the following:
 ```bash
-python -m unittest discover -s augly/tests/image_tests/ -p "*_tests.py"
+python -m unittest discover -s augly/tests/image_tests/ -p "*_test.py"
 ```
 
 Note: If you want to additionally run the pytorch unit test (you must have torchvision installed), you can run:

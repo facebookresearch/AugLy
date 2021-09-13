@@ -16,7 +16,7 @@ python -m unittest discover -s augly/tests/audio_tests/ -p "*"
 
 ### Image
 ```bash
-python -m unittest discover -s augly/tests/image_tests/ -p "*_tests.py"
+python -m unittest discover -s augly/tests/image_tests/ -p "*_test.py"
 # Or `python -m unittest discover -s augly/tests/image_tests/ -p "*.py"` to run pytorch test too (must install `torchvision` to run)
 ```
 

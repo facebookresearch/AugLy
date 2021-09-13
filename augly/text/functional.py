@@ -8,6 +8,7 @@ import augly.text.augmenters as a
 import augly.text.utils as txtutils
 from augly.utils import (
     FUN_FONTS_PATH,
+    GENDERED_WORDS_MAPPING,
     MISSPELLING_DICTIONARY_PATH,
     UNICODE_MAPPING_PATH,
 )
@@ -129,6 +130,51 @@ def insert_punctuation_chars(
     txtutils.get_metadata(
         metadata=metadata,
         function_name="insert_punctuation_chars",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
+def insert_whitespace_chars(
+    texts: Union[str, List[str]],
+    granularity: str = "all",
+    cadence: float = 1.0,
+    vary_chars: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Inserts whitespace characters in each input text
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param granularity: 'all' or 'word' -- if 'word', a new char is picked and
+        the cadence resets for each word in the text
+
+    @param cadence: how frequent (i.e. between this many characters) to insert a
+        whitespace character. Must be at least 1.0. Non-integer values are used
+        as an 'average' cadence
+
+    @param vary_chars: if true, picks a different whitespace char each time one
+        is used instead of just one per word/text
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented texts
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    whitespace_aug = a.InsertionAugmenter(
+        "whitespace", granularity, cadence, vary_chars
+    )
+    aug_texts = whitespace_aug.augment(texts)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="insert_whitespace_chars",
         aug_texts=aug_texts,
         **func_kwargs,
     )
@@ -467,6 +513,58 @@ def replace_upside_down(
     return aug_texts
 
 
+def replace_words(
+    texts: Union[str, List[str]],
+    aug_word_p: float = 0.3,
+    aug_word_min: int = 1,
+    aug_word_max: int = 1000,
+    n: int = 1,
+    mapping: Optional[Union[str, Dict[str, Any]]] = None,
+    priority_words: Optional[List[str]] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Replaces words in each text based on a given mapping
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param aug_word_p: probability of words to be augmented
+
+    @param aug_word_min: minimum # of words to be augmented
+
+    @param aug_word_max: maximum # of words to be augmented
+
+    @param n: number of augmentations to be performed for each text
+
+    @param mapping: either a dictionary representing the mapping or an iopath uri where
+        the mapping is stored
+
+    @param priority_words: list of target words that the augmenter should prioritize to
+        augment first
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    word_aug = a.WordReplacementAugmenter(
+        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words
+    )
+    aug_texts = word_aug.augment(texts, n)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="replace_words",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
 def simulate_typos(
     texts: Union[str, List[str]],
     aug_char_p: float = 0.3,
@@ -586,6 +684,64 @@ def split_words(
     txtutils.get_metadata(
         metadata=metadata,
         function_name="split_words",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
+def swap_gendered_words(
+    texts: Union[str, List[str]],
+    aug_word_p: float = 0.3,
+    aug_word_min: int = 1,
+    aug_word_max: int = 1000,
+    n: int = 1,
+    mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
+    priority_words: Optional[List[str]] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Replaces words in each text based on a provided `mapping`, which can either be a dict
+    already constructed mapping words from one gender to another or a file path to a
+    dict. Note: the logic in this augmentation was originally written by Adina Williams
+    and has been used in influential work, e.g. https://arxiv.org/pdf/2005.00614.pdf
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param aug_word_p: probability of words to be augmented
+
+    @param aug_word_min: minimum # of words to be augmented
+
+    @param aug_word_max: maximum # of words to be augmented
+
+    @param n: number of augmentations to be performed for each text
+
+    @param mapping: a mapping of words from one gender to another; a mapping can be
+        supplied either directly as a dict or as a filepath to a json file containing the
+        dict
+
+    @param priority_words: list of target words that the augmenter should
+        prioritize to augment first
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    mapping = txtutils.get_gendered_words_mapping(mapping)
+
+    word_aug = a.WordReplacementAugmenter(
+        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words
+    )
+    aug_texts = word_aug.augment(texts, n)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="swap_gendered_words",
         aug_texts=aug_texts,
         **func_kwargs,
     )

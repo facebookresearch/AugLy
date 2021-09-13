@@ -9,6 +9,7 @@ from augly.text.augmenters.letter_replacement import LetterReplacementAugmenter
 from augly.text.augmenters.split_words import SplitWordsAugmenter
 from augly.text.augmenters.typo import TypoAugmenter
 from augly.text.augmenters.upside_down import UpsideDownAugmenter
+from augly.text.augmenters.word_replacement import WordReplacementAugmenter
 
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "SplitWordsAugmenter",
     "TypoAugmenter",
     "UpsideDownAugmenter",
+    "WordReplacementAugmenter",
 ]

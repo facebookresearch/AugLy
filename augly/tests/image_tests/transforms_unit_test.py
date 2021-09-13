@@ -20,6 +20,9 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_ApplyLambda(self):
         self.evaluate_class(imaugs.ApplyLambda(), fname="apply_lambda")
 
+    def test_ApplyPILFilter(self):
+        self.evaluate_class(imaugs.ApplyPILFilter(), fname="apply_pil_filter")
+
     def test_Blur(self):
         self.evaluate_class(imaugs.Blur(), fname="blur")
 
@@ -28,6 +31,11 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_ChangeAspectRatio(self):
         self.evaluate_class(imaugs.ChangeAspectRatio(), fname="change_aspect_ratio")
+
+    def test_ClipImageSize(self):
+        self.evaluate_class(
+            imaugs.ClipImageSize(max_resolution=1500000), fname="clip_image_size"
+        )
 
     def test_ColorJitter(self):
         self.evaluate_class(imaugs.ColorJitter(), fname="color_jitter")
@@ -98,9 +106,17 @@ class TransformsImageUnitTest(BaseImageUnitTest):
             fname="overlay_image",
         )
 
+    def test_OverlayOntoBackgroundImage(self):
+        self.evaluate_class(
+            imaugs.OverlayOntoBackgroundImage(
+                background_image=EMOJI_PATH, overlay_size=0.5, scale_bg=True
+            ),
+            fname="overlay_onto_background_image",
+        )
+
     def test_OverlayOntoScreenshot(self):
         self.evaluate_class(
-            imaugs.OverlayOntoScreenshot(),
+            imaugs.OverlayOntoScreenshot(resize_src_to_match_template=False),
             fname="overlay_onto_screenshot",
             metadata_exclude_keys=[
                 "dst_height", "dst_width", "intensity", "template_filepath"

@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 import augly.text.functional as F
 from augly.utils import (
     FUN_FONTS_PATH,
+    GENDERED_WORDS_MAPPING,
     MISSPELLING_DICTIONARY_PATH,
     UNICODE_MAPPING_PATH,
 )
@@ -187,6 +188,57 @@ class InsertPunctuationChars(BaseTransform):
         @returns: the list of augmented text documents
         """
         return F.insert_punctuation_chars(
+            texts,
+            granularity=self.granularity,
+            cadence=self.cadence,
+            vary_chars=self.vary_chars,
+            metadata=metadata,
+        )
+
+
+class InsertWhitespaceChars(BaseTransform):
+    def __init__(
+        self,
+        granularity: str = "all",
+        cadence: float = 1.0,
+        vary_chars: bool = False,
+        p: float = 1.0,
+    ):
+        """
+        @param granularity: 'all' or 'word' -- if 'word', a new char is picked and
+            the cadence resets for each word in the text
+
+        @param cadence: how frequent (i.e. between this many characters) to insert
+            a whitespace character. Must be at least 1.0. Non-integer values
+            are used as an 'average' cadence
+
+        @param vary_chars: if true, picks a different whitespace char each time
+            one is used instead of just one per word/text
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.granularity = granularity
+        self.cadence = cadence
+        self.vary_chars = vary_chars
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Inserts whitespace characters in each input text
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.insert_whitespace_chars(
             texts,
             granularity=self.granularity,
             cadence=self.cadence,
@@ -590,6 +642,70 @@ class ReplaceUpsideDown(BaseTransform):
         )
 
 
+class ReplaceWords(BaseTransform):
+    def __init__(
+        self,
+        aug_word_p: float = 0.3,
+        aug_word_min: int = 1,
+        aug_word_max: int = 1000,
+        n: int = 1,
+        mapping: Optional[Union[str, Dict[str, Any]]] = None,
+        priority_words: Optional[List[str]] = None,
+        p: float = 1.0,
+    ):
+        """
+        @param aug_word_p: probability of words to be augmented
+
+        @param aug_word_min: minimum # of words to be augmented
+
+        @param aug_word_max: maximum # of words to be augmented
+
+        @param n: number of augmentations to be performed for each text
+
+        @param mapping: either a dictionary representing the mapping or an iopath uri where
+            the mapping is stored
+
+        @param priority_words: list of target words that the augmenter should prioritize
+            to augment first
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.aug_word_p = aug_word_p
+        self.aug_word_min = aug_word_min
+        self.aug_word_max = aug_word_max
+        self.n = n
+        self.mapping = mapping
+        self.priority_words = priority_words
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Replaces words in each text based on a given mapping
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.replace_words(
+            texts,
+            aug_word_p=self.aug_word_p,
+            aug_word_min=self.aug_word_min,
+            aug_word_max=self.aug_word_max,
+            n=self.n,
+            mapping=self.mapping,
+            priority_words=self.priority_words,
+            metadata=metadata,
+        )
+
+
 class SimulateTypos(BaseTransform):
     def __init__(
         self,
@@ -735,6 +851,75 @@ class SplitWords(BaseTransform):
             aug_word_min=self.aug_word_min,
             aug_word_max=self.aug_word_max,
             n=self.n,
+            priority_words=self.priority_words,
+            metadata=metadata,
+        )
+
+
+class SwapGenderedWords(BaseTransform):
+    def __init__(
+        self,
+        aug_word_p: float = 0.3,
+        aug_word_min: int = 1,
+        aug_word_max: int = 1000,
+        n: int = 1,
+        mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
+        priority_words: Optional[List[str]] = None,
+        p: float = 1.0,
+    ):
+        """
+        @param aug_word_p: probability of words to be augmented
+
+        @param aug_word_min: minimum # of words to be augmented
+
+        @param aug_word_max: maximum # of words to be augmented
+
+        @param n: number of augmentations to be performed for each text
+
+        @param mapping: a mapping of words from one gender to another; a mapping can be
+            supplied either directly as a dict or as a filepath to a json file containing
+            the dict
+
+        @param priority_words: list of target words that the augmenter should
+            prioritize to augment first
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.aug_word_p = aug_word_p
+        self.aug_word_min = aug_word_min
+        self.aug_word_max = aug_word_max
+        self.n = n
+        self.mapping = mapping
+        self.priority_words = priority_words
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Replaces words in each text based on a provided `mapping`, which can either be a
+        dict already constructed mapping words from one gender to another or a file path
+        to a dict. Note: the logic in this augmentation was originally written by
+        Adina Williams and has been used in influential work, e.g.
+        https://arxiv.org/pdf/2005.00614.pdf
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.swap_gendered_words(
+            texts,
+            aug_word_p=self.aug_word_p,
+            aug_word_min=self.aug_word_min,
+            aug_word_max=self.aug_word_max,
+            n=self.n,
+            mapping=self.mapping,
             priority_words=self.priority_words,
             metadata=metadata,
         )

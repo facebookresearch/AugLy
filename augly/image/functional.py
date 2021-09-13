@@ -67,6 +67,54 @@ def apply_lambda(
     return imutils.ret_and_save_image(aug_image, output_path)
 
 
+def apply_pil_filter(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    filter_type: Union[Callable, ImageFilter.Filter] = ImageFilter.EDGE_ENHANCE_MORE,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Applies a given PIL filter to the input image using `Image.filter()`
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param filter_type: the PIL ImageFilter to apply to the image
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = deepcopy(locals())
+
+    ftr = filter_type() if isinstance(filter_type, Callable) else filter_type
+    assert (
+        isinstance(ftr, ImageFilter.Filter)
+    ), "Filter type must be a PIL.ImageFilter.Filter class"
+
+    func_kwargs = imutils.get_func_kwargs(
+        metadata, func_kwargs, filter_type=getattr(ftr, "name", filter_type)
+    )
+
+    aug_image = image.filter(ftr)  # pyre-ignore PIL.ImageFilter.Filter isn't recognized
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="apply_pil_filter",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
 def blur(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
@@ -182,6 +230,70 @@ def change_aspect_ratio(
     imutils.get_metadata(
         metadata=metadata,
         function_name="change_aspect_ratio",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
+def clip_image_size(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    min_resolution: Optional[int] = None,
+    max_resolution: Optional[int] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Scales the image up or down if necessary to fit in the given min and max resolution
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param min_resolution: the minimum resolution, i.e. width * height, that the
+        augmented image should have; if the input image has a lower resolution than this,
+        the image will be scaled up as necessary
+
+    @param max_resolution: the maximum resolution, i.e. width * height, that the
+        augmented image should have; if the input image has a higher resolution than
+        this, the image will be scaled down as necessary
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
+    assert min_resolution is None or (
+        isinstance(min_resolution, int) and min_resolution >= 0
+    ), "min_resolution must be None or a nonnegative int"
+    assert max_resolution is None or (
+        isinstance(max_resolution, int) and max_resolution >= 0
+    ), "max_resolution must be None or a nonnegative int"
+    assert not (
+        min_resolution is not None
+        and max_resolution is not None
+        and min_resolution > max_resolution
+    ), "min_resolution cannot be greater than max_resolution"
+
+    image = imutils.validate_and_load_image(image)
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    aug_image = image
+
+    if min_resolution is not None and image.width * image.height < min_resolution:
+        resize_factor = math.sqrt(min_resolution / (image.width * image.height))
+        aug_image = scale(aug_image, factor=resize_factor)
+
+    elif max_resolution is not None and image.width * image.height > max_resolution:
+        resize_factor = math.sqrt(max_resolution / (image.width * image.height))
+        aug_image = scale(aug_image, factor=resize_factor)
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="clip_image_size",
         aug_image=aug_image,
         **func_kwargs,
     )
@@ -639,14 +751,14 @@ def meme_format(
 
     @returns: the augmented PIL Image
     """
-    assert type(text) == str, "Expected variable `text` to be a string"
+    assert isinstance(text, str), "Expected variable `text` to be a string"
     assert 0.0 <= opacity <= 1.0, "Opacity must be a value in the range [0.0, 1.0]"
+    assert caption_height > 10, "Caption height must be greater than 10"
 
     utils.validate_rgb_color(text_color)
     utils.validate_rgb_color(meme_bg_color)
 
     image = imutils.validate_and_load_image(image)
-
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
     width, height = image.size
@@ -875,6 +987,83 @@ def overlay_image(
     return imutils.ret_and_save_image(aug_image, output_path)
 
 
+def overlay_onto_background_image(
+    image: Union[str, Image.Image],
+    background_image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    opacity: float = 1.0,
+    overlay_size: float = 1.0,
+    x_pos: float = 0.4,
+    y_pos: float = 0.4,
+    scale_bg: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Image.Image:
+    """
+    Overlays the image onto a given background image at position
+    (width * x_pos, height * y_pos)
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param background_image: the path to an image or a variable of type PIL.Image.Image
+        onto which the source image will be overlaid
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param opacity: the lower the opacity, the more transparent the overlaid image
+
+    @param overlay_size: size of the overlaid image is overlay_size * height
+        of the background image
+
+    @param x_pos: position of overlaid image relative to the background image width with
+        respect to the x-axis
+
+    @param y_pos: position of overlaid image relative to the background image height with
+        respect to the y-axis
+
+    @param scale_bg: if True, the background image will be scaled up or down so that
+        overlay_size is respected; if False, the source image will be scaled instead
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the augmented PIL Image
+    """
+    assert 0.0 <= overlay_size <= 1.0, "Image size must be a value in the range [0, 1]"
+
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
+    if scale_bg:
+        background_image = resize(
+            background_image,
+            width=math.floor(image.width / overlay_size),
+            height=math.floor(image.height / overlay_size),
+        )
+
+    aug_image = overlay_image(
+        background_image,
+        overlay=image,
+        output_path=output_path,
+        opacity=opacity,
+        overlay_size=overlay_size,
+        x_pos=x_pos,
+        y_pos=y_pos,
+    )
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="overlay_onto_background_image",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path)
+
+
 def overlay_onto_screenshot(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
@@ -882,6 +1071,7 @@ def overlay_onto_screenshot(
     template_bboxes_filepath: str = utils.BBOXES_PATH,
     max_image_size_pixels: Optional[int] = None,
     crop_src_to_fit: bool = False,
+    resize_src_to_match_template: bool = True,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> Image.Image:
     """
@@ -904,7 +1094,14 @@ def overlay_onto_screenshot(
         size (in pixels)
 
     @param crop_src_to_fit: if True, the src image will be cropped if necessary to fit
-        into the template image. If False, the src image will instead be resized if needed
+        into the template image if the aspect ratios are different. If False, the src
+        image will instead be resized if needed
+
+    @param resize_src_to_match_template: if True, the src image will be resized if it is
+        too big or small in both dimensions to better match the template image. If False,
+        the template image will be resized to match the src image instead. It can be
+        useful to set this to True if the src image is very large so that the augmented
+        image isn't huge, but instead is the same size as the template image
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -920,15 +1117,20 @@ def overlay_onto_screenshot(
         template_filepath, template_bboxes_filepath
     )
 
-    template, bbox = imutils.scale_template_image(
-        image.size[0],
-        image.size[1],
-        template,
-        bbox,
-        max_image_size_pixels,
-        crop_src_to_fit,
-    )
-    bbox_w, bbox_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    if resize_src_to_match_template:
+        bbox_w, bbox_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        image = scale(image, factor=min(bbox_w / image.width, bbox_h / image.height))
+    else:
+        template, bbox = imutils.scale_template_image(
+            image.size[0],
+            image.size[1],
+            template,
+            bbox,
+            max_image_size_pixels,
+            crop_src_to_fit,
+        )
+        bbox_w, bbox_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+
     cropped_src = imutils.resize_and_pad_to_given_size(
         image, bbox_w, bbox_h, crop=crop_src_to_fit
     )
@@ -1053,7 +1255,7 @@ def overlay_stripes(
 def overlay_text(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
-    text: List[int] = utils.DEFAULT_TEXT_INDICES,
+    text: List[Union[int, List[int]]] = utils.DEFAULT_TEXT_INDICES,
     font_file: str = utils.FONT_PATH,
     font_size: float = 0.15,
     opacity: float = 1.0,
@@ -1071,7 +1273,9 @@ def overlay_text(
     @param output_path: the path in which the resulting image will be stored.
         If None, the resulting PIL Image will still be returned
 
-    @param text: indices (into the file) of the characters to be overlaid
+    @param text: indices (into the file) of the characters to be overlaid. Each line of
+        text is represented as a list of int indices; if a list of lists is supplied,
+        multiple lines of text will be overlaid
 
     @param font_file: iopath uri to the .ttf font file
 
@@ -1102,6 +1306,15 @@ def overlay_text(
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
+    text_lists = text if all(isinstance(t, list) for t in text) else [text]
+    assert (
+        all(isinstance(t, list) for t in text_lists)
+        and all(
+            all(isinstance(t, int) for t in text_l)  # pyre-ignore text_l is a List[int]
+            for text_l in text_lists
+        )
+    ), "Text must be a list of ints or a list of list of ints for multiple lines"
+
     image = image.convert('RGBA')
     width, height = image.size
 
@@ -1116,22 +1329,24 @@ def overlay_text(
         chars = pickle.load(f)
 
     try:
-        text_str = "".join([chr(chars[c % len(chars)]) for c in text])
+        text_strs = (
+            ["".join([chr(chars[c % len(chars)]) for c in t]) for t in text_lists]
+        )
     except Exception:
         raise IndexError("Invalid text indices specified")
 
     draw = ImageDraw.Draw(image)
-
-    draw.text(
-        xy=(x_pos * width, y_pos * height),
-        text=text_str,
-        # pyre-fixme[6]: Expected `Union[None, Tuple[int, int, int], int, str]` for
-        #  3rd param but got `Tuple[int, int, int, int]`.
-        fill=(color[0], color[1], color[2], round(opacity * 255)),
-        # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 4th param but got
-        #  `FreeTypeFont`.
-        font=font,
-    )
+    for i, text_str in enumerate(text_strs):
+        draw.text(
+            xy=(x_pos * width, y_pos * height + i * (font_size + 5)),
+            text=text_str,
+            # pyre-fixme[6]: Expected `Union[None, Tuple[int, int, int], int, str]` for
+            #  3rd param but got `Tuple[int, int, int, int]`.
+            fill=(color[0], color[1], color[2], round(opacity * 255)),
+            # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 4th param but got
+            #  `FreeTypeFont`.
+            font=font,
+        )
 
     imutils.get_metadata(
         metadata=metadata,

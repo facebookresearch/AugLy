@@ -75,6 +75,18 @@
             "vary_chars": false
         }
     ],
+    "insert_whitespace_chars": [
+        {
+            "cadence": 1.0,
+            "dst_length": 1,
+            "granularity": "all",
+            "input_type": "list",
+            "intensity": 100.0,
+            "name": "insert_whitespace_chars",
+            "src_length": 1,
+            "vary_chars": false
+        }
+    ],
     "insert_zero_width_chars": [
         {
             "cadence": 1.0,
@@ -167,6 +179,21 @@
             "src_length": 1
         }
     ],
+    "replace_words": [
+        {
+            "aug_word_max": 1000,
+            "aug_word_min": 1,
+            "aug_word_p": 0.3,
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 0.0,
+            "mapping": null,
+            "n": 1,
+            "name": "replace_words",
+            "priority_words": null,
+            "src_length": 1
+        }
+    ],
     "simulate_typos": [
         {
             "aug_char_max": 1,
@@ -197,6 +224,21 @@
             "min_char": 4,
             "n": 1,
             "name": "split_words",
+            "priority_words": null,
+            "src_length": 1
+        }
+    ],
+    "swap_gendered_words": [
+        {
+            "aug_word_max": 1000,
+            "aug_word_min": 1,
+            "aug_word_p": 0.3,
+            "dst_length": 1,
+            "mapping": "text/gendered_words_mapping.json",
+            "input_type": "list",
+            "intensity": 30.0,
+            "n": 1,
+            "name": "swap_gendered_words",
             "priority_words": null,
             "src_length": 1
         }

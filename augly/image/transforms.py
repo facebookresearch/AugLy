@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import augly.image.functional as F
 import augly.utils as utils
-from PIL import Image
+from PIL import Image, ImageFilter
 
 
 """
@@ -157,6 +157,37 @@ class ApplyLambda(BaseTransform):
         )
 
 
+class ApplyPILFilter(BaseTransform):
+    def __init__(
+        self,
+        filter_type: Union[Callable, ImageFilter.Filter] = ImageFilter.EDGE_ENHANCE_MORE,
+        p: float = 1.0,
+    ):
+        """
+        @param filter_type: the PIL ImageFilter to apply to the image
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.filter_type = filter_type
+
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
+        """
+        Applies a given PIL filter to the input image using `Image.filter()`
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: Augmented PIL Image
+        """
+        return F.apply_pil_filter(image, filter_type=self.filter_type, metadata=metadata)
+
+
 class Blur(BaseTransform):
     def __init__(self, radius: float = 2.0, p: float = 1.0):
         """
@@ -238,6 +269,51 @@ class ChangeAspectRatio(BaseTransform):
         @returns: Augmented PIL Image
         """
         return F.change_aspect_ratio(image, ratio=self.ratio, metadata=metadata)
+
+
+class ClipImageSize(BaseTransform):
+    def __init__(
+        self,
+        min_resolution: Optional[int] = None,
+        max_resolution: Optional[int] = None,
+        p: float = 1.0,
+    ):
+        """
+        @param min_resolution: the minimum resolution, i.e. width * height, that the
+            augmented image should have; if the input image has a lower resolution than this,
+            the image will be scaled up as necessary
+
+        @param max_resolution: the maximum resolution, i.e. width * height, that the
+            augmented image should have; if the input image has a higher resolution than
+            this, the image will be scaled down as necessary
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.min_resolution = min_resolution
+        self.max_resolution = max_resolution
+
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
+        """
+        Scales the image up or down if necessary to fit in the given min and max
+        resolution
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: Augmented PIL Image
+        """
+        return F.clip_image_size(
+            image,
+            min_resolution=self.min_resolution,
+            max_resolution=self.max_resolution,
+            metadata=metadata,
+        )
 
 
 class ColorJitter(BaseTransform):
@@ -754,11 +830,80 @@ class OverlayImage(BaseTransform):
         )
 
 
+class OverlayOntoBackgroundImage(BaseTransform):
+    def __init__(
+        self,
+        background_image: Union[str, Image.Image],
+        opacity: float = 1.0,
+        overlay_size: float = 1.0,
+        x_pos: float = 0.4,
+        y_pos: float = 0.4,
+        scale_bg: bool = False,
+        p: float = 1.0,
+    ):
+        """
+        @param background_image: the path to an image or a variable of type
+            PIL.Image.Image onto which the source image will be overlaid
+
+        @param opacity: the lower the opacity, the more transparent the overlaid image
+
+        @param overlay_size: size of the overlaid image is overlay_size * height
+            of the background image
+
+        @param x_pos: position of overlaid image relative to the background image width
+            with respect to the x-axis
+
+        @param y_pos: position of overlaid image relative to the background image height
+            with respect to the y-axis
+
+        @param scale_bg: if True, the background image will be scaled up or down so that
+            overlay_size is respected; if False, the source image will be scaled instead
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.background_image = background_image
+        self.opacity = opacity
+        self.overlay_size = overlay_size
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+        self.scale_bg = scale_bg
+
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
+        """
+        Overlays the image onto a given background image at position
+        (width * x_pos, height * y_pos)
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: Augmented PIL Image
+        """
+        return F.overlay_onto_background_image(
+            image,
+            background_image=self.background_image,
+            opacity=self.opacity,
+            overlay_size=self.overlay_size,
+            x_pos=self.x_pos,
+            y_pos=self.y_pos,
+            scale_bg=self.scale_bg,
+            metadata=metadata,
+        )
+
+
 class OverlayOntoScreenshot(BaseTransform):
     def __init__(
         self,
         template_filepath: str = utils.TEMPLATE_PATH,
         template_bboxes_filepath: str = utils.BBOXES_PATH,
+        max_image_size_pixels: Optional[int] = None,
+        crop_src_to_fit: bool = False,
+        resize_src_to_match_template: bool = True,
         p: float = 1.0,
     ):
         """
@@ -767,11 +912,28 @@ class OverlayOntoScreenshot(BaseTransform):
         @param template_bboxes_filepath: iopath uri to the file containing the
             bounding box for each template
 
+        @param max_image_size_pixels: if provided, the template image and/or src image
+            will be scaled down to avoid an output image with an area greater than this
+            size (in pixels)
+
+        @param crop_src_to_fit: if True, the src image will be cropped if necessary to
+            fit into the template image if the aspect ratios are different. If False, the
+            src image will instead be resized if needed
+
+        @param resize_src_to_match_template: if True, the src image will be resized if it
+            is too big or small in both dimensions to better match the template image. If
+            False, the template image will be resized to match the src image instead. It
+            can be useful to set this to True if the src image is very large so that the
+            augmented image isn't huge, but instead is the same size as the template image
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.template_filepath = template_filepath
         self.template_bboxes_filepath = template_bboxes_filepath
+        self.max_image_size_pixels = max_image_size_pixels
+        self.crop_src_to_fit = crop_src_to_fit
+        self.resize_src_to_match_template = resize_src_to_match_template
 
     def apply_transform(
         self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
@@ -792,6 +954,9 @@ class OverlayOntoScreenshot(BaseTransform):
             image,
             template_filepath=self.template_filepath,
             template_bboxes_filepath=self.template_bboxes_filepath,
+            max_image_size_pixels=self.max_image_size_pixels,
+            crop_src_to_fit=self.crop_src_to_fit,
+            resize_src_to_match_template=self.resize_src_to_match_template,
             metadata=metadata,
         )
 
@@ -863,7 +1028,7 @@ class OverlayStripes(BaseTransform):
 class OverlayText(BaseTransform):
     def __init__(
         self,
-        text: List[int] = utils.DEFAULT_TEXT_INDICES,
+        text: List[Union[int, List[int]]] = utils.DEFAULT_TEXT_INDICES,
         font_file: str = utils.FONT_PATH,
         font_size: float = 0.15,
         opacity: float = 1.0,
@@ -873,7 +1038,9 @@ class OverlayText(BaseTransform):
         p: float = 1.0,
     ):
         """
-        @param text: indices (into the file) of the characters to be overlaid
+        @param text: indices (into the file) of the characters to be overlaid. Each line
+            of text is represented as a list of int indices; if a list of lists is
+            supplied, multiple lines of text will be overlaid
 
         @param font_file: iopath uri to the .ttf font file
 

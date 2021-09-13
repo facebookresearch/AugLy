@@ -12,6 +12,18 @@
             "src_width": 1920
         }
     ],
+    "apply_pil_filter": [
+        {
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "filter_type": "Edge-enhance More",
+            "intensity": 100.0,
+            "name": "apply_pil_filter",
+            "output_path": null,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
     "blur": [
         {
             "dst_height": 1080,
@@ -48,6 +60,19 @@
             "src_width": 1920
         }
     ],
+    "clip_image_size": [
+        {
+            "dst_height": 918,
+            "dst_width": 1632,
+            "intensity": 27.750000000000004,
+            "name": "clip_image_size",
+            "output_path": null,
+            "min_resolution": null,
+            "max_resolution": 1500000,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
     "color_jitter": [
         {
             "brightness_factor": 1.0,
@@ -71,16 +96,22 @@
             "output_path": null,
             "radius": 2.0,
             "src_height": 1080,
-            "src_width": 1920}, {"brightness_factor": 1.0,
+            "src_width": 1920
+        },
+        {
+            "brightness_factor": 1.0,
             "contrast_factor": 1.0,
             "dst_height": 1080,
             "dst_width": 1920,
-            "intensity": 0.0,
+            "intensity": 5.0,
             "name": "color_jitter",
             "output_path": null,
             "saturation_factor": 1.5,
             "src_height": 1080,
-            "src_width": 1920}, {"dst_height": 1080,
+            "src_width": 1920
+        },
+        {
+            "dst_height": 1080,
             "dst_width": 1920,
             "emoji_path": "twemojis/smileys/smiling_face_with_heart_eyes.png",
             "emoji_size": 0.15,
@@ -246,6 +277,23 @@
             "y_pos": 0.8
         }
     ],
+    "overlay_onto_background_image": [
+        {
+            "background_image": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "dst_height": 2160,
+            "dst_width": 3840,
+            "intensity": 75.0,
+            "name": "overlay_onto_background_image",
+            "opacity": 1.0,
+            "output_path": null,
+            "overlay_size": 0.5,
+            "scale_bg": true,
+            "src_height": 1080,
+            "src_width": 1920,
+            "x_pos": 0.4,
+            "y_pos": 0.4
+        }
+    ],
     "overlay_onto_screenshot": [
         {
             "crop_src_to_fit": false,
@@ -255,6 +303,7 @@
             "max_image_size_pixels": null,
             "name": "overlay_onto_screenshot",
             "output_path": null,
+            "resize_src_to_match_template": false,
             "src_height": 1080,
             "src_width": 1920,
             "template_bboxes_filepath": "screenshot_templates/bboxes.json",

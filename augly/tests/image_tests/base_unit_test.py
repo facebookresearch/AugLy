@@ -75,7 +75,7 @@ class BaseImageUnitTest(unittest.TestCase):
         ref = self.get_ref_image(aug_function.__name__)
 
         with tempfile.NamedTemporaryFile(suffix=".png") as tmpfile:
-            aug_function(self.local_img_path, tmpfile.name, **kwargs)
+            aug_function(self.local_img_path, output_path=tmpfile.name, **kwargs)
             file_dst = Image.open(tmpfile.name)
 
         pil_dst = aug_function(self.img, **kwargs)
