@@ -188,21 +188,9 @@ class ApplyPILFilter(BaseTransform):
         return F.apply_pil_filter(image, filter_type=self.filter_type, metadata=metadata)
 
 
-class BarrelDistortion(BaseTransform):
+class DistortBarrel(BaseTransform):
     def __init__(self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1):
         """
-        To see effects of the coefficients in detail refer to https://legacy.imagemagick.org/Usage/distorts/#barrel.
-        Below is a direct quotation from the document describing how barrel distortion parameter works.
-
-        >   The values basically form a distortion equation such that...
-
-                Rsrc = r * ( A*r3 + B*r2 + C*r + D )
-
-            Where "r" is the destination radius and "Rsrc" is the source pixel to get the pixel color from. the radii
-            are normalized so that radius = '1.0' for the half minimum width or height of the input image.
-            This may seem reversed but that is because the Reverse Pixel Mapping technique is used to ensure
-            complete coverage of the resulting image.
-
         @param a: Coefficient A in the equation Rsrc(r).
 
         @param b: Coefficient B in the equation Rsrc(r).
@@ -232,6 +220,42 @@ class BarrelDistortion(BaseTransform):
         @returns: Augmented PIL Image
         """
         return F.distort_barrel(image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata)
+
+
+class DistortPincushion(BaseTransform):
+    def __init__(self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1):
+        """
+
+
+        @param a: Coefficient A in the equation Rsrc(r).
+
+        @param b: Coefficient B in the equation Rsrc(r).
+
+        @param c: Coefficient C in the equation Rsrc(r).
+
+        @param d: Coefficient D in the equation Rsrc(r).
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def apply_transform(self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None) -> Image.Image:
+        """
+        Applies pinchusion distortion to the image.
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+                including its name, the source & dest width, height, etc. will be appended to
+                the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: Augmented PIL Image
+        """
+        return F.distort_pincushion(image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata)
 
 
 class Blur(BaseTransform):
@@ -1259,53 +1283,6 @@ class PerspectiveTransform(BaseTransform):
             seed=self.seed,
             metadata=metadata,
         )
-
-
-class PincushionDistortion(BaseTransform):
-    def __init__(self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1):
-        """
-        To see effects of the coefficients in detail refer to
-        https://legacy.imagemagick.org/Usage/distorts/#barrelinverse. Below is a direct quotation from the document
-        describing how pincushion (barrel inverse) distortion parameter works.
-
-        >   The 'BarrelInverse' distortion method is very similar to the previous Barrel Distortion distortion method,
-         and in fact takes the same set of arguments. However the formula that is applied is slightly different,
-         with the main part of the equation dividing the radius. that is the Equation has been inverted.
-
-            Rsrc = r / ( A*r3 + B*r2 + C*r + D )
-
-            NOTE: This equation does NOT produce the 'reverse' the 'Barrel' distortion. You can NOT use it to 'undo'
-            the previous distortion.
-
-        @param a: Coefficient A in the equation Rsrc(r).
-
-        @param b: Coefficient B in the equation Rsrc(r).
-
-        @param c: Coefficient C in the equation Rsrc(r).
-
-        @param d: Coefficient D in the equation Rsrc(r).
-
-        @param p: the probability of the transform being applied; default value is 1.0
-        """
-        super().__init__(p)
-        self.a = a
-        self.b = b
-        self.c = c
-        self.d = d
-
-    def apply_transform(self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None) -> Image.Image:
-        """
-        Applies pinchusion distortion to the image.
-
-        @param image: PIL Image to be augmented
-
-        @param metadata: if set to be a list, metadata about the function execution
-                including its name, the source & dest width, height, etc. will be appended to
-                the inputted list. If set to None, no metadata will be appended or returned
-
-        @returns: Augmented PIL Image
-        """
-        return F.distort_pincushion(image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata)
 
 
 class Pixelization(BaseTransform):

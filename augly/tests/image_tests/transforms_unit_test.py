@@ -24,7 +24,7 @@ class TransformsImageUnitTest(BaseImageUnitTest):
         self.evaluate_class(imaugs.ApplyPILFilter(), fname="apply_pil_filter")
 
     def test_BarrelDistortion(self):
-        self.evaluate_class(imaugs.BarrelDistortion(a=0.1), fname="distort_barrel")
+        self.evaluate_class(imaugs.DistortBarrel(a=0.1), fname="distort_barrel")
 
     def test_Blur(self):
         self.evaluate_class(imaugs.Blur(), fname="blur")
@@ -148,7 +148,7 @@ class TransformsImageUnitTest(BaseImageUnitTest):
         )
 
     def test_PincushionDistortion(self):
-        self.evaluate_class(imaugs.PincushionDistortion(a=0.1), fname="distort_pincushion")
+        self.evaluate_class(imaugs.DistortPincushion(a=0.1), fname="distort_pincushion")
 
     def test_Pixelization(self):
         self.evaluate_class(imaugs.Pixelization(), fname="pixelization")

@@ -100,12 +100,18 @@ def crop_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
-def distort_barrel_intensity(**kwargs) -> float:
-    return 100.0
+def distort_barrel_intensity(a: float, b: float, c: float, d: float, **kwargs) -> float:
+    barrel_coefficients_magnitude = abs(a) + abs(b) + abs(c)
+    scale = np.abs(d)
+    intensity = 100 * (barrel_coefficients_magnitude / scale)
+    return float(np.clip(intensity, 0, 100))
 
 
-def distort_pincushion_intensity(**kwargs) -> float:
-    return 100.0
+def distort_pincushion_intensity(a: float, b: float, c: float, d: float, **kwargs) -> float:
+    pincushion_coefficients_magnitude = np.abs([a, b, c]).sum()
+    scale = np.abs(d)
+    intensity = 100 * (pincushion_coefficients_magnitude / scale)
+    return float(np.clip(intensity, 0, 100))
 
 
 def encoding_quality_intensity(quality: int, **kwargs):

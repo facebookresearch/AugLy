@@ -284,19 +284,19 @@ def compute_stripe_mask(
 
 def distort(
         image: Image.Image,
-        distortion_type: str,
+        method: str,
         distortion_args: Tuple,
 ) -> Image.Image:
     """
     Distorts the image with a specified type of distortion. This function wraps `Wand` package
-    distort() method to apply distortions. This function is an helper function to apply lens distortions
-    on the image, and it is not meant to be used for methods explicitly written in AugLy. To see full set of
-    distortion methods, see
+    `wand.image.Image.distort()` method to apply distortions. This function is a helper function
+    to apply lens distortions on the image, and it is not meant to be used for methods explicitly
+    written in AugLy. To see full set of distortion methods, see
     https://docs.wand-py.org/en/0.5.3/wand/image.html#wand.image.DISTORTION_METHODS
     """
     image = np.array(image)
     wimage = wImage.from_array(image)
-    wimage.distort(distortion_type, distortion_args)
+    wimage.distort(method, distortion_args)
     aug_image = Image.fromarray(np.array(wimage))
 
     return aug_image
