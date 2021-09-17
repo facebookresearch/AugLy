@@ -629,7 +629,7 @@ def distort_pincushion(
         If None, the resulting PIL Image will still be returned
 
     @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
-    pincushion effect, has higher effect than b and c.
+        pincushion effect, has higher effect than b and c.
 
     @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
     pincushion effect, has higher effect than b and c.
