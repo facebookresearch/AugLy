@@ -28,7 +28,7 @@
         {
             "dst_height": 1080,
             "dst_width": 1920,
-            "intensity": 100.0,
+            "intensity": 10.0,
             "name": "distort_barrel",
             "output_path": null,
             "a": 0.1,
@@ -43,7 +43,7 @@
         {
             "dst_height": 1080,
             "dst_width": 1920,
-            "intensity": 100.0,
+            "intensity": 10.0,
             "name": "distort_pincushion",
             "output_path": null,
             "a": 0.1,
