@@ -100,10 +100,7 @@ def crop_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
-def distort_intensity(
-        coefficients: Tuple,
-        scale: float
-) -> float:
+def distort_intensity(coefficients: Tuple, scale: float) -> float:
     coefficients_magnitude = np.abs(coefficients).sum()
     adjusted_scale = np.exp(-(scale-1)**2)
     intensity = 100 * (coefficients_magnitude / adjusted_scale)

@@ -285,7 +285,7 @@ def compute_stripe_mask(
 def distort(
         image: Image.Image,
         method: str,
-        distortion_args: Tuple,
+        distortion_args: Tuple[float, float, float, float],
 ) -> Image.Image:
     """
     Distorts the image with a specified type of distortion. This function wraps `Wand` package

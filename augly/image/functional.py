@@ -632,15 +632,15 @@ def distort_pincushion(
         pincushion effect, has higher effect than b and c.
 
     @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
-    pincushion effect, has higher effect than b and c.
+        pincushion effect, has higher effect than b and c.
 
     @param c: Coefficient C in the equation Rsrc(r). Larger values results in more
-    pincushion effect, has higher effect than b and c.
+        pincushion effect, has higher effect than b and c.
 
     @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of
-    the image. In a positive domain, values larger than 1 will enlarge the image
-    (zoomed in). Negative values would result in both vertically and horizontally
-    flipped image scaled in a mirrored way of positive domain.
+        the image. In a positive domain, values larger than 1 will enlarge the image
+        (zoomed in). Negative values would result in both vertically and horizontally
+        flipped image scaled in a mirrored way of positive domain.
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
