@@ -189,7 +189,9 @@ class ApplyPILFilter(BaseTransform):
 
 
 class DistortBarrel(BaseTransform):
-    def __init__(self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1):
+    def __init__(
+        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1
+    ):
         """
         @param a: Coefficient A in the equation Rsrc(r).
 
@@ -207,23 +209,29 @@ class DistortBarrel(BaseTransform):
         self.c = c
         self.d = d
 
-    def apply_transform(self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None) -> Image.Image:
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
         """
-        Applies barrel distortion to the image.
+        Applies barrel distortion to the image
 
         @param image: PIL Image to be augmented
 
         @param metadata: if set to be a list, metadata about the function execution
-                including its name, the source & dest width, height, etc. will be appended to
-                the inputted list. If set to None, no metadata will be appended or returned
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
 
         @returns: Augmented PIL Image
         """
-        return F.distort_barrel(image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata)
+        return F.distort_barrel(
+            image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata
+        )
 
 
 class DistortPincushion(BaseTransform):
-    def __init__(self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1):
+    def __init__(
+        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1
+    ):
         """
 
 
@@ -243,19 +251,23 @@ class DistortPincushion(BaseTransform):
         self.c = c
         self.d = d
 
-    def apply_transform(self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None) -> Image.Image:
+    def apply_transform(
+        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+    ) -> Image.Image:
         """
-        Applies pinchusion distortion to the image.
+        Applies pinchusion distortion to the image
 
         @param image: PIL Image to be augmented
 
         @param metadata: if set to be a list, metadata about the function execution
-                including its name, the source & dest width, height, etc. will be appended to
-                the inputted list. If set to None, no metadata will be appended or returned
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
 
         @returns: Augmented PIL Image
         """
-        return F.distort_pincushion(image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata)
+        return F.distort_pincushion(
+            image, a=self.a, b=self.b, c=self.c, d=self.d, metadata=metadata
+        )
 
 
 class Blur(BaseTransform):
@@ -1040,7 +1052,7 @@ class OverlayStripes(BaseTransform):
         line_density: float = 0.5,
         line_type: Optional[str] = "solid",
         line_opacity: float = 1.0,
-        p: float = 1.0
+        p: float = 1.0,
     ):
         """
         @param line_width: the width of individual stripes as a float value ranging

@@ -522,31 +522,35 @@ def crop(
 
 
 def distort_barrel(
-        image: Union[str, Image.Image],
-        output_path: Optional[str] = None,
-        a: float = 0.0,
-        b: float = 0.0,
-        c: float = 0.0,
-        d: float = 1.0,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    a: float = 0.0,
+    b: float = 0.0,
+    c: float = 0.0,
+    d: float = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
 ):
     """
     Applies barrel distortion to the image with the following equation.
 
-    To see effects of the coefficients in detail refer to https://legacy.imagemagick.org/Usage/distorts/#barrel.
-    Below is a direct quotation from the document describing how barrel distortion parameter works.
+    To see effects of the coefficients in detail refer to
+    https://legacy.imagemagick.org/Usage/distorts/#barrel.
+    Below is a direct quotation from the document describing how barrel distortion
+    parameter works.
 
     >   The values basically form a distortion equation such that...
 
             Rsrc = r * ( A*r3 + B*r2 + C*r + D )
 
-        Where "r" is the destination radius and "Rsrc" is the source pixel to get the pixel color from. the radii
-        are normalized so that radius = '1.0' for the half minimum width or height of the input image.
-        This may seem reversed but that is because the Reverse Pixel Mapping technique is used to ensure
-        complete coverage of the resulting image.
+        Where "r" is the destination radius and "Rsrc" is the source pixel to get the
+        pixel color from. the radii are normalized so that radius = '1.0' for the half
+        minimum width or height of the input image. This may seem reversed but that is
+        because the Reverse Pixel Mapping technique is used to ensure complete coverage
+        of the resulting image.
 
-    Setting A = B = C = 0 and D = 1 results in no change in the input image. Negative values of A, B and C will
-    result in reverse barrel effect closer to pincushion effect.
+    Setting A = B = C = 0 and D = 1 results in no change in the input image. Negative
+    values of A, B and C will result in reverse barrel effect closer to pincushion
+    effect.
 
     @param image: the path to an image or a variable of type PIL.Image.Image
         to be augmented
@@ -554,19 +558,19 @@ def distort_barrel(
     @param output_path: the path in which the resulting image will be stored.
         If None, the resulting PIL Image will still be returned
 
-    @param a: Coefficient A in the equation Rsrc(r). Larger values results in more barrel effect,
-        has higher effect than b and c.
+    @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
+    barrel effect, has higher effect than b and c.
 
-    @param b: Coefficient B in the equation Rsrc(r). Larger values results in more barrel effect,
-        has lower effect than a and higher effect than c.
+    @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
+    barrel effect, has lower effect than a and higher effect than c.
 
-    @param c: Coefficient C in the equation Rsrc(r). Larger values results in more barrel effect,
-        has lower effect than a and b.
+    @param c: Coefficient C in the equation Rsrc(r). Larger values results in more
+    barrel effect, has lower effect than a and b.
 
-    @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of the image.
-        In a positive domain, values larger than 1 will shrink the image. Negative values would
-        result in both vertically and horizontally flipped image scaled in a mirrored way
-        of positive domain.
+    @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of the
+    image. In a positive domain, values larger than 1 will shrink the image. Negative
+    values would result in both vertically and horizontally flipped image scaled in a
+    mirrored way of positive domain.
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -578,9 +582,9 @@ def distort_barrel(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
     aug_image = imutils.distort(
-            image=image,
-            method="barrel",
-            distortion_args=(a, b, c, d),
+        image=image,
+        method="barrel",
+        distortion_args=(a, b, c, d),
     )
 
     imutils.get_metadata(
@@ -594,27 +598,29 @@ def distort_barrel(
 
 
 def distort_pincushion(
-        image: Union[str, Image.Image],
-        output_path: Optional[str] = None,
-        a: float = 0.0,
-        b: float = 0.0,
-        c: float = 0.0,
-        d: float = 1.0,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    a: float = 0.0,
+    b: float = 0.0,
+    c: float = 0.0,
+    d: float = 1.0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
 ):
     """
     To see effects of the coefficients in detail refer to
-    https://legacy.imagemagick.org/Usage/distorts/#barrelinverse. Below is a direct quotation from the document
-    describing how pincushion (barrel inverse) distortion parameter works.
+    https://legacy.imagemagick.org/Usage/distorts/#barrelinverse. Below is a direct
+    quotation from the document describing how pincushion (barrel inverse)
+    distortion parameter works.
 
-    >   The 'BarrelInverse' distortion method is very similar to the previous Barrel Distortion distortion method,
-     and in fact takes the same set of arguments. However the formula that is applied is slightly different,
-     with the main part of the equation dividing the radius. that is the Equation has been inverted.
+    >   The 'BarrelInverse' distortion method is very similar to the previous
+    Barrel Distortion distortion method, and in fact takes the same set of arguments.
+    However the formula that is applied is slightly different, with the main part of
+    the equation dividing the radius. that is the Equation has been inverted.
 
         Rsrc = r / ( A*r3 + B*r2 + C*r + D )
 
-        NOTE: This equation does NOT produce the 'reverse' the 'Barrel' distortion. You can NOT use it to 'undo'
-        the previous distortion.
+        NOTE: This equation does NOT produce the 'reverse' the 'Barrel' distortion.
+        You can NOT use it to 'undo' the previous distortion.
 
     @param image: the path to an image or a variable of type PIL.Image.Image
         to be augmented
@@ -622,19 +628,19 @@ def distort_pincushion(
     @param output_path: the path in which the resulting image will be stored.
         If None, the resulting PIL Image will still be returned
 
-    @param a: Coefficient A in the equation Rsrc(r). Larger values results in more pincushion effect,
-        has higher effect than b and c.
+    @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
+    pincushion effect, has higher effect than b and c.
 
-    @param b: Coefficient B in the equation Rsrc(r). Larger values results in more pincushion effect,
-        has higher effect than b and c.
+    @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
+    pincushion effect, has higher effect than b and c.
 
-    @param c: Coefficient C in the equation Rsrc(r). Larger values results in more pincushion effect,
-        has higher effect than b and c.
+    @param c: Coefficient C in the equation Rsrc(r). Larger values results in more
+    pincushion effect, has higher effect than b and c.
 
-    @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of the image.
-        In a positive domain, values larger than 1 will enlarge the image (zoomed in). Negative
-        values would result in both vertically and horizontally flipped image scaled in a mirrored way
-        of positive domain.
+    @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of
+    the image. In a positive domain, values larger than 1 will enlarge the image
+    (zoomed in). Negative values would result in both vertically and horizontally
+    flipped image scaled in a mirrored way of positive domain.
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -646,9 +652,9 @@ def distort_pincushion(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
     aug_image = imutils.distort(
-            image=image,
-            method="barrel_inverse",
-            distortion_args=(a, b, c, d),
+        image=image,
+        method="barrel_inverse",
+        distortion_args=(a, b, c, d),
     )
 
     imutils.get_metadata(
@@ -2151,10 +2157,3 @@ def vflip(
     imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path)
-
-
-if __name__ == "__main__":
-    aug_img = distort_pincushion(
-            image="/home/devrimcavusoglu/lab/gh/AugLy/augly/assets/tests/image/inputs/dfdc_1.jpg",
-    )
-    aug_img.show()
