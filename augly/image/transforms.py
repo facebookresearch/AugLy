@@ -196,11 +196,16 @@ class DistortBarrel(BaseTransform):
         @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
             barrel effect, has higher effect than b and c.
 
-        @param b: Coefficient B in the equation Rsrc(r).
+        @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
+            barrel effect, has lower effect than a and higher effect than c.
 
-        @param c: Coefficient C in the equation Rsrc(r).
+        @param c: Coefficient C in the equation Rsrc(r). Larger values results in more
+            barrel effect, has lower effect than a and b.
 
-        @param d: Coefficient D in the equation Rsrc(r).
+        @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of
+            the image. In a positive domain, values larger than 1 will shrink the image.
+            Negative values would result in both vertically and horizontally flipped
+            image scaled in a mirrored way of positive domain.
 
         @param p: the probability of the transform being applied; default value is 1.0
         """
@@ -235,13 +240,18 @@ class DistortPincushion(BaseTransform):
     ):
         """
         @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
-            barrel effect, has higher effect than b and c.
+        pincushion effect, has higher effect than b and c.
 
-        @param b: Coefficient B in the equation Rsrc(r).
+        @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
+        pincushion effect, has higher effect than b and c.
 
-        @param c: Coefficient C in the equation Rsrc(r).
+        @param c: Coefficient C in the equation Rsrc(r). Larger values results in more
+        pincushion effect, has higher effect than b and c.
 
-        @param d: Coefficient D in the equation Rsrc(r).
+        @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of
+        the image. In a positive domain, values larger than 1 will enlarge the image
+        (zoomed in). Negative values would result in both vertically and horizontally
+        flipped image scaled in a mirrored way of positive domain.
 
         @param p: the probability of the transform being applied; default value is 1.0
         """

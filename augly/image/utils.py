@@ -294,9 +294,9 @@ def distort(
     written in AugLy. To see full set of distortion methods, see
     https://docs.wand-py.org/en/0.5.3/wand/image.html#wand.image.DISTORTION_METHODS
     """
-    npimage = np.array(image)
-    wimage = wImage.from_array(npimage)
-    wimage.distort(method, distortion_args)
-    aug_image = Image.fromarray(np.array(wimage))
+    np_image = np.array(image)
+    w_image = wImage.from_array(np_image)
+    w_image.distort(method, distortion_args)
+    aug_image = Image.fromarray(np.array(w_image))
 
     return aug_image
