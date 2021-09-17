@@ -559,7 +559,7 @@ def distort_barrel(
         If None, the resulting PIL Image will still be returned
 
     @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
-    barrel effect, has higher effect than b and c.
+        barrel effect, has higher effect than b and c.
 
     @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
     barrel effect, has lower effect than a and higher effect than c.
