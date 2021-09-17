@@ -1062,7 +1062,7 @@ class OverlayStripes(BaseTransform):
         line_density: float = 0.5,
         line_type: Optional[str] = "solid",
         line_opacity: float = 1.0,
-        p: float = 1.0,
+        p: float = 1.0
     ):
         """
         @param line_width: the width of individual stripes as a float value ranging
