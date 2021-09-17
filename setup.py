@@ -25,7 +25,7 @@ with open("README.md", encoding="utf8") as f:
 
 setuptools.setup(
     name="augly",
-    version="0.1.6",
+    version="0.1.7",
     description="A data augmentations library for audio, image, text, & video.",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -41,5 +41,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent"
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.6",
 )
