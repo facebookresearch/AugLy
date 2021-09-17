@@ -104,9 +104,9 @@ def distort_intensity(
         coefficients: Tuple,
         scale: float
 ) -> float:
-    pincushion_coefficients_magnitude = np.abs(coefficients).sum()
-    scale = np.clip(np.abs(scale), a_min=1e-2, a_max=None)
-    intensity = 100 * (pincushion_coefficients_magnitude / scale)
+    coefficients_magnitude = np.abs(coefficients).sum()
+    adjusted_scale = np.exp(-(scale-1)**2)
+    intensity = 100 * (coefficients_magnitude / adjusted_scale)
     return float(np.clip(intensity, 0, 100))
 
 
