@@ -288,11 +288,11 @@ def distort(
         distortion_args: Tuple[float, float, float, float],
 ) -> Image.Image:
     """
-    Distorts the image with a specified type of distortion. This function wraps `Wand` package
-    `wand.image.Image.distort()` method to apply distortions. This function is a helper function
-    to apply lens distortions on the image, and it is not meant to be used for methods explicitly
-    written in AugLy. To see full set of distortion methods, see
-    https://docs.wand-py.org/en/0.5.3/wand/image.html#wand.image.DISTORTION_METHODS
+    Distorts the image with a specified type of distortion. This function wraps `Wand`
+    package `wand.image.Image.distort()` method to apply distortions. This function is
+    a helper function to apply lens distortions on the image, and it is not meant to be
+    used for methods explicitly written in AugLy. To see full set of distortion methods,
+    see https://docs.wand-py.org/en/0.5.3/wand/image.html#wand.image.DISTORTION_METHODS
     """
     np_image = np.array(image)
     w_image = wImage.from_array(np_image)
