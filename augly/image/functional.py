@@ -562,7 +562,7 @@ def distort_barrel(
         barrel effect, has higher effect than b and c.
 
     @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
-    barrel effect, has lower effect than a and higher effect than c.
+        barrel effect, has lower effect than a and higher effect than c.
 
     @param c: Coefficient C in the equation Rsrc(r). Larger values results in more
     barrel effect, has lower effect than a and b.
