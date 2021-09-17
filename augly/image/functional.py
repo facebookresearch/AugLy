@@ -568,9 +568,9 @@ def distort_barrel(
         barrel effect, has lower effect than a and b.
 
     @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of the
-    image. In a positive domain, values larger than 1 will shrink the image. Negative
-    values would result in both vertically and horizontally flipped image scaled in a
-    mirrored way of positive domain.
+        image. In a positive domain, values larger than 1 will shrink the image. Negative
+        values would result in both vertically and horizontally flipped image scaled in a
+        mirrored way of positive domain.
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
