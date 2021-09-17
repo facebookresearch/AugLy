@@ -115,10 +115,7 @@ def distort_barrel_intensity(a: float, b: float, c: float, d: float, **kwargs) -
 
 
 def distort_pincushion_intensity(a: float, b: float, c: float, d: float, **kwargs) -> float:
-    return distort_intensity(
-            coefficients=(a, b, c),
-            scale=d
-    )
+    return distort_intensity(coefficients=(a, b, c), scale=d)
 
 
 def encoding_quality_intensity(quality: int, **kwargs):
