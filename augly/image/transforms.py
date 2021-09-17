@@ -233,8 +233,6 @@ class DistortPincushion(BaseTransform):
         self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1
     ):
         """
-
-
         @param a: Coefficient A in the equation Rsrc(r).
 
         @param b: Coefficient B in the equation Rsrc(r).

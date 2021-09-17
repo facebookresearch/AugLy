@@ -26,30 +26,30 @@
     ],
     "distort_barrel": [
         {
+            "a": 0.1,
+            "b": 0.0,
+            "c": 0.0,
+            "d": 1.0,
             "dst_height": 1080,
             "dst_width": 1920,
             "intensity": 10.0,
             "name": "distort_barrel",
             "output_path": null,
-            "a": 0.1,
-            "b": 0.0,
-            "c": 0.0,
-            "d": 1.0,
             "src_height": 1080,
             "src_width": 1920
         }
     ],
     "distort_pincushion": [
         {
+            "a": 0.1,
+            "b": 0.0,
+            "c": 0.0,
+            "d": 1.0,
             "dst_height": 1080,
             "dst_width": 1920,
             "intensity": 10.0,
             "name": "distort_pincushion",
             "output_path": null,
-            "a": 0.1,
-            "b": 0.0,
-            "c": 0.0,
-            "d": 1.0,
             "src_height": 1080,
             "src_width": 1920
         }
