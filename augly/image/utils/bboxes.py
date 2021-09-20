@@ -4,6 +4,24 @@
 from typing import Tuple
 
 
+def crop_bboxes_helper(
+    bbox: Tuple, x1: float, y1: float, x2: float, y2: float, **kwargs
+) -> Tuple:
+    """
+    If part of the bbox was cropped out in the x-axis, the left/right side will now be
+    0/1 respectively; otherwise the fraction x1 is cut off from the left & x2 from the
+    right and we renormalize with the new width. Analogous for the y-axis
+    """
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    new_w, new_h = x2 - x1, y2 - y1
+    return (
+        max(0, (left_factor - x1) / new_w),
+        max(0, (upper_factor - y1) / new_h),
+        min(1, 1 - (x2 - right_factor) / new_w),
+        min(1, 1 - (y2 - lower_factor) / new_h),
+    )
+
+
 def hflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
     """
     When the src image is horizontally flipped, the bounding box also gets horizontally
