@@ -66,6 +66,57 @@ def overlay_onto_background_image_bboxes_helper(
     )
 
 
+def overlay_image_bboxes_helper(
+    bbox: Tuple,
+    opacity: float,
+    overlay_size: float,
+    x_pos: float,
+    y_pos: float,
+    max_visible_opacity: float,
+    **kwargs,
+) -> Tuple:
+    """
+    We made a few decisions for this augmentation about how bboxes are defined:
+    1. If `opacity` < `max_visible_opacity` (default 0.75, can be specified by the user),
+       the bbox stays the same because it is still considered "visible" behind the
+       overlaid image
+    2. If the entire bbox is covered by the overlaid image, the bbox is no longer valid
+       so we return it as (0, 0, 0, 0), which will be turned to None in `check_bboxes()`
+    3. If the entire bottom of the bbox is covered by the overlaid image
+       (i.e. `x_pos < left_factor` & `x_pos + overlay_size > right_factor` &
+       `y_pos + overlay_size > lower_factor`), we crop out the lower part of the bbox
+       that is covered. The analogue is true for the top/left/right being occluded
+    4. If just the middle of the bbox is covered or a rectangle is sliced out of the
+       bbox, we consider that the bbox is unchanged, even though part of it is occluded.
+       This isn't ideal but otherwise it's very complicated; we could split the
+       remaining area into smaller visible bboxes, but then we would have to return
+       multiple dst bboxes corresponding to one src bbox
+    """
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    if opacity >= max_visible_opacity:
+        occluded_left = x_pos < left_factor
+        occluded_upper = y_pos < upper_factor
+        occluded_right = x_pos + overlay_size > right_factor
+        occluded_lower = y_pos + overlay_size > lower_factor
+
+        if occluded_left and occluded_right:
+            # If the bbox is completely covered, it's no longer valid so return zeros
+            if occluded_upper and occluded_lower:
+                return (0.0, 0.0, 0.0, 0.0)
+
+            if occluded_lower:
+                lower_factor = y_pos
+            elif occluded_upper:
+                upper_factor = y_pos + overlay_size
+        elif occluded_upper and occluded_lower:
+            if occluded_right:
+                right_factor = x_pos
+            elif occluded_left:
+                left_factor = x_pos + overlay_size
+
+    return left_factor, upper_factor, right_factor, lower_factor
+
+
 def overlay_onto_screenshot_bboxes_helper(
     bbox: Tuple,
     src_w: int,

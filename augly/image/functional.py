@@ -1089,6 +1089,7 @@ def overlay_image(
     overlay_size: float = 1.0,
     x_pos: float = 0.4,
     y_pos: float = 0.4,
+    max_visible_opacity: float = 0.75,
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
@@ -1111,6 +1112,11 @@ def overlay_image(
         of the original image
 
     @param x_pos: position of overlaid image relative to the image width
+
+    @param max_visible_opacity: if bboxes are passed in, this param will be used as the
+        maximum opacity value through which the src image will still be considered
+        visible; see the function `overlay_image_bboxes_helper` in `utils/bboxes.py` for
+        more details about how this is used. If bboxes are not passed in this is not used
 
     @param y_pos: position of overlaid image relative to the image height
 
