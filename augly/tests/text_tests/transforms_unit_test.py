@@ -93,10 +93,11 @@ class TransformsTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_compose,
             [
-                "T̶ -̶ h̶ -̶ e̶ -̶ -̶ u̶ -̶ q̶ -̶ i̶ -̶ c̶ -̶ k̶ -̶ -̶ b̶ -̶ r̶ -̶ o̶ -̶ w̶ -̶ n̶ -̶ -̶ '̶ -̶ "
-                "f̶ -̶ o̶ -̶ x̶ -̶ '̶ -̶ -̶ c̶ -̶ o̶ -̶ u̶ -̶ ,̶ -̶ d̶ -̶ n̶ -̶ '̶ -̶ -̶ t̶ -̶ -̶ j̶ -̶ u̶ -̶ "
-                "m̶ -̶ p̶ -̶ -̶ v̶ -̶ o̶ -̶ e̶ -̶ r̶ -̶ -̶ t̶ -̶ g̶ -̶ h̶ -̶ e̶ -̶ -̶ g̶ -̶ r̶ -̶ e̶ -̶ e̶ -̶ "
-                "n̶ -̶ ,̶ -̶ -̶ g̶ -̶ r̶ -̶ a̶ -̶ s̶ -̶ s̶ -̶ y̶ -̶ -̶ n̶ -̶ i̶ -̶ l̶ -̶ l̶ -̶.̶"
+                "T... h... e...... u... q... i... c... k...... b... r... o... w... "
+                "n...... '... f... o... x... '...... c... o... u... d... n... '...... "
+                "t...... j... u... m... p...... o... v... e... f...... t... j... e......"
+                " g... r... e... e... n...,...... g... r... a... s... s... y...... h... "
+                "i...,... l...."
             ],
         )
         self.assertTrue(
@@ -265,13 +266,13 @@ class TransformsTextUnitTest(unittest.TestCase):
         )
 
     def test_SimulateTypos(self) -> None:
-        aug_typo_text = txtaugs.SimulateTypos(aug_word_p=0.3, aug_char_p=0.3)(
-            self.texts, metadata=self.metadata
-        )
+        aug_typo_text = txtaugs.SimulateTypos(
+            aug_word_p=0.3, aug_char_p=0.3, typo_type="all"
+        )(self.texts, metadata=self.metadata)
 
         self.assertTrue(
             aug_typo_text[0]
-            == "Hte quici brown 'fox' fouldn' t ,ump over the green, grassy ihll."
+            == "Thw qu(ck brown 'fox' co)uldn' t jamp over the green, grassy hill.",
         )
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["simulate_typos"]),
