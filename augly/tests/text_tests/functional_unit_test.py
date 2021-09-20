@@ -420,6 +420,14 @@ class FunctionalTextUnitTest(unittest.TestCase):
             == "The queen and king have a daughter named Raj and a son named Amanda.",
         )
 
+        ignore_augmented_gender_swap_words = txtaugs.swap_gendered_words(
+            self.fairness_texts[0], aug_word_p=0.3, ignore_words=["son"]
+        )
+        self.assertTrue(
+            ignore_augmented_gender_swap_words
+            == "The queen and king have a son named Raj and a son named Amanda.",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

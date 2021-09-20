@@ -521,6 +521,7 @@ def replace_words(
     n: int = 1,
     mapping: Optional[Union[str, Dict[str, Any]]] = None,
     priority_words: Optional[List[str]] = None,
+    ignore_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -542,6 +543,8 @@ def replace_words(
     @param priority_words: list of target words that the augmenter should prioritize to
         augment first
 
+    @param ignore_words: list of words that the augmenter should not augment
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
@@ -551,7 +554,7 @@ def replace_words(
     func_kwargs = txtutils.get_func_kwargs(metadata, locals())
 
     word_aug = a.WordReplacementAugmenter(
-        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words
+        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words, ignore_words
     )
     aug_texts = word_aug.augment(texts, n)
 
@@ -699,6 +702,7 @@ def swap_gendered_words(
     n: int = 1,
     mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
     priority_words: Optional[List[str]] = None,
+    ignore_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -724,6 +728,8 @@ def swap_gendered_words(
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
 
+    @param ignore_words: list of words that the augmenter should not augment
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
@@ -735,7 +741,7 @@ def swap_gendered_words(
     mapping = txtutils.get_gendered_words_mapping(mapping)
 
     word_aug = a.WordReplacementAugmenter(
-        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words
+        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words, ignore_words
     )
     aug_texts = word_aug.augment(texts, n)
 
