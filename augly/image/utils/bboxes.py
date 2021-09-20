@@ -34,3 +34,12 @@ def pad_square_bboxes_helper(bbox: Tuple, src_w: int, src_h: int, **kwargs) -> T
         h_factor = (src_w - src_h) / (2 * src_h)
 
     return pad_bboxes_helper(bbox, w_factor=w_factor, h_factor=h_factor)
+
+
+def vflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
+    """
+    When the src image is vertically flipped, the bounding box also gets vertically
+    flipped
+    """
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    return (left_factor, 1 - lower_factor, right_factor, 1 - upper_factor)
