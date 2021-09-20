@@ -271,7 +271,7 @@
         {
             "bbox_format": "yolo",
             "caption_height": 250,
-            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_bboxes": [[0.5, 0.5939849624060152, 0.25, 0.6090225563909775]],
             "dst_height": 1330,
             "dst_width": 1920,
             "font_file": "fonts/Raleway-ExtraBold.ttf",

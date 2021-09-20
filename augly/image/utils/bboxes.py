@@ -13,6 +13,20 @@ def hflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
     return (1 - right_factor, upper_factor, 1 - left_factor, lower_factor)
 
 
+def meme_format_bboxes_helper(
+    bbox: Tuple, src_w: int, src_h: int, caption_height: int, **kwargs
+) -> Tuple:
+    """
+    The src image is offset vertically by caption_height pixels, so we normalize that to
+    get the y offset, add that to the upper & lower coordinates, & renormalize with the
+    new height. The x dimension is unaffected
+    """
+    left_f, upper_f, right_f, lower_f = bbox
+    y_off = caption_height / src_h
+    new_h = 1.0 + y_off
+    return left_f, (upper_f + y_off) / new_h, right_f, (lower_f + y_off) / new_h
+
+
 def overlay_onto_background_image_bboxes_helper(
     bbox: Tuple, overlay_size: float, x_pos: float, y_pos: float, **kwargs
 ) -> Tuple:
