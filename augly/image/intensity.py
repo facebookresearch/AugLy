@@ -100,19 +100,12 @@ def crop_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
-def distort_intensity(coefficients: Tuple[float, float, float], scale: float) -> float:
-    coefficients_magnitude = np.abs(coefficients).sum()
-    adjusted_scale = np.exp(-(scale-1)**2)
-    intensity = 100 * (coefficients_magnitude / adjusted_scale)
-    return float(np.clip(intensity, 0, 100))
-
-
 def distort_barrel_intensity(a: float, b: float, c: float, d: float, **kwargs) -> float:
-    return distort_intensity(coefficients=(a, b, c), scale=d)
+    return distort_intensity_helper(coefficients=(a, b, c), scale=d)
 
 
 def distort_pincushion_intensity(a: float, b: float, c: float, d: float, **kwargs) -> float:
-    return distort_intensity(coefficients=(a, b, c), scale=d)
+    return distort_intensity_helper(coefficients=(a, b, c), scale=d)
 
 
 def encoding_quality_intensity(quality: int, **kwargs):
@@ -333,6 +326,13 @@ def normalize_mult_factor(factor: float) -> float:
         return 0.0
 
     return factor if factor >= 1 else 1 / factor
+
+
+def distort_intensity_helper(coefficients: Tuple[float, float, float], scale: float) -> float:
+    coefficients_magnitude = np.abs(coefficients).sum()
+    adjusted_scale = np.exp(-(scale-1)**2)
+    intensity = 100 * (coefficients_magnitude / adjusted_scale)
+    return float(np.clip(intensity, 0, 100))
 
 
 def mult_factor_intensity_helper(factor: float) -> float:

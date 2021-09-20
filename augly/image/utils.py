@@ -283,9 +283,9 @@ def compute_stripe_mask(
 
 
 def distort(
-        image: Image.Image,
-        method: str,
-        distortion_args: Tuple[float, float, float, float],
+    image: Image.Image,
+    method: str,
+    distortion_args: Tuple[float, float, float, float],
 ) -> Image.Image:
     """
     Distorts the image with a specified type of distortion. This function wraps `Wand`
@@ -297,6 +297,4 @@ def distort(
     np_image = np.array(image)
     w_image = wImage.from_array(np_image)
     w_image.distort(method, distortion_args)
-    aug_image = Image.fromarray(np.array(w_image))
-
-    return aug_image
+    return Image.fromarray(np.array(w_image))

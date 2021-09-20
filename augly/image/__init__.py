@@ -217,6 +217,8 @@ __all__ = [
     "contrast_intensity",
     "convert_color_intensity",
     "crop_intensity",
+    "distort_barrel_intensity",
+    "distort_pincushion_intensity",
     "encoding_quality_intensity",
     "grayscale_intensity",
     "hflip_intensity",
