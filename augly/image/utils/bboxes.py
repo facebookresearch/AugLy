@@ -3,6 +3,8 @@
 
 from typing import Tuple
 
+import augly.image.utils as imutils
+
 
 def crop_bboxes_helper(
     bbox: Tuple, x1: float, y1: float, x2: float, y2: float, **kwargs
@@ -62,6 +64,77 @@ def overlay_onto_background_image_bboxes_helper(
         min(1, right_factor * overlay_size + x_pos),
         min(1, lower_factor * overlay_size + y_pos),
     )
+
+
+def overlay_onto_screenshot_bboxes_helper(
+    bbox: Tuple,
+    src_w: int,
+    src_h: int,
+    template_filepath: str,
+    template_bboxes_filepath: str,
+    resize_src_to_match_template: bool,
+    max_image_size_pixels: int,
+    crop_src_to_fit: bool,
+    **kwargs,
+) -> Tuple:
+    """
+    We transform the bbox by applying all the same transformations as are applied in the
+    `overlay_onto_screenshot` function, each of which is mentioned below in comments
+    """
+    left_f, upper_f, right_f, lower_f = bbox
+    template, tbbox = imutils.get_template_and_bbox(
+        template_filepath, template_bboxes_filepath
+    )
+
+    # Either src image or template image is scaled
+    if resize_src_to_match_template:
+        tbbox_w, tbbox_h = tbbox[2] - tbbox[0], tbbox[3] - tbbox[1]
+        src_scale_factor = min(tbbox_w / src_w, tbbox_h / src_h)
+    else:
+        template, tbbox = imutils.scale_template_image(
+            src_w, src_h, template, tbbox, max_image_size_pixels, crop_src_to_fit,
+        )
+        tbbox_w, tbbox_h = tbbox[2] - tbbox[0], tbbox[3] - tbbox[1]
+        src_scale_factor = 1
+
+    template_w, template_h = template.size
+    x_off, y_off = tbbox[:2]
+
+    # Src image is scaled (if resize_src_to_match_template)
+    curr_w, curr_h = src_w * src_scale_factor, src_h * src_scale_factor
+    left, upper, right, lower = (
+        left_f * curr_w, upper_f * curr_h, right_f * curr_w, lower_f * curr_h
+    )
+
+    # Src image is cropped to (tbbox_w, tbbox_h)
+    if crop_src_to_fit:
+        dx, dy = (curr_w - tbbox_w) // 2, (curr_h - tbbox_h) // 2
+        x1, y1, x2, y2 = dx, dy, dx + tbbox_w, dy + tbbox_h
+        left_f, upper_f, right_f, lower_f = crop_bboxes_helper(
+            bbox, x1 / curr_w, y1 / curr_h, x2 / curr_w, y2 / curr_h
+        )
+        left, upper, right, lower = (
+            left_f * tbbox_w, upper_f * tbbox_h, right_f * tbbox_w, lower_f * tbbox_h
+        )
+    # Src image is resized to (tbbox_w, tbbox_h)
+    else:
+        resize_f = min(tbbox_w / curr_w, tbbox_h / curr_h)
+        left, upper, right, lower = (
+            left * resize_f, upper * resize_f, right * resize_f, lower * resize_f
+        )
+        curr_w, curr_h = curr_w * resize_f, curr_h * resize_f
+
+        # Padding with black
+        padding_x = max(0, (tbbox_w - curr_w) // 2)
+        padding_y = max(0, (tbbox_h - curr_h) // 2)
+        left, upper, right, lower = (
+            left + padding_x, upper + padding_y, right + padding_x, lower + padding_y
+        )
+
+    # Src image is overlaid onto template image
+    left, upper, right, lower = left + x_off, upper + y_off, right + x_off, lower + y_off
+
+    return left / template_w, upper / template_h, right / template_w, lower / template_h
 
 
 def pad_bboxes_helper(bbox: Tuple, w_factor: float, h_factor: float, **kwargs) -> Tuple:
