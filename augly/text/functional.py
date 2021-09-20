@@ -578,12 +578,18 @@ def simulate_typos(
     aug_word_min: int = 1,
     aug_word_max: int = 1000,
     n: int = 1,
-    misspelling_dict_path: str = MISSPELLING_DICTIONARY_PATH,
+    typo_type: str = "all",
+    misspelling_dict_path: Optional[str] = MISSPELLING_DICTIONARY_PATH,
     priority_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
-    Simulates typos in each text using misspellings, keyboard distance, and swapping
+    Simulates typos in each text using misspellings, keyboard distance, and swapping.
+    You can specify a typo_type: charmix, which does a combination of character-level
+    modifications (delete, insert, substitute, & swap); keyboard, which swaps characters
+    which those close to each other on the QWERTY keyboard; misspelling, which replaces
+    words with misspellings defined in a dictionary file; or all, which will apply a
+    random combination of all 4
 
     @param texts: a string or a list of text documents to be augmented
 
@@ -607,7 +613,12 @@ def simulate_typos(
 
     @param n: number of augmentations to be performed for each text
 
-    @param misspelling_dict_path: iopath uri where the misspelling dictionary is stored
+    @param typo_type: the type of typos to apply to the text; valid values are
+        "misspelling", "keyboard", "charmix", or "all"
+
+    @param misspelling_dict_path: iopath uri where the misspelling dictionary is stored;
+        must be specified if typo_type is "misspelling" or "all", but otherwise can be
+        None
 
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
@@ -628,6 +639,7 @@ def simulate_typos(
         aug_word_min,
         aug_word_max,
         aug_word_p,
+        typo_type,
         misspelling_dict_path,
         priority_words,
     )

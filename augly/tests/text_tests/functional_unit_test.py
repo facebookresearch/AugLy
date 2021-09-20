@@ -367,26 +367,31 @@ class FunctionalTextUnitTest(unittest.TestCase):
 
     def test_simulate_typos(self) -> None:
         augmented_typos = txtaugs.simulate_typos(
-            self.texts[0], aug_word_p=0.3, aug_char_p=0.3, n=2
+            self.texts[0], aug_word_p=0.3, aug_char_p=0.3, n=2, typo_type="misspelling"
         )
         self.assertTrue(
             augmented_typos[0]
-            == "Tje uqick brown 'fox' oculdn' t ,ump over the green, rgassy hill."
+            == "Ther quick brown 'fox' couldn' t jump over the green, grassy hill."
         )
         self.assertTrue(
             augmented_typos[1]
-            == "Teh uqick borwn 'fox' couldn' t jump over the grene, grassy hill."
+            == "Teh quick brown 'fox' couldn' t jump over tghe green, grassy hill."
         )
+
         augmented_typos_targetted = txtaugs.simulate_typos(
-            self.texts[0], aug_word_p=0.3, n=2, priority_words=self.priority_words
+            self.texts[0],
+            aug_word_p=0.3,
+            n=2,
+            priority_words=self.priority_words,
+            typo_type="charmix",
         )
         self.assertTrue(
             augmented_typos_targetted[0]
-            == "The qucik brown 'fox' couldn' t jump ovre the rgeen, geassy hil?."
+            == "The quick buown 'fox' couldn' t jump over he rgeen, rgassy lhill."
         )
         self.assertTrue(
             augmented_typos_targetted[1]
-            == "The quick brown 'fox' couldn' t jump ovee hten ggeen, grzssy hill."
+            == "The quick brown 'fox' couldn' t nump o^er the gre$n, grasys ill."
         )
 
     def test_split_words(self) -> None:

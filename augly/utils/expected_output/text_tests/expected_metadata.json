@@ -26,7 +26,8 @@
             "n": 1,
             "name": "simulate_typos",
             "priority_words": null,
-            "src_length": 1
+            "src_length": 1,
+            "typo_type": "all"
         },
         {
             "cadence": 1.0,
@@ -211,7 +212,8 @@
             "n": 1,
             "name": "simulate_typos",
             "priority_words": null,
-            "src_length": 1
+            "src_length": 1,
+            "typo_type": "all"
         }
     ],
     "split_words": [
