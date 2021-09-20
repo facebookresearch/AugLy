@@ -635,7 +635,7 @@ def distort_pincushion(
         pincushion effect, has lower effect than a and higher effect than c.
 
     @param c: Coefficient C in the equation Rsrc(r). Larger values results in more
-        pincushion effect, has lower effect than b and c.
+        pincushion effect, has lower effect than a and b.
 
     @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of
         the image. In a positive domain, values larger than 1 will enlarge the image
