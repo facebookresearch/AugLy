@@ -1098,6 +1098,7 @@ class OverlayImage(BaseTransform):
         overlay_size: float = 1.0,
         x_pos: float = 0.4,
         y_pos: float = 0.4,
+        max_visible_opacity: float = 0.75,
         p: float = 1.0,
     ):
         """
@@ -1113,12 +1114,19 @@ class OverlayImage(BaseTransform):
 
         @param y_pos: position of overlaid image relative to the image height
 
+        @param max_visible_opacity: if bboxes are passed in, this param will be used as
+            the maximum opacity value through which the src image will still be
+            considered visible; see the function `overlay_image_bboxes_helper` in
+            `utils/bboxes.py` for more details about how this is used. If bboxes are not
+            passed in this is not used
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.overlay = overlay
         self.overlay_size, self.opacity = overlay_size, opacity
         self.x_pos, self.y_pos = x_pos, y_pos
+        self.max_visible_opacity = max_visible_opacity
 
     def apply_transform(
         self,
@@ -1153,6 +1161,7 @@ class OverlayImage(BaseTransform):
             overlay_size=self.overlay_size,
             x_pos=self.x_pos,
             y_pos=self.y_pos,
+            max_visible_opacity=self.max_visible_opacity,
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,

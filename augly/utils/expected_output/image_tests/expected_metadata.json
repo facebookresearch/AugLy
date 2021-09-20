@@ -328,6 +328,7 @@
             "dst_height": 1080,
             "dst_width": 1920,
             "intensity": 2.25,
+            "max_visible_opacity": 0.75,
             "name": "overlay_image",
             "opacity": 1.0,
             "output_path": null,
