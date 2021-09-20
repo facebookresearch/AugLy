@@ -651,6 +651,7 @@ class ReplaceWords(BaseTransform):
         n: int = 1,
         mapping: Optional[Union[str, Dict[str, Any]]] = None,
         priority_words: Optional[List[str]] = None,
+        ignore_words: Optional[List[str]] = None,
         p: float = 1.0,
     ):
         """
@@ -668,6 +669,8 @@ class ReplaceWords(BaseTransform):
         @param priority_words: list of target words that the augmenter should prioritize
             to augment first
 
+        @param ignore_words: list of words that the augmenter should not augment
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
@@ -677,6 +680,7 @@ class ReplaceWords(BaseTransform):
         self.n = n
         self.mapping = mapping
         self.priority_words = priority_words
+        self.ignore_words = ignore_words
 
     def apply_transform(
         self,
@@ -702,6 +706,7 @@ class ReplaceWords(BaseTransform):
             n=self.n,
             mapping=self.mapping,
             priority_words=self.priority_words,
+            ignore_words=self.ignore_words,
             metadata=metadata,
         )
 
@@ -865,6 +870,7 @@ class SwapGenderedWords(BaseTransform):
         n: int = 1,
         mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
         priority_words: Optional[List[str]] = None,
+        ignore_words: Optional[List[str]] = None,
         p: float = 1.0,
     ):
         """
@@ -883,6 +889,8 @@ class SwapGenderedWords(BaseTransform):
         @param priority_words: list of target words that the augmenter should
             prioritize to augment first
 
+        @param ignore_words: list of words that the augmenter should not augment
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
@@ -892,6 +900,7 @@ class SwapGenderedWords(BaseTransform):
         self.n = n
         self.mapping = mapping
         self.priority_words = priority_words
+        self.ignore_words = ignore_words
 
     def apply_transform(
         self,
@@ -921,5 +930,6 @@ class SwapGenderedWords(BaseTransform):
             n=self.n,
             mapping=self.mapping,
             priority_words=self.priority_words,
+            ignore_words=self.ignore_words,
             metadata=metadata,
         )
