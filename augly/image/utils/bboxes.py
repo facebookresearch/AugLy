@@ -2,7 +2,8 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import math
-from typing import List, Tuple
+import numpy as np
+from typing import List, Optional, Tuple
 
 import augly.image.utils as imutils
 
@@ -219,6 +220,110 @@ def pad_square_bboxes_helper(bbox: Tuple, src_w: int, src_h: int, **kwargs) -> T
         h_factor = (src_w - src_h) / (2 * src_h)
 
     return pad_bboxes_helper(bbox, w_factor=w_factor, h_factor=h_factor)
+
+
+def perspective_transform_bboxes_helper(
+    bbox: Tuple,
+    src_w: int,
+    src_h: int,
+    sigma: float,
+    dx: float,
+    dy: float,
+    crop_out_black_border: bool,
+    seed: Optional[int],
+    **kwargs,
+) -> Tuple:
+    """
+    Computes the bbox that encloses the bbox in the perspective transformed image. Also
+    uses the `crop_bboxes_helper` function since the image is cropped if
+    `crop_out_black_border` is True.
+    """
+
+    def transform(x: float, y: float, a: List[float]) -> Tuple:
+        """
+        Transforms a point in the image given the perspective transform matrix; we will
+        use this to transform the bounding box corners. Based on PIL source code:
+        https://github.com/python-pillow/Pillow/blob/master/src/libImaging/Geometry.c#L399
+        """
+        return (
+            (a[0] * x + a[1] * y + a[2]) / (a[6] * x + a[7] * y + a[8]),
+            (a[3] * x + a[4] * y + a[5]) / (a[6] * x + a[7] * y + a[8]),
+        )
+
+    def get_perspective_transform(
+        src_coords: List[Tuple[int, int]], dst_coords: List[Tuple[int, int]]
+    ) -> List[float]:
+        """
+        Computes the transformation matrix used for the perspective transform with
+        the given src & dst corner coordinates. Based on OpenCV source code:
+        https://github.com/opencv/opencv/blob/master/modules/imgproc/src/imgwarp.cpp#L3277-L3304
+        """
+        a = np.zeros((8, 8), dtype=np.float)
+        dst_x, dst_y = zip(*dst_coords)
+        b = np.asarray(list(dst_x) + list(dst_y))
+
+        for i, (sc, dc) in enumerate(zip(src_coords, dst_coords)):
+            a[i][0] = a[i + 4][3] = sc[0]
+            a[i][1] = a[i + 4][4] = sc[1]
+            a[i][2] = a[i + 4][5] = 1
+            a[i][6] = -sc[0] * dc[0]
+            a[i][7] = -sc[1] * dc[0]
+            a[i + 4][6] = -sc[0] * dc[1]
+            a[i + 4][7] = -sc[1] * dc[1]
+
+        A = np.matrix(a, dtype=np.float)
+        B = np.array(b).reshape(8)
+        res = np.linalg.solve(A, B)
+        return np.array(res).reshape(8).tolist() + [1.0]
+
+    assert (
+        seed is not None
+    ), "Cannot transform bbox for perspective_transform if seed is not provided"
+
+    rng = np.random.RandomState(seed)
+    src_coords = [(0, 0), (src_w, 0), (src_w, src_h), (0, src_h)]
+    dst_coords = [
+        (rng.normal(point[0], sigma) + dx, rng.normal(point[1], sigma) + dy)
+        for point in src_coords
+    ]
+
+    perspective_transform_coeffs = get_perspective_transform(src_coords, dst_coords)
+
+    left_f, upper_f, right_f, lower_f = bbox
+    left, upper, right, lower = (
+        left_f * src_w, upper_f * src_h, right_f * src_w, lower_f * src_h
+    )
+    bbox_coords = [(left, upper), (right, upper), (right, lower), (left, lower)]
+
+    transformed_bbox_coords = [
+        transform(x + 0.5, y + 0.5, perspective_transform_coeffs) for x, y in bbox_coords
+    ]
+
+    transformed_xs, transformed_ys = zip(*transformed_bbox_coords)
+    transformed_bbox = (
+        max(0, min(transformed_xs) / src_w),
+        max(0, min(transformed_ys) / src_h),
+        min(1, max(transformed_xs) / src_w),
+        min(1, max(transformed_ys) / src_h),
+    )
+
+    # This is copy-pasted from `functional.py`, exactly how the crop coords are computed
+    if crop_out_black_border:
+        top_left, top_right, bottom_right, bottom_left = dst_coords
+        new_left = max(0, top_left[0], bottom_left[0])
+        new_right = min(src_w, top_right[0], bottom_right[0])
+        new_top = max(0, top_left[1], top_right[1])
+        new_bottom = min(src_h, bottom_left[1], bottom_right[1])
+
+        transformed_bbox = crop_bboxes_helper(
+            transformed_bbox,
+            x1=new_left / src_w,
+            y1=new_top / src_h,
+            x2=new_right / src_w,
+            y2=new_bottom / src_h,
+        )
+
+    return transformed_bbox
 
 
 def rotate_bboxes_helper(
