@@ -529,7 +529,7 @@ def distort_barrel(
     c: float = 0.0,
     d: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
-):
+) -> Image.Image:
     """
     Applies barrel distortion to the image with the following equation.
 
@@ -605,7 +605,7 @@ def distort_pincushion(
     c: float = 0.0,
     d: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
-):
+) -> Image.Image:
     """
     To see effects of the coefficients in detail refer to
     https://legacy.imagemagick.org/Usage/distorts/#barrelinverse. Below is a direct
