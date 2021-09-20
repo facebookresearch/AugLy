@@ -101,11 +101,11 @@ def check_for_gone_bboxes(transformed_bboxes: List[Tuple]) -> List[Optional[Tupl
 
 
 def transform_bboxes(
-    dst_bboxes: Optional[List[Tuple]],
-    bbox_format: Optional[str],
     function_name: str,
     image: Image.Image,
     aug_image: Image.Image,
+    dst_bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
     bboxes_helper_func: Optional[Callable] = None,
     **kwargs,
 ) -> None:
@@ -145,16 +145,15 @@ def get_func_kwargs(
     if metadata is None:
         return {}
 
-    bboxes = local_kwargs.pop("bboxes")
-    bboxes = [] if bboxes is None else bboxes
+    bboxes = local_kwargs.pop("bboxes", None)
+    bboxes = bboxes if len(metadata) == 0 else metadata[-1].get("dst_bboxes", None)
 
     func_kwargs = deepcopy(local_kwargs)
     func_kwargs.pop("metadata")
 
-    func_kwargs["src_bboxes"] = (
-        deepcopy(bboxes if len(metadata) == 0 else metadata[-1]["dst_bboxes"])
-    )
-    func_kwargs["dst_bboxes"] = deepcopy(bboxes)
+    if bboxes is not None:
+        func_kwargs["src_bboxes"] = deepcopy(bboxes)
+        func_kwargs["dst_bboxes"] = deepcopy(bboxes)
     func_kwargs.update(**deepcopy(kwargs))
 
     return func_kwargs

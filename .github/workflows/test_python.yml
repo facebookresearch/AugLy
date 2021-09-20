@@ -14,6 +14,5 @@ jobs:
       - run: sudo apt-get install --fix-missing ffmpeg python3-soundfile
       - run: pip install pyre-check pytest torchvision
       - run: pip install -e .[av]
-      - run: brew install --build-from-source watchman  # ~2 minutes
       - run: pyre --source-directory "." --noninteractive check || true
       - run: pytest --durations=10 .
