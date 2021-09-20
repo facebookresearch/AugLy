@@ -7,7 +7,11 @@ import unittest
 
 import augly.image as imaugs
 from augly.tests.image_tests.base_unit_test import BaseImageUnitTest
-from augly.utils import EMOJI_PATH, IMAGE_METADATA_PATH, IMG_MASK_PATH
+from augly.utils import (
+    EMOJI_PATH,
+    IMAGE_METADATA_PATH,
+    IMG_MASK_PATH,
+)
 
 
 class TransformsImageUnitTest(BaseImageUnitTest):
@@ -100,9 +104,7 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_OverlayImage(self):
         self.evaluate_class(
-            imaugs.OverlayImage(
-                overlay=EMOJI_PATH, overlay_size=0.15, y_pos=0.8
-            ),
+            imaugs.OverlayImage(overlay=EMOJI_PATH, overlay_size=0.15, y_pos=0.8),
             fname="overlay_image",
         )
 
@@ -119,14 +121,15 @@ class TransformsImageUnitTest(BaseImageUnitTest):
             imaugs.OverlayOntoScreenshot(resize_src_to_match_template=False),
             fname="overlay_onto_screenshot",
             metadata_exclude_keys=[
-                "dst_height", "dst_width", "intensity", "template_filepath"
+                "dst_height",
+                "dst_width",
+                "intensity",
+                "template_filepath",
             ],
         )
 
     def test_OverlayStripes(self):
-        self.evaluate_class(
-            imaugs.OverlayStripes(), fname="overlay_stripes"
-        )
+        self.evaluate_class(imaugs.OverlayStripes(), fname="overlay_stripes")
 
     @unittest.skip("Failing on some envs, will fix")
     def test_OverlayText(self):
