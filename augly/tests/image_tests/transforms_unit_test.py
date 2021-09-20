@@ -121,6 +121,7 @@ class TransformsImageUnitTest(BaseImageUnitTest):
             imaugs.OverlayOntoScreenshot(resize_src_to_match_template=False),
             fname="overlay_onto_screenshot",
             metadata_exclude_keys=[
+                "dst_bboxes",
                 "dst_height",
                 "dst_width",
                 "intensity",
