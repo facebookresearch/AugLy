@@ -53,7 +53,7 @@ def get_template_and_bbox(
     return template, bbox
 
 
-def rotated_rect_with_max_area(image: Image.Image, angle: float) -> Tuple[float, float]:
+def rotated_rect_with_max_area(w: int, h: int, angle: float) -> Tuple[float, float]:
     """
     Computes the width and height of the largest possible axis-aligned
     rectangle (maximal area) within the rotated rectangle
@@ -61,7 +61,6 @@ def rotated_rect_with_max_area(image: Image.Image, angle: float) -> Tuple[float,
     source:
     https://stackoverflow.com/questions/16702966/rotate-image-and-crop-out-black-borders # noqa: B950
     """
-    w, h = image.size
     width_is_longer = w >= h
     side_long, side_short = (w, h) if width_is_longer else (h, w)
 
