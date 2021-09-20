@@ -4,6 +4,15 @@
 from typing import Tuple
 
 
+def hflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
+    """
+    When the src image is horizontally flipped, the bounding box also gets horizontally
+    flipped
+    """
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    return (1 - right_factor, upper_factor, 1 - left_factor, lower_factor)
+
+
 def pad_bboxes_helper(bbox: Tuple, w_factor: float, h_factor: float, **kwargs) -> Tuple:
     """
     The src image is padded horizontally with w_factor * src_w, so the bbox gets shifted
@@ -38,8 +47,8 @@ def pad_square_bboxes_helper(bbox: Tuple, src_w: int, src_h: int, **kwargs) -> T
 
 def vflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
     """
-    When the src image is vertically flipped, the bounding box also gets vertically
-    flipped
+    Analogous to hflip, when the src image is vertically flipped, the bounding box also
+    gets vertically flipped
     """
     left_factor, upper_factor, right_factor, lower_factor = bbox
     return (left_factor, 1 - lower_factor, right_factor, 1 - upper_factor)
