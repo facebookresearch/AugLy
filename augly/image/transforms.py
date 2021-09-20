@@ -190,7 +190,7 @@ class ApplyPILFilter(BaseTransform):
 
 class DistortBarrel(BaseTransform):
     def __init__(
-        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1
+        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1.0
     ):
         """
         @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
@@ -236,7 +236,7 @@ class DistortBarrel(BaseTransform):
 
 class DistortPincushion(BaseTransform):
     def __init__(
-        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1
+        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1.0
     ):
         """
         @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
