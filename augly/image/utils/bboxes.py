@@ -13,6 +13,25 @@ def hflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
     return (1 - right_factor, upper_factor, 1 - left_factor, lower_factor)
 
 
+def overlay_onto_background_image_bboxes_helper(
+    bbox: Tuple, overlay_size: float, x_pos: float, y_pos: float, **kwargs
+) -> Tuple:
+    """
+    The src image is overlaid on the dst image offset by (`x_pos`, `y_pos`) & with a
+    size of `overlay_size` (all relative to the dst image dimensions). So the bounding
+    box is also offset by (`x_pos`, `y_pos`) & scaled by `overlay_size`. It is also
+    possible that some of the src image will be cut off, so we take the max with 0/min
+    with 1 in order to crop the bbox if needed
+    """
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    return (
+        max(0, left_factor * overlay_size + x_pos),
+        max(0, upper_factor * overlay_size + y_pos),
+        min(1, right_factor * overlay_size + x_pos),
+        min(1, lower_factor * overlay_size + y_pos),
+    )
+
+
 def pad_bboxes_helper(bbox: Tuple, w_factor: float, h_factor: float, **kwargs) -> Tuple:
     """
     The src image is padded horizontally with w_factor * src_w, so the bbox gets shifted

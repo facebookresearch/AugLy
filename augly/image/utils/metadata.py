@@ -48,7 +48,7 @@ def validate_and_normalize_bboxes(
 
 
 def convert_bboxes(
-    transformed_norm_bboxes: List[Tuple],
+    transformed_norm_bboxes: List[Optional[Tuple]],
     bboxes: List[Tuple],
     bbox_format: str,
     aug_w: int,
@@ -58,6 +58,9 @@ def convert_bboxes(
         return
 
     for i, bbox in enumerate(transformed_norm_bboxes):
+        if bbox is None:
+            continue
+
         left_norm, upper_norm, right_norm, lower_norm = bbox
         if bbox_format == "pascal_voc":
             # denormalize -> (left, upper, right, lower)
@@ -78,6 +81,23 @@ def convert_bboxes(
             x_center_norm = left_norm + w_norm / 2
             y_center_norm = upper_norm + h_norm / 2
             bboxes[i] = (x_center_norm, y_center_norm, w_norm, h_norm)
+
+
+def check_for_gone_bboxes(transformed_bboxes: List[Tuple]) -> List[Optional[Tuple]]:
+    """
+    When a bounding box is cropped out of the image or something is overlaid
+    which obfuscates it, we consider the bbox to no longer be visible/valid, so
+    we will return it as None
+    """
+    checked_bboxes = []
+    for transformed_bbox in transformed_bboxes:
+        left_factor, upper_factor, right_factor, lower_factor = transformed_bbox
+        checked_bboxes.append(
+            None
+            if left_factor >= right_factor or upper_factor >= lower_factor
+            else transformed_bbox
+        )
+    return checked_bboxes
 
 
 def transform_bboxes(
@@ -113,6 +133,7 @@ def transform_bboxes(
         for bbox in norm_bboxes
     ]
 
+    transformed_norm_bboxes = check_for_gone_bboxes(transformed_norm_bboxes)
     convert_bboxes(transformed_norm_bboxes, dst_bboxes, bbox_format, aug_w, aug_h)
 
 
