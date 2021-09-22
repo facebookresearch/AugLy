@@ -5,6 +5,7 @@ from augly.text.composition import Compose, OneOf
 
 from augly.text.functional import (
     apply_lambda,
+    change_case,
     get_baseline,
     insert_punctuation_chars,
     insert_whitespace_chars,
@@ -22,6 +23,7 @@ from augly.text.functional import (
 
 from augly.text.intensity import (
     apply_lambda_intensity,
+    change_case_intensity,
     get_baseline_intensity,
     insert_punctuation_chars_intensity,
     insert_whitespace_chars_intensity,
@@ -39,6 +41,7 @@ from augly.text.intensity import (
 
 from augly.text.transforms import (
     ApplyLambda,
+    ChangeCase,
     GetBaseline,
     InsertPunctuationChars,
     InsertWhitespaceChars,
@@ -58,6 +61,7 @@ __all__ = [
     "Compose",
     "OneOf",
     "ApplyLambda",
+    "ChangeCase",
     "GetBaseline",
     "InsertPunctuationChars",
     "InsertWhitespaceChars",
@@ -72,6 +76,7 @@ __all__ = [
     "SplitWords",
     "SwapGenderedWords",
     "apply_lambda",
+    "change_case",
     "get_baseline",
     "insert_punctuation_chars",
     "insert_whitespace_chars",
@@ -86,6 +91,7 @@ __all__ = [
     "split_words",
     "swap_gendered_words",
     "apply_lambda_intensity",
+    "change_case_intensity",
     "get_baseline_intensity",
     "insert_punctuation_chars_intensity",
     "insert_whitespace_chars_intensity",

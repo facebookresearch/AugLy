@@ -125,6 +125,65 @@ class ApplyLambda(BaseTransform):
         )
 
 
+class ChangeCase(BaseTransform):
+    def __init__(
+        self,
+        granularity: str = "word",
+        cadence: float = 1.0,
+        case: str = "random",
+        seed: Optional[int] = 10,
+        p: float = 1.0,
+    ):
+        """
+        @param granularity: 'all' (case of the entire text is changed), 'word' (case of
+            random words is changed), or 'char' (case of random chars is changed)
+
+        @param cadence: how frequent (i.e. between this many characters/words) to change
+            the case. Must be at least 1.0. Non-integer values are used as an 'average'
+            cadence. Not used for granularity 'all'
+
+        @param case: the case to change words to; valid values are 'lower', 'upper',
+            'title', or 'random' (in which case every word will be randomly changed to
+            one of the 3 cases)
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.granularity = granularity
+        self.cadence = cadence
+        self.case = case
+        self.seed = seed
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Changes the case (e.g. upper, lower, title) of random chars, words, or the entire
+        text
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.change_case(
+            texts,
+            granularity=self.granularity,
+            cadence=self.cadence,
+            case=self.case,
+            seed=self.seed,
+            metadata=metadata,
+        )
+
+
 class GetBaseline(BaseTransform):
     def apply_transform(
         self,

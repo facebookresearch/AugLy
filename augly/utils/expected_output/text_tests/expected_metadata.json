@@ -10,6 +10,19 @@
             "src_length": 1
         }
     ],
+    "change_case": [
+        {
+            "cadence": 5.0,
+            "case": "random",
+            "dst_length": 1,
+            "granularity": "char",
+            "input_type": "list",
+            "intensity": 20.0,
+            "name": "change_case",
+            "seed": 10,
+            "src_length": 1
+        }
+    ],
     "compose": [
         {
             "aug_char_max": 1,

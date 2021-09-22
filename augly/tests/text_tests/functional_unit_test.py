@@ -31,6 +31,13 @@ class FunctionalTextUnitTest(unittest.TestCase):
         augmented_apply_lambda = txtaugs.apply_lambda(self.texts)
         self.assertTrue(augmented_apply_lambda[0] == self.texts[0])
 
+    def test_change_case(self) -> None:
+        augmented_words = txtaugs.change_case(self.texts[0], cadence=3.0, case="upper")
+        self.assertTrue(
+            augmented_words[0]
+            == "THE quick brown 'FOX' couldn't jump OVER the green, GRASSY hill.",
+        )
+
     def test_get_baseline(self) -> None:
         augmented_baseline = txtaugs.get_baseline(self.texts)
         self.assertTrue(

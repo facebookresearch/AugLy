@@ -80,6 +80,19 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(self.metadata, self.expected_metadata["apply_lambda"]),
         )
 
+    def test_ChangeCase(self) -> None:
+        augmented_words = txtaugs.ChangeCase(
+            granularity="char", cadence=5.0, case="random"
+        )(self.texts, metadata=self.metadata)
+
+        self.assertTrue(
+            augmented_words[0]
+            == "The qUick brown 'fox' couldn't jump over the Green, graSsy hill."
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["change_case"])
+        )
+
     def test_Compose(self) -> None:
         random.seed(1)
         augmented_compose = txtaugs.Compose(
