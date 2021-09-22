@@ -62,6 +62,55 @@ def apply_lambda(
     return aug_texts
 
 
+def change_case(
+    texts: Union[str, List[str]],
+    granularity: str = "word",
+    cadence: float = 1.0,
+    case: str = "random",
+    seed: Optional[int] = 10,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Changes the case (e.g. upper, lower, title) of random chars, words, or the entire
+    text
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param granularity: 'all' (case of the entire text is changed), 'word' (case of
+        random words is changed), or 'char' (case of random chars is changed)
+
+    @param cadence: how frequent (i.e. between this many characters/words) to change the
+        case. Must be at least 1.0. Non-integer values are used as an 'average' cadence.
+        Not used for granularity 'all'
+
+    @param case: the case to change words to; valid values are 'lower', 'upper', 'title',
+        or 'random' (in which case the case will randomly be changed to one of the
+        previous three)
+
+    @param seed: if provided, this will set the random seed to ensure consistency between
+        runs
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    case_aug = a.CaseAugmenter(case, granularity, cadence, seed)
+    aug_texts = case_aug.augment(texts)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="change_case",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
 def get_baseline(
     texts: Union[str, List[str]],
     metadata: Optional[List[Dict[str, Any]]] = None,

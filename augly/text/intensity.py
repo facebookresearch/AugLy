@@ -9,6 +9,10 @@ def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
     return intensity_func(**kwargs) if intensity_func else 100.0
 
 
+def change_case_intensity(granularity: str, cadence: float, **kwargs) -> float:
+    return char_insertion_intensity_helper(granularity, cadence)
+
+
 def get_baseline_intensity(**kwargs) -> float:
     # get_baseline simply tokenizes and detokenizes text and at most adds extra spaces
     return 0.0
