@@ -68,6 +68,19 @@
             "vary_fonts": false
         }
     ],
+    "contractions": [
+        {
+            "aug_p": 1.0,
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 100.0,
+            "mapping": "text/contractions.json",
+            "max_contraction_length": 2,
+            "name": "contractions",
+            "seed": 10,
+            "src_length": 1
+        }
+    ],
     "get_baseline": [
         {
             "dst_length": 1,

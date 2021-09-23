@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 import augly.text.functional as F
 from augly.utils import (
+    CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
     GENDERED_WORDS_MAPPING,
     MISSPELLING_DICTIONARY_PATH,
@@ -179,6 +180,63 @@ class ChangeCase(BaseTransform):
             granularity=self.granularity,
             cadence=self.cadence,
             case=self.case,
+            seed=self.seed,
+            metadata=metadata,
+        )
+
+
+class Contractions(BaseTransform):
+    def __init__(
+        self,
+        aug_p: float = 0.3,
+        mapping: Optional[Union[str, Dict[str, Any]]] = CONTRACTIONS_MAPPING,
+        max_contraction_length: int = 2,
+        seed: Optional[int] = 10,
+        p: float = 1.0,
+    ):
+        """
+        @param aug_p: the probability that each pair (or longer string) of words will be
+            replaced with the corresponding contraction, if there is one in the mapping
+
+        @param mapping: either a dictionary representing the mapping or an iopath uri
+            where the mapping is stored
+
+        @param max_contraction_length: the words in each text will be checked for matches
+            in the mapping up to this length; i.e. if 'max_contraction_length' is 3 then
+            every substring of 2 *and* 3 words will be checked
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.aug_p = aug_p
+        self.mapping = mapping
+        self.max_contraction_length = max_contraction_length
+        self.seed = seed
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Replaces pairs (or longer strings) of words with contractions given a mapping
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.contractions(
+            texts,
+            aug_p=self.aug_p,
+            mapping=self.mapping,
+            max_contraction_length=self.max_contraction_length,
             seed=self.seed,
             metadata=metadata,
         )

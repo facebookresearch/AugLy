@@ -93,6 +93,19 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(self.metadata, self.expected_metadata["change_case"])
         )
 
+    def test_Contractions(self) -> None:
+        augmented_words = txtaugs.Contractions(aug_p=1.0)(
+            ["I would call him but I do not know where he has gone"],
+            metadata=self.metadata,
+        )
+
+        self.assertTrue(
+            augmented_words[0]== "I'd call him but I don't know where he's gone"
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["contractions"])
+        )
+
     def test_Compose(self) -> None:
         random.seed(1)
         augmented_compose = txtaugs.Compose(
