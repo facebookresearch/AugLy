@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 import augly.text.augmenters as a
 import augly.text.utils as txtutils
 from augly.utils import (
+    CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
     GENDERED_WORDS_MAPPING,
     MISSPELLING_DICTIONARY_PATH,
@@ -104,6 +105,56 @@ def change_case(
     txtutils.get_metadata(
         metadata=metadata,
         function_name="change_case",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
+def contractions(
+    texts: Union[str, List[str]],
+    aug_p: float = 0.3,
+    mapping: Optional[Union[str, Dict[str, Any]]] = CONTRACTIONS_MAPPING,
+    max_contraction_length: int = 2,
+    seed: Optional[int] = 10,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Replaces pairs (or longer strings) of words with contractions given a mapping
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param aug_p: the probability that each pair (or longer string) of words will be
+        replaced with the corresponding contraction, if there is one in the mapping
+
+    @param mapping: either a dictionary representing the mapping or an iopath uri where
+        the mapping is stored
+
+    @param max_contraction_length: the words in each text will be checked for matches in
+        the mapping up to this length; i.e. if 'max_contraction_length' is 3 then every
+        substring of 2 *and* 3 words will be checked
+
+    @param seed: if provided, this will set the random seed to ensure consistency between
+        runs
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+    assert 0 <= aug_p <= 1, "'aug_p' must be in the range [0, 1]"
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    contraction_aug = a.ContractionAugmenter(
+        aug_p, mapping, max_contraction_length, seed
+    )
+    aug_texts = contraction_aug.augment(texts)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="contractions",
         aug_texts=aug_texts,
         **func_kwargs,
     )

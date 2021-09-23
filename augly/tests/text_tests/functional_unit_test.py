@@ -38,6 +38,14 @@ class FunctionalTextUnitTest(unittest.TestCase):
             == "THE quick brown 'FOX' couldn't jump OVER the green, GRASSY hill.",
         )
 
+    def test_contractions(self) -> None:
+        augmented_words = txtaugs.contractions(
+            "I would call him but I do not know where he has gone", aug_p=0.7
+        )
+        self.assertTrue(
+            augmented_words[0] == "I would call him but I don't know where he's gone"
+        )
+
     def test_get_baseline(self) -> None:
         augmented_baseline = txtaugs.get_baseline(self.texts)
         self.assertTrue(
