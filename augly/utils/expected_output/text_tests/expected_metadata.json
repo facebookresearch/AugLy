@@ -10,6 +10,19 @@
             "src_length": 1
         }
     ],
+    "change_case": [
+        {
+            "cadence": 5.0,
+            "case": "random",
+            "dst_length": 1,
+            "granularity": "char",
+            "input_type": "list",
+            "intensity": 20.0,
+            "name": "change_case",
+            "seed": 10,
+            "src_length": 1
+        }
+    ],
     "compose": [
         {
             "aug_char_max": 1,
@@ -26,7 +39,8 @@
             "n": 1,
             "name": "simulate_typos",
             "priority_words": null,
-            "src_length": 1
+            "src_length": 1,
+            "typo_type": "all"
         },
         {
             "cadence": 1.0,
@@ -52,6 +66,19 @@
             "priority_words": null,
             "src_length": 1,
             "vary_fonts": false
+        }
+    ],
+    "contractions": [
+        {
+            "aug_p": 1.0,
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 100.0,
+            "mapping": "text/contractions.json",
+            "max_contraction_length": 2,
+            "name": "contractions",
+            "seed": 10,
+            "src_length": 1
         }
     ],
     "get_baseline": [
@@ -185,6 +212,7 @@
             "aug_word_min": 1,
             "aug_word_p": 0.3,
             "dst_length": 1,
+            "ignore_words": null,
             "input_type": "list",
             "intensity": 0.0,
             "mapping": null,
@@ -210,7 +238,8 @@
             "n": 1,
             "name": "simulate_typos",
             "priority_words": null,
-            "src_length": 1
+            "src_length": 1,
+            "typo_type": "all"
         }
     ],
     "split_words": [
@@ -235,6 +264,7 @@
             "aug_word_p": 0.3,
             "dst_length": 1,
             "mapping": "text/gendered_words_mapping.json",
+            "ignore_words": null,
             "input_type": "list",
             "intensity": 30.0,
             "n": 1,

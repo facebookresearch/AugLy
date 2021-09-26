@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 import augly.text.augmenters as a
 import augly.text.utils as txtutils
 from augly.utils import (
+    CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
     GENDERED_WORDS_MAPPING,
     MISSPELLING_DICTIONARY_PATH,
@@ -55,6 +56,105 @@ def apply_lambda(
     txtutils.get_metadata(
         metadata=metadata,
         function_name="apply_lambda",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
+def change_case(
+    texts: Union[str, List[str]],
+    granularity: str = "word",
+    cadence: float = 1.0,
+    case: str = "random",
+    seed: Optional[int] = 10,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Changes the case (e.g. upper, lower, title) of random chars, words, or the entire
+    text
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param granularity: 'all' (case of the entire text is changed), 'word' (case of
+        random words is changed), or 'char' (case of random chars is changed)
+
+    @param cadence: how frequent (i.e. between this many characters/words) to change the
+        case. Must be at least 1.0. Non-integer values are used as an 'average' cadence.
+        Not used for granularity 'all'
+
+    @param case: the case to change words to; valid values are 'lower', 'upper', 'title',
+        or 'random' (in which case the case will randomly be changed to one of the
+        previous three)
+
+    @param seed: if provided, this will set the random seed to ensure consistency between
+        runs
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    case_aug = a.CaseAugmenter(case, granularity, cadence, seed)
+    aug_texts = case_aug.augment(texts)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="change_case",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
+def contractions(
+    texts: Union[str, List[str]],
+    aug_p: float = 0.3,
+    mapping: Optional[Union[str, Dict[str, Any]]] = CONTRACTIONS_MAPPING,
+    max_contraction_length: int = 2,
+    seed: Optional[int] = 10,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Replaces pairs (or longer strings) of words with contractions given a mapping
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param aug_p: the probability that each pair (or longer string) of words will be
+        replaced with the corresponding contraction, if there is one in the mapping
+
+    @param mapping: either a dictionary representing the mapping or an iopath uri where
+        the mapping is stored
+
+    @param max_contraction_length: the words in each text will be checked for matches in
+        the mapping up to this length; i.e. if 'max_contraction_length' is 3 then every
+        substring of 2 *and* 3 words will be checked
+
+    @param seed: if provided, this will set the random seed to ensure consistency between
+        runs
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+    assert 0 <= aug_p <= 1, "'aug_p' must be in the range [0, 1]"
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    contraction_aug = a.ContractionAugmenter(
+        aug_p, mapping, max_contraction_length, seed
+    )
+    aug_texts = contraction_aug.augment(texts)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="contractions",
         aug_texts=aug_texts,
         **func_kwargs,
     )
@@ -521,6 +621,7 @@ def replace_words(
     n: int = 1,
     mapping: Optional[Union[str, Dict[str, Any]]] = None,
     priority_words: Optional[List[str]] = None,
+    ignore_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -542,6 +643,8 @@ def replace_words(
     @param priority_words: list of target words that the augmenter should prioritize to
         augment first
 
+    @param ignore_words: list of words that the augmenter should not augment
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
@@ -551,7 +654,7 @@ def replace_words(
     func_kwargs = txtutils.get_func_kwargs(metadata, locals())
 
     word_aug = a.WordReplacementAugmenter(
-        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words
+        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words, ignore_words
     )
     aug_texts = word_aug.augment(texts, n)
 
@@ -575,12 +678,18 @@ def simulate_typos(
     aug_word_min: int = 1,
     aug_word_max: int = 1000,
     n: int = 1,
-    misspelling_dict_path: str = MISSPELLING_DICTIONARY_PATH,
+    typo_type: str = "all",
+    misspelling_dict_path: Optional[str] = MISSPELLING_DICTIONARY_PATH,
     priority_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
-    Simulates typos in each text using misspellings, keyboard distance, and swapping
+    Simulates typos in each text using misspellings, keyboard distance, and swapping.
+    You can specify a typo_type: charmix, which does a combination of character-level
+    modifications (delete, insert, substitute, & swap); keyboard, which swaps characters
+    which those close to each other on the QWERTY keyboard; misspelling, which replaces
+    words with misspellings defined in a dictionary file; or all, which will apply a
+    random combination of all 4
 
     @param texts: a string or a list of text documents to be augmented
 
@@ -604,7 +713,12 @@ def simulate_typos(
 
     @param n: number of augmentations to be performed for each text
 
-    @param misspelling_dict_path: iopath uri where the misspelling dictionary is stored
+    @param typo_type: the type of typos to apply to the text; valid values are
+        "misspelling", "keyboard", "charmix", or "all"
+
+    @param misspelling_dict_path: iopath uri where the misspelling dictionary is stored;
+        must be specified if typo_type is "misspelling" or "all", but otherwise can be
+        None
 
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
@@ -625,6 +739,7 @@ def simulate_typos(
         aug_word_min,
         aug_word_max,
         aug_word_p,
+        typo_type,
         misspelling_dict_path,
         priority_words,
     )
@@ -699,6 +814,7 @@ def swap_gendered_words(
     n: int = 1,
     mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
     priority_words: Optional[List[str]] = None,
+    ignore_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -724,6 +840,8 @@ def swap_gendered_words(
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
 
+    @param ignore_words: list of words that the augmenter should not augment
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
@@ -735,7 +853,7 @@ def swap_gendered_words(
     mapping = txtutils.get_gendered_words_mapping(mapping)
 
     word_aug = a.WordReplacementAugmenter(
-        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words
+        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words, ignore_words
     )
     aug_texts = word_aug.augment(texts, n)
 

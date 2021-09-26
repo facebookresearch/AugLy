@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 import augly.text.functional as F
 from augly.utils import (
+    CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
     GENDERED_WORDS_MAPPING,
     MISSPELLING_DICTIONARY_PATH,
@@ -122,6 +123,122 @@ class ApplyLambda(BaseTransform):
         """
         return F.apply_lambda(
             texts, self.aug_function, **self.kwargs, metadata=metadata
+        )
+
+
+class ChangeCase(BaseTransform):
+    def __init__(
+        self,
+        granularity: str = "word",
+        cadence: float = 1.0,
+        case: str = "random",
+        seed: Optional[int] = 10,
+        p: float = 1.0,
+    ):
+        """
+        @param granularity: 'all' (case of the entire text is changed), 'word' (case of
+            random words is changed), or 'char' (case of random chars is changed)
+
+        @param cadence: how frequent (i.e. between this many characters/words) to change
+            the case. Must be at least 1.0. Non-integer values are used as an 'average'
+            cadence. Not used for granularity 'all'
+
+        @param case: the case to change words to; valid values are 'lower', 'upper',
+            'title', or 'random' (in which case every word will be randomly changed to
+            one of the 3 cases)
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.granularity = granularity
+        self.cadence = cadence
+        self.case = case
+        self.seed = seed
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Changes the case (e.g. upper, lower, title) of random chars, words, or the entire
+        text
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.change_case(
+            texts,
+            granularity=self.granularity,
+            cadence=self.cadence,
+            case=self.case,
+            seed=self.seed,
+            metadata=metadata,
+        )
+
+
+class Contractions(BaseTransform):
+    def __init__(
+        self,
+        aug_p: float = 0.3,
+        mapping: Optional[Union[str, Dict[str, Any]]] = CONTRACTIONS_MAPPING,
+        max_contraction_length: int = 2,
+        seed: Optional[int] = 10,
+        p: float = 1.0,
+    ):
+        """
+        @param aug_p: the probability that each pair (or longer string) of words will be
+            replaced with the corresponding contraction, if there is one in the mapping
+
+        @param mapping: either a dictionary representing the mapping or an iopath uri
+            where the mapping is stored
+
+        @param max_contraction_length: the words in each text will be checked for matches
+            in the mapping up to this length; i.e. if 'max_contraction_length' is 3 then
+            every substring of 2 *and* 3 words will be checked
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.aug_p = aug_p
+        self.mapping = mapping
+        self.max_contraction_length = max_contraction_length
+        self.seed = seed
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Replaces pairs (or longer strings) of words with contractions given a mapping
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.contractions(
+            texts,
+            aug_p=self.aug_p,
+            mapping=self.mapping,
+            max_contraction_length=self.max_contraction_length,
+            seed=self.seed,
+            metadata=metadata,
         )
 
 
@@ -651,6 +768,7 @@ class ReplaceWords(BaseTransform):
         n: int = 1,
         mapping: Optional[Union[str, Dict[str, Any]]] = None,
         priority_words: Optional[List[str]] = None,
+        ignore_words: Optional[List[str]] = None,
         p: float = 1.0,
     ):
         """
@@ -668,6 +786,8 @@ class ReplaceWords(BaseTransform):
         @param priority_words: list of target words that the augmenter should prioritize
             to augment first
 
+        @param ignore_words: list of words that the augmenter should not augment
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
@@ -677,6 +797,7 @@ class ReplaceWords(BaseTransform):
         self.n = n
         self.mapping = mapping
         self.priority_words = priority_words
+        self.ignore_words = ignore_words
 
     def apply_transform(
         self,
@@ -702,6 +823,7 @@ class ReplaceWords(BaseTransform):
             n=self.n,
             mapping=self.mapping,
             priority_words=self.priority_words,
+            ignore_words=self.ignore_words,
             metadata=metadata,
         )
 
@@ -717,7 +839,8 @@ class SimulateTypos(BaseTransform):
         aug_word_min: int = 1,
         aug_word_max: int = 1000,
         n: int = 1,
-        misspelling_dict_path: str = MISSPELLING_DICTIONARY_PATH,
+        typo_type: str = "all",
+        misspelling_dict_path: Optional[str] = MISSPELLING_DICTIONARY_PATH,
         priority_words: Optional[List[str]] = None,
         p: float = 1.0,
     ):
@@ -742,7 +865,12 @@ class SimulateTypos(BaseTransform):
 
         @param n: number of augmentations to be performed for each text
 
-        @param misspelling_dict_path: iopath uri where the misspelling dictionary is stored
+        @param typo_type: the type of typos to apply to the text; valid values are
+            "misspelling", "keyboard", "charmix", or "all"
+
+        @param misspelling_dict_path: iopath uri where the misspelling dictionary is
+            stored; must be specified if typo_type is "misspelling" or "all", but
+            otherwise can be None
 
         @param priority_words: list of target words that the augmenter should
             prioritize to augment first
@@ -758,6 +886,7 @@ class SimulateTypos(BaseTransform):
         self.aug_word_min = aug_word_min
         self.aug_word_max = aug_word_max
         self.n = n
+        self.typo_type = typo_type
         self.misspelling_dict_path = misspelling_dict_path
         self.priority_words = priority_words
 
@@ -767,7 +896,12 @@ class SimulateTypos(BaseTransform):
         metadata: Optional[List[Dict[str, Any]]] = None,
     ) -> List[str]:
         """
-        Simulates typos in each text using misspellings, keyboard distance, and swapping
+        Simulates typos in each text using misspellings, keyboard distance, and swapping.
+        You can specify a typo_type: charmix, which does a combination of character-level
+        modifications (delete, insert, substitute, & swap); keyboard, which swaps
+        characters which those close to each other on the QWERTY keyboard; misspelling,
+        which replaces words with misspellings defined in a dictionary file; or all,
+        which will apply a random combination of all 4
 
         @param texts: a string or a list of text documents to be augmented
 
@@ -787,6 +921,7 @@ class SimulateTypos(BaseTransform):
             aug_word_min=self.aug_word_min,
             aug_word_max=self.aug_word_max,
             n=self.n,
+            typo_type=self.typo_type,
             misspelling_dict_path=self.misspelling_dict_path,
             priority_words=self.priority_words,
             metadata=metadata,
@@ -865,6 +1000,7 @@ class SwapGenderedWords(BaseTransform):
         n: int = 1,
         mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
         priority_words: Optional[List[str]] = None,
+        ignore_words: Optional[List[str]] = None,
         p: float = 1.0,
     ):
         """
@@ -883,6 +1019,8 @@ class SwapGenderedWords(BaseTransform):
         @param priority_words: list of target words that the augmenter should
             prioritize to augment first
 
+        @param ignore_words: list of words that the augmenter should not augment
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
@@ -892,6 +1030,7 @@ class SwapGenderedWords(BaseTransform):
         self.n = n
         self.mapping = mapping
         self.priority_words = priority_words
+        self.ignore_words = ignore_words
 
     def apply_transform(
         self,
@@ -921,5 +1060,6 @@ class SwapGenderedWords(BaseTransform):
             n=self.n,
             mapping=self.mapping,
             priority_words=self.priority_words,
+            ignore_words=self.ignore_words,
             metadata=metadata,
         )

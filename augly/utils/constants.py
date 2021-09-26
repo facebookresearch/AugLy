@@ -61,6 +61,7 @@ FONT_PATH = os.path.join(FONTS_DIR, "NotoNaskhArabic-Regular.ttf")
 MEME_DEFAULT_FONT = os.path.join(FONTS_DIR, "Raleway-ExtraBold.ttf")
 
 # text augmentation assets
+CONTRACTIONS_MAPPING = os.path.join(TEXT_DIR, "contractions.json")
 FUN_FONTS_PATH = os.path.join(TEXT_DIR, "fun_fonts.json")
 FUN_FONTS_GREEK_PATH = os.path.join(TEXT_DIR, "fun_fonts_greek.json")
 UNICODE_MAPPING_PATH = os.path.join(TEXT_DIR, "letter_unicode_mapping.json")

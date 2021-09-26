@@ -47,6 +47,7 @@ class WordReplacementAugmenter(WordAugmenter):
         aug_word_p: float,
         mapping: Optional[Union[str, Dict[str, Any]]],
         priority_words: Optional[List[str]],
+        ignore_words: Optional[List[str]],
     ):
         super().__init__(
             action=Action.SUBSTITUTE,
@@ -57,6 +58,9 @@ class WordReplacementAugmenter(WordAugmenter):
         self.word_mapping = self.get_mapping(mapping)
         self.priority_words = (
             set(priority_words) if priority_words is not None else priority_words
+        )
+        self.ignore_words = (
+            set(ignore_words) if ignore_words is not None else set()
         )
 
     def get_mapping(
