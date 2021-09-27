@@ -126,6 +126,21 @@
             "vary_chars": false
         }
     ],
+    "merge_words": [
+        {
+            "aug_word_max": 1000,
+            "aug_word_min": 1,
+            "aug_word_p": 0.3,
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 30.0,
+            "min_char": 2,
+            "n": 1,
+            "name": "merge_words",
+            "priority_words": null,
+            "src_length": 1
+        }
+    ],
     "replace_bidirectional": [
         {
             "dst_length": 1,

@@ -40,6 +40,10 @@ def insert_zero_width_chars_intensity(
     return char_insertion_intensity_helper(granularity, cadence)
 
 
+def merge_words_intensity(aug_word_p: float, aug_word_max: int, **kwargs) -> float:
+    return replace_intensity_helper(aug_word_p, aug_word_max)
+
+
 def replace_bidirectional_intensity(**kwargs):
     return 100.0
 

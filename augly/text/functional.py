@@ -327,6 +327,57 @@ def insert_zero_width_chars(
     return aug_texts
 
 
+def merge_words(
+    texts: Union[str, List[str]],
+    aug_word_p: float = 0.3,
+    min_char: int = 2,
+    aug_word_min: int = 1,
+    aug_word_max: int = 1000,
+    n: int = 1,
+    priority_words: Optional[List[str]] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> List[str]:
+    """
+    Merges words in the text together
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param aug_word_p: probability of words to be augmented
+
+    @param min_char: minimum # of characters in a word to be merged
+
+    @param aug_word_min: minimum # of words to be augmented
+
+    @param aug_word_max: maximum # of words to be augmented
+
+    @param n: number of augmentations to be performed for each text
+
+    @param priority_words: list of target words that the augmenter should
+        prioritize to augment first
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    merge_aug = a.WordsAugmenter(
+        "delete", min_char, aug_word_min, aug_word_max, aug_word_p, priority_words
+    )
+    aug_texts = merge_aug.augment(texts, n)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="merge_words",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
 def replace_bidirectional(
     texts: Union[str, List[str]],
     granularity: str = "all",
@@ -791,8 +842,8 @@ def split_words(
     """
     func_kwargs = txtutils.get_func_kwargs(metadata, locals())
 
-    split_aug = a.SplitWordsAugmenter(
-        min_char, aug_word_min, aug_word_max, aug_word_p, priority_words
+    split_aug = a.WordsAugmenter(
+        "split", min_char, aug_word_min, aug_word_max, aug_word_p, priority_words
     )
     aug_texts = split_aug.augment(texts, n)
 
