@@ -415,6 +415,69 @@ class InsertZeroWidthChars(BaseTransform):
         )
 
 
+class MergeWords(BaseTransform):
+    def __init__(
+        self,
+        aug_word_p: float = 0.3,
+        min_char: int = 2,
+        aug_word_min: int = 1,
+        aug_word_max: int = 1000,
+        n: int = 1,
+        priority_words: Optional[List[str]] = None,
+        p: float = 1.0,
+    ):
+        """
+        @param aug_word_p: probability of words to be augmented
+
+        @param min_char: minimum # of characters in a word to be merged
+
+        @param aug_word_min: minimum # of words to be augmented
+
+        @param aug_word_max: maximum # of words to be augmented
+
+        @param n: number of augmentations to be performed for each text
+
+        @param priority_words: list of target words that the augmenter should
+            prioritize to augment first
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.aug_word_p = aug_word_p
+        self.min_char = min_char
+        self.aug_word_min = aug_word_min
+        self.aug_word_max = aug_word_max
+        self.n = n
+        self.priority_words = priority_words
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[str]:
+        """
+        Merges words in the text together
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the list of augmented text documents
+        """
+        return F.merge_words(
+            texts,
+            aug_word_p=self.aug_word_p,
+            min_char=self.min_char,
+            aug_word_min=self.aug_word_min,
+            aug_word_max=self.aug_word_max,
+            n=self.n,
+            priority_words=self.priority_words,
+            metadata=metadata,
+        )
+
+
 class ReplaceBidirectional(BaseTransform):
     def __init__(
         self,

@@ -204,6 +204,18 @@ class TransformsTextUnitTest(unittest.TestCase):
             ),
         )
 
+    def test_MergeWords(self) -> None:
+        aug_merge_words = txtaugs.MergeWords(aug_word_p=0.3)(
+            self.texts, metadata=self.metadata
+        )
+        self.assertTrue(
+            aug_merge_words[0]
+            == "The quickbrown 'fox' couldn'tjump overthe green, grassy hill."
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["merge_words"]),
+        )
+
     def test_ReplaceBidirectional(self) -> None:
         aug_bidirectional_text = txtaugs.ReplaceBidirectional()(
             self.texts, metadata=self.metadata
