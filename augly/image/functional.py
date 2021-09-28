@@ -935,7 +935,6 @@ def meme_format(
     draw.multiline_text(
         (x_pos, y_pos),
         text,
-        # pyre-fixme[61]: `font` may not be initialized here.
         # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 3rd param but got
         #  `FreeTypeFont`.
         font=font,
