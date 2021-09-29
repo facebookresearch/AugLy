@@ -231,8 +231,7 @@ def blur(
     vdutils.apply_ffmpeg_augmenter(blur_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="blur", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="blur", **func_kwargs)
 
     return output_path or video_path
 
@@ -469,8 +468,7 @@ def contrast(
     vdutils.apply_ffmpeg_augmenter(contrast_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="contrast", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="contrast", **func_kwargs)
 
     return output_path or video_path
 
@@ -516,8 +514,7 @@ def crop(
     vdutils.apply_ffmpeg_augmenter(crop_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="crop", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="crop", **func_kwargs)
 
     return output_path or video_path
 
@@ -588,8 +585,7 @@ def fps(
     vdutils.apply_ffmpeg_augmenter(fps_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="fps", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="fps", **func_kwargs)
 
     return output_path or video_path
 
@@ -651,8 +647,7 @@ def hflip(
     vdutils.apply_ffmpeg_augmenter(hflip_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="hflip", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="hflip", **func_kwargs)
 
     return output_path or video_path
 
@@ -685,13 +680,11 @@ def hstack(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    hstack_aug = af.VideoAugmenterByStack(
-        second_video_path, use_second_audio, "hstack")
+    hstack_aug = af.VideoAugmenterByStack(second_video_path, use_second_audio, "hstack")
     vdutils.apply_ffmpeg_augmenter(hstack_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="hstack", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="hstack", **func_kwargs)
 
     return output_path or video_path
 
@@ -763,8 +756,7 @@ def insert_in_background(
         helpers.add_silent_audio(video_path, tmp_video_path)
 
         if background_path is None:
-            helpers.create_color_video(
-                resized_bg_path, video_duration, height, width)
+            helpers.create_color_video(resized_bg_path, video_duration, height, width)
         else:
             resize(background_path, resized_bg_path, height, width)
             helpers.add_silent_audio(resized_bg_path)
@@ -781,8 +773,7 @@ def insert_in_background(
             desired_bg_duration = video_duration / source_percentage - video_duration
 
             # if background vid isn't long enough, loop
-            num_loops_needed = math.ceil(
-                desired_bg_duration / bg_video_duration)
+            num_loops_needed = math.ceil(desired_bg_duration / bg_video_duration)
             if num_loops_needed > 1:
                 loop(resized_bg_path, num_loops=num_loops_needed)
                 bg_video_duration *= num_loops_needed
@@ -794,8 +785,7 @@ def insert_in_background(
 
         if offset > 0:
             before_path = os.path.join(tmpdir, "before.mp4")
-            trim(resized_bg_path, before_path,
-                 start=bg_start, end=bg_start + offset)
+            trim(resized_bg_path, before_path, start=bg_start, end=bg_start + offset)
             video_paths.append(before_path)
             src_video_path_index = 1
         else:
@@ -889,8 +879,7 @@ def replace_with_background(
 
         # create bg video
         if background_path is None:
-            helpers.create_color_video(
-                resized_bg_path, video_duration, height, width)
+            helpers.create_color_video(resized_bg_path, video_duration, height, width)
         else:
             resize(background_path, resized_bg_path, height, width)
             helpers.add_silent_audio(resized_bg_path)
@@ -988,8 +977,7 @@ def loop(
     vdutils.apply_ffmpeg_augmenter(loop_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="loop", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="loop", **func_kwargs)
 
     return output_path or video_path
 
@@ -1105,8 +1093,7 @@ def overlay(
         overlay_h = int(video_info["height"] * overlay_size)
         overlay_w = int(video_info["width"] * overlay_size)
 
-        _, tmp_overlay_path = tempfile.mkstemp(
-            suffix=os.path.splitext(overlay_path)[1])
+        _, tmp_overlay_path = tempfile.mkstemp(suffix=os.path.splitext(overlay_path)[1])
 
         if utils.is_image_file(overlay_path):
             imaugs.resize(overlay_path, tmp_overlay_path, overlay_w, overlay_h)
@@ -1122,8 +1109,7 @@ def overlay(
         os.remove(tmp_overlay_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="overlay", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="overlay", **func_kwargs)
 
     return output_path or video_path
 
@@ -1213,8 +1199,7 @@ def overlay_emoji(
     video_info = helpers.get_video_info(video_path)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        local_emoji_path = utils.pathmgr.get_local_path(
-            emoji_path, cache_dir=tmpdir)
+        local_emoji_path = utils.pathmgr.get_local_path(emoji_path, cache_dir=tmpdir)
         utils.validate_image_path(local_emoji_path)
 
         emoji_output_path = os.path.join(tmpdir, "modified_emoji.png")
@@ -1225,8 +1210,7 @@ def overlay_emoji(
             height=int(emoji_size * video_info["height"]),
             width=int(emoji_size * video_info["height"]),
         )
-        imaugs.opacity(emoji_output_path,
-                       output_path=emoji_output_path, level=opacity)
+        imaugs.opacity(emoji_output_path, output_path=emoji_output_path, level=opacity)
 
         overlay(
             video_path,
@@ -1542,8 +1526,7 @@ def pad(
     vdutils.apply_ffmpeg_augmenter(pad_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="pad", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="pad", **func_kwargs)
 
     return output_path or video_path
 
@@ -1598,8 +1581,7 @@ def perspective_transform_and_shake(
             "dy": u * rng.normal(0, shake_radius),
         }
 
-    vdutils.apply_to_each_frame(
-        perspective_func, video_path, output_path, get_dx_dy)
+    vdutils.apply_to_each_frame(perspective_func, video_path, output_path, get_dx_dy)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -1746,8 +1728,7 @@ def replace_with_color_frames(
             video_duration - offset if offset + duration >= video_duration else duration
         )
         color_path = os.path.join(tmpdir, "color_frames.mp4")
-        helpers.create_color_video(
-            color_path, color_duration, height, width, color)
+        helpers.create_color_video(color_path, color_duration, height, width, color)
 
         if helpers.has_audio_stream(video_path):
             audio_path = os.path.join(tmpdir, "audio.aac")
@@ -1772,8 +1753,7 @@ def replace_with_color_frames(
             trim(video_path, after_path, start=offset + duration)
             video_paths.append(after_path)
 
-        concat(video_paths, output_path,
-               src_video_path_index=src_video_path_index)
+        concat(video_paths, output_path, src_video_path_index=src_video_path_index)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, **func_kwargs)
@@ -1814,8 +1794,7 @@ def resize(
     vdutils.apply_ffmpeg_augmenter(resize_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="resize", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="resize", **func_kwargs)
 
     return output_path or video_path
 
@@ -1849,8 +1828,7 @@ def rotate(
     vdutils.apply_ffmpeg_augmenter(rotate_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="rotate", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="rotate", **func_kwargs)
 
     return output_path or video_path
 
@@ -1883,8 +1861,7 @@ def scale(
     vdutils.apply_ffmpeg_augmenter(scale_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="scale", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="scale", **func_kwargs)
 
     return output_path or video_path
 
@@ -1946,8 +1923,7 @@ def shift(
         )
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="shift", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="shift", **func_kwargs)
 
     return output_path or video_path
 
@@ -2093,8 +2069,7 @@ def trim(
     vdutils.apply_ffmpeg_augmenter(trim_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="trim", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="trim", **func_kwargs)
 
     return output_path or video_path
 
@@ -2124,8 +2099,7 @@ def vflip(
     vdutils.apply_ffmpeg_augmenter(vflip_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="vflip", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
 
     return output_path or video_path
 
@@ -2158,21 +2132,18 @@ def vstack(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    vstack_aug = af.VideoAugmenterByStack(
-        second_video_path, use_second_audio, "vstack")
+    vstack_aug = af.VideoAugmenterByStack(second_video_path, use_second_audio, "vstack")
     vdutils.apply_ffmpeg_augmenter(vstack_aug, video_path, output_path)
 
     if metadata is not None:
-        helpers.get_metadata(
-            metadata=metadata, function_name="vstack", **func_kwargs)
+        helpers.get_metadata(metadata=metadata, function_name="vstack", **func_kwargs)
 
     return output_path or video_path
 
 
 def augment_audio(
     video_path: str,
-    audio_aug_function: Callable[...,
-                                 Tuple[np.ndarray, int]] = audaugs.apply_lambda,
+    audio_aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
     output_path: Optional[str] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
