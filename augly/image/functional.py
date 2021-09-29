@@ -74,7 +74,7 @@ def apply_lambda(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def apply_pil_filter(
@@ -132,7 +132,7 @@ def apply_pil_filter(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def blur(
@@ -183,7 +183,7 @@ def blur(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def brightness(
@@ -228,7 +228,7 @@ def brightness(
         metadata=metadata, function_name="brightness", **func_kwargs
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def change_aspect_ratio(
@@ -283,7 +283,7 @@ def change_aspect_ratio(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def clip_image_size(
@@ -357,7 +357,7 @@ def clip_image_size(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def color_jitter(
@@ -414,7 +414,7 @@ def color_jitter(
         metadata=metadata, function_name="color_jitter", **func_kwargs
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def contrast(
@@ -466,7 +466,7 @@ def contrast(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def convert_color(
@@ -619,7 +619,7 @@ def crop(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def encoding_quality(
@@ -672,7 +672,7 @@ def encoding_quality(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def grayscale(
@@ -737,7 +737,7 @@ def grayscale(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def hflip(
@@ -778,7 +778,7 @@ def hflip(
         metadata=metadata, function_name="hflip", **func_kwargs
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def masked_composite(
@@ -836,7 +836,7 @@ def masked_composite(
     else:
         aug_image = transform_function(image)
         if mask is None:
-            masked_image = imutils.ret_and_save_image(aug_image, output_path)
+            masked_image = imutils.ret_and_save_image(aug_image, output_path, src_mode)
         else:
             mask = imutils.validate_and_load_image(mask)
             assert image.size == mask.size, "Mask size must be equal to image size"
@@ -1007,7 +1007,7 @@ def opacity(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def overlay_emoji(
@@ -1170,7 +1170,7 @@ def overlay_image(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def overlay_onto_background_image(
@@ -1257,7 +1257,7 @@ def overlay_onto_background_image(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def overlay_onto_screenshot(
@@ -1465,7 +1465,7 @@ def overlay_stripes(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def overlay_text(
@@ -1652,7 +1652,7 @@ def pad(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def pad_square(
@@ -1818,7 +1818,7 @@ def perspective_transform(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def pixelization(
@@ -1872,7 +1872,7 @@ def pixelization(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def random_noise(
@@ -1949,7 +1949,7 @@ def random_noise(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def resize(
@@ -2007,7 +2007,7 @@ def resize(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def rotate(
@@ -2070,7 +2070,7 @@ def rotate(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def saturation(
@@ -2121,7 +2121,7 @@ def saturation(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def scale(
@@ -2198,7 +2198,7 @@ def scale(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def sharpen(
@@ -2241,7 +2241,7 @@ def sharpen(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     imutils.get_metadata(metadata=metadata, function_name="sharpen", **func_kwargs)
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def shuffle_pixels(
@@ -2322,7 +2322,7 @@ def shuffle_pixels(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def vflip(
@@ -2361,4 +2361,4 @@ def vflip(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)

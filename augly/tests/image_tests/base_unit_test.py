@@ -103,7 +103,7 @@ class BaseImageUnitTest(unittest.TestCase):
         dst = transform_class(
             self.img, metadata=metadata, bboxes=bboxes, bbox_format=bbox_format
         )
-
+        self.assertTrue(are_equal_images(self.img, dst))
         self.assertTrue(
             are_equal_metadata(metadata, self.metadata[fname], metadata_exclude_keys)
         )
