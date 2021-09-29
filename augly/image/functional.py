@@ -123,7 +123,7 @@ def apply_pil_filter(
         metadata, func_kwargs, filter_type=getattr(ftr, "name", filter_type)
     )
 
-    aug_image = image.filter(ftr)  # pyre-ignore PIL.ImageFilter.Filter isn't recognized
+    aug_image = image.filter(ftr)
 
     imutils.get_metadata(
         metadata=metadata,
@@ -174,7 +174,6 @@ def blur(
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
-    # pyre-fixme[6]: Expected `Type[typing.Any]` for 1st param but got `GaussianBlur`.
     aug_image = image.filter(ImageFilter.GaussianBlur(radius))
 
     imutils.get_metadata(
@@ -539,6 +538,8 @@ def convert_color(
     @returns: Image.Image - Augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
+    # pyre-fixme[6]: Expected `Union[typing_extensions.Literal[0],
+    #  typing_extensions.Literal[1]]` for 4th param but got `int`.
     aug_image = image.convert(mode, matrix, dither, palette, colors)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
@@ -1807,6 +1808,7 @@ def perspective_transform(
                 "Cannot crop out black border of a perspective transform this intense"
             )
 
+        # pyre-fixme[16]: `None` has no attribute `crop`.
         aug_image = aug_image.crop((new_left, new_top, new_right, new_bottom))
 
     imutils.get_metadata(
@@ -2183,6 +2185,10 @@ def scale(
     scaled_width = int(width * factor)
     scaled_height = int(height * factor)
 
+    # pyre-fixme[6]: Expected `Union[typing_extensions.Literal[0],
+    #  typing_extensions.Literal[1], typing_extensions.Literal[2],
+    #  typing_extensions.Literal[3], typing_extensions.Literal[4],
+    #  typing_extensions.Literal[5], None]` for 2nd param but got `int`.
     aug_image = image.resize((scaled_width, scaled_height), resample=interpolation)
 
     imutils.get_metadata(
