@@ -173,6 +173,8 @@ def blur(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+    src_mode = image.mode
 
     aug_image = image.filter(ImageFilter.GaussianBlur(radius))
 
@@ -224,6 +226,7 @@ def brightness(
     aug_image = ImageEnhance.Brightness(image).enhance(factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
     imutils.get_metadata(
         metadata=metadata, function_name="brightness", **func_kwargs
     )
@@ -269,6 +272,7 @@ def change_aspect_ratio(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
     area = width * height
@@ -340,6 +344,7 @@ def clip_image_size(
 
     image = imutils.validate_and_load_image(image)
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
     aug_image = image
 
     if min_resolution is not None and image.width * image.height < min_resolution:
@@ -410,6 +415,7 @@ def color_jitter(
     aug_image = ImageEnhance.Color(aug_image).enhance(saturation_factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
     imutils.get_metadata(
         metadata=metadata, function_name="color_jitter", **func_kwargs
     )
@@ -455,6 +461,7 @@ def contrast(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     enhancer = ImageEnhance.Contrast(image)
     aug_image = enhancer.enhance(factor)
@@ -604,6 +611,7 @@ def crop(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
 
@@ -660,6 +668,7 @@ def encoding_quality(
     image = imutils.validate_and_load_image(image).convert("RGB")
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     buffer = io.BytesIO()
     image.save(buffer, format="JPEG", quality=quality)
@@ -717,6 +726,7 @@ def grayscale(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     # If grayscale image is passed in, return it
     if image.mode == "L":
@@ -774,6 +784,7 @@ def hflip(
     aug_image = image.transpose(Image.FLIP_LEFT_RIGHT)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
     imutils.get_metadata(
         metadata=metadata, function_name="hflip", **func_kwargs
     )
@@ -911,6 +922,7 @@ def meme_format(
 
     image = imutils.validate_and_load_image(image)
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
 
@@ -994,6 +1006,7 @@ def opacity(
     image = imutils.validate_and_load_image(image).convert(mode="RGBA")
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     mask = image.convert("RGBA").getchannel("A")
     mask = Image.fromarray((np.array(mask) * level).astype(np.uint8))
@@ -1058,6 +1071,7 @@ def overlay_emoji(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     local_emoji_path = utils.pathmgr.get_local_path(emoji_path)
 
@@ -1142,6 +1156,7 @@ def overlay_image(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     overlay = imutils.validate_and_load_image(overlay)
 
@@ -1232,6 +1247,7 @@ def overlay_onto_background_image(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     if scale_bg:
         background_image = resize(
@@ -1318,6 +1334,7 @@ def overlay_onto_screenshot(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     template, bbox = imutils.get_template_and_bbox(
         template_filepath, template_bboxes_filepath
@@ -1419,6 +1436,7 @@ def overlay_stripes(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
 
@@ -1531,6 +1549,7 @@ def overlay_text(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     text_lists = text if all(isinstance(t, list) for t in text) else [text]
     assert (
@@ -1632,6 +1651,7 @@ def pad(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
 
@@ -1692,6 +1712,7 @@ def pad_square(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
 
@@ -1779,6 +1800,7 @@ def perspective_transform(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     rng = np.random.RandomState(seed) if seed is not None else np.random
     width, height = image.size
@@ -1860,6 +1882,7 @@ def pixelization(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
     aug_image = image.resize((int(width * ratio), int(height * ratio)))
@@ -1921,6 +1944,7 @@ def random_noise(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     if seed is not None:
         np.random.seed(seed=seed)
@@ -1996,6 +2020,7 @@ def resize(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     im_w, im_h = image.size
     aug_image = image.resize((width or im_w, height or im_h))
@@ -2049,6 +2074,7 @@ def rotate(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     rotated_image = image.rotate(degrees, expand=True)
 
@@ -2111,6 +2137,7 @@ def saturation(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     aug_image = ImageEnhance.Color(image).enhance(factor)
 
@@ -2176,6 +2203,7 @@ def scale(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     if interpolation is None:
         interpolation = Image.LANCZOS if factor < 1 else Image.BILINEAR
@@ -2239,6 +2267,7 @@ def sharpen(
     aug_image = ImageEnhance.Sharpness(image).enhance(factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
     imutils.get_metadata(metadata=metadata, function_name="sharpen", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
@@ -2291,6 +2320,7 @@ def shuffle_pixels(
     assert 0.0 <= factor <= 1.0, "'factor' must be a value in range [0, 1]"
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     if factor == 0.0:
         aug_image = image
@@ -2359,6 +2389,7 @@ def vflip(
     aug_image = image.transpose(Image.FLIP_TOP_BOTTOM)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
     imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
