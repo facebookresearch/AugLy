@@ -23,6 +23,9 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
     def test_ApplyLambda(self):
         self.evaluate_class(vidaugs.ApplyLambda(), fname="apply_lambda")
 
+    def test_AugmentAudio(self):
+        self.evaluate_class(vidaugs.AugmentAudio(), fname="augment_audio")
+
     def test_InsertInBackground(self):
         self.evaluate_class(
             vidaugs.InsertInBackground(offset_factor=0.25),
@@ -74,9 +77,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
     def test_ReplaceWithBackground(self):
         self.evaluate_class(
             vidaugs.ReplaceWithBackground(
-                source_offset=0.1,
-                background_offset=0,
-                source_percentage=0.7,
+                source_offset=0.1, background_offset=0, source_percentage=0.7,
             ),
             fname="replace_with_background",
         )
