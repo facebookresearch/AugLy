@@ -58,12 +58,15 @@ def apply_lambda(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = deepcopy(locals())
+    
     if aug_function is not None:
         try:
             func_kwargs["aug_function"] = aug_function.__name__
         except AttributeError:
             func_kwargs["aug_function"] = type(aug_function).__name__
     func_kwargs = imutils.get_func_kwargs(metadata, func_kwargs)
+    
+    src_mode = image.mode
 
     aug_image = aug_function(image, **kwargs)
 
@@ -122,6 +125,7 @@ def apply_pil_filter(
     func_kwargs = imutils.get_func_kwargs(
         metadata, func_kwargs, filter_type=getattr(ftr, "name", filter_type)
     )
+    src_mode = image.mode
 
     aug_image = image.filter(ftr)
 
@@ -835,12 +839,15 @@ def masked_composite(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = deepcopy(locals())
+    
     if transform_function is not None:
         try:
             func_kwargs["transform_function"] = transform_function.__name__
         except AttributeError:
             func_kwargs["transform_function"] = type(transform_function).__name__
     func_kwargs = imutils.get_func_kwargs(metadata, func_kwargs)
+    
+    src_mode = image.mode
 
     if transform_function is None:
         masked_image = imutils.ret_and_save_image(image, output_path)
@@ -860,7 +867,7 @@ def masked_composite(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(masked_image, output_path)
+    return imutils.ret_and_save_image(masked_image, output_path, src_mode)
 
 
 def meme_format(
@@ -1366,7 +1373,7 @@ def overlay_onto_screenshot(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(template, output_path)
+    return imutils.ret_and_save_image(template, output_path, src_mode)
 
 
 def overlay_stripes(
@@ -1600,7 +1607,7 @@ def overlay_text(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(image, output_path)
+    return imutils.ret_and_save_image(image, output_path, src_mode)
 
 
 def pad(
