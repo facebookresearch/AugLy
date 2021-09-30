@@ -73,10 +73,26 @@ class TransformsImageUnitTest(BaseImageUnitTest):
         self.evaluate_class(imaugs.Crop(), fname="crop")
 
     def test_DistortBarrel(self):
-        self.evaluate_class(imaugs.DistortBarrel(a=0.1), fname="distort_barrel")
+        try:
+            self.evaluate_class(imaugs.DistortBarrel(a=0.1), fname="distort_barrel")
+        except NotImplementedError:
+            pass
+        else:
+            self.assertTrue(
+                    False,
+                    "This augmentation doesn't have bounding box support, so should fail with NotImplementedError"
+            )
 
     def test_DistortPincushion(self):
-        self.evaluate_class(imaugs.DistortPincushion(a=0.1), fname="distort_pincushion")
+        try:
+            self.evaluate_class(imaugs.DistortPincushion(a=0.1), fname="distort_pincushion")
+        except NotImplementedError:
+            pass
+        else:
+            self.assertTrue(
+                    False,
+                    "This augmentation doesn't have bounding box support, so should fail with NotImplementedError"
+            )
 
     def test_EncodingQuality(self):
         self.evaluate_class(
