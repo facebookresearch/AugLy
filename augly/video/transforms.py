@@ -5,6 +5,9 @@ import os
 import random
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+import numpy as np
+
+import augly.audio as audaugs
 import augly.utils as utils
 import augly.video.functional as F
 from augly.video.helpers import identity_function
@@ -267,6 +270,58 @@ class AudioSwap(BaseTransform):
         """
         return F.audio_swap(
             video_path, self.audio_path, output_path, self.offset, metadata=metadata
+        )
+
+
+class AugmentAudio(BaseTransform):
+    def __init__(
+        self,
+        audio_aug: Callable[..., Tuple[np.ndarray, int]
+                            ] = audaugs.apply_lambda,
+        p: float = 1.0,
+        **audio_aug_kwargs,
+    ):
+        """
+        @param audio_aug: the augmentation function to be applied onto the video's audio
+        track. Should have the standard API of an AugLy audio augmentation, i.e. expect input audio
+        as a numpy array or path & output path as input, and output the augmented audio to the
+        output path
+
+        @param p: the probability of the transform being applied; default value is 1.0
+
+        @param audio_aug_kwargs: the input attributes to be passed into `audio_aug`
+
+        """
+        super().__init__(p)
+        self.audio_aug = audio_aug
+        self.audio_aug_kwargs = audio_aug_kwargs
+
+    def apply_transform(
+        self,
+        video_path: str,
+        output_path: str,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ):
+        """
+        Augments the audio track of the input video using a given AugLy audio augmentation
+
+        @param video_path: the path to the video to be augmented
+
+        @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+        @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the path to the augmented video
+        """
+        return F.augment_audio(
+            video_path,
+            self.audio_aug,
+            output_path,
+            self.audio_aug_kwargs,
+            metadata=metadata,
         )
 
 
@@ -581,7 +636,7 @@ class Concat(BaseTransform):
         video_paths = (
             self.other_video_paths[: self.src_video_path_index]
             + [video_path]
-            + self.other_video_paths[self.src_video_path_index :]
+            + self.other_video_paths[self.src_video_path_index:]
         )
         return F.concat(
             video_paths, output_path, self.src_video_path_index, metadata=metadata
@@ -801,10 +856,7 @@ class HFlip(BaseTransform):
 
 class HStack(BaseTransform):
     def __init__(
-        self,
-        second_video_path: str,
-        use_second_audio: bool = False,
-        p: float = 1.0,
+        self, second_video_path: str, use_second_audio: bool = False, p: float = 1.0,
     ):
         """
         @param second_video_path: the path to the video that will be stacked
@@ -2074,10 +2126,7 @@ class VFlip(BaseTransform):
 
 class VStack(BaseTransform):
     def __init__(
-        self,
-        second_video_path: str,
-        use_second_audio: bool = False,
-        p: float = 1.0,
+        self, second_video_path: str, use_second_audio: bool = False, p: float = 1.0,
     ):
         """
         @param second_video_path: the path to the video that will be stacked on
@@ -2245,10 +2294,7 @@ class RandomBrightness(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.brightness(
-            video_path,
-            output_path,
-            level=self.chosen_value,
-            metadata=metadata,
+            video_path, output_path, level=self.chosen_value, metadata=metadata,
         )
 
 
@@ -2395,10 +2441,7 @@ class RandomEncodingQuality(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.encoding_quality(
-            video_path,
-            output_path,
-            quality=int(self.chosen_value),
-            metadata=metadata,
+            video_path, output_path, quality=int(self.chosen_value), metadata=metadata,
         )
 
 
@@ -2512,10 +2555,7 @@ class RandomPixelization(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.pixelization(
-            video_path,
-            output_path,
-            ratio=self.chosen_value,
-            metadata=metadata,
+            video_path, output_path, ratio=self.chosen_value, metadata=metadata,
         )
 
 
