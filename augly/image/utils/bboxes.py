@@ -27,11 +27,15 @@ def crop_bboxes_helper(
 
 
 def distort_barrel_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
-    raise NotImplementedError("Bounding box support has not yet been added to this augmentation")
+    raise NotImplementedError(
+        "Bounding box support has not yet been added to this augmentation",
+    )
 
 
 def distort_pincushion_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
-    raise NotImplementedError("Bounding box support has not yet been added to this augmentation")
+    raise NotImplementedError(
+        "Bounding box support has not yet been added to this augmentation",
+    )
 
 
 def hflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:

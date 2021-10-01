@@ -286,11 +286,11 @@ class DistortBarrel(BaseTransform):
         self.d = d
 
     def apply_transform(
-            self,
-            image: Image.Image,
-            metadata: Optional[List[Dict[str, Any]]] = None,
-            bboxes: Optional[List[Tuple]] = None,
-            bbox_format: Optional[str] = None,
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Applies barrel distortion to the image
@@ -351,11 +351,11 @@ class DistortPincushion(BaseTransform):
         self.d = d
 
     def apply_transform(
-            self,
-            image: Image.Image,
-            metadata: Optional[List[Dict[str, Any]]] = None,
-            bboxes: Optional[List[Tuple]] = None,
-            bbox_format: Optional[str] = None,
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Applies pinchusion distortion to the image
