@@ -185,8 +185,8 @@ def augment_audio(
             tmpfile.name, metadata=audio_metadata, **audio_aug_kwargs
         )
         audutils.ret_and_save_audio(aug_audio, tmpfile.name, aug_sr)
-        audio_swap(video_path, tmpfile.name)
-
+        audio_swap(video_path, tmpfile.name,output_path=output_path or video_path)
+    
     if metadata is not None:
         helpers.get_metadata(
             metadata=metadata,
