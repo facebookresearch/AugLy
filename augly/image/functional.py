@@ -629,6 +629,8 @@ def distort_barrel(
     c: float = 0.0,
     d: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Applies barrel distortion to the image with the following equation.
@@ -676,6 +678,14 @@ def distort_barrel(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image).convert("RGB")
@@ -705,6 +715,8 @@ def distort_pincushion(
     c: float = 0.0,
     d: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     To see effects of the coefficients in detail refer to
@@ -745,6 +757,14 @@ def distort_pincushion(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
