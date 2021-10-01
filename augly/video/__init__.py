@@ -48,7 +48,6 @@ from augly.video.functional import (
     vstack,
 )
 from augly.video.transforms import (
-    FPS,
     AddNoise,
     ApplyLambda,
     AudioSwap,
@@ -63,6 +62,7 @@ from augly.video.transforms import (
     Contrast,
     Crop,
     EncodingQuality,
+    FPS,
     Grayscale,
     HFlip,
     HStack,

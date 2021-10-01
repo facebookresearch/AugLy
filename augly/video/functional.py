@@ -173,21 +173,19 @@ def augment_audio(
         repr(type(audio_aug).__name__) + " object is not callable"
     )
 
-    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+    func_kwargs = helpers.get_func_kwargs(
+        metadata, locals(), video_path, audio_aug=audio_aug.__name__
+    )
 
     audio_metadata = []
 
-    with tempfile.NamedTemporaryFile(suffix=".aac") as tmpfile:
-
+    with tempfile.NamedTemporaryFile(suffix=".wav") as tmpfile:
         helpers.extract_audio_to_file(video_path, tmpfile.name)
-        aug_audio, aug_sr = audio_aug(tmpfile.name)
+        aug_audio, aug_sr = audio_aug(
+            tmpfile.name, metadata=audio_metadata, **audio_aug_kwargs
+        )
         audutils.ret_and_save_audio(aug_audio, tmpfile.name, aug_sr)
         audio_swap(video_path, tmpfile.name)
-
-        if metadata is not None:
-            helpers.get_metadata(
-                metadata=audio_metadata, function_name="augment_audio", **func_kwargs
-            )
 
     if metadata is not None:
         helpers.get_metadata(
@@ -2197,3 +2195,5 @@ def vstack(
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="vstack", **func_kwargs)
+
+    return output_path or video_path

@@ -3,7 +3,7 @@
 
 from typing import Any, Dict, Optional, Tuple
 
-import augly.audio.intensity as audi_func
+import augly.audio.intensity as aud_intensity
 import augly.image.intensity as imint
 import augly.image.utils as imutils
 from augly.video.helpers import get_video_info
@@ -44,7 +44,7 @@ def audio_swap_intensity(offset: float, **kwargs) -> float:
 
 
 def augment_audio_intensity(aug_function: str, **kwargs) -> float:
-    intensity_func = vars(audi_func).get(f"{aug_function}_intensity")
+    intensity_func = getattr(aud_intensity, f"{aug_function}_intensity", None)
     return intensity_func(**kwargs) if intensity_func else 100.0
 
 
