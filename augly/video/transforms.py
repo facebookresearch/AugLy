@@ -276,16 +276,15 @@ class AudioSwap(BaseTransform):
 class AugmentAudio(BaseTransform):
     def __init__(
         self,
-        audio_aug: Callable[..., Tuple[np.ndarray, int]
-                            ] = audaugs.apply_lambda,
+        audio_aug: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
         p: float = 1.0,
         **audio_aug_kwargs,
     ):
         """
         @param audio_aug: the augmentation function to be applied onto the video's audio
-        track. Should have the standard API of an AugLy audio augmentation, i.e. expect input audio
-        as a numpy array or path & output path as input, and output the augmented audio to the
-        output path
+            track. Should have the standard API of an AugLy audio augmentation, i.e. expect input audio
+            as a numpy array or path & output path as input, and output the augmented audio to the
+            output path
 
         @param p: the probability of the transform being applied; default value is 1.0
 
@@ -308,11 +307,11 @@ class AugmentAudio(BaseTransform):
         @param video_path: the path to the video to be augmented
 
         @param output_path: the path in which the resulting video will be stored.
-        If not passed in, the original video file will be overwritten
+            If not passed in, the original video file will be overwritten
 
         @param metadata: if set to be a list, metadata about the function execution
-        including its name, the source & dest duration, fps, etc. will be appended
-        to the inputted list. If set to None, no metadata will be appended or returned
+            including its name, the source & dest duration, fps, etc. will be appended
+            to the inputted list. If set to None, no metadata will be appended or returned
 
         @returns: the path to the augmented video
         """
@@ -636,7 +635,7 @@ class Concat(BaseTransform):
         video_paths = (
             self.other_video_paths[: self.src_video_path_index]
             + [video_path]
-            + self.other_video_paths[self.src_video_path_index:]
+            + self.other_video_paths[self.src_video_path_index :]
         )
         return F.concat(
             video_paths, output_path, self.src_video_path_index, metadata=metadata
