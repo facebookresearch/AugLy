@@ -45,6 +45,10 @@ def audio_swap_intensity(offset: float, **kwargs) -> float:
 
 def augment_audio_intensity(aug_function: str, **kwargs) -> float:
     intensity_func = getattr(aud_intensity, f"{aug_function}_intensity", None)
+    """
+    says missing 1 positional argument but if I pass in aug_function 
+    then apply_lambda_intensity will become recursive
+     """
     return intensity_func(**kwargs) if intensity_func else 100.0
 
 
