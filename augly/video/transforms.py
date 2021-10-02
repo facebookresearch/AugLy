@@ -276,12 +276,12 @@ class AudioSwap(BaseTransform):
 class AugmentAudio(BaseTransform):
     def __init__(
         self,
-        audio_aug: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
+        aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
         p: float = 1.0,
         **audio_aug_kwargs,
     ):
         """
-        @param audio_aug: the augmentation function to be applied onto the video's audio
+        @param aug_function: the augmentation function to be applied onto the video's audio
             track. Should have the standard API of an AugLy audio augmentation, i.e. expect input audio
             as a numpy array or path & output path as input, and output the augmented audio to the
             output path
@@ -292,7 +292,7 @@ class AugmentAudio(BaseTransform):
 
         """
         super().__init__(p)
-        self.audio_aug = audio_aug
+        self.aug_function = aug_function
         self.audio_aug_kwargs = audio_aug_kwargs
 
     def apply_transform(
@@ -317,7 +317,7 @@ class AugmentAudio(BaseTransform):
         """
         return F.augment_audio(
             video_path=video_path,
-            audio_aug=self.audio_aug,
+            aug_function=self.aug_function,
             output_path=output_path,
             metadata=metadata,
             **self.audio_aug_kwargs,

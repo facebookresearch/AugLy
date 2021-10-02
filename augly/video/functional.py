@@ -143,7 +143,7 @@ def audio_swap(
 
 def augment_audio(
     video_path: str,
-    audio_aug: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
+    aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
     output_path: Optional[str] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
     **audio_aug_kwargs,
@@ -153,7 +153,7 @@ def augment_audio(
 
     @param video_path: the path to the video to be augmented
 
-    @param audio_aug: the augmentation function to be applied onto the video's audio
+    @param aug_function: the augmentation function to be applied onto the video's audio
         track. Should have the standard API of an AugLy audio augmentation, i.e. expect input audio
         as a numpy array or path & output path as input, and output the augmented audio to the
         output path
@@ -169,19 +169,19 @@ def augment_audio(
 
     @returns: the path to the augmented video
     """
-    assert callable(audio_aug), (
-        repr(type(audio_aug).__name__) + " object is not callable"
+    assert callable(aug_function), (
+        repr(type(aug_function).__name__) + " object is not callable"
     )
 
     func_kwargs = helpers.get_func_kwargs(
-        metadata, locals(), video_path, audio_aug=audio_aug.__name__
+        metadata, locals(), video_path, aug_function=aug_function.__name__
     )
 
     audio_metadata = []
 
     with tempfile.NamedTemporaryFile(suffix=".wav") as tmpfile:
         helpers.extract_audio_to_file(video_path, tmpfile.name)
-        aug_audio, aug_sr = audio_aug(
+        aug_audio, aug_sr = aug_function(
             tmpfile.name, metadata=audio_metadata, **audio_aug_kwargs
         )
         audutils.ret_and_save_audio(aug_audio, tmpfile.name, aug_sr)
