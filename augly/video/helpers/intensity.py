@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, List
 
-import augly.audio.intensity as aud_intensity
 import augly.image.intensity as imint
 import augly.image.utils as imutils
 from augly.video.helpers import get_video_info
@@ -43,13 +42,8 @@ def audio_swap_intensity(offset: float, **kwargs) -> float:
     return (1.0 - offset) * 100.0
 
 
-def augment_audio_intensity(aug_function: str, **kwargs) -> float:
-    intensity_func = getattr(aud_intensity, f"{aug_function}_intensity", None)
-    """
-    says missing 1 positional argument but if I pass in aug_function 
-    then apply_lambda_intensity will become recursive
-     """
-    return intensity_func(**kwargs) if intensity_func else 100.0
+def augment_audio_intensity(audio_metadata: List[Dict[str, Any]], **kwargs) -> float:
+    return audio_metadata[0]["intensity"]
 
 
 def blend_videos_intensity(opacity: float, overlay_size: float, **kwargs) -> float:
