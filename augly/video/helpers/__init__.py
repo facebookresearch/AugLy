@@ -16,6 +16,7 @@ from augly.video.helpers.intensity import (
     add_noise_intensity,
     apply_lambda_intensity,
     audio_swap_intensity,
+    augment_audio_intensity,
     blend_videos_intensity,
     blur_intensity,
     brightness_intensity,

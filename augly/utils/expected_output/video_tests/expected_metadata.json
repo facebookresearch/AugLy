@@ -52,62 +52,6 @@
             "src_width": 1920
         }
     ],
-    "augment_audio": [
-        {
-            "name":"augment_audio",
-            "src_duration":10.027855,
-            "dst_duration":10.027855,
-            "src_fps":29.916666666666668,
-            "dst_fps":29.916666666666668,
-            "src_width":1920,
-            "src_height":1080,
-            "dst_width":1920,
-            "dst_height":1080,
-            "src_segments":[
-                {
-                    "start":0.0,
-                    "end":10.027855
-                }
-            ],
-            "dst_segments":[
-                    {
-                    "start":0.0,
-                    "end":10.027855
-                }
-            ],
-            "audio_metadata":[
-                {
-                    "name":"apply_lambda",
-                    "src_duration":2.82675,
-                    "dst_duration":2.82675,
-                    "src_num_channels":1,
-                    "dst_num_channels":1,
-                    "src_sample_rate":48000,
-                    "dst_sample_rate":48000,
-                    "src_segments":[
-                    {
-                        "start":0.0,
-                        "end":2.82675
-                        }
-                    ],
-                    "dst_segments":[
-                        {
-                        "start":0.0,
-                        "end":2.82675
-                        }
-                    ],
-                    "aug_function":"<lambda>",
-                    "output_path":null,
-                    "intensity":100.0
-                }
-            ],
-            "aug_function":"apply_lambda",
-            "audio_aug_kwargs":{
-                
-            },
-            "intensity":100.0
-            }
-        ],
     "audio_swap": [
         {
             "audio_path": "tests/video/inputs/input_1.aac",
@@ -131,6 +75,60 @@
                 {
                     "start": 0.0,
                     "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "augment_audio": [
+        {
+            "audio_aug_kwargs": {},
+            "audio_metadata": [
+                {
+                    "aug_function": "<lambda>",
+                    "dst_duration": 2.82675,
+                    "dst_num_channels": 1,
+                    "dst_sample_rate": 48000,
+                    "dst_segments": [
+                        {
+                            "end": 2.82675,
+                            "start": 0
+                        }
+                    ],
+                    "intensity": 100,
+                    "name": "apply_lambda",
+                    "output_path": null,
+                    "src_duration": 2.82675,
+                    "src_num_channels": 1,
+                    "src_sample_rate": 48000,
+                    "src_segments": [
+                        {
+                            "end": 2.82675,
+                            "start": 0
+                        }
+                    ]
+                }
+            ],
+            "aug_function": "apply_lambda",
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "end": 10.027855,
+                    "start": 0
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 100,
+            "name": "augment_audio",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "end": 10.027855,
+                    "start": 0
                 }
             ],
             "src_width": 1920

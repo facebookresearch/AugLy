@@ -281,10 +281,10 @@ class AugmentAudio(BaseTransform):
         **audio_aug_kwargs,
     ):
         """
-        @param aug_function: the augmentation function to be applied onto the video's audio
-            track. Should have the standard API of an AugLy audio augmentation, i.e. expect input audio
-            as a numpy array or path & output path as input, and output the augmented audio to the
-            output path
+        @param aug_function: the augmentation function to be applied onto the video's 
+            audio track. Should have the standard API of an AugLy audio augmentation, 
+            i.e. expect input audio as a numpy array or path & output path as input, and
+            output the augmented audio to the output path
 
         @param p: the probability of the transform being applied; default value is 1.0
 
@@ -302,7 +302,8 @@ class AugmentAudio(BaseTransform):
         metadata: Optional[List[Dict[str, Any]]] = None,
     ):
         """
-        Augments the audio track of the input video using a given AugLy audio augmentation
+        Augments the audio track of the input video using a given AugLy audio 
+        augmentation
 
         @param video_path: the path to the video to be augmented
 
@@ -311,7 +312,8 @@ class AugmentAudio(BaseTransform):
 
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest duration, fps, etc. will be appended
-            to the inputted list. If set to None, no metadata will be appended or returned
+            to the inputted list. If set to None, no metadata will be appended or 
+            returned
 
         @returns: the path to the augmented video
         """
