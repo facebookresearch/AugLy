@@ -1234,6 +1234,7 @@ class OverlayOntoBackgroundImage(BaseTransform):
 
         @returns: Augmented PIL Image
         """
+        
         return F.overlay_onto_background_image(
             image,
             background_image=self.background_image,

@@ -31,8 +31,12 @@ def validate_and_load_image(image: Union[str, Image.Image]) -> Image.Image:
 
 
 def ret_and_save_image(
-    image: Image.Image, output_path: Optional[str], src_mode: str
+    image: Image.Image, output_path: Optional[str], src_mode: Optional[str]
 ) -> Image.Image:
+
+    if src_mode is not None:
+        image.mode = src_mode
+        
     if output_path is not None:
         if any(output_path.endswith(extension) for extension in JPEG_EXTENSIONS):
             image = image.convert("RGB")
