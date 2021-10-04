@@ -31,7 +31,7 @@ def validate_and_load_image(image: Union[str, Image.Image]) -> Image.Image:
 
 
 def ret_and_save_image(
-    image: Image.Image, output_path: Optional[str], src_mode: Optional[str]
+    image: Image.Image, output_path: Optional[str], src_mode: Optional[str] = None
 ) -> Image.Image:
 
     if src_mode is not None:
