@@ -35,7 +35,7 @@ def ret_and_save_image(
 ) -> Image.Image:
 
     if src_mode is not None:
-        image.mode = src_mode
+        image.convert(src_mode)
         
     if output_path is not None:
         if any(output_path.endswith(extension) for extension in JPEG_EXTENSIONS):
