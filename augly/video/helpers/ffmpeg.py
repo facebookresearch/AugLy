@@ -5,10 +5,12 @@ import io
 import math
 import os
 import shutil
+import numpy as np
 from typing import Any, Dict, Optional, Union
 
 import ffmpeg
 from ffmpeg.nodes import FilterableStream
+import augly.audio.utils as audutils
 from augly.utils import pathmgr, SILENT_AUDIO_PATH
 from augly.utils.ffmpeg import FFMPEG_PATH, FFPROBE_PATH
 
@@ -35,13 +37,25 @@ def combine_frames_and_audio_to_file(
 
 def extract_audio_to_file(video_path: str, output_audio_path: str) -> None:
     audio_info = get_audio_info(video_path)
+    sample_rate = str(audio_info["sample_rate"])
+    codec = str(audio_info["codec_name"])
 
-    (
-        ffmpeg.input(video_path, loglevel="quiet")
-        .output(output_audio_path, acodec=audio_info["codec_name"], ac=1)
-        .overwrite_output()
-        .run(cmd=FFMPEG_PATH)
-    )
+    if output_audio_path.split(".")[-1] == "aac":
+        (
+            ffmpeg.input(video_path, loglevel="quiet")
+            .output(output_audio_path, acodec=codec, ac=1)
+            .overwrite_output()
+            .run(cmd=FFMPEG_PATH)
+        )
+    else:
+        out, err = (
+            ffmpeg
+            .input(video_path, loglevel="quiet")
+            .output("-", format="f32le", acodec="pcm_f32le", ac=1, ar=sample_rate)
+            .run(cmd=FFMPEG_PATH, capture_stdout=True, capture_stderr=True)
+        )
+        audio = np.frombuffer(out, np.float32)
+        audutils.ret_and_save_audio(audio, output_audio_path, int(sample_rate))
 
 
 def extract_frames_to_dir(
