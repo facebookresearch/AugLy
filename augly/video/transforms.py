@@ -276,15 +276,17 @@ class AudioSwap(BaseTransform):
 class AugmentAudio(BaseTransform):
     def __init__(
         self,
-        aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
+        audio_aug_function: Callable[
+            ..., Tuple[np.ndarray, int]
+        ] = audaugs.apply_lambda,
         p: float = 1.0,
         **audio_aug_kwargs,
     ):
         """
-        @param aug_function: the augmentation function to be applied onto the video's 
-            audio track. Should have the standard API of an AugLy audio augmentation, 
-            i.e. expect input audio as a numpy array or path & output path as input, and
-            output the augmented audio to the output path
+        @param audio_aug_function: the augmentation function to be applied onto the 
+            video's audio track. Should have the standard API of an AugLy audio 
+            augmentation, i.e. expect input audio as a numpy array or path & output 
+            path as input, and output the augmented audio to the output path
 
         @param p: the probability of the transform being applied; default value is 1.0
 
@@ -292,7 +294,7 @@ class AugmentAudio(BaseTransform):
 
         """
         super().__init__(p)
-        self.aug_function = aug_function
+        self.audio_aug_function = audio_aug_function
         self.audio_aug_kwargs = audio_aug_kwargs
 
     def apply_transform(
@@ -317,9 +319,11 @@ class AugmentAudio(BaseTransform):
 
         @returns: the path to the augmented video
         """
+        print(self.audio_aug_function.__name__)
+        print(self.audio_aug_kwargs)
         return F.augment_audio(
             video_path=video_path,
-            aug_function=self.aug_function,
+            audio_aug_function=self.audio_aug_function,
             output_path=output_path,
             metadata=metadata,
             **self.audio_aug_kwargs,

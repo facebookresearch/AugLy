@@ -5,7 +5,10 @@ import json
 import random
 import unittest
 
+from augly.utils import DEFAULT_SAMPLE_RATE
+
 import augly.video as vidaugs
+import augly.audio as audaugs
 from augly.tests.base_configs import VideoAugConfig
 from augly.tests.video_tests.base_unit_test import BaseVideoUnitTest
 from augly.utils import VIDEO_METADATA_PATH
@@ -24,7 +27,14 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
         self.evaluate_class(vidaugs.ApplyLambda(), fname="apply_lambda")
 
     def test_AugmentAudio(self):
-        self.evaluate_class(vidaugs.AugmentAudio(), fname="augment_audio")
+        self.evaluate_class(
+            vidaugs.AugmentAudio(
+                audio_aug_function=audaugs.Compose(
+                    [audaugs.PitchShift(), audaugs.Reverb()]
+                ).__call__(sample_rate=DEFAULT_SAMPLE_RATE),
+            ),
+            fname="augment_audio",
+        )
 
     def test_InsertInBackground(self):
         self.evaluate_class(
@@ -80,7 +90,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
                 source_offset=0.1, background_offset=0, source_percentage=0.7,
             ),
             fname="replace_with_background",
-            metadata_exclude_keys=["dst_duration", "dst_fps"]
+            metadata_exclude_keys=["dst_duration", "dst_fps"],
         )
 
     def test_ReplaceWithColorFrames(self):

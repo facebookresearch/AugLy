@@ -143,7 +143,7 @@ def audio_swap(
 
 def augment_audio(
     video_path: str,
-    aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
+    audio_aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
     output_path: Optional[str] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
     **audio_aug_kwargs,
@@ -169,19 +169,20 @@ def augment_audio(
 
     @returns: the path to the augmented video
     """
-    assert callable(aug_function), (
-        repr(type(aug_function).__name__) + " object is not callable"
+    assert callable(audio_aug_function), (
+        repr(type(audio_aug_function).__name__) + " object is not callable"
     )
 
     func_kwargs = helpers.get_func_kwargs(
-        metadata, locals(), video_path, aug_function=aug_function.__name__
+        metadata, locals(), video_path, audio_aug_function=audio_aug_function.__name__
     )
 
     audio_metadata = []
-
     with tempfile.NamedTemporaryFile(suffix=".wav") as tmpfile:
         helpers.extract_audio_to_file(video_path, tmpfile.name)
-        aug_audio, aug_sr = aug_function(
+        print("name ", audio_aug_function.__name__)
+        print("kwargs ",**audio_aug_kwargs)
+        aug_audio, aug_sr = audio_aug_function(
             tmpfile.name, metadata=audio_metadata, **audio_aug_kwargs
         )
         audutils.ret_and_save_audio(aug_audio, tmpfile.name, aug_sr)
