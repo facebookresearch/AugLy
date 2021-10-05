@@ -1741,7 +1741,7 @@ def pad_square(
         **func_kwargs,
     )
 
-    return aug_image
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def perspective_transform(
