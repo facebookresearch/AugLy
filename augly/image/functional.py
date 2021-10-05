@@ -1011,7 +1011,6 @@ def opacity(
     assert 0 <= level <= 1, "level must be a value in the range [0, 1]"
 
     image = imutils.validate_and_load_image(image).convert(mode="RGBA")
-    
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     src_mode = image.mode
 
