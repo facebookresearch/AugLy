@@ -31,7 +31,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
             vidaugs.AugmentAudio(
                 audio_aug_function=audaugs.Compose(
                     [audaugs.PitchShift(), audaugs.Reverb()]
-                ).__call__(sample_rate=DEFAULT_SAMPLE_RATE),
+                ).__call__,
             ),
             fname="augment_audio",
         )

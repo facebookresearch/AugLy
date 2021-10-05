@@ -319,8 +319,6 @@ class AugmentAudio(BaseTransform):
 
         @returns: the path to the augmented video
         """
-        print(self.audio_aug_function.__name__)
-        print(self.audio_aug_kwargs)
         return F.augment_audio(
             video_path=video_path,
             audio_aug_function=self.audio_aug_function,

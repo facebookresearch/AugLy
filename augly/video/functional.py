@@ -180,10 +180,9 @@ def augment_audio(
     audio_metadata = []
     with tempfile.NamedTemporaryFile(suffix=".wav") as tmpfile:
         helpers.extract_audio_to_file(video_path, tmpfile.name)
-        print("name ", audio_aug_function.__name__)
-        print("kwargs ",**audio_aug_kwargs)
+        audio, sr = audutils.validate_and_load_audio(tmpfile.name)
         aug_audio, aug_sr = audio_aug_function(
-            tmpfile.name, metadata=audio_metadata, **audio_aug_kwargs
+            audio, sample_rate=sr, metadata=audio_metadata, **audio_aug_kwargs
         )
         audutils.ret_and_save_audio(aug_audio, tmpfile.name, aug_sr)
         audio_swap(video_path, tmpfile.name, output_path=output_path or video_path)
