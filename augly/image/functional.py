@@ -1098,7 +1098,7 @@ def overlay_emoji(
         **func_kwargs,
     )
 
-    return aug_image
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def overlay_image(
