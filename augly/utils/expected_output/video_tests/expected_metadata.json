@@ -105,7 +105,7 @@
                             "end": 10.005333333333333
                         }
                     ],
-                    "output_path": "None",
+                    "output_path": null,
                     "n_steps": 1,
                     "intensity": 1.1904761904761905
                 },
@@ -136,7 +136,7 @@
                     "pre_delay": 0,
                     "wet_gain": 0,
                     "wet_only": false,
-                    "output_path": "None",
+                    "output_path": null,
                     "intensity": 50
                 }
             ],
