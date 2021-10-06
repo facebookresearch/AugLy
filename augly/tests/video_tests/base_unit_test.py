@@ -118,8 +118,7 @@ class BaseVideoUnitTest(unittest.TestCase):
                 output_path=tmpfile.name, seed=seed, metadata=metadata, **kwargs
             )
             self.assertTrue(os.path.exists(tmpfile.name))
-        print(self.metadata[fname])
-        print(metadata)
+        
         self.assertTrue(
             are_equal_metadata(metadata, self.metadata[fname], metadata_exclude_keys),
         )
