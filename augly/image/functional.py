@@ -1010,6 +1010,7 @@ def opacity(
     image = imutils.validate_and_load_image(image)
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     src_mode = image.mode
+    image = image.convert(mode="RGBA")
 
     mask = image.convert("RGBA").getchannel("A")
     mask = Image.fromarray((np.array(mask) * level).astype(np.uint8))
