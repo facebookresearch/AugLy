@@ -63,6 +63,7 @@ def are_equal_metadata(
 
 class BaseImageUnitTest(unittest.TestCase):
     ref_img_dir = os.path.join(TEST_URI, "image", "dfdc_expected_output")
+    
 
     def test_import(self) -> None:
         try:
@@ -96,7 +97,9 @@ class BaseImageUnitTest(unittest.TestCase):
         transform_class: Callable[..., Image.Image],
         fname: str,
         metadata_exclude_keys: Optional[List[str]] = None,
+        check_mode: Optional[bool] = True
     ):
+        
         metadata = []
         bboxes, bbox_format = [(0.5, 0.5, 0.25, 0.75)], "yolo"
         ref = self.get_ref_image(fname)
@@ -104,8 +107,9 @@ class BaseImageUnitTest(unittest.TestCase):
             self.img, metadata=metadata, bboxes=bboxes, bbox_format=bbox_format
         )
         
-        # if check_mode:
-        self.assertTrue(self.img.mode == dst.mode)
+        if check_mode:
+            self.assertTrue(self.img.mode == dst.mode)
+
         self.assertTrue(
             are_equal_metadata(metadata, self.metadata[fname], metadata_exclude_keys)
         )
