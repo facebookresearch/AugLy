@@ -103,6 +103,7 @@ class BaseImageUnitTest(unittest.TestCase):
         dst = transform_class(
             self.img, metadata=metadata, bboxes=bboxes, bbox_format=bbox_format
         )
+        
         # if check_mode:
         self.assertTrue(self.img.mode == dst.mode)
         self.assertTrue(
