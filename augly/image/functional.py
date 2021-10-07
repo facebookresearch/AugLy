@@ -845,7 +845,6 @@ def masked_composite(
         except AttributeError:
             func_kwargs["transform_function"] = type(transform_function).__name__
     func_kwargs = imutils.get_func_kwargs(metadata, func_kwargs)
-    
     src_mode = image.mode
 
     if transform_function is None:
