@@ -178,7 +178,6 @@ def blur(
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     src_mode = image.mode
-    src_mode = image.mode
 
     aug_image = image.filter(ImageFilter.GaussianBlur(radius))
 
