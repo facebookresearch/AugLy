@@ -65,7 +65,6 @@ def apply_lambda(
         except AttributeError:
             func_kwargs["aug_function"] = type(aug_function).__name__
     func_kwargs = imutils.get_func_kwargs(metadata, func_kwargs)
-    
     src_mode = image.mode
 
     aug_image = aug_function(image, **kwargs)
