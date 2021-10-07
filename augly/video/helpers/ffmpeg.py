@@ -39,9 +39,9 @@ def combine_frames_and_audio_to_file(
 def extract_audio_to_file(video_path: str, output_audio_path: str) -> None:
     audio_info = get_audio_info(video_path)
     sample_rate = str(audio_info["sample_rate"])
-    codec = str(audio_info["codec_name"])
+    codec = audio_info["codec_name"]
 
-    if output_audio_path.split(".")[-1] == "aac":
+    if os.path.splitext(output_audio_path)[-1] == ".aac":
         (
             ffmpeg.input(video_path, loglevel="quiet")
             .output(output_audio_path, acodec=codec, ac=1)
