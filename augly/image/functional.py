@@ -58,7 +58,6 @@ def apply_lambda(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = deepcopy(locals())
-    
     if aug_function is not None:
         try:
             func_kwargs["aug_function"] = aug_function.__name__
