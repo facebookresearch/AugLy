@@ -836,7 +836,6 @@ def masked_composite(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = deepcopy(locals())
-    
     if transform_function is not None:
         try:
             func_kwargs["transform_function"] = transform_function.__name__
