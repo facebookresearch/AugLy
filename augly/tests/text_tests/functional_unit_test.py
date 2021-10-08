@@ -226,7 +226,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
 
     def test_replace_bidirectional(self) -> None:
         augmented_bidirectional = txtaugs.replace_bidirectional(self.texts)
-        # Renders as: "‮.llih yssarg ,neerg eht revo pmuj t'ndluoc 'xof' nworb kciuq ehT‬"
+        # Renders as: "‮.llih yssarg ,neerg eht revo pmuj t'ndluoc 'xof' nworb kciuq ehT‬"  # noqa: B950
         self.assertEqual(
             augmented_bidirectional,
             [
@@ -236,27 +236,27 @@ class FunctionalTextUnitTest(unittest.TestCase):
         augmented_bidirectional_word = txtaugs.replace_bidirectional(
             self.texts, granularity="word"
         )
-        # Renders as: "‭‮ehT‬ ‮kciuq‬ ‮nworb‬ ‮'xof'‬ ‮t'ndluoc‬ ‮pmuj‬ ‮revo‬ ‮eht‬ ‮,neerg‬ ‮yssarg‬ ‮.llih‬"
+        # Renders as: "‭‮ehT‬ ‮kciuq‬ ‮nworb‬ ‮'xof'‬ ‮t'ndluoc‬ ‮pmuj‬ ‮revo‬ ‮eht‬ ‮,neerg‬ ‮yssarg‬ ‮.llih‬"  # noqa: B950
         self.assertEqual(
             augmented_bidirectional_word,
             [
-                "\u202d\u202eehT\u202c \u202ekciuq\u202c \u202enworb\u202c \u202e'"
-                "xof'\u202c \u202et'ndluoc\u202c \u202epmuj\u202c \u202erevo\u202c"
-                " \u202eeht\u202c \u202e,neerg\u202c \u202eyssarg\u202c \u202e.lli"
-                "h\u202c"
+                "\u202d\u202eehT\u202c \u202ekciuq\u202c \u202enworb\u202c \u202e'"  # noqa: B950
+                "xof'\u202c \u202et'ndluoc\u202c \u202epmuj\u202c \u202erevo\u202c"  # noqa: B950
+                " \u202eeht\u202c \u202e,neerg\u202c \u202eyssarg\u202c \u202e.lli"  # noqa: B950
+                "h\u202c"  # noqa: B950
             ],
         )
         augmented_bidirectional_split = txtaugs.replace_bidirectional(
             self.texts, granularity="word", split_word=True
         )
-        # Renders as: "‭T‮eh‬ qu‮kci‬ br‮nwo‬ 'f‮'xo‬ coul‮t'nd‬ ju‮pm‬ ov‮re‬ t‮eh‬ gre‮,ne‬ gra‮yss‬ hi‮.ll‬"
+        # Renders as: "‭T‮eh‬ qu‮kci‬ br‮nwo‬ 'f‮'xo‬ coul‮t'nd‬ ju‮pm‬ ov‮re‬ t‮eh‬ gre‮,ne‬ gra‮yss‬ hi‮.ll‬"  # noqa: B950
         self.assertEqual(
             augmented_bidirectional_split,
             [
-                "\u202dT\u202eeh\u202c qu\u202ekci\u202c br\u202enwo\u202c 'f\u202e"
-                "'xo\u202c coul\u202et'nd\u202c ju\u202epm\u202c ov\u202ere\u202c"
-                " t\u202eeh\u202c gre\u202e,ne\u202c gra\u202eyss\u202c hi\u202e"
-                ".ll\u202c"
+                "\u202dT\u202eeh\u202c qu\u202ekci\u202c br\u202enwo\u202c 'f\u202e"  # noqa: B950
+                "'xo\u202c coul\u202et'nd\u202c ju\u202epm\u202c ov\u202ere\u202c"  # noqa: B950
+                " t\u202eeh\u202c gre\u202e,ne\u202c gra\u202eyss\u202c hi\u202e"  # noqa: B950
+                ".ll\u202c"  # noqa: B950
             ],
         )
 
@@ -388,6 +388,27 @@ class FunctionalTextUnitTest(unittest.TestCase):
     def test_replace_words(self) -> None:
         augmented_words = txtaugs.replace_words(self.texts, aug_word_p=0.3)
         self.assertTrue(augmented_words[0] == self.texts[0])
+
+        augmented_words = txtaugs.replace_words(
+            self.texts,
+            mapping={"jump": "hop", "brown": "orange", "green": "blue", "the": "a"},
+            aug_word_p=1.0,
+        )
+        self.assertTrue(
+            augmented_words[0]
+            == "A quick orange 'fox' couldn't hop over a blue, grassy hill.",
+        )
+
+        augmented_words = txtaugs.replace_words(
+            self.texts,
+            mapping={"jump": "hop", "brown": "orange", "green": "blue", "the": "a"},
+            aug_word_p=1.0,
+            ignore_words=["green", "jump"],
+        )
+        self.assertTrue(
+            augmented_words[0]
+            == "A quick orange 'fox' couldn't jump over a green, grassy hill.",
+        )
 
     def test_simulate_typos(self) -> None:
         augmented_typos = txtaugs.simulate_typos(

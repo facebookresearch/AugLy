@@ -246,8 +246,7 @@ def get_aug_idxes(
     for i in filtered_idxes:
         if i not in priority_idxes:
             if (
-                min_char is None
-                or len(tokens[i]) >= min_char
+                (min_char is None or len(tokens[i]) >= min_char)
                 and tokens[i] not in ignore_words
             ):
                 idxes.append(i)
