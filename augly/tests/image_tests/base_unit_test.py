@@ -99,7 +99,6 @@ class BaseImageUnitTest(unittest.TestCase):
         metadata_exclude_keys: Optional[List[str]] = None,
         check_mode: Optional[bool] = True
     ):
-        
         metadata = []
         bboxes, bbox_format = [(0.5, 0.5, 0.25, 0.75)], "yolo"
         ref = self.get_ref_image(fname)
