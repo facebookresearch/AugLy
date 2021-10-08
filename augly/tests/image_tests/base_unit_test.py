@@ -63,7 +63,6 @@ def are_equal_metadata(
 
 class BaseImageUnitTest(unittest.TestCase):
     ref_img_dir = os.path.join(TEST_URI, "image", "dfdc_expected_output")
-    
 
     def test_import(self) -> None:
         try:
