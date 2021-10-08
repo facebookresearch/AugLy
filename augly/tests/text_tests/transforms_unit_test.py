@@ -305,7 +305,9 @@ class TransformsTextUnitTest(unittest.TestCase):
 
     def test_SimulateTypos(self) -> None:
         aug_typo_text = txtaugs.SimulateTypos(
-            aug_word_p=0.3, aug_char_p=0.3, typo_type="all"
+            aug_word_p=0.3,
+            aug_char_p=0.3,
+            typo_type="all"
         )(self.texts, metadata=self.metadata)
 
         self.assertTrue(
