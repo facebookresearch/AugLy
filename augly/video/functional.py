@@ -8,8 +8,6 @@ import shutil
 import tempfile
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import numpy as np
-
 import augly.audio as audaugs
 import augly.audio.utils as audutils
 import augly.image as imaugs
@@ -18,6 +16,7 @@ import augly.video.augmenters.cv2 as ac
 import augly.video.augmenters.ffmpeg as af
 import augly.video.helpers as helpers
 import augly.video.utils as vdutils
+import numpy as np
 
 
 def add_noise(
@@ -143,8 +142,8 @@ def audio_swap(
 
 def augment_audio(
     video_path: str,
-    audio_aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
     output_path: Optional[str] = None,
+    audio_aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
     metadata: Optional[List[Dict[str, Any]]] = None,
     **audio_aug_kwargs,
 ) -> str:
@@ -153,13 +152,13 @@ def augment_audio(
 
     @param video_path: the path to the video to be augmented
 
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
     @param audio_aug_function: the augmentation function to be applied onto the video's 
         audio track. Should have the standard API of an AugLy audio augmentation, i.e. 
         expect input audio as a numpy array or path & output path as input, and output 
         the augmented audio to the output path
-
-    @param output_path: the path in which the resulting video will be stored.
-        If not passed in, the original video file will be overwritten
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
@@ -172,10 +171,16 @@ def augment_audio(
     assert callable(audio_aug_function), (
         repr(type(audio_aug_function).__name__) + " object is not callable"
     )
-
+    
     func_kwargs = helpers.get_func_kwargs(
-        metadata, locals(), video_path, audio_aug_function=audio_aug_function.__name__
+        metadata, locals(), video_path, audio_aug_function=audio_aug_function
     )
+
+    if audio_aug_function is not None:
+        try:
+            func_kwargs["audio_aug_function"] = audio_aug_function.__name__
+        except AttributeError:
+            func_kwargs["audio_aug_function"] = type(audio_aug_function).__name__
 
     audio_metadata = []
     with tempfile.NamedTemporaryFile(suffix=".wav") as tmpfile:
@@ -834,7 +839,7 @@ def insert_in_background(
             num_loops_needed = math.ceil(desired_bg_duration / bg_video_duration)
             if num_loops_needed > 1:
                 loop(resized_bg_path, num_loops=num_loops_needed)
-                bg_video_duration *= num_loops_needed
+                bg_video_duration*=num_loops_needed
 
             bg_start = rng.uniform(0, bg_video_duration - desired_bg_duration)
             bg_end = bg_start + desired_bg_duration

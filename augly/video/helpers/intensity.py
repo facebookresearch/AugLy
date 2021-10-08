@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import Any, Dict, Optional, Tuple, List
+from typing import Any, Dict, List, Optional, Tuple
 
 import augly.image.intensity as imint
 import augly.image.utils as imutils
@@ -213,7 +213,7 @@ def overlay_emoji_intensity(
 
 
 def overlay_onto_background_video_intensity(
-    overlay_size: Optional[float], metadata: Dict[str, Any], **kwargs,
+    overlay_size: Optional[float], metadata: Dict[str, Any], **kwargs
 ) -> float:
     if overlay_size is not None:
         return (1 - overlay_size ** 2) * 100.0

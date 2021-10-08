@@ -82,62 +82,32 @@
     ],
     "augment_audio": [
         {
-            "audio_aug_function": "__call__",
+            "audio_aug_function": "PitchShift",
             "audio_aug_kwargs": {},
             "audio_metadata": [
                 {
-                    "name": "pitch_shift",
-                    "src_duration": 10.005333333333333,
                     "dst_duration": 10.005333333333333,
-                    "src_num_channels": 1,
                     "dst_num_channels": 1,
-                    "src_sample_rate": 48000,
                     "dst_sample_rate": 48000,
-                    "src_segments": [
-                        {
-                            "start": 0,
-                            "end": 10.005333333333333
-                        }
-                    ],
                     "dst_segments": [
                         {
-                            "start": 0,
-                            "end": 10.005333333333333
+                            "end": 10.005333333333333,
+                            "start": 0
                         }
                     ],
-                    "output_path": null,
+                    "intensity": 1.1904761904761905,
                     "n_steps": 1,
-                    "intensity": 1.1904761904761905
-                },
-                {
-                    "name": "reverb",
+                    "name": "pitch_shift",
+                    "output_path": null,
                     "src_duration": 10.005333333333333,
-                    "dst_duration": 10.005333333333333,
                     "src_num_channels": 1,
-                    "dst_num_channels": 2,
                     "src_sample_rate": 48000,
-                    "dst_sample_rate": 48000,
                     "src_segments": [
                         {
-                            "start": 0,
-                            "end": 10.005333333333333
+                            "end": 10.005333333333333,
+                            "start": 0
                         }
-                    ],
-                    "dst_segments": [
-                        {
-                            "start": 0,
-                            "end": 10.005333333333333
-                        }
-                    ],
-                    "reverberance": 50,
-                    "hf_damping": 50,
-                    "room_scale": 100,
-                    "stereo_depth": 100,
-                    "pre_delay": 0,
-                    "wet_gain": 0,
-                    "wet_only": false,
-                    "output_path": null,
-                    "intensity": 50
+                    ]
                 }
             ],
             "dst_duration": 10.027855,
@@ -145,8 +115,8 @@
             "dst_height": 1080,
             "dst_segments": [
                 {
-                    "start": 0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "start": 0
                 }
             ],
             "dst_width": 1920,
@@ -157,8 +127,8 @@
             "src_height": 1080,
             "src_segments": [
                 {
-                    "start": 0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "start": 0
                 }
             ],
             "src_width": 1920

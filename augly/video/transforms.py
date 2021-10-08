@@ -5,11 +5,10 @@ import os
 import random
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-import numpy as np
-
 import augly.audio as audaugs
 import augly.utils as utils
 import augly.video.functional as F
+import numpy as np
 from augly.video.helpers import identity_function
 
 
@@ -302,7 +301,7 @@ class AugmentAudio(BaseTransform):
         video_path: str,
         output_path: str,
         metadata: Optional[List[Dict[str, Any]]] = None,
-    ):
+    ) -> str:
         """
         Augments the audio track of the input video using a given AugLy audio 
         augmentation
@@ -463,7 +462,12 @@ class Brightness(BaseTransform):
 
         @returns: the path to the augmented video
         """
-        return F.brightness(video_path, output_path, self.level, metadata=metadata)
+        return F.brightness(
+                video_path,
+                output_path,
+                level=self.chosen_value,
+                metadata=metadata,
+        )
 
 
 class ChangeAspectRatio(BaseTransform):
@@ -771,7 +775,10 @@ class EncodingQuality(BaseTransform):
         @returns: the path to the augmented video
         """
         return F.encoding_quality(
-            video_path, output_path, self.quality, metadata=metadata
+            video_path,
+            output_path,
+            quality=int(self.chosen_value),
+            metadata=metadata,
         )
 
 
@@ -1677,7 +1684,12 @@ class Pixelization(BaseTransform):
 
         @returns: the path to the augmented video
         """
-        return F.pixelization(video_path, output_path, self.ratio, metadata=metadata)
+        return F.pixelization(
+            video_path,
+            output_path,
+            ratio=self.chosen_value,
+            metadata=metadata,
+        )
 
 
 class RemoveAudio(BaseTransform):

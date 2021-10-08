@@ -5,10 +5,8 @@ import json
 import random
 import unittest
 
-from augly.utils import DEFAULT_SAMPLE_RATE
-
-import augly.video as vidaugs
 import augly.audio as audaugs
+import augly.video as vidaugs
 from augly.tests.base_configs import VideoAugConfig
 from augly.tests.video_tests.base_unit_test import BaseVideoUnitTest
 from augly.utils import VIDEO_METADATA_PATH
@@ -29,9 +27,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
     def test_AugmentAudio(self):
         self.evaluate_class(
             vidaugs.AugmentAudio(
-                audio_aug_function=audaugs.Compose(
-                    [audaugs.PitchShift(), audaugs.Reverb()]
-                ).__call__,
+                audio_aug_function=audaugs.PitchShift(),
             ),
             fname="augment_audio",
         )
