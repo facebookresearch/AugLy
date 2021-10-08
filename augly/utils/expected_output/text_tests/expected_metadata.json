@@ -14,6 +14,7 @@
         {
             "cadence": 5.0,
             "case": "random",
+            "case_aug": "CaseAugmenter",
             "dst_length": 1,
             "granularity": "char",
             "input_type": "list",
@@ -40,6 +41,7 @@
             "name": "simulate_typos",
             "priority_words": null,
             "src_length": 1,
+            "typo_aug": "TypoAugmenter",
             "typo_type": "all"
         },
         {
@@ -49,6 +51,7 @@
             "input_type": "list",
             "intensity": 100.0,
             "name": "insert_punctuation_chars",
+            "punctuation_aug": "InsertionAugmenter",
             "src_length": 1,
             "vary_chars": false
         },
@@ -58,6 +61,7 @@
             "aug_p": 0.3,
             "dst_length": 1,
             "fonts_path": "text/fun_fonts.json",
+            "fun_fonts_aug": "FunFontsAugmenter",
             "granularity": "all",
             "input_type": "list",
             "intensity": 100.0,
@@ -71,6 +75,7 @@
     "contractions": [
         {
             "aug_p": 1.0,
+            "contraction_aug": "ContractionAugmenter",
             "dst_length": 1,
             "input_type": "list",
             "intensity": 100.0,
@@ -83,6 +88,7 @@
     ],
     "get_baseline": [
         {
+            "baseline_aug": "BaselineAugmenter",
             "dst_length": 1,
             "input_type": "list",
             "intensity": 0.0,
@@ -98,6 +104,7 @@
             "input_type": "list",
             "intensity": 100.0,
             "name": "insert_punctuation_chars",
+            "punctuation_aug": "InsertionAugmenter",
             "src_length": 1,
             "vary_chars": false
         }
@@ -111,6 +118,7 @@
             "intensity": 100.0,
             "name": "insert_whitespace_chars",
             "src_length": 1,
+            "whitespace_aug": "InsertionAugmenter",
             "vary_chars": false
         }
     ],
@@ -123,7 +131,8 @@
             "intensity": 100.0,
             "name": "insert_zero_width_chars",
             "src_length": 1,
-            "vary_chars": false
+            "vary_chars": false,
+            "zero_width_aug": "InsertionAugmenter"
         }
     ],
     "merge_words": [
@@ -134,6 +143,7 @@
             "dst_length": 1,
             "input_type": "list",
             "intensity": 30.0,
+            "merge_aug": "WordsAugmenter",
             "min_char": 2,
             "n": 1,
             "name": "merge_words",
@@ -143,6 +153,7 @@
     ],
     "replace_bidirectional": [
         {
+            "bidirectional_aug": "BidirectionalAugmenter",
             "dst_length": 1,
             "granularity": "all",
             "input_type": "list",
@@ -159,6 +170,7 @@
             "aug_p": 0.8,
             "dst_length": 1,
             "fonts_path": "text/fun_fonts.json",
+            "fun_fonts_aug": "FunFontsAugmenter",
             "granularity": "all",
             "input_type": "list",
             "intensity": 100.0,
@@ -177,6 +189,7 @@
             "aug_word_max": 1000,
             "aug_word_min": 1,
             "aug_word_p": 0.3,
+            "char_aug": "LetterReplacementAugmenter",
             "dst_length": 1,
             "input_type": "list",
             "intensity": 9.0,
@@ -204,7 +217,8 @@
             "n": 1,
             "name": "replace_similar_unicode_chars",
             "priority_words": null,
-            "src_length": 1
+            "src_length": 1,
+            "unicode_aug": "LetterReplacementAugmenter"
         }
     ],
     "replace_upside_down": [
@@ -218,7 +232,8 @@
             "intensity": 100.0,
             "n": 1,
             "name": "replace_upside_down",
-            "src_length": 1
+            "src_length": 1,
+            "upside_down_aug": "UpsideDownAugmenter"
         }
     ],
     "replace_words": [
@@ -234,7 +249,8 @@
             "n": 1,
             "name": "replace_words",
             "priority_words": null,
-            "src_length": 1
+            "src_length": 1,
+            "word_aug": "WordReplacementAugmenter"
         }
     ],
     "simulate_typos": [
@@ -254,6 +270,7 @@
             "name": "simulate_typos",
             "priority_words": null,
             "src_length": 1,
+            "typo_aug": "TypoAugmenter",
             "typo_type": "all"
         }
     ],
@@ -269,6 +286,7 @@
             "n": 1,
             "name": "split_words",
             "priority_words": null,
+            "split_aug": "WordsAugmenter",
             "src_length": 1
         }
     ],
@@ -285,7 +303,8 @@
             "n": 1,
             "name": "swap_gendered_words",
             "priority_words": null,
-            "src_length": 1
+            "src_length": 1,
+            "word_aug": "WordReplacementAugmenter"
         }
     ]
 }

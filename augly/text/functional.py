@@ -69,6 +69,7 @@ def change_case(
     cadence: float = 1.0,
     case: str = "random",
     seed: Optional[int] = 10,
+    case_aug: Optional[a.CaseAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -91,15 +92,26 @@ def change_case(
     @param seed: if provided, this will set the random seed to ensure consistency between
         runs
 
+    @param case_aug: if provided, this will be the augmenter used in this augmentation.
+        If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata,
+        locals(),
+        case_aug=type(case_aug).__name__ if case_aug is not None else case_aug,
+    )
 
-    case_aug = a.CaseAugmenter(case, granularity, cadence, seed)
+    case_aug = (
+        a.CaseAugmenter(case, granularity, cadence, seed)
+        if case_aug is None
+        else case_aug
+    )
     aug_texts = case_aug.augment(texts)
 
     txtutils.get_metadata(
@@ -118,6 +130,7 @@ def contractions(
     mapping: Optional[Union[str, Dict[str, Any]]] = CONTRACTIONS_MAPPING,
     max_contraction_length: int = 2,
     seed: Optional[int] = 10,
+    contraction_aug: Optional[a.ContractionAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -138,6 +151,9 @@ def contractions(
     @param seed: if provided, this will set the random seed to ensure consistency between
         runs
 
+    @param contraction_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
@@ -145,10 +161,18 @@ def contractions(
     @returns: the list of augmented text documents
     """
     assert 0 <= aug_p <= 1, "'aug_p' must be in the range [0, 1]"
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata, locals(), contraction_aug=(
+            type(contraction_aug).__name__
+            if contraction_aug is not None
+            else contraction_aug
+        ),
+    )
 
-    contraction_aug = a.ContractionAugmenter(
-        aug_p, mapping, max_contraction_length, seed
+    contraction_aug = (
+        a.ContractionAugmenter(aug_p, mapping, max_contraction_length, seed)
+        if contraction_aug is None
+        else contraction_aug
     )
     aug_texts = contraction_aug.augment(texts)
 
@@ -164,6 +188,7 @@ def contractions(
 
 def get_baseline(
     texts: Union[str, List[str]],
+    baseline_aug: Optional[a.BaselineAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -171,15 +196,24 @@ def get_baseline(
 
     @param texts: a string or a list of text documents to be augmented
 
+    @param baseline_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata, locals(), baseline_aug=(
+            type(baseline_aug).__name__
+            if baseline_aug is not None
+            else baseline_aug
+        ),
+    )
 
-    baseline_aug = a.BaselineAugmenter()
+    baseline_aug = a.BaselineAugmenter() if baseline_aug is None else baseline_aug
     aug_texts = baseline_aug.augment(texts, 1)
 
     txtutils.get_metadata(
@@ -197,6 +231,7 @@ def insert_punctuation_chars(
     granularity: str = "all",
     cadence: float = 1.0,
     vary_chars: bool = False,
+    punctuation_aug: Optional[a.InsertionAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -214,16 +249,27 @@ def insert_punctuation_chars(
     @param vary_chars: if true, picks a different punctuation char each time one
         is used instead of just one per word/text
 
+    @param punctuation_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented texts
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata, locals(), punctuation_aug=(
+            type(punctuation_aug).__name__
+            if punctuation_aug is not None
+            else punctuation_aug
+        ),
+    )
 
-    punctuation_aug = a.InsertionAugmenter(
-        "punctuation", granularity, cadence, vary_chars
+    punctuation_aug = (
+        a.InsertionAugmenter("punctuation", granularity, cadence, vary_chars)
+        if punctuation_aug is None
+        else punctuation_aug
     )
     aug_texts = punctuation_aug.augment(texts)
 
@@ -242,6 +288,7 @@ def insert_whitespace_chars(
     granularity: str = "all",
     cadence: float = 1.0,
     vary_chars: bool = False,
+    whitespace_aug: Optional[a.InsertionAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -259,16 +306,27 @@ def insert_whitespace_chars(
     @param vary_chars: if true, picks a different whitespace char each time one
         is used instead of just one per word/text
 
+    @param whitespace_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented texts
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata, locals(), whitespace_aug=(
+            type(whitespace_aug).__name__
+            if whitespace_aug is not None
+            else whitespace_aug
+        ),
+    )
 
-    whitespace_aug = a.InsertionAugmenter(
-        "whitespace", granularity, cadence, vary_chars
+    whitespace_aug = (
+        a.InsertionAugmenter("whitespace", granularity, cadence, vary_chars)
+        if whitespace_aug is None
+        else whitespace_aug
     )
     aug_texts = whitespace_aug.augment(texts)
 
@@ -287,6 +345,7 @@ def insert_zero_width_chars(
     granularity: str = "all",
     cadence: float = 1.0,
     vary_chars: bool = False,
+    zero_width_aug: Optional[a.InsertionAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -304,16 +363,27 @@ def insert_zero_width_chars(
     @param vary_chars: if true, picks a different zero-width char each time one
         is used instead of just one per word/text
 
+    @param zero_width_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented texts
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata, locals(), zero_width_aug=(
+            type(zero_width_aug).__name__
+            if zero_width_aug is not None
+            else zero_width_aug
+        ),
+    )
 
-    zero_width_aug = a.InsertionAugmenter(
-        "zero_width", granularity, cadence, vary_chars
+    zero_width_aug = (
+        a.InsertionAugmenter("zero_width", granularity, cadence, vary_chars)
+        if zero_width_aug is None
+        else zero_width_aug
     )
     aug_texts = zero_width_aug.augment(texts)
 
@@ -335,6 +405,7 @@ def merge_words(
     aug_word_max: int = 1000,
     n: int = 1,
     priority_words: Optional[List[str]] = None,
+    merge_aug: Optional[a.WordsAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -355,16 +426,27 @@ def merge_words(
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
 
+    @param merge_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata,
+        locals(),
+        merge_aug=type(merge_aug).__name__ if merge_aug is not None else merge_aug,
+    )
 
-    merge_aug = a.WordsAugmenter(
-        "delete", min_char, aug_word_min, aug_word_max, aug_word_p, priority_words
+    merge_aug = (
+        a.WordsAugmenter(
+            "delete", min_char, aug_word_min, aug_word_max, aug_word_p, priority_words
+        )
+        if merge_aug is None
+        else merge_aug
     )
     aug_texts = merge_aug.augment(texts, n)
 
@@ -382,6 +464,7 @@ def replace_bidirectional(
     texts: Union[str, List[str]],
     granularity: str = "all",
     split_word: bool = False,
+    bidirectional_aug: Optional[a.BidirectionalAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -397,15 +480,28 @@ def replace_bidirectional(
     @param split_word: if true and granularity is 'word', reverses only the second
         half of each word
 
+    @param bidirectional_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented texts
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata, locals(), bidirectional_aug=(
+            type(bidirectional_aug).__name__
+            if bidirectional_aug is not None
+            else bidirectional_aug
+        ),
+    )
 
-    bidirectional_aug = a.BidirectionalAugmenter(granularity, split_word)
+    bidirectional_aug = (
+        a.BidirectionalAugmenter(granularity, split_word)
+        if bidirectional_aug is None
+        else bidirectional_aug
+    )
     aug_texts = bidirectional_aug.augment(texts)
 
     txtutils.get_metadata(
@@ -428,6 +524,7 @@ def replace_fun_fonts(
     fonts_path: str = FUN_FONTS_PATH,
     n: int = 1,
     priority_words: Optional[List[str]] = None,
+    fun_fonts_aug: Optional[a.FunFontsAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ):
     """
@@ -453,16 +550,29 @@ def replace_fun_fonts(
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
 
+    @param fun_fonts_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata, locals(), fun_fonts_aug=(
+            type(fun_fonts_aug).__name__
+            if fun_fonts_aug is not None
+            else fun_fonts_aug
+        ),
+    )
 
-    fun_fonts_aug = a.FunFontsAugmenter(
-        granularity, aug_min, aug_max, aug_p, vary_fonts, fonts_path, priority_words
+    fun_fonts_aug = (
+        a.FunFontsAugmenter(
+            granularity, aug_min, aug_max, aug_p, vary_fonts, fonts_path, priority_words
+        )
+        if fun_fonts_aug is None
+        else fun_fonts_aug
     )
     aug_texts = fun_fonts_aug.augment(texts, n)
 
@@ -488,6 +598,7 @@ def replace_similar_chars(
     n: int = 1,
     mapping_path: Optional[str] = None,
     priority_words: Optional[List[str]] = None,
+    char_aug: Optional[a.LetterReplacementAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -516,24 +627,35 @@ def replace_similar_chars(
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
 
+    @param char_aug: if provided, this will be the augmenter used in this augmentation.
+        If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata,
+        locals(),
+        char_aug=type(char_aug).__name__ if char_aug is not None else char_aug,
+    )
 
-    char_aug = a.LetterReplacementAugmenter(
-        min_char,
-        aug_char_min,
-        aug_char_max,
-        aug_char_p,
-        aug_word_min,
-        aug_word_max,
-        aug_word_p,
-        mapping_path,
-        priority_words,
+    char_aug = (
+        a.LetterReplacementAugmenter(
+            min_char,
+            aug_char_min,
+            aug_char_max,
+            aug_char_p,
+            aug_word_min,
+            aug_word_max,
+            aug_word_p,
+            mapping_path,
+            priority_words,
+        )
+        if char_aug is None
+        else char_aug
     )
     aug_texts = char_aug.augment(texts, n)
 
@@ -559,6 +681,7 @@ def replace_similar_unicode_chars(
     n: int = 1,
     mapping_path: str = UNICODE_MAPPING_PATH,
     priority_words: Optional[List[str]] = None,
+    unicode_aug: Optional[a.LetterReplacementAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -587,24 +710,35 @@ def replace_similar_unicode_chars(
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
 
+    @param unicode_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata, locals(), unicode_aug=(
+            type(unicode_aug).__name__ if unicode_aug is not None else unicode_aug
+        ),
+    )
 
-    unicode_aug = a.LetterReplacementAugmenter(
-        min_char,
-        aug_char_min,
-        aug_char_max,
-        aug_char_p,
-        aug_word_min,
-        aug_word_max,
-        aug_word_p,
-        mapping_path,
-        priority_words,
+    unicode_aug = (
+        a.LetterReplacementAugmenter(
+            min_char,
+            aug_char_min,
+            aug_char_max,
+            aug_char_p,
+            aug_word_min,
+            aug_word_max,
+            aug_word_p,
+            mapping_path,
+            priority_words,
+        )
+        if unicode_aug is None
+        else unicode_aug
     )
     aug_texts = unicode_aug.augment(texts, n)
 
@@ -625,6 +759,7 @@ def replace_upside_down(
     aug_max: int = 1000,
     granularity: str = "all",
     n: int = 1,
+    upside_down_aug: Optional[a.UpsideDownAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -643,15 +778,28 @@ def replace_upside_down(
 
     @param n: number of augmentations to be performed for each text
 
+    @param upside_down_aug: if provided, this will be the augmenter used in this
+        augmentation. If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata, locals(), upside_down_aug=(
+            type(upside_down_aug).__name__
+            if upside_down_aug is not None
+            else upside_down_aug
+        ),
+    )
 
-    upside_down_aug = a.UpsideDownAugmenter(granularity, aug_min, aug_max, aug_p)
+    upside_down_aug = (
+        a.UpsideDownAugmenter(granularity, aug_min, aug_max, aug_p)
+        if upside_down_aug is None
+        else upside_down_aug
+    )
     aug_texts = upside_down_aug.augment(texts, n)
 
     txtutils.get_metadata(
@@ -673,6 +821,7 @@ def replace_words(
     mapping: Optional[Union[str, Dict[str, Any]]] = None,
     priority_words: Optional[List[str]] = None,
     ignore_words: Optional[List[str]] = None,
+    word_aug: Optional[a.WordReplacementAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -696,16 +845,27 @@ def replace_words(
 
     @param ignore_words: list of words that the augmenter should not augment
 
+    @param word_aug: if provided, this will be the augmenter used in this augmentation.
+        If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata,
+        locals(),
+        word_aug=type(word_aug).__name__ if word_aug is not None else word_aug,
+    )
 
-    word_aug = a.WordReplacementAugmenter(
-        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words, ignore_words
+    word_aug = (
+        a.WordReplacementAugmenter(
+            aug_word_min, aug_word_max, aug_word_p, mapping, priority_words, ignore_words
+        )
+        if word_aug is None
+        else word_aug
     )
     aug_texts = word_aug.augment(texts, n)
 
@@ -732,6 +892,7 @@ def simulate_typos(
     typo_type: str = "all",
     misspelling_dict_path: Optional[str] = MISSPELLING_DICTIONARY_PATH,
     priority_words: Optional[List[str]] = None,
+    typo_aug: Optional[a.TypoAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -774,25 +935,36 @@ def simulate_typos(
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
 
+    @param typo_aug: if provided, this will be the augmenter used in this augmentation.
+        If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata,
+        locals(),
+        typo_aug=type(typo_aug).__name__ if typo_aug is not None else typo_aug,
+    )
 
-    typo_aug = a.TypoAugmenter(
-        min_char,
-        aug_char_min,
-        aug_char_max,
-        aug_char_p,
-        aug_word_min,
-        aug_word_max,
-        aug_word_p,
-        typo_type,
-        misspelling_dict_path,
-        priority_words,
+    typo_aug = (
+        a.TypoAugmenter(
+            min_char,
+            aug_char_min,
+            aug_char_max,
+            aug_char_p,
+            aug_word_min,
+            aug_word_max,
+            aug_word_p,
+            typo_type,
+            misspelling_dict_path,
+            priority_words,
+        )
+        if typo_aug is None
+        else typo_aug
     )
     aug_texts = typo_aug.augment(texts, n)
 
@@ -814,6 +986,7 @@ def split_words(
     aug_word_max: int = 1000,
     n: int = 1,
     priority_words: Optional[List[str]] = None,
+    split_aug: Optional[a.WordsAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -834,16 +1007,27 @@ def split_words(
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
 
+    @param split_aug: if provided, this will be the augmenter used in this augmentation.
+        If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata,
+        locals(),
+        split_aug=type(split_aug).__name__ if split_aug is not None else split_aug,
+    )
 
-    split_aug = a.WordsAugmenter(
-        "split", min_char, aug_word_min, aug_word_max, aug_word_p, priority_words
+    split_aug = (
+        a.WordsAugmenter(
+            "split", min_char, aug_word_min, aug_word_max, aug_word_p, priority_words
+        )
+        if split_aug is None
+        else split_aug
     )
     aug_texts = split_aug.augment(texts, n)
 
@@ -866,6 +1050,7 @@ def swap_gendered_words(
     mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
     priority_words: Optional[List[str]] = None,
     ignore_words: Optional[List[str]] = None,
+    word_aug: Optional[a.WordReplacementAugmenter] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
     """
@@ -893,18 +1078,29 @@ def swap_gendered_words(
 
     @param ignore_words: list of words that the augmenter should not augment
 
+    @param word_aug: if provided, this will be the augmenter used in this augmentation.
+        If not a new one will be initialized
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
         the inputted list. If set to None, no metadata will be appended or returned
 
     @returns: the list of augmented text documents
     """
-    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+    func_kwargs = txtutils.get_func_kwargs(
+        metadata,
+        locals(),
+        word_aug=type(word_aug).__name__ if word_aug is not None else word_aug,
+    )
 
     mapping = txtutils.get_gendered_words_mapping(mapping)
 
-    word_aug = a.WordReplacementAugmenter(
-        aug_word_min, aug_word_max, aug_word_p, mapping, priority_words, ignore_words
+    word_aug = (
+        a.WordReplacementAugmenter(
+            aug_word_min, aug_word_max, aug_word_p, mapping, priority_words, ignore_words
+        )
+        if word_aug is None
+        else word_aug
     )
     aug_texts = word_aug.augment(texts, n)
 
