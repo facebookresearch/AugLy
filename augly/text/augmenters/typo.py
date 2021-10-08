@@ -154,11 +154,11 @@ class TypoAugmenter(WordAugmenter):
 
         for t_i in range(1, self.max_typo_length + 1):
             i = 0
-            in_idex = True
-            while i <= len(tokens) - t_i and in_idex:
-                if t_i not in aug_word_idxes:
+            while i <= len(tokens) - t_i:
+                if i not in aug_word_idxes:
                     results.append(tokens[i])
-                    in_idex = False
+                    i += 1
+                    continue
 
                 misspellings = self.model.replace(
                     " ".join(tokens[i : i + t_i])
@@ -166,12 +166,11 @@ class TypoAugmenter(WordAugmenter):
                 if misspellings:
                     misspelling = self.sample(misspellings, 1)[0]
                     results.append(self.align_capitalization(tokens[i], misspelling))
-                    i += 1
+                    i += t_i - 1
                 elif len(self.augmenters) > 0:
                     aug = self.sample(self.augmenters, 1)[0]
                     new_token = aug.augment(tokens[i])
                     results.append(self.align_capitalization(tokens[i], new_token))
-                    i += 1
                 else:
                     # If no misspelling is found in the dict & no other typo types are being
                     # used, don't change the token
