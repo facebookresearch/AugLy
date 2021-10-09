@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
+# @lint-ignore-every UTF8
 
 import random
 import unittest
@@ -230,7 +231,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_bidirectional,
             [
-                "\u202e.llih yssarg ,neerg eht revo pmuj t'ndluoc 'xof' nworb kciuq ehT\u202c"  # noqa: B950
+                "\u202e.llih yssarg ,neerg eht revo pmuj t'ndluoc 'xof' nworb kciuq ehT\u202c"
             ],
         )
         augmented_bidirectional_word = txtaugs.replace_bidirectional(
@@ -388,6 +389,27 @@ class FunctionalTextUnitTest(unittest.TestCase):
     def test_replace_words(self) -> None:
         augmented_words = txtaugs.replace_words(self.texts, aug_word_p=0.3)
         self.assertTrue(augmented_words[0] == self.texts[0])
+
+        augmented_words = txtaugs.replace_words(
+            self.texts,
+            mapping={"jump": "hop", "brown": "orange", "green": "blue", "the": "a"},
+            aug_word_p=1.0,
+        )
+        self.assertTrue(
+            augmented_words[0]
+            == "A quick orange 'fox' couldn't hop over a blue, grassy hill.",
+        )
+
+        augmented_words = txtaugs.replace_words(
+            self.texts,
+            mapping={"jump": "hop", "brown": "orange", "green": "blue", "the": "a"},
+            aug_word_p=1.0,
+            ignore_words=["green", "jump"],
+        )
+        self.assertTrue(
+            augmented_words[0]
+            == "A quick orange 'fox' couldn't jump over a green, grassy hill.",
+        )
 
     def test_simulate_typos(self) -> None:
         augmented_typos = txtaugs.simulate_typos(

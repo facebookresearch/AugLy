@@ -60,7 +60,9 @@ class WordReplacementAugmenter(WordAugmenter):
             set(priority_words) if priority_words is not None else priority_words
         )
         self.ignore_words = (
-            set(ignore_words) if ignore_words is not None else set()
+            {word.lower() for word in ignore_words}
+            if ignore_words is not None
+            else set()
         )
 
     def get_mapping(
