@@ -69,7 +69,7 @@ class ContractionAugmenter(object):
                 )
                 if contraction is not None and self.rng.rand() <= self.aug_p:
                     results.append(contraction)
-                    i += 1
+                    i += c_len - 1
                 else:
                     results.append(tokens[i])
                 i += 1
