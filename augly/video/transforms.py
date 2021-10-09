@@ -290,7 +290,6 @@ class AugmentAudio(BaseTransform):
         @param p: the probability of the transform being applied; default value is 1.0
 
         @param audio_aug_kwargs: the input attributes to be passed into `audio_aug`
-
         """
         super().__init__(p)
         self.audio_aug_function = audio_aug_function
@@ -463,10 +462,10 @@ class Brightness(BaseTransform):
         @returns: the path to the augmented video
         """
         return F.brightness(
-                video_path,
-                output_path,
-                level=self.chosen_value,
-                metadata=metadata,
+            video_path,
+            output_path,
+            level=self.chosen_value,
+            metadata=metadata,
         )
 
 
@@ -2141,7 +2140,10 @@ class VFlip(BaseTransform):
 
 class VStack(BaseTransform):
     def __init__(
-        self, second_video_path: str, use_second_audio: bool = False, p: float = 1.0,
+        self, 
+        second_video_path: str, 
+        use_second_audio: bool = False, 
+        p: float = 1.0,
     ):
         """
         @param second_video_path: the path to the video that will be stacked on
@@ -2309,7 +2311,10 @@ class RandomBrightness(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.brightness(
-            video_path, output_path, level=self.chosen_value, metadata=metadata,
+            video_path, 
+            output_path, 
+            level=self.chosen_value, 
+            metadata=metadata,
         )
 
 
@@ -2456,7 +2461,10 @@ class RandomEncodingQuality(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.encoding_quality(
-            video_path, output_path, quality=int(self.chosen_value), metadata=metadata,
+            video_path, 
+            output_path, 
+            quality=int(self.chosen_value), 
+            metadata=metadata,
         )
 
 
@@ -2570,7 +2578,10 @@ class RandomPixelization(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.pixelization(
-            video_path, output_path, ratio=self.chosen_value, metadata=metadata,
+            video_path, 
+            output_path, 
+            ratio=self.chosen_value, 
+            metadata=metadata,
         )
 
 
