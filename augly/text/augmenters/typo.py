@@ -118,6 +118,8 @@ class TypoAugmenter(WordAugmenter):
             assert max_typo_length >= 1, "Must set 'max_typo_length' >= 1"
             self.max_typo_length = max_typo_length
             self.model = self.get_model(misspelling_dict_path)
+        else:
+            self.max_typo_length = 1;
 
         self.priority_words = (
             set(priority_words) if priority_words is not None else priority_words
@@ -177,7 +179,8 @@ class TypoAugmenter(WordAugmenter):
                     results.append(tokens[i])
                 i += 1
 
-            results.extend(tokens[-t_i + 1 :])
+            if (t_i > 1):
+                results.extend(tokens[-t_i + 1: ])
 
         return detokenize(results)
 
