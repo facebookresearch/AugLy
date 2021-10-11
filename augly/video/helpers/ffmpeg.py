@@ -5,7 +5,6 @@ import io
 import math
 import os
 import shutil
-import numpy as np
 from typing import Any, Dict, Optional, Union
 
 import augly.audio.utils as audutils
