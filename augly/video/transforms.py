@@ -865,7 +865,10 @@ class HFlip(BaseTransform):
 
 class HStack(BaseTransform):
     def __init__(
-        self, second_video_path: str, use_second_audio: bool = False, p: float = 1.0,
+        self, 
+        second_video_path: str, 
+        use_second_audio: bool = False, 
+        p: float = 1.0,
     ):
         """
         @param second_video_path: the path to the video that will be stacked
@@ -2140,9 +2143,9 @@ class VFlip(BaseTransform):
 
 class VStack(BaseTransform):
     def __init__(
-        self, 
-        second_video_path: str, 
-        use_second_audio: bool = False, 
+        self,
+        second_video_path: str,
+        use_second_audio: bool = False,
         p: float = 1.0,
     ):
         """
@@ -2311,9 +2314,9 @@ class RandomBrightness(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.brightness(
-            video_path, 
-            output_path, 
-            level=self.chosen_value, 
+            video_path,
+            output_path,
+            level=self.chosen_value,
             metadata=metadata,
         )
 
@@ -2461,9 +2464,9 @@ class RandomEncodingQuality(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.encoding_quality(
-            video_path, 
-            output_path, 
-            quality=int(self.chosen_value), 
+            video_path,
+            output_path,
+            quality=int(self.chosen_value),
             metadata=metadata,
         )
 
@@ -2578,9 +2581,9 @@ class RandomPixelization(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.pixelization(
-            video_path, 
-            output_path, 
-            ratio=self.chosen_value, 
+            video_path,
+            output_path,
+            ratio=self.chosen_value,
             metadata=metadata,
         )
 
