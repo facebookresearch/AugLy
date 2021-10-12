@@ -464,7 +464,7 @@ class Brightness(BaseTransform):
         return F.brightness(
             video_path,
             output_path,
-            level=self.chosen_value,
+            level=self.level,
             metadata=metadata,
         )
 
@@ -776,7 +776,7 @@ class EncodingQuality(BaseTransform):
         return F.encoding_quality(
             video_path,
             output_path,
-            quality=int(self.chosen_value),
+            quality=int(self.quality),
             metadata=metadata,
         )
 
@@ -865,9 +865,9 @@ class HFlip(BaseTransform):
 
 class HStack(BaseTransform):
     def __init__(
-        self, 
-        second_video_path: str, 
-        use_second_audio: bool = False, 
+        self,
+        second_video_path: str,
+        use_second_audio: bool = False,
         p: float = 1.0,
     ):
         """
@@ -1689,7 +1689,7 @@ class Pixelization(BaseTransform):
         return F.pixelization(
             video_path,
             output_path,
-            ratio=self.chosen_value,
+            ratio=self.ratio,
             metadata=metadata,
         )
 
