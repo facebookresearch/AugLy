@@ -58,14 +58,18 @@ def replace_similar_chars_intensity(
     aug_char_p: float, aug_word_p: float, aug_char_max: int, aug_word_max: int, **kwargs
 ) -> float:
     # we only care if aug_*_max is zero or not, so it's okay to multiply the values here
-    return replace_intensity_helper(aug_word_p * aug_char_p, aug_word_max * aug_char_max)
+    return replace_intensity_helper(
+        aug_word_p * aug_char_p, aug_word_max * aug_char_max
+    )
 
 
 def replace_similar_unicode_chars_intensity(
     aug_char_p: float, aug_word_p: float, aug_char_max: int, aug_word_max: int, **kwargs
 ) -> float:
     # we only care if aug_*_max is zero or not, so it's okay to multiply the values here
-    return replace_intensity_helper(aug_word_p * aug_char_p, aug_word_max * aug_char_max)
+    return replace_intensity_helper(
+        aug_word_p * aug_char_p, aug_word_max * aug_char_max
+    )
 
 
 def replace_upside_down_intensity(
@@ -80,18 +84,16 @@ def replace_words_intensity(
     mapping: Optional[Union[str, Dict[str, Any]]],
     **kwargs,
 ) -> float:
-    return (
-        0.0
-        if not mapping
-        else replace_intensity_helper(aug_word_p, aug_word_max)
-    )
+    return 0.0 if not mapping else replace_intensity_helper(aug_word_p, aug_word_max)
 
 
 def simulate_typos_intensity(
     aug_char_p: float, aug_word_p: float, aug_char_max: int, aug_word_max: int, **kwargs
 ) -> float:
     # we only care if aug_*_max is zero or not, so it's okay to multiply the values here
-    return replace_intensity_helper(aug_word_p * aug_char_p, aug_word_max * aug_char_max)
+    return replace_intensity_helper(
+        aug_word_p * aug_char_p, aug_word_max * aug_char_max
+    )
 
 
 def split_words_intensity(aug_word_p: float, aug_word_max: int, **kwargs) -> float:

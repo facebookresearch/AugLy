@@ -93,9 +93,7 @@ class LetterReplacementAugmenter(CharAugmenter):
         )
         filtered_word_idxes = self.skip_aug(self.pre_skip_aug(tokens), tokens)
         aug_word_idxes = set(
-            get_aug_idxes(
-                self, tokens, filtered_word_idxes, aug_word_cnt, Method.WORD
-            )
+            get_aug_idxes(self, tokens, filtered_word_idxes, aug_word_cnt, Method.WORD)
         )
 
         for t_i, token in enumerate(tokens):

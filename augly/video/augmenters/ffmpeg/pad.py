@@ -4,7 +4,7 @@
 from typing import Dict, Tuple
 
 from augly.utils import validate_rgb_color
-from augly.video.augmenters.ffmpeg import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
 from augly.video.helpers import get_video_info
 from ffmpeg.nodes import FilterableStream
 

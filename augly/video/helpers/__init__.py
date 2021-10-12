@@ -11,7 +11,6 @@ from augly.video.helpers.ffmpeg import (
     get_video_info,
     has_audio_stream,
 )
-
 from augly.video.helpers.intensity import (
     add_noise_intensity,
     apply_lambda_intensity,
@@ -56,7 +55,6 @@ from augly.video.helpers.intensity import (
     vflip_intensity,
     vstack_intensity,
 )
-
 from augly.video.helpers.metadata import (
     compute_changed_segments,
     compute_segments,
@@ -65,7 +63,6 @@ from augly.video.helpers.metadata import (
     get_func_kwargs,
     get_metadata,
 )
-
 from augly.video.helpers.utils import (
     create_color_video,
     create_video_from_image,

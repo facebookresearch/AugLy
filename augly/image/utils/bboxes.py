@@ -2,10 +2,10 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import math
-import numpy as np
 from typing import List, Optional, Tuple
 
 import augly.image.utils as imutils
+import numpy as np
 
 
 def crop_bboxes_helper(
@@ -145,7 +145,12 @@ def overlay_onto_screenshot_bboxes_helper(
         src_scale_factor = min(tbbox_w / src_w, tbbox_h / src_h)
     else:
         template, tbbox = imutils.scale_template_image(
-            src_w, src_h, template, tbbox, max_image_size_pixels, crop_src_to_fit,
+            src_w,
+            src_h,
+            template,
+            tbbox,
+            max_image_size_pixels,
+            crop_src_to_fit,
         )
         tbbox_w, tbbox_h = tbbox[2] - tbbox[0], tbbox[3] - tbbox[1]
         src_scale_factor = 1
@@ -156,7 +161,10 @@ def overlay_onto_screenshot_bboxes_helper(
     # Src image is scaled (if resize_src_to_match_template)
     curr_w, curr_h = src_w * src_scale_factor, src_h * src_scale_factor
     left, upper, right, lower = (
-        left_f * curr_w, upper_f * curr_h, right_f * curr_w, lower_f * curr_h
+        left_f * curr_w,
+        upper_f * curr_h,
+        right_f * curr_w,
+        lower_f * curr_h,
     )
 
     # Src image is cropped to (tbbox_w, tbbox_h)
@@ -167,13 +175,19 @@ def overlay_onto_screenshot_bboxes_helper(
             bbox, x1 / curr_w, y1 / curr_h, x2 / curr_w, y2 / curr_h
         )
         left, upper, right, lower = (
-            left_f * tbbox_w, upper_f * tbbox_h, right_f * tbbox_w, lower_f * tbbox_h
+            left_f * tbbox_w,
+            upper_f * tbbox_h,
+            right_f * tbbox_w,
+            lower_f * tbbox_h,
         )
     # Src image is resized to (tbbox_w, tbbox_h)
     else:
         resize_f = min(tbbox_w / curr_w, tbbox_h / curr_h)
         left, upper, right, lower = (
-            left * resize_f, upper * resize_f, right * resize_f, lower * resize_f
+            left * resize_f,
+            upper * resize_f,
+            right * resize_f,
+            lower * resize_f,
         )
         curr_w, curr_h = curr_w * resize_f, curr_h * resize_f
 
@@ -181,11 +195,19 @@ def overlay_onto_screenshot_bboxes_helper(
         padding_x = max(0, (tbbox_w - curr_w) // 2)
         padding_y = max(0, (tbbox_h - curr_h) // 2)
         left, upper, right, lower = (
-            left + padding_x, upper + padding_y, right + padding_x, lower + padding_y
+            left + padding_x,
+            upper + padding_y,
+            right + padding_x,
+            lower + padding_y,
         )
 
     # Src image is overlaid onto template image
-    left, upper, right, lower = left + x_off, upper + y_off, right + x_off, lower + y_off
+    left, upper, right, lower = (
+        left + x_off,
+        upper + y_off,
+        right + x_off,
+        lower + y_off,
+    )
 
     return left / template_w, upper / template_h, right / template_w, lower / template_h
 
@@ -291,12 +313,16 @@ def perspective_transform_bboxes_helper(
 
     left_f, upper_f, right_f, lower_f = bbox
     left, upper, right, lower = (
-        left_f * src_w, upper_f * src_h, right_f * src_w, lower_f * src_h
+        left_f * src_w,
+        upper_f * src_h,
+        right_f * src_w,
+        lower_f * src_h,
     )
     bbox_coords = [(left, upper), (right, upper), (right, lower), (left, lower)]
 
     transformed_bbox_coords = [
-        transform(x + 0.5, y + 0.5, perspective_transform_coeffs) for x, y in bbox_coords
+        transform(x + 0.5, y + 0.5, perspective_transform_coeffs)
+        for x, y in bbox_coords
     ]
 
     transformed_xs, transformed_ys = zip(*transformed_bbox_coords)
@@ -338,7 +364,10 @@ def rotate_bboxes_helper(
     """
     left_f, upper_f, right_f, lower_f = bbox
     left, upper, right, lower = (
-        left_f * src_w, upper_f * src_h, right_f * src_w, lower_f * src_h
+        left_f * src_w,
+        upper_f * src_h,
+        right_f * src_w,
+        lower_f * src_h,
     )
     # Top left, upper right, lower right, & lower left corner coefficients (in pixels)
     bbox_corners = [(left, upper), (right, upper), (right, lower), (left, lower)]
@@ -378,9 +407,12 @@ def rotate_bboxes_helper(
 
     # Get rotated image dimensions
     src_img_corners = [(0, 0), (src_w, 0), (src_w, src_h), (0, src_h)]
-    rotated_img_min_x, rotated_img_min_y, rotated_img_max_x, rotated_img_max_y = (
-        get_enclosing_bbox(src_img_corners, rotation_matrix)
-    )
+    (
+        rotated_img_min_x,
+        rotated_img_min_y,
+        rotated_img_max_x,
+        rotated_img_max_y,
+    ) = get_enclosing_bbox(src_img_corners, rotation_matrix)
     rotated_img_w = rotated_img_max_x - rotated_img_min_x
     rotated_img_h = rotated_img_max_y - rotated_img_min_y
 

@@ -2,9 +2,9 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import re
-import regex
 from typing import List, Optional, Tuple
 
+import regex
 from augly.utils.libsndfile import install_libsndfile
 
 
@@ -245,10 +245,9 @@ def get_aug_idxes(
     idxes = []
     for i in filtered_idxes:
         if i not in priority_idxes:
-            if (
-                (min_char is None or len(tokens[i]) >= min_char)
-                and tokens[i].lower() not in ignore_words
-            ):
+            if (min_char is None or len(tokens[i]) >= min_char) and tokens[
+                i
+            ].lower() not in ignore_words:
                 idxes.append(i)
 
     if len(priority_idxes) + len(idxes) == 0:
