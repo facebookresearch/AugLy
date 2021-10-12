@@ -967,7 +967,7 @@ def meme_format(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(meme, output_path)
+    return imutils.ret_and_save_image(meme, output_path, src_mode)
 
 
 def opacity(
@@ -1074,7 +1074,6 @@ def overlay_emoji(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    src_mode = image.mode
 
     local_emoji_path = utils.pathmgr.get_local_path(emoji_path)
 
@@ -1095,7 +1094,7 @@ def overlay_emoji(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+    return aug_image
 
 
 def overlay_image(
@@ -1715,7 +1714,6 @@ def pad_square(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    src_mode = image.mode
 
     width, height = image.size
 
@@ -1737,7 +1735,7 @@ def pad_square(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+    return aug_image
 
 
 def perspective_transform(
