@@ -937,8 +937,8 @@ class SimulateTypos(BaseTransform):
             otherwise can be None
 
         @param max_typo_length: the words in the misspelling dictionary will be checked for
-        matches in the mapping up to this length; i.e. if 'max_typo_length' is 3 then
-        every substring of 2 *and* 3 words will be checked
+            matches in the mapping up to this length; i.e. if 'max_typo_length' is 3 then
+            every substring of 2 *and* 3 words will be checked
 
         @param priority_words: list of target words that the augmenter should
             prioritize to augment first

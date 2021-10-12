@@ -35,7 +35,7 @@ def are_equal_metadata(
             if not (
                 isinstance(act_v, str)
                 and isinstance(exp_v, str)
-                and act_v[-len(exp_v) :] == exp_v
+                and os.path.split(os.path.normpath(act_v[-len(exp_v):]).split(os.path.sep)) == os.path.split(os.path.normpath(exp_v).split(os.path.sep))
             ):
                 return False
 
