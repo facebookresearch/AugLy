@@ -67,7 +67,9 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
         self.evaluate_class(vidaugs.Crop(), fname="crop")
 
     def test_EncodingQuality(self):
-        self.evaluate_class(vidaugs.EncodingQuality(quality=37), fname="encoding_quality")
+        self.evaluate_class(
+            vidaugs.EncodingQuality(quality=37), fname="encoding_quality"
+        )
 
     def test_FPS(self):
         self.evaluate_class(vidaugs.FPS(), fname="fps")
@@ -95,13 +97,17 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
         self.evaluate_class(vidaugs.Pad(), fname="pad")
 
     def test_RandomAspectRatio(self):
-        self.evaluate_class(vidaugs.RandomAspectRatio(), fname="RandomAspectRatio", seed=1)
+        self.evaluate_class(
+            vidaugs.RandomAspectRatio(), fname="RandomAspectRatio", seed=1
+        )
 
     def test_RandomBlur(self):
         self.evaluate_class(vidaugs.RandomBlur(), fname="RandomBlur", seed=1)
 
     def test_RandomBrightness(self):
-        self.evaluate_class(vidaugs.RandomBrightness(), fname="RandomBrightness", seed=1)
+        self.evaluate_class(
+            vidaugs.RandomBrightness(), fname="RandomBrightness", seed=1
+        )
 
     def test_RandomContrast(self):
         self.evaluate_class(vidaugs.RandomContrast(), fname="RandomContrast", seed=1)
@@ -121,7 +127,9 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
         self.evaluate_class(vidaugs.RandomRotation(), fname="RandomRotation", seed=1)
 
     def test_RandomVideoSpeed(self):
-        self.evaluate_class(vidaugs.RandomVideoSpeed(), fname="RandomVideoSpeed", seed=1)
+        self.evaluate_class(
+            vidaugs.RandomVideoSpeed(), fname="RandomVideoSpeed", seed=1
+        )
 
     def test_RemoveAudio(self):
         self.evaluate_class(vidaugs.RemoveAudio(), fname="remove_audio")

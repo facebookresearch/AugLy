@@ -29,7 +29,6 @@ from augly.utils.base_paths import (
     VIDEO_METADATA_PATH,
 )
 from augly.utils.classes import Segment
-from augly.utils.functions import compute_time_crop_segments
 from augly.utils.constants import (
     BBOXES_PATH,
     CONTRACTIONS_MAPPING,
@@ -53,6 +52,7 @@ from augly.utils.constants import (
     UNICODE_MAPPING_PATH,
     WHITE_RGB_COLOR,
 )
+from augly.utils.functions import compute_time_crop_segments
 from augly.utils.io import pathmgr
 
 

@@ -27,7 +27,9 @@ class MisspellingReplacement(object):
             self.dictionary = json.load(json_file)
 
     def replace(self, word: str) -> Optional[List[str]]:
-        return self.dictionary.get(word, None) or self.dictionary.get(word.lower(), None)
+        return self.dictionary.get(word, None) or self.dictionary.get(
+            word.lower(), None
+        )
 
 
 class TypoAugmenter(WordAugmenter):
@@ -61,9 +63,12 @@ class TypoAugmenter(WordAugmenter):
             aug_word_p,
         )
 
-        assert (
-            typo_type in ["all", "charmix", "keyboard", "misspelling"]
-        ), "Typo type must be one of: all, charmix, keyboard, misspelling"
+        assert typo_type in [
+            "all",
+            "charmix",
+            "keyboard",
+            "misspelling",
+        ], "Typo type must be one of: all, charmix, keyboard, misspelling"
 
         super().__init__(
             action=Action.SUBSTITUTE,
@@ -74,7 +79,12 @@ class TypoAugmenter(WordAugmenter):
 
         self.augmenters, self.model = [], None
         if typo_type in ["all", "charmix"]:
-            for action in [Action.DELETE, Action.INSERT, Action.SUBSTITUTE, Action.SWAP]:
+            for action in [
+                Action.DELETE,
+                Action.INSERT,
+                Action.SUBSTITUTE,
+                Action.SWAP,
+            ]:
                 self.augmenters.append(
                     RandomCharAug(
                         action=action,
@@ -136,9 +146,7 @@ class TypoAugmenter(WordAugmenter):
         )
         filtered_word_idxes = self.skip_aug(self.pre_skip_aug(tokens), tokens)
         aug_word_idxes = set(
-            get_aug_idxes(
-                self, tokens, filtered_word_idxes, aug_word_cnt, Method.WORD
-            )
+            get_aug_idxes(self, tokens, filtered_word_idxes, aug_word_cnt, Method.WORD)
         )
 
         for t_i, token in enumerate(tokens):
