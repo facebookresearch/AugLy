@@ -35,7 +35,7 @@ def are_equal_metadata(
             if not (
                 isinstance(act_v, str)
                 and isinstance(exp_v, str)
-                and act_v[-len(exp_v):] == exp_v
+                and act_v[-len(exp_v) :] == exp_v
             ):
                 return False
 
@@ -62,9 +62,7 @@ class TransformsTextUnitTest(unittest.TestCase):
         with open(TEXT_METADATA_PATH, "r") as f:
             cls.expected_metadata = json.load(f)
 
-        cls.texts = [
-            "The quick brown 'fox' couldn't jump over the green, grassy hill."
-        ]
+        cls.texts = ["The quick brown 'fox' couldn't jump over the green, grassy hill."]
         cls.priority_words = ["green", "grassy", "hill"]
 
         cls.fairness_texts = [
@@ -101,7 +99,7 @@ class TransformsTextUnitTest(unittest.TestCase):
         )
 
         self.assertTrue(
-            augmented_words[0]== "I'd call him but I don't know where he's gone"
+            augmented_words[0] == "I'd call him but I don't know where he's gone"
         )
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["contractions"])
@@ -340,7 +338,9 @@ class TransformsTextUnitTest(unittest.TestCase):
             == "The queen and king have a daughter named Raj and a son named Amanda.",
         )
         self.assertTrue(
-            are_equal_metadata(self.metadata, self.expected_metadata["swap_gendered_words"]),
+            are_equal_metadata(
+                self.metadata, self.expected_metadata["swap_gendered_words"]
+            ),
         )
 
 

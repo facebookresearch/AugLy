@@ -4,7 +4,7 @@
 from typing import Dict, Optional, Tuple
 
 import ffmpeg  # @manual
-from augly.video.augmenters.ffmpeg import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
 from augly.video.helpers import get_video_info, has_audio_stream
 from ffmpeg.nodes import FilterableStream
 

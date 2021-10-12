@@ -2,9 +2,9 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import math
-import numpy as np
 from typing import List, Optional, Union
 
+import numpy as np
 from augly.text.augmenters.utils import (
     rejoin_words_and_whitespace,
     split_words_on_whitespace,
@@ -46,11 +46,16 @@ class CaseAugmenter(object):
         seed: Optional[int] = 10,
     ):
         assert granularity in {
-            "char", "word", "all"
+            "char",
+            "word",
+            "all",
         }, "Must set 'granularity' to either 'word' or 'all'."
         assert cadence >= 1.0, "Must set 'cadence' to be no less than 1.0."
         assert case in {
-            "lower", "upper", "title", "random"
+            "lower",
+            "upper",
+            "title",
+            "random",
         }, "'case' must be one of: lower, upper, title, random"
 
         self.case_changer = CaseChanger(case, seed)

@@ -66,7 +66,7 @@ class WordsAugmenter(WordAugmenter):
             return data
 
         t_i = 0
-        while(t_i < len(tokens)):
+        while t_i < len(tokens):
             if t_i in aug_word_idxes and len(tokens[t_i + 1]) >= self.min_char:
                 results.append(tokens[t_i] + tokens[t_i + 1])
                 t_i += 1
