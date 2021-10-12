@@ -83,8 +83,8 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
     def test_ReplaceWithBackground(self):
         self.evaluate_class(
             vidaugs.ReplaceWithBackground(
-                source_offset=0.1, 
-                background_offset=0, 
+                source_offset=0.1,
+                background_offset=0,
                 source_percentage=0.7,
             ),
             fname="replace_with_background",
