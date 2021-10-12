@@ -4,16 +4,15 @@
 import math
 from typing import Dict, Tuple, Union
 
-from augly.video.augmenters.ffmpeg import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
 from augly.video.helpers import get_video_info
 from ffmpeg.nodes import FilterableStream
 
 
 class VideoAugmenterByAspectRatio(BaseFFMPEGAugmenter):
     def __init__(self, ratio: Union[float, str]):
-        assert (
-            (isinstance(ratio, str) and len(ratio.split(":")) == 2)
-            or (isinstance(ratio, (int, float)) and ratio > 0)
+        assert (isinstance(ratio, str) and len(ratio.split(":")) == 2) or (
+            isinstance(ratio, (int, float)) and ratio > 0
         ), "Aspect ratio must be a valid string ratio or a positive number"
         self.aspect_ratio = ratio
 

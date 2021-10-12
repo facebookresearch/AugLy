@@ -49,8 +49,7 @@ def extract_audio_to_file(video_path: str, output_audio_path: str) -> None:
         )
     else:
         out, err = (
-            ffmpeg
-            .input(video_path, loglevel="quiet")
+            ffmpeg.input(video_path, loglevel="quiet")
             .output("-", format="f32le", acodec="pcm_f32le", ac=1, ar=sample_rate)
             .run(cmd=FFMPEG_PATH, capture_stdout=True, capture_stderr=True)
         )

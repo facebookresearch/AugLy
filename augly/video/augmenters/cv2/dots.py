@@ -5,7 +5,8 @@ import logging
 
 import cv2
 import numpy as np
-from augly.video.augmenters.cv2 import BaseCV2Augmenter, VideoDistractorByShapes
+from augly.video.augmenters.cv2.base_augmenter import BaseCV2Augmenter
+from augly.video.augmenters.cv2.shapes import VideoDistractorByShapes
 
 
 logger = logging.getLogger(__name__)

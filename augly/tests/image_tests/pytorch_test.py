@@ -3,13 +3,12 @@
 
 import unittest
 
+import augly.image as imaugs
 import torch
 import torchvision.transforms as transforms  # @manual
-from PIL import Image
-
-import augly.image as imaugs
 from augly.tests import ImageAugConfig
 from augly.utils import pathmgr
+from PIL import Image
 
 COLOR_JITTER_PARAMS = {
     "brightness_factor": 1.2,

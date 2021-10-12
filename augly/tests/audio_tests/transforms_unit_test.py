@@ -5,9 +5,8 @@ import json
 import random
 import unittest
 
-import numpy as np
-
 import augly.audio as audaugs
+import numpy as np
 from augly.tests.audio_tests.base_unit_test import BaseAudioUnitTest
 from augly.utils import AUDIO_METADATA_PATH
 
@@ -58,7 +57,9 @@ class TransformsAudioUnitTest(BaseAudioUnitTest):
         self.evaluate_class(
             audaugs.Compose(
                 [
-                    audaugs.InsertInBackground(offset_factor=0.2, background_audio=None, seed=random_generator),
+                    audaugs.InsertInBackground(
+                        offset_factor=0.2, background_audio=None, seed=random_generator
+                    ),
                     audaugs.Clip(offset_factor=0.5, duration_factor=0.25),
                     audaugs.Speed(factor=4.0),
                 ]
