@@ -212,7 +212,9 @@ class ApplyLambda(BaseTransform):
 class ApplyPILFilter(BaseTransform):
     def __init__(
         self,
-        filter_type: Union[Callable, ImageFilter.Filter] = ImageFilter.EDGE_ENHANCE_MORE,
+        filter_type: Union[
+            Callable, ImageFilter.Filter
+        ] = ImageFilter.EDGE_ENHANCE_MORE,
         p: float = 1.0,
     ):
         """
@@ -561,7 +563,8 @@ class Contrast(BaseTransform):
             factor=self.factor,
             metadata=metadata,
             bboxes=bboxes,
-            bbox_format=bbox_format)
+            bbox_format=bbox_format,
+        )
 
 
 class ConvertColor(BaseTransform):
@@ -1336,7 +1339,7 @@ class OverlayStripes(BaseTransform):
         line_density: float = 0.5,
         line_type: Optional[str] = "solid",
         line_opacity: float = 1.0,
-        p: float = 1.0
+        p: float = 1.0,
     ):
         """
         @param line_width: the width of individual stripes as a float value ranging
@@ -1401,7 +1404,7 @@ class OverlayStripes(BaseTransform):
             line_opacity=self.line_opacity,
             metadata=metadata,
             bboxes=bboxes,
-            bbox_format=bbox_format
+            bbox_format=bbox_format,
         )
 
 

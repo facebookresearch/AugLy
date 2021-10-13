@@ -2,7 +2,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 from augly.video.composition import Compose, OneOf
-
 from augly.video.functional import (
     add_noise,
     apply_lambda,
@@ -47,7 +46,6 @@ from augly.video.functional import (
     vflip,
     vstack,
 )
-
 from augly.video.transforms import (
     AddNoise,
     ApplyLambda,

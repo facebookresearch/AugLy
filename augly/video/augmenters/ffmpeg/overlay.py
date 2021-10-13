@@ -5,7 +5,7 @@ from typing import Dict, Tuple
 
 import ffmpeg  # @manual
 from augly.utils import is_image_file, is_video_file, pathmgr
-from augly.video.augmenters.ffmpeg import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
 from augly.video.helpers import get_video_info
 from ffmpeg.nodes import FilterableStream
 

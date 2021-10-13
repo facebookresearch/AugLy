@@ -2,7 +2,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 from augly.text.composition import Compose, OneOf
-
 from augly.text.functional import (
     apply_lambda,
     change_case,
@@ -22,7 +21,6 @@ from augly.text.functional import (
     split_words,
     swap_gendered_words,
 )
-
 from augly.text.intensity import (
     apply_lambda_intensity,
     change_case_intensity,
@@ -42,7 +40,6 @@ from augly.text.intensity import (
     split_words_intensity,
     swap_gendered_words_intensity,
 )
-
 from augly.text.transforms import (
     ApplyLambda,
     ChangeCase,

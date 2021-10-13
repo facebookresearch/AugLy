@@ -6,7 +6,7 @@ from typing import Optional, List, Tuple, Iterator
 
 import cv2
 import numpy as np
-from augly.video.augmenters.cv2 import BaseCV2Augmenter
+from augly.video.augmenters.cv2.base_augmenter import BaseCV2Augmenter
 
 
 class VideoDistractorByShapes(BaseCV2Augmenter):

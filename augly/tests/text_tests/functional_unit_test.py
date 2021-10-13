@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
+# @lint-ignore-every UTF8
 
 import random
 import unittest
@@ -230,7 +231,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_bidirectional,
             [
-                "\u202e.llih yssarg ,neerg eht revo pmuj t'ndluoc 'xof' nworb kciuq ehT\u202c"  # noqa: B950
+                "\u202e.llih yssarg ,neerg eht revo pmuj t'ndluoc 'xof' nworb kciuq ehT\u202c"
             ],
         )
         augmented_bidirectional_word = txtaugs.replace_bidirectional(
@@ -318,7 +319,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
             [
                 "7he qui{k brDwn 'fox' c0uldn' t jump ov3r the green, grassy hill.",
                 "+he quick |3rown 'f[]x' couldn' t jump Dver 7he green, grassy hill.",
-            ]
+            ],
         )
         augmented_chars_targetted = txtaugs.replace_similar_chars(
             self.texts[0],
@@ -332,7 +333,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
             [
                 "The quick 13rown 'fox' couldn' t jump ove/2 the gr3en, 9rassy hi|_l.",
                 "The quic|( brown 'fox' couldn' t jump over +he gree^, grassy hil!.",
-            ]
+            ],
         )
 
     def test_replace_similar_unicode_chars(self) -> None:
@@ -344,7 +345,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
             [
                 "†he qui⊂k browŅ 'fox' coỦldn' t jump o∨er the green, grassy hill.",
                 "The ჹuick brown 'ⓕox' couldn' t jumρ over the ġreen, grassy hilŀ.",
-            ]
+            ],
         )
         augmented_unicode_chars_targetted = txtaugs.replace_similar_unicode_chars(
             self.texts[0],
@@ -358,7 +359,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
             [
                 "Thė quick brown 'fox' couldn' t jump over ₸he grèen, gras$y hiḽl.",
                 "TΉe quick brown 'fox' couldn' t jump oveř the gree⋒, grasకy hiℒl.",
-            ]
+            ],
         )
 
     def test_replace_upside_down(self) -> None:
@@ -382,12 +383,33 @@ class FunctionalTextUnitTest(unittest.TestCase):
             [
                 "Thǝ buiɔk qrown 'fox, couldn,t jump over ʇɥe green' gɹassʎ hill.",
                 "Ʇɥǝ qnᴉɔk qɹown 'fox' conldn,t jnɯp over the gɹeen, grassy ɥᴉll ˙",
-            ]
+            ],
         )
 
     def test_replace_words(self) -> None:
         augmented_words = txtaugs.replace_words(self.texts, aug_word_p=0.3)
         self.assertTrue(augmented_words[0] == self.texts[0])
+
+        augmented_words = txtaugs.replace_words(
+            self.texts,
+            mapping={"jump": "hop", "brown": "orange", "green": "blue", "the": "a"},
+            aug_word_p=1.0,
+        )
+        self.assertTrue(
+            augmented_words[0]
+            == "A quick orange 'fox' couldn't hop over a blue, grassy hill.",
+        )
+
+        augmented_words = txtaugs.replace_words(
+            self.texts,
+            mapping={"jump": "hop", "brown": "orange", "green": "blue", "the": "a"},
+            aug_word_p=1.0,
+            ignore_words=["green", "jump"],
+        )
+        self.assertTrue(
+            augmented_words[0]
+            == "A quick orange 'fox' couldn't jump over a green, grassy hill.",
+        )
 
     def test_simulate_typos(self) -> None:
         augmented_typos = txtaugs.simulate_typos(
@@ -398,7 +420,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
             [
                 "Ther quick brown 'fox' couldn' t jump over the green, grassy hill.",
                 "Teh quick brown 'fox' couldn' t jump over tghe green, grassy hill.",
-            ]
+            ],
         )
 
         augmented_typos_targetted = txtaugs.simulate_typos(
@@ -412,8 +434,8 @@ class FunctionalTextUnitTest(unittest.TestCase):
             augmented_typos_targetted,
             [
                 "The quick buown 'fox' couldn' t jump over he rgeen, rgassy lhill.",
-                "The quick brown 'fox' couldn' t nump o^er the gre$n, grasys ill."
-            ]
+                "The quick brown 'fox' couldn' t nump o^er the gre$n, grasys ill.",
+            ],
         )
 
     def test_split_words(self) -> None:
@@ -423,7 +445,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
             [
                 "The qui ck brown 'fox' c ouldn't j ump over the green, grassy hi ll.",
                 "The qu ick bro wn 'fox' could n't jump over the gre en, grassy hill.",
-            ]
+            ],
         )
         augmented_split_words_targetted = txtaugs.split_words(
             self.texts[0], aug_word_p=0.3, n=2, priority_words=self.priority_words
@@ -433,7 +455,7 @@ class FunctionalTextUnitTest(unittest.TestCase):
             [
                 "The quick br own 'fox' couldn't jump over the g reen, gras sy h ill.",
                 "The quick brown 'fox' couldn't jump ov er the g reen, g rassy hi ll.",
-            ]
+            ],
         )
 
     def test_swap_gendered_words(self) -> None:

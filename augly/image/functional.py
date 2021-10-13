@@ -117,8 +117,8 @@ def apply_pil_filter(
     func_kwargs = deepcopy(locals())
 
     ftr = filter_type() if isinstance(filter_type, Callable) else filter_type
-    assert (
-        isinstance(ftr, ImageFilter.Filter)
+    assert isinstance(
+        ftr, ImageFilter.Filter
     ), "Filter type must be a PIL.ImageFilter.Filter class"
 
     func_kwargs = imutils.get_func_kwargs(
@@ -228,10 +228,12 @@ def brightness(
     aug_image = ImageEnhance.Brightness(image).enhance(factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    
     src_mode = image.mode
     imutils.get_metadata(
         metadata=metadata, function_name="brightness", **func_kwargs
     )
+
 
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
@@ -417,7 +419,9 @@ def color_jitter(
     aug_image = ImageEnhance.Color(aug_image).enhance(saturation_factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
     src_mode = image.mode
+    
     imutils.get_metadata(
         metadata=metadata, function_name="color_jitter", **func_kwargs
     )
@@ -553,7 +557,9 @@ def convert_color(
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     imutils.get_metadata(
-        metadata=metadata, function_name="convert_color", **func_kwargs,
+        metadata=metadata,
+        function_name="convert_color",
+        **func_kwargs,
     )
 
     return imutils.ret_and_save_image(aug_image, output_path)
@@ -786,6 +792,7 @@ def hflip(
     aug_image = image.transpose(Image.FLIP_LEFT_RIGHT)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
     src_mode = image.mode
     imutils.get_metadata(
         metadata=metadata, function_name="hflip", **func_kwargs
@@ -1426,12 +1433,18 @@ def overlay_stripes(
 
     @returns: the augmented PIL Image
     """
-    assert 0.0 <= line_width <= 1.0, "Line width must be a value in the range [0.0, 1.0]"
+    assert (
+        0.0 <= line_width <= 1.0
+    ), "Line width must be a value in the range [0.0, 1.0]"
     assert (
         -360.0 <= line_angle <= 360.0
     ), "Line angle must be a degree in the range [360.0, 360.0]"
-    assert 0.0 <= line_density <= 1.0, "Line density must be a value in the range [0.0, 1.0]"
-    assert 0.0 <= line_opacity <= 1.0, "Line opacity must be a value in the range [0.0, 1.0]"
+    assert (
+        0.0 <= line_density <= 1.0
+    ), "Line density must be a value in the range [0.0, 1.0]"
+    assert (
+        0.0 <= line_opacity <= 1.0
+    ), "Line opacity must be a value in the range [0.0, 1.0]"
     assert line_type in utils.SUPPORTED_LINE_TYPES, "Stripe type not supported"
     utils.validate_rgb_color(line_color)
 
@@ -1554,15 +1567,12 @@ def overlay_text(
     src_mode = image.mode
 
     text_lists = text if all(isinstance(t, list) for t in text) else [text]
-    assert (
-        all(isinstance(t, list) for t in text_lists)
-        and all(
-            all(isinstance(t, int) for t in text_l)  # pyre-ignore text_l is a List[int]
-            for text_l in text_lists
-        )
+    assert all(isinstance(t, list) for t in text_lists) and all(
+        all(isinstance(t, int) for t in text_l)  # pyre-ignore text_l is a List[int]
+        for text_l in text_lists
     ), "Text must be a list of ints or a list of list of ints for multiple lines"
 
-    image = image.convert('RGBA')
+    image = image.convert("RGBA")
     width, height = image.size
 
     local_font_path = utils.pathmgr.get_local_path(font_file)
@@ -1576,9 +1586,9 @@ def overlay_text(
         chars = pickle.load(f)
 
     try:
-        text_strs = (
-            ["".join([chr(chars[c % len(chars)]) for c in t]) for t in text_lists]
-        )
+        text_strs = [
+            "".join([chr(chars[c % len(chars)]) for c in t]) for t in text_lists
+        ]
     except Exception:
         raise IndexError("Invalid text indices specified")
 
