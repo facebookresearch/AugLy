@@ -213,7 +213,9 @@ def overlay_emoji_intensity(
 
 
 def overlay_onto_background_video_intensity(
-    overlay_size: Optional[float], metadata: Dict[str, Any], **kwargs
+    overlay_size: Optional[float],
+    metadata: Dict[str, Any],
+    **kwargs
 ) -> float:
     if overlay_size is not None:
         return (1 - overlay_size ** 2) * 100.0
