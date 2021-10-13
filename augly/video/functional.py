@@ -171,7 +171,7 @@ def augment_audio(
     assert callable(audio_aug_function), (
         repr(type(audio_aug_function).__name__) + " object is not callable"
     )
-    
+
     func_kwargs = helpers.get_func_kwargs(
         metadata, locals(), video_path, audio_aug_function=audio_aug_function
     )
