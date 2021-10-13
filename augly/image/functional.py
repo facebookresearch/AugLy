@@ -228,12 +228,9 @@ def brightness(
     aug_image = ImageEnhance.Brightness(image).enhance(factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    
-    src_mode = image.mode
-    imutils.get_metadata(
-        metadata=metadata, function_name="brightness", **func_kwargs
-    )
 
+    src_mode = image.mode
+    imutils.get_metadata(metadata=metadata, function_name="brightness", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
@@ -421,10 +418,8 @@ def color_jitter(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
     src_mode = image.mode
-    
-    imutils.get_metadata(
-        metadata=metadata, function_name="color_jitter", **func_kwargs
-    )
+
+    imutils.get_metadata(metadata=metadata, function_name="color_jitter", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
@@ -794,9 +789,7 @@ def hflip(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
     src_mode = image.mode
-    imutils.get_metadata(
-        metadata=metadata, function_name="hflip", **func_kwargs
-    )
+    imutils.get_metadata(metadata=metadata, function_name="hflip", **func_kwargs)
 
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
