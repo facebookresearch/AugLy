@@ -2,9 +2,9 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import json
-import numpy as np
 from typing import Any, Dict, List, Optional, Union
 
+import numpy as np
 from augly.text.augmenters.utils import (
     detokenize,
     tokenize,
@@ -22,7 +22,6 @@ class ContractionMapping(object):
             self.mapping = mapping
         else:
             self.mapping = {}
-
 
     def replace(self, text: str) -> Optional[str]:
         new_text = self.mapping.get(text.lower(), None)
@@ -69,7 +68,7 @@ class ContractionAugmenter(object):
                 )
                 if contraction is not None and self.rng.rand() <= self.aug_p:
                     results.append(contraction)
-                    i += 1
+                    i += c_len - 1
                 else:
                     results.append(tokens[i])
                 i += 1

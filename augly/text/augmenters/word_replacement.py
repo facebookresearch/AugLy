@@ -29,7 +29,6 @@ class WordReplacement(object):
         else:
             self.mapping = {}
 
-
     def replace(self, word: str) -> str:
         new_word = self.mapping.get(word, None) or self.mapping.get(word.lower(), None)
         if new_word is not None and word[0].isupper():
@@ -60,7 +59,9 @@ class WordReplacementAugmenter(WordAugmenter):
             set(priority_words) if priority_words is not None else priority_words
         )
         self.ignore_words = (
-            set(ignore_words) if ignore_words is not None else set()
+            {word.lower() for word in ignore_words}
+            if ignore_words is not None
+            else set()
         )
 
     def get_mapping(

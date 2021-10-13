@@ -39,9 +39,9 @@ def combine_frames_and_audio_to_file(
 def extract_audio_to_file(video_path: str, output_audio_path: str) -> None:
     audio_info = get_audio_info(video_path)
     sample_rate = str(audio_info["sample_rate"])
-    codec = str(audio_info["codec_name"])
+    codec = audio_info["codec_name"]
 
-    if output_audio_path.split(".")[-1] == "aac":
+    if os.path.splitext(output_audio_path)[-1] == ".aac":
         (
             ffmpeg.input(video_path, loglevel="quiet")
             .output(output_audio_path, acodec=codec, ac=1)
@@ -50,8 +50,7 @@ def extract_audio_to_file(video_path: str, output_audio_path: str) -> None:
         )
     else:
         out, err = (
-            ffmpeg
-            .input(video_path, loglevel="quiet")
+            ffmpeg.input(video_path, loglevel="quiet")
             .output("-", format="f32le", acodec="pcm_f32le", ac=1, ar=sample_rate)
             .run(cmd=FFMPEG_PATH, capture_stdout=True, capture_stderr=True)
         )

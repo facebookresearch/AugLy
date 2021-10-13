@@ -839,7 +839,7 @@ def insert_in_background(
             num_loops_needed = math.ceil(desired_bg_duration / bg_video_duration)
             if num_loops_needed > 1:
                 loop(resized_bg_path, num_loops=num_loops_needed)
-                bg_video_duration*=num_loops_needed
+                bg_video_duration *= num_loops_needed
 
             bg_start = rng.uniform(0, bg_video_duration - desired_bg_duration)
             bg_end = bg_start + desired_bg_duration

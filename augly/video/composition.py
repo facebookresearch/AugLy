@@ -5,8 +5,8 @@ import random
 import shutil
 from typing import Any, Dict, List, Optional
 
-from augly.video.transforms import VidAugBaseClass
 from augly.video.helpers import validate_input_and_output_paths
+from augly.video.transforms import VidAugBaseClass
 
 
 """
