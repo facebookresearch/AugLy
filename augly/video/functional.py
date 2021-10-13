@@ -155,9 +155,9 @@ def augment_audio(
     @param output_path: the path in which the resulting video will be stored.
         If not passed in, the original video file will be overwritten
 
-    @param audio_aug_function: the augmentation function to be applied onto the video's 
-        audio track. Should have the standard API of an AugLy audio augmentation, i.e. 
-        expect input audio as a numpy array or path & output path as input, and output 
+    @param audio_aug_function: the augmentation function to be applied onto the video's
+        audio track. Should have the standard API of an AugLy audio augmentation, i.e.
+        expect input audio as a numpy array or path & output path as input, and output
         the augmented audio to the output path
 
     @param metadata: if set to be a list, metadata about the function execution
