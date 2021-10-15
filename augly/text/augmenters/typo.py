@@ -162,9 +162,11 @@ class TypoAugmenter(WordAugmenter):
                     i += 1
                     continue
 
-                misspellings = self.model.replace(
-                    " ".join(tokens[i : i + t_i])
-                ) if self.model else None
+                misspellings = (
+                    self.model.replace(" ".join(tokens[i : i + t_i]))
+                    if self.model
+                    else None
+                )
 
                 if misspellings:
                     misspelling = self.sample(misspellings, 1)[0]
@@ -181,7 +183,7 @@ class TypoAugmenter(WordAugmenter):
                 i += 1
 
             if t_i > 1:
-                results.extend(tokens[-t_i + 1: ])
+                results.extend(tokens[-t_i + 1 :])
 
         return detokenize(results)
 
