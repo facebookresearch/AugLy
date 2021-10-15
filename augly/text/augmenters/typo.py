@@ -119,7 +119,7 @@ class TypoAugmenter(WordAugmenter):
             self.max_typo_length = max_typo_length
             self.model = self.get_model(misspelling_dict_path)
         else:
-            self.max_typo_length = 1;
+            self.max_typo_length = 1
 
         self.priority_words = (
             set(priority_words) if priority_words is not None else priority_words
@@ -165,6 +165,7 @@ class TypoAugmenter(WordAugmenter):
                 misspellings = self.model.replace(
                     " ".join(tokens[i : i + t_i])
                 ) if self.model else None
+
                 if misspellings:
                     misspelling = self.sample(misspellings, 1)[0]
                     results.append(self.align_capitalization(tokens[i], misspelling))
@@ -179,7 +180,7 @@ class TypoAugmenter(WordAugmenter):
                     results.append(tokens[i])
                 i += 1
 
-            if (t_i > 1):
+            if t_i > 1:
                 results.extend(tokens[-t_i + 1: ])
 
         return detokenize(results)

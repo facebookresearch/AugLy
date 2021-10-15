@@ -941,6 +941,7 @@ class SimulateTypos(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Simulates typos in each text using misspellings, keyboard distance, and swapping.
@@ -956,24 +957,12 @@ class SimulateTypos(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.simulate_typos(
-            texts,
-            aug_char_p=self.aug_char_p,
-            aug_word_p=self.aug_word_p,
-            min_char=self.min_char,
-            aug_char_min=self.aug_char_min,
-            aug_char_max=self.aug_char_max,
-            aug_word_min=self.aug_word_min,
-            aug_word_max=self.aug_word_max,
-            n=self.n,
-            typo_type=self.typo_type,
-            misspelling_dict_path=self.misspelling_dict_path,
-            max_typo_length=self.max_typo_length,
-            priority_words=self.priority_words,
-            metadata=metadata,
-        )
+        return F.simulate_typos(texts, metadata=metadata, **aug_kwargs)
 
 
 class SplitWords(BaseTransform):
