@@ -68,8 +68,8 @@ class TransformsImageUnitTest(BaseImageUnitTest):
 
     def test_ConvertColor(self):
         self.evaluate_class(
-            imaugs.ConvertColor(mode="L"), 
-            fname="convert_color", 
+            imaugs.ConvertColor(mode="L"),
+            fname="convert_color",
             check_mode=False,
         )
 
