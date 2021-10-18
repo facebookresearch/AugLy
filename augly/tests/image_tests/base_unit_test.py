@@ -96,6 +96,7 @@ class BaseImageUnitTest(unittest.TestCase):
         transform_class: Callable[..., Image.Image],
         fname: str,
         metadata_exclude_keys: Optional[List[str]] = None,
+        check_mode: bool = True,
     ):
         metadata = []
         bboxes, bbox_format = [(0.5, 0.5, 0.25, 0.75)], "yolo"
@@ -103,6 +104,9 @@ class BaseImageUnitTest(unittest.TestCase):
         dst = transform_class(
             self.img, metadata=metadata, bboxes=bboxes, bbox_format=bbox_format
         )
+
+        if check_mode:
+            self.assertTrue(self.img.mode == dst.mode)
 
         self.assertTrue(
             are_equal_metadata(metadata, self.metadata[fname], metadata_exclude_keys)
