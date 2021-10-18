@@ -62,8 +62,8 @@ def get_gendered_words_mapping(mapping: Union[str, Dict[str, str]]) -> Dict[str,
     written by Adina Williams and has been used in influential work, e.g.
     https://arxiv.org/pdf/2005.00614.pdf
     """
-    assert (
-        isinstance(mapping, (str, Dict))
+    assert isinstance(
+        mapping, (str, Dict)
     ), "Mapping must be either a dict or filepath to a mapping of gendered words"
 
     if isinstance(mapping, Dict):

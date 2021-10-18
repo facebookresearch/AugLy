@@ -4,7 +4,7 @@
 import math
 from typing import Tuple, Dict
 
-from augly.video.augmenters.ffmpeg import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
 from ffmpeg.nodes import FilterableStream
 
 

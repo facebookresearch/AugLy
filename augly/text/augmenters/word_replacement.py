@@ -29,7 +29,6 @@ class WordReplacement(object):
         else:
             self.mapping = {}
 
-
     def replace(self, word: str) -> str:
         new_word = self.mapping.get(word, None) or self.mapping.get(word.lower(), None)
         if new_word is not None and word[0].isupper():
@@ -47,6 +46,7 @@ class WordReplacementAugmenter(WordAugmenter):
         aug_word_p: float,
         mapping: Optional[Union[str, Dict[str, Any]]],
         priority_words: Optional[List[str]],
+        ignore_words: Optional[List[str]],
     ):
         super().__init__(
             action=Action.SUBSTITUTE,
@@ -57,6 +57,11 @@ class WordReplacementAugmenter(WordAugmenter):
         self.word_mapping = self.get_mapping(mapping)
         self.priority_words = (
             set(priority_words) if priority_words is not None else priority_words
+        )
+        self.ignore_words = (
+            {word.lower() for word in ignore_words}
+            if ignore_words is not None
+            else set()
         )
 
     def get_mapping(

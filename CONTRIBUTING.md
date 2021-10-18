@@ -26,7 +26,7 @@ If you're adding a new augmentation, please ensure that you have made all the ne
 - `augly/tests/<module>_tests/transforms_unit_tests.py`
 - `augly/utils/expected_output/<module>/expected_metadata.json`
 - for audio: `augly/assets/tests/audio/speech_commands_expected_output/{mono, stereo}/test_<aug_name>.wav`
-- for image: `augly/assets/tests/image/dfdc_expected_output/test_<aug_name>.png`
+- for image: `augly/assets/tests/image/dfdc_expected_output/test_<aug_name>.png` & `augly/image/utils/bboxes.py`
 
 Note about test files: The final file will be added, and should be the result of running the new augmentation with the args as specified in the new unit tests. The two new unit tests in `functional_unit_tests.py` & `transforms_unit_tests.py` should specify the same `args` for the new augmentation so they can use the same output file.
 

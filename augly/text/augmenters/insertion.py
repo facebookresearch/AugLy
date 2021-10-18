@@ -24,7 +24,7 @@ CHARACTER_TYPES = {
         "\u2064",  # Invisible Plus
     ],
     "whitespace": [
-        " ",   # Space
+        " ",  # Space
         "\t",  # Horizontal Tab
         "\n",  # Newline
         "\r",  # Carriage Return

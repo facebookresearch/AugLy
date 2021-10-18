@@ -13,8 +13,8 @@ from augly.utils.libsndfile import install_libsndfile
 
 install_libsndfile()
 import librosa
-import torchaudio
 import soundfile as sf
+import torchaudio
 
 # Use Any because np.random.Generator is not a valid type for pyre
 RNG = Any

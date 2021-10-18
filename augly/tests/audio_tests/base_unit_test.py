@@ -57,9 +57,7 @@ class BaseAudioUnitTest(unittest.TestCase):
 
             with tempfile.NamedTemporaryFile(suffix=".wav") as tmpfile:
                 np.random.seed(1)
-                aug_function(
-                    local_audio_path, output_path=tmpfile.name, **kwargs
-                )
+                aug_function(local_audio_path, output_path=tmpfile.name, **kwargs)
                 dst = librosa.load(tmpfile.name, sr=None, mono=False)[0]
 
             self.assertTrue(are_equal_audios(dst, ref))

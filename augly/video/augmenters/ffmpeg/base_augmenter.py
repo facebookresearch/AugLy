@@ -16,9 +16,9 @@ from abc import ABC, abstractmethod
 from typing import Dict, Tuple
 
 import ffmpeg  # @manual
-from ffmpeg.nodes import FilterableStream
 from augly.utils.ffmpeg import FFMPEG_PATH
 from augly.video.helpers import has_audio_stream
+from ffmpeg.nodes import FilterableStream
 
 
 class BaseFFMPEGAugmenter(ABC):

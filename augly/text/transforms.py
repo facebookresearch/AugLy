@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
+import inspect
 import random
 from typing import Any, Callable, Dict, List, Optional, Union
 
 import augly.text.functional as F
 from augly.utils import (
+    CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
     GENDERED_WORDS_MAPPING,
     MISSPELLING_DICTIONARY_PATH,
@@ -31,6 +33,7 @@ class BaseTransform(object):
         texts: Union[str, List[str]],
         force: bool = False,
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **kwargs,
     ) -> List[str]:
         """
         @param texts: a string or a list of text documents to be augmented
@@ -42,6 +45,9 @@ class BaseTransform(object):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
         assert isinstance(
@@ -52,17 +58,36 @@ class BaseTransform(object):
         if not force and random.random() > self.p:
             return texts if isinstance(texts, list) else [texts]
 
-        return self.apply_transform(texts, metadata)
+        return self.apply_transform(texts, metadata, **self.get_aug_kwargs(**kwargs))
+
+    def get_aug_kwargs(self, **kwargs) -> Dict[str, Any]:
+        """
+        @param kwargs: any kwargs that were passed into __call__() intended to override
+            the instance variables set in __init__() when calling the augmentation
+            function in apply_transform()
+
+        @returns: the kwargs that should be passed into the augmentation function
+            apply_transform() -- this will be the instance variables set in __init__(),
+            potentially overridden by anything passed in as kwargs
+        """
+        attrs = {
+            k: v
+            for k, v in inspect.getmembers(self)
+            if k not in {"apply_transform", "get_aug_kwargs", "p"}
+            and not k.startswith("__")
+        }
+        return {**attrs, **kwargs}
 
     def apply_transform(
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
-        This function is to be implemented in the child classes.
-        From this function, call the augmentation function with the
-        parameters specified
+        This function is to be implemented in the child classes. From this function, call
+        the augmentation function, passing in 'texts', 'metadata', & the given
+        'aug_kwargs'
         """
         raise NotImplementedError()
 
@@ -108,6 +133,7 @@ class ApplyLambda(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Apply a user-defined lambda on a list of text documents
@@ -118,11 +144,123 @@ class ApplyLambda(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.apply_lambda(
-            texts, self.aug_function, **self.kwargs, metadata=metadata
-        )
+        lambda_kwargs = aug_kwargs.pop("kwargs")
+        return F.apply_lambda(texts, metadata=metadata, **lambda_kwargs, **aug_kwargs)
+
+
+class ChangeCase(BaseTransform):
+    def __init__(
+        self,
+        granularity: str = "word",
+        cadence: float = 1.0,
+        case: str = "random",
+        seed: Optional[int] = 10,
+        p: float = 1.0,
+    ):
+        """
+        @param granularity: 'all' (case of the entire text is changed), 'word' (case of
+            random words is changed), or 'char' (case of random chars is changed)
+
+        @param cadence: how frequent (i.e. between this many characters/words) to change
+            the case. Must be at least 1.0. Non-integer values are used as an 'average'
+            cadence. Not used for granularity 'all'
+
+        @param case: the case to change words to; valid values are 'lower', 'upper',
+            'title', or 'random' (in which case every word will be randomly changed to
+            one of the 3 cases)
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.granularity = granularity
+        self.cadence = cadence
+        self.case = case
+        self.seed = seed
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
+    ) -> List[str]:
+        """
+        Changes the case (e.g. upper, lower, title) of random chars, words, or the entire
+        text
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
+        @returns: the list of augmented text documents
+        """
+        return F.change_case(texts, metadata=metadata, **aug_kwargs)
+
+
+class Contractions(BaseTransform):
+    def __init__(
+        self,
+        aug_p: float = 0.3,
+        mapping: Optional[Union[str, Dict[str, Any]]] = CONTRACTIONS_MAPPING,
+        max_contraction_length: int = 2,
+        seed: Optional[int] = 10,
+        p: float = 1.0,
+    ):
+        """
+        @param aug_p: the probability that each pair (or longer string) of words will be
+            replaced with the corresponding contraction, if there is one in the mapping
+
+        @param mapping: either a dictionary representing the mapping or an iopath uri
+            where the mapping is stored
+
+        @param max_contraction_length: the words in each text will be checked for matches
+            in the mapping up to this length; i.e. if 'max_contraction_length' is 3 then
+            every substring of 2 *and* 3 words will be checked
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.aug_p = aug_p
+        self.mapping = mapping
+        self.max_contraction_length = max_contraction_length
+        self.seed = seed
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
+    ) -> List[str]:
+        """
+        Replaces pairs (or longer strings) of words with contractions given a mapping
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
+        @returns: the list of augmented text documents
+        """
+        return F.contractions(texts, metadata=metadata, **aug_kwargs)
 
 
 class GetBaseline(BaseTransform):
@@ -130,6 +268,7 @@ class GetBaseline(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Generates a baseline by tokenizing and detokenizing the text
@@ -140,9 +279,12 @@ class GetBaseline(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.get_baseline(texts, metadata=metadata)
+        return F.get_baseline(texts, metadata=metadata, **aug_kwargs)
 
 
 class InsertPunctuationChars(BaseTransform):
@@ -175,6 +317,7 @@ class InsertPunctuationChars(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Inserts punctuation characters in each input text
@@ -185,15 +328,12 @@ class InsertPunctuationChars(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.insert_punctuation_chars(
-            texts,
-            granularity=self.granularity,
-            cadence=self.cadence,
-            vary_chars=self.vary_chars,
-            metadata=metadata,
-        )
+        return F.insert_punctuation_chars(texts, metadata=metadata, **aug_kwargs)
 
 
 class InsertWhitespaceChars(BaseTransform):
@@ -226,6 +366,7 @@ class InsertWhitespaceChars(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Inserts whitespace characters in each input text
@@ -236,15 +377,12 @@ class InsertWhitespaceChars(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.insert_whitespace_chars(
-            texts,
-            granularity=self.granularity,
-            cadence=self.cadence,
-            vary_chars=self.vary_chars,
-            metadata=metadata,
-        )
+        return F.insert_whitespace_chars(texts, metadata=metadata, **aug_kwargs)
 
 
 class InsertZeroWidthChars(BaseTransform):
@@ -277,6 +415,7 @@ class InsertZeroWidthChars(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Inserts zero-width characters in each input text
@@ -287,15 +426,70 @@ class InsertZeroWidthChars(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.insert_zero_width_chars(
-            texts,
-            granularity=self.granularity,
-            cadence=self.cadence,
-            vary_chars=self.vary_chars,
-            metadata=metadata,
-        )
+        return F.insert_zero_width_chars(texts, metadata=metadata, **aug_kwargs)
+
+
+class MergeWords(BaseTransform):
+    def __init__(
+        self,
+        aug_word_p: float = 0.3,
+        min_char: int = 2,
+        aug_word_min: int = 1,
+        aug_word_max: int = 1000,
+        n: int = 1,
+        priority_words: Optional[List[str]] = None,
+        p: float = 1.0,
+    ):
+        """
+        @param aug_word_p: probability of words to be augmented
+
+        @param min_char: minimum # of characters in a word to be merged
+
+        @param aug_word_min: minimum # of words to be augmented
+
+        @param aug_word_max: maximum # of words to be augmented
+
+        @param n: number of augmentations to be performed for each text
+
+        @param priority_words: list of target words that the augmenter should
+            prioritize to augment first
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.aug_word_p = aug_word_p
+        self.min_char = min_char
+        self.aug_word_min = aug_word_min
+        self.aug_word_max = aug_word_max
+        self.n = n
+        self.priority_words = priority_words
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
+    ) -> List[str]:
+        """
+        Merges words in the text together
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
+        @returns: the list of augmented text documents
+        """
+        return F.merge_words(texts, metadata=metadata, **aug_kwargs)
 
 
 class ReplaceBidirectional(BaseTransform):
@@ -322,6 +516,7 @@ class ReplaceBidirectional(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Reverses each word (or part of the word) in each input text and uses
@@ -334,14 +529,12 @@ class ReplaceBidirectional(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.replace_bidirectional(
-            texts,
-            granularity=self.granularity,
-            split_word=self.split_word,
-            metadata=metadata,
-        )
+        return F.replace_bidirectional(texts, metadata=metadata, **aug_kwargs)
 
 
 class ReplaceFunFonts(BaseTransform):
@@ -392,6 +585,7 @@ class ReplaceFunFonts(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Replaces words or characters depending on the granularity with fun fonts applied
@@ -402,20 +596,12 @@ class ReplaceFunFonts(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.replace_fun_fonts(
-            texts,
-            aug_p=self.aug_p,
-            aug_min=self.aug_min,
-            aug_max=self.aug_max,
-            granularity=self.granularity,
-            vary_fonts=self.vary_fonts,
-            fonts_path=self.fonts_path,
-            n=self.n,
-            priority_words=self.priority_words,
-            metadata=metadata,
-        )
+        return F.replace_fun_fonts(texts, metadata=metadata, **aug_kwargs)
 
 
 class ReplaceSimilarChars(BaseTransform):
@@ -473,6 +659,7 @@ class ReplaceSimilarChars(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Replaces letters in each text with similar characters
@@ -483,22 +670,12 @@ class ReplaceSimilarChars(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.replace_similar_chars(
-            texts,
-            aug_char_p=self.aug_char_p,
-            aug_word_p=self.aug_word_p,
-            min_char=self.min_char,
-            aug_char_min=self.aug_char_min,
-            aug_char_max=self.aug_char_max,
-            aug_word_min=self.aug_word_min,
-            aug_word_max=self.aug_word_max,
-            n=self.n,
-            mapping_path=self.mapping_path,
-            priority_words=self.priority_words,
-            metadata=metadata,
-        )
+        return F.replace_similar_chars(texts, metadata=metadata, **aug_kwargs)
 
 
 class ReplaceSimilarUnicodeChars(BaseTransform):
@@ -556,6 +733,7 @@ class ReplaceSimilarUnicodeChars(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Replaces letters in each text with similar unicodes
@@ -566,22 +744,12 @@ class ReplaceSimilarUnicodeChars(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.replace_similar_unicode_chars(
-            texts,
-            aug_char_p=self.aug_char_p,
-            aug_word_p=self.aug_word_p,
-            min_char=self.min_char,
-            aug_char_min=self.aug_char_min,
-            aug_char_max=self.aug_char_max,
-            aug_word_min=self.aug_word_min,
-            aug_word_max=self.aug_word_max,
-            n=self.n,
-            mapping_path=self.mapping_path,
-            priority_words=self.priority_words,
-            metadata=metadata,
-        )
+        return F.replace_similar_unicode_chars(texts, metadata=metadata, **aug_kwargs)
 
 
 class ReplaceUpsideDown(BaseTransform):
@@ -619,6 +787,7 @@ class ReplaceUpsideDown(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Flips words in the text upside down depending on the granularity
@@ -629,17 +798,12 @@ class ReplaceUpsideDown(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.replace_upside_down(
-            texts,
-            aug_p=self.aug_p,
-            aug_min=self.aug_min,
-            aug_max=self.aug_max,
-            granularity=self.granularity,
-            n=self.n,
-            metadata=metadata,
-        )
+        return F.replace_upside_down(texts, metadata=metadata, **aug_kwargs)
 
 
 class ReplaceWords(BaseTransform):
@@ -651,6 +815,7 @@ class ReplaceWords(BaseTransform):
         n: int = 1,
         mapping: Optional[Union[str, Dict[str, Any]]] = None,
         priority_words: Optional[List[str]] = None,
+        ignore_words: Optional[List[str]] = None,
         p: float = 1.0,
     ):
         """
@@ -668,6 +833,8 @@ class ReplaceWords(BaseTransform):
         @param priority_words: list of target words that the augmenter should prioritize
             to augment first
 
+        @param ignore_words: list of words that the augmenter should not augment
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
@@ -677,11 +844,13 @@ class ReplaceWords(BaseTransform):
         self.n = n
         self.mapping = mapping
         self.priority_words = priority_words
+        self.ignore_words = ignore_words
 
     def apply_transform(
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Replaces words in each text based on a given mapping
@@ -692,18 +861,12 @@ class ReplaceWords(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.replace_words(
-            texts,
-            aug_word_p=self.aug_word_p,
-            aug_word_min=self.aug_word_min,
-            aug_word_max=self.aug_word_max,
-            n=self.n,
-            mapping=self.mapping,
-            priority_words=self.priority_words,
-            metadata=metadata,
-        )
+        return F.replace_words(texts, metadata=metadata, **aug_kwargs)
 
 
 class SimulateTypos(BaseTransform):
@@ -717,7 +880,8 @@ class SimulateTypos(BaseTransform):
         aug_word_min: int = 1,
         aug_word_max: int = 1000,
         n: int = 1,
-        misspelling_dict_path: str = MISSPELLING_DICTIONARY_PATH,
+        typo_type: str = "all",
+        misspelling_dict_path: Optional[str] = MISSPELLING_DICTIONARY_PATH,
         priority_words: Optional[List[str]] = None,
         p: float = 1.0,
     ):
@@ -742,7 +906,12 @@ class SimulateTypos(BaseTransform):
 
         @param n: number of augmentations to be performed for each text
 
-        @param misspelling_dict_path: iopath uri where the misspelling dictionary is stored
+        @param typo_type: the type of typos to apply to the text; valid values are
+            "misspelling", "keyboard", "charmix", or "all"
+
+        @param misspelling_dict_path: iopath uri where the misspelling dictionary is
+            stored; must be specified if typo_type is "misspelling" or "all", but
+            otherwise can be None
 
         @param priority_words: list of target words that the augmenter should
             prioritize to augment first
@@ -758,6 +927,7 @@ class SimulateTypos(BaseTransform):
         self.aug_word_min = aug_word_min
         self.aug_word_max = aug_word_max
         self.n = n
+        self.typo_type = typo_type
         self.misspelling_dict_path = misspelling_dict_path
         self.priority_words = priority_words
 
@@ -765,9 +935,15 @@ class SimulateTypos(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
-        Simulates typos in each text using misspellings, keyboard distance, and swapping
+        Simulates typos in each text using misspellings, keyboard distance, and swapping.
+        You can specify a typo_type: charmix, which does a combination of character-level
+        modifications (delete, insert, substitute, & swap); keyboard, which swaps
+        characters which those close to each other on the QWERTY keyboard; misspelling,
+        which replaces words with misspellings defined in a dictionary file; or all,
+        which will apply a random combination of all 4
 
         @param texts: a string or a list of text documents to be augmented
 
@@ -775,22 +951,12 @@ class SimulateTypos(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.simulate_typos(
-            texts,
-            aug_char_p=self.aug_char_p,
-            aug_word_p=self.aug_word_p,
-            min_char=self.min_char,
-            aug_char_min=self.aug_char_min,
-            aug_char_max=self.aug_char_max,
-            aug_word_min=self.aug_word_min,
-            aug_word_max=self.aug_word_max,
-            n=self.n,
-            misspelling_dict_path=self.misspelling_dict_path,
-            priority_words=self.priority_words,
-            metadata=metadata,
-        )
+        return F.simulate_typos(texts, metadata=metadata, **aug_kwargs)
 
 
 class SplitWords(BaseTransform):
@@ -832,6 +998,7 @@ class SplitWords(BaseTransform):
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Splits words in the text into subwords
@@ -842,18 +1009,12 @@ class SplitWords(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.split_words(
-            texts,
-            aug_word_p=self.aug_word_p,
-            min_char=self.min_char,
-            aug_word_min=self.aug_word_min,
-            aug_word_max=self.aug_word_max,
-            n=self.n,
-            priority_words=self.priority_words,
-            metadata=metadata,
-        )
+        return F.split_words(texts, metadata=metadata, **aug_kwargs)
 
 
 class SwapGenderedWords(BaseTransform):
@@ -865,6 +1026,7 @@ class SwapGenderedWords(BaseTransform):
         n: int = 1,
         mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
         priority_words: Optional[List[str]] = None,
+        ignore_words: Optional[List[str]] = None,
         p: float = 1.0,
     ):
         """
@@ -883,6 +1045,8 @@ class SwapGenderedWords(BaseTransform):
         @param priority_words: list of target words that the augmenter should
             prioritize to augment first
 
+        @param ignore_words: list of words that the augmenter should not augment
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
@@ -892,11 +1056,13 @@ class SwapGenderedWords(BaseTransform):
         self.n = n
         self.mapping = mapping
         self.priority_words = priority_words
+        self.ignore_words = ignore_words
 
     def apply_transform(
         self,
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
     ) -> List[str]:
         """
         Replaces words in each text based on a provided `mapping`, which can either be a
@@ -911,15 +1077,9 @@ class SwapGenderedWords(BaseTransform):
             including its name, the source & dest length, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
         @returns: the list of augmented text documents
         """
-        return F.swap_gendered_words(
-            texts,
-            aug_word_p=self.aug_word_p,
-            aug_word_min=self.aug_word_min,
-            aug_word_max=self.aug_word_max,
-            n=self.n,
-            mapping=self.mapping,
-            priority_words=self.priority_words,
-            metadata=metadata,
-        )
+        return F.swap_gendered_words(texts, metadata=metadata, **aug_kwargs)
