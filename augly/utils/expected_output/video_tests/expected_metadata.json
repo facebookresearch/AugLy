@@ -80,6 +80,60 @@
             "src_width": 1920
         }
     ],
+    "augment_audio": [
+        {
+            "audio_aug_function": "PitchShift",
+            "audio_aug_kwargs": {},
+            "audio_metadata": [
+                {
+                    "dst_duration": 10.005333333333333,
+                    "dst_num_channels": 1,
+                    "dst_sample_rate": 48000,
+                    "dst_segments": [
+                        {
+                            "end": 10.005333333333333,
+                            "start": 0
+                        }
+                    ],
+                    "intensity": 1.1904761904761905,
+                    "n_steps": 1,
+                    "name": "pitch_shift",
+                    "output_path": null,
+                    "src_duration": 10.005333333333333,
+                    "src_num_channels": 1,
+                    "src_sample_rate": 48000,
+                    "src_segments": [
+                        {
+                            "end": 10.005333333333333,
+                            "start": 0
+                        }
+                    ]
+                }
+            ],
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "end": 10.027855,
+                    "start": 0
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 1.1904761904761905,
+            "name": "augment_audio",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "end": 10.027855,
+                    "start": 0
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
     "blend_videos": [
         {
             "dst_duration": 10.027855,

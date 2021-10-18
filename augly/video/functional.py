@@ -8,6 +8,8 @@ import shutil
 import tempfile
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
+import augly.audio as audaugs
+import augly.audio.utils as audutils
 import augly.image as imaugs
 import augly.utils as utils
 import augly.video.augmenters.cv2 as ac
@@ -133,6 +135,69 @@ def audio_swap(
     if metadata is not None:
         helpers.get_metadata(
             metadata=metadata, function_name="audio_swap", **func_kwargs
+        )
+
+    return output_path or video_path
+
+
+def augment_audio(
+    video_path: str,
+    output_path: Optional[str] = None,
+    audio_aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    **audio_aug_kwargs,
+) -> str:
+    """
+    Augments the audio track of the input video using a given AugLy audio augmentation
+
+    @param video_path: the path to the video to be augmented
+
+    @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+    @param audio_aug_function: the augmentation function to be applied onto the video's
+        audio track. Should have the standard API of an AugLy audio augmentation, i.e.
+        expect input audio as a numpy array or path & output path as input, and output
+        the augmented audio to the output path
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, fps, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param audio_aug_kwargs: the input attributes to be passed into `audio_aug`
+
+    @returns: the path to the augmented video
+    """
+    assert callable(audio_aug_function), (
+        repr(type(audio_aug_function).__name__) + " object is not callable"
+    )
+
+    func_kwargs = helpers.get_func_kwargs(
+        metadata, locals(), video_path, audio_aug_function=audio_aug_function
+    )
+
+    if audio_aug_function is not None:
+        try:
+            func_kwargs["audio_aug_function"] = audio_aug_function.__name__
+        except AttributeError:
+            func_kwargs["audio_aug_function"] = type(audio_aug_function).__name__
+
+    audio_metadata = []
+    with tempfile.NamedTemporaryFile(suffix=".wav") as tmpfile:
+        helpers.extract_audio_to_file(video_path, tmpfile.name)
+        audio, sr = audutils.validate_and_load_audio(tmpfile.name)
+        aug_audio, aug_sr = audio_aug_function(
+            audio, sample_rate=sr, metadata=audio_metadata, **audio_aug_kwargs
+        )
+        audutils.ret_and_save_audio(aug_audio, tmpfile.name, aug_sr)
+        audio_swap(video_path, tmpfile.name, output_path=output_path or video_path)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata,
+            audio_metadata=audio_metadata,
+            function_name="augment_audio",
+            **func_kwargs,
         )
 
     return output_path or video_path

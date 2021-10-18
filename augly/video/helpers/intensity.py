@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import augly.image.intensity as imint
 import augly.image.utils as imutils
@@ -40,6 +40,10 @@ def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
 
 def audio_swap_intensity(offset: float, **kwargs) -> float:
     return (1.0 - offset) * 100.0
+
+
+def augment_audio_intensity(audio_metadata: List[Dict[str, Any]], **kwargs) -> float:
+    return audio_metadata[0]["intensity"]
 
 
 def blend_videos_intensity(opacity: float, overlay_size: float, **kwargs) -> float:
@@ -209,9 +213,7 @@ def overlay_emoji_intensity(
 
 
 def overlay_onto_background_video_intensity(
-    overlay_size: Optional[float],
-    metadata: Dict[str, Any],
-    **kwargs,
+    overlay_size: Optional[float], metadata: Dict[str, Any], **kwargs
 ) -> float:
     if overlay_size is not None:
         return (1 - overlay_size ** 2) * 100.0
