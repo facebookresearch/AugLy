@@ -69,6 +69,9 @@ class FunctionalAudioUnitTest(BaseAudioUnitTest):
     def test_to_mono(self):
         self.evaluate_function(audaugs.to_mono)
 
+    def test_loop_audio(self):
+        self.evaluate_function(audaugs.loop_audio, n=1)
+
 
 if __name__ == "__main__":
     unittest.main()

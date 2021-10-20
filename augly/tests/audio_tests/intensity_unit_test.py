@@ -93,3 +93,7 @@ class IntensityAudioUnitTest(unittest.TestCase):
     def test_to_mono_intensity(self):
         intensity = audaugs.to_mono_intensity(metadata={"src_num_channels": 1})
         self.assertAlmostEqual(intensity, 0.0)
+
+    def test_loop_audio_intensity(self):
+        intensity = audaugs.loop_audio_intensity(metadata={}, n=1)
+        self.assertAlmostEqual(intensity, 1.0)

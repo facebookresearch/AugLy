@@ -201,3 +201,9 @@ def time_stretch_intensity(rate: float = 1.5, **kwargs) -> float:
 
 def to_mono_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     return 0.0 if metadata["src_num_channels"] == 1 else 100.0
+
+
+def loop_audio_intensity(n: int = 1, **kwargs) -> float:
+    assert isinstance(n, int) and n >= 1, "n must be a positive integer"
+    max_num_loops = 100
+    return min((n / max_num_loops) * 100.0, 100.0)

@@ -133,6 +133,9 @@ class TransformsAudioUnitTest(BaseAudioUnitTest):
     def test_ToMono(self):
         self.evaluate_class(audaugs.ToMono(), fname="to_mono")
 
+    def test_LoopAudio(self):
+        self.evaluate_class(audaugs.LoopAudio(n=1), fname="loop_audio")
+
 
 if __name__ == "__main__":
     unittest.main()

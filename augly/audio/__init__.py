@@ -22,6 +22,7 @@ from augly.audio.functional import (
     tempo,
     time_stretch,
     to_mono,
+    loop_audio,
 )
 from augly.audio.intensity import (
     add_background_noise_intensity,
@@ -43,6 +44,7 @@ from augly.audio.intensity import (
     tempo_intensity,
     time_stretch_intensity,
     to_mono_intensity,
+    loop_audio_intensity,
 )
 from augly.audio.transforms import (
     AddBackgroundNoise,
@@ -64,6 +66,7 @@ from augly.audio.transforms import (
     Tempo,
     TimeStretch,
     ToMono,
+    LoopAudio,
 )
 
 
@@ -108,6 +111,7 @@ __all__ = [
     "Tempo",
     "TimeStretch",
     "ToMono",
+    "LoopAudio",
     "add_background_noise_intensity",
     "apply_lambda_intensity",
     "change_volume_intensity",
@@ -127,4 +131,5 @@ __all__ = [
     "tempo_intensity",
     "time_stretch_intensity",
     "to_mono_intensity",
+    "loop_audio_intensity",
 ]
