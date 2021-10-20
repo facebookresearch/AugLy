@@ -27,11 +27,19 @@ class MisspellingReplacement(object):
             self.dictionary = json.load(json_file)
 
     def replace(self, word: str) -> Optional[List[str]]:
-        return None if word not in self.dictionary else self.dictionary[word]
+        return self.dictionary.get(word, None) or self.dictionary.get(
+            word.lower(), None
+        )
 
 
 class TypoAugmenter(WordAugmenter):
-    """Augmenter that replaces words with typos"""
+    """
+    Augmenter that replaces words with typos. You can specify a typo_type: charmix, which
+    does a combination of character-level modifications (delete, insert, substitute, &
+    swap); keyboard, which swaps characters which those close to each other on the QWERTY
+    keyboard; misspelling, which replaces words with misspellings defined in a dictionary
+    file; or all, which will apply a random combination of all 4
+    """
 
     def __init__(
         self,
@@ -42,7 +50,8 @@ class TypoAugmenter(WordAugmenter):
         aug_word_min: int,
         aug_word_max: int,
         aug_word_p: float,
-        misspelling_dict_path: str,
+        typo_type: str,
+        misspelling_dict_path: Optional[str],
         priority_words: Optional[List[str]],
     ):
         validate_augmenter_params(
@@ -54,33 +63,59 @@ class TypoAugmenter(WordAugmenter):
             aug_word_p,
         )
 
+        assert typo_type in [
+            "all",
+            "charmix",
+            "keyboard",
+            "misspelling",
+        ], "Typo type must be one of: all, charmix, keyboard, misspelling"
+
         super().__init__(
             action=Action.SUBSTITUTE,
             aug_min=aug_word_min,
             aug_max=aug_word_max,
             aug_p=aug_word_p,
         )
-        self.augmenters = [
-            KeyboardAug(
-                min_char=min_char,
-                aug_char_min=aug_char_min,
-                aug_char_max=aug_char_max,
-                aug_char_p=aug_char_p,
-                include_upper_case=True,
-                reverse_tokenizer=detokenize,
-                tokenizer=tokenize,
-            ),
-            RandomCharAug(
-                action=Action.SWAP,
-                min_char=min_char,
-                aug_char_min=aug_char_min,
-                aug_char_max=aug_char_max,
-                aug_char_p=aug_char_p,
-                reverse_tokenizer=detokenize,
-                tokenizer=tokenize,
-            ),
-        ]
-        self.model = self.get_model(misspelling_dict_path)
+
+        self.augmenters, self.model = [], None
+        if typo_type in ["all", "charmix"]:
+            for action in [
+                Action.DELETE,
+                Action.INSERT,
+                Action.SUBSTITUTE,
+                Action.SWAP,
+            ]:
+                self.augmenters.append(
+                    RandomCharAug(
+                        action=action,
+                        min_char=min_char,
+                        aug_char_min=aug_char_min,
+                        aug_char_max=aug_char_max,
+                        aug_char_p=aug_char_p,
+                        reverse_tokenizer=detokenize,
+                        tokenizer=tokenize,
+                    ),
+                )
+
+        if typo_type in ["all", "keyboard"]:
+            self.augmenters.append(
+                KeyboardAug(
+                    min_char=min_char,
+                    aug_char_min=aug_char_min,
+                    aug_char_max=aug_char_max,
+                    aug_char_p=aug_char_p,
+                    include_upper_case=True,
+                    reverse_tokenizer=detokenize,
+                    tokenizer=tokenize,
+                ),
+            )
+
+        if typo_type in ["all", "misspelling"]:
+            assert (
+                misspelling_dict_path is not None
+            ), "'misspelling_dict_path' must be provided if 'typo_type' is 'all' or 'misspelling'"
+            self.model = self.get_model(misspelling_dict_path)
+
         self.priority_words = (
             set(priority_words) if priority_words is not None else priority_words
         )
@@ -111,9 +146,7 @@ class TypoAugmenter(WordAugmenter):
         )
         filtered_word_idxes = self.skip_aug(self.pre_skip_aug(tokens), tokens)
         aug_word_idxes = set(
-            get_aug_idxes(
-                self, tokens, filtered_word_idxes, aug_word_cnt, Method.WORD
-            )
+            get_aug_idxes(self, tokens, filtered_word_idxes, aug_word_cnt, Method.WORD)
         )
 
         for t_i, token in enumerate(tokens):
@@ -121,14 +154,18 @@ class TypoAugmenter(WordAugmenter):
                 results.append(token)
                 continue
 
-            misspellings = self.model.replace(token)
+            misspellings = self.model.replace(token) if self.model else None
             if misspellings:
                 misspelling = self.sample(misspellings, 1)[0]
                 results.append(self.align_capitalization(token, misspelling))
-            else:
+            elif len(self.augmenters) > 0:
                 aug = self.sample(self.augmenters, 1)[0]
                 new_token = aug.augment(token)
                 results.append(self.align_capitalization(token, new_token))
+            else:
+                # If no misspelling is found in the dict & no other typo types are being
+                # used, don't change the token
+                results.append(token)
 
         return detokenize(results)
 

@@ -3,10 +3,10 @@
 
 import random
 import shutil
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
-from augly.video.transforms import VidAugBaseClass
 from augly.video.helpers import validate_input_and_output_paths
+from augly.video.transforms import VidAugBaseClass
 
 
 """
@@ -24,12 +24,11 @@ probabilities of the individual transforms.
 Example:
 
  >>> Compose([
- >>>     IGFilter(),
- >>>     ColorJitter(saturation_factor=1.5)
+ >>>     VFlip(),
+ >>>     Brightness(),
  >>>     OneOf([
- >>>         ScreenshotOverlay(),
- >>>         EmojiOverlay(),
- >>>         TextOverlay(),
+ >>>         OverlayOntoScreenshot(),
+ >>>         OverlayText(),
  >>>     ]),
  >>> ])
 """
@@ -52,7 +51,13 @@ class BaseComposition(VidAugBaseClass):
 
 
 class Compose(BaseComposition):
-    def __call__(self, video_path: str, output_path: Optional[str] = None) -> None:
+    def __call__(
+        self,
+        video_path: str,
+        output_path: Optional[str] = None,
+        seed: Optional[int] = None,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> str:
         """
         Applies the list of transforms in order to the video
 
@@ -60,6 +65,15 @@ class Compose(BaseComposition):
 
         @param output_path: the path in which the resulting video will be stored.
             If not passed in, the original video file will be overwritten
+
+        @param seed: if provided, the random seed will be set to this before calling
+            the transform
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest duration, fps, etc. will be appended
+            to the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the path to the augmented video
         """
         video_path, output_path = validate_input_and_output_paths(
             video_path, output_path
@@ -68,8 +82,12 @@ class Compose(BaseComposition):
         if video_path != output_path:
             shutil.copy(video_path, output_path)
 
+        if seed is not None:
+            random.seed(seed)
+
         for transform in self.transforms:
-            transform(output_path)
+            output_path = transform(output_path, metadata=metadata)
+        return output_path
 
 
 class OneOf(BaseComposition):
@@ -85,7 +103,13 @@ class OneOf(BaseComposition):
         probs_sum = sum(transform_probs)
         self.transform_probs = [t / probs_sum for t in transform_probs]
 
-    def __call__(self, video_path: str, output_path: Optional[str] = None) -> None:
+    def __call__(
+        self,
+        video_path: str,
+        output_path: Optional[str] = None,
+        seed: Optional[int] = None,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> str:
         """
         Applies one of the transforms to the video (with probability p)
 
@@ -93,9 +117,25 @@ class OneOf(BaseComposition):
 
         @param output_path: the path in which the resulting video will be stored.
             If not passed in, the original video file will be overwritten
+
+        @param seed: if provided, the random seed will be set to this before calling
+            the transform
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest duration, fps, etc. will be appended
+            to the inputted list. If set to None, no metadata will be appended or returned
+
+        @returns: the path to the augmented video
         """
+        video_path, output_path = validate_input_and_output_paths(
+            video_path, output_path
+        )
+
+        if seed is not None:
+            random.seed(seed)
+
         if random.random() > self.p:
-            return None
+            return output_path
 
         transform = random.choices(self.transforms, self.transform_probs)[0]
-        return transform(video_path, output_path, force=True)
+        return transform(video_path, output_path, force=True, metadata=metadata)

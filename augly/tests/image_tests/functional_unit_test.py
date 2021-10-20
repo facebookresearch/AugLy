@@ -5,12 +5,15 @@ import unittest
 
 import augly.image as imaugs
 from augly.tests.image_tests.base_unit_test import BaseImageUnitTest
-from augly.utils import IMG_MASK_PATH
+from augly.utils import EMOJI_PATH, IMG_MASK_PATH
 
 
 class FunctionalImageUnitTest(BaseImageUnitTest):
     def test_apply_lambda(self):
         self.evaluate_function(imaugs.apply_lambda)
+
+    def test_apply_pil_filter(self):
+        self.evaluate_function(imaugs.apply_pil_filter)
 
     def test_blur(self):
         self.evaluate_function(imaugs.blur)
@@ -23,6 +26,9 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
 
     def test_change_aspect_ratio(self):
         self.evaluate_function(imaugs.change_aspect_ratio)
+
+    def test_clip_image_size(self):
+        self.evaluate_function(imaugs.clip_image_size, max_resolution=1500000)
 
     def test_color_jitter(self):
         self.evaluate_function(imaugs.color_jitter)
@@ -62,8 +68,23 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
     def test_overlay_emoji(self):
         self.evaluate_function(imaugs.overlay_emoji)
 
+    def test_overlay_image(self):
+        self.evaluate_function(
+            imaugs.overlay_image, overlay=EMOJI_PATH, overlay_size=0.15, y_pos=0.8
+        )
+
+    def test_overlay_onto_background_image(self):
+        self.evaluate_function(
+            imaugs.overlay_onto_background_image,
+            background_image=EMOJI_PATH,
+            overlay_size=0.5,
+            scale_bg=True,
+        )
+
     def test_overlay_onto_screenshot(self):
-        self.evaluate_function(imaugs.overlay_onto_screenshot)
+        self.evaluate_function(
+            imaugs.overlay_onto_screenshot, resize_src_to_match_template=False
+        )
 
     def test_overlay_stripes(self):
         self.evaluate_function(imaugs.overlay_stripes)

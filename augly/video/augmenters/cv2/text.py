@@ -9,7 +9,7 @@ from typing import Any, List, Iterator, Optional, Tuple
 import cv2
 import numpy as np
 from augly.utils import pathmgr
-from augly.video.augmenters.cv2 import BaseCV2Augmenter
+from augly.video.augmenters.cv2.base_augmenter import BaseCV2Augmenter
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -150,9 +150,18 @@ class VideoDistractorByText(BaseCV2Augmenter):
             #  got `Union[ImageFont.FreeTypeFont, ImageFont.ImageFont,
             #  ImageFont.TransposedFont]`.
             ImageDraw.Draw(distract_frame_pil).text((x, y), text_str, font=font)
-            distract_frame = cv2.cvtColor(np.array(distract_frame_pil), cv2.COLOR_RGB2BGR)
+            distract_frame = cv2.cvtColor(
+                np.array(distract_frame_pil), cv2.COLOR_RGB2BGR
+            )
         else:
             cv2.putText(
-                distract_frame, text_str, (x, y), font, fontscale, color, thickness, cv2.LINE_AA
+                distract_frame,
+                text_str,
+                (x, y),
+                font,
+                fontscale,
+                color,
+                thickness,
+                cv2.LINE_AA,
             )
         return distract_frame

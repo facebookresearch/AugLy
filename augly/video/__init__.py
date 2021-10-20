@@ -2,11 +2,11 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 from augly.video.composition import Compose, OneOf
-
 from augly.video.functional import (
     add_noise,
     apply_lambda,
     audio_swap,
+    augment_audio,
     blend_videos,
     blur,
     brightness,
@@ -22,20 +22,20 @@ from augly.video.functional import (
     hflip,
     hstack,
     insert_in_background,
-    replace_with_background,
     loop,
     meme_format,
     overlay,
     overlay_dots,
     overlay_emoji,
-    overlay_onto_screenshot,
     overlay_onto_background_video,
+    overlay_onto_screenshot,
     overlay_shapes,
     overlay_text,
     pad,
     perspective_transform_and_shake,
     pixelization,
     remove_audio,
+    replace_with_background,
     replace_with_color_frames,
     resize,
     rotate,
@@ -47,11 +47,11 @@ from augly.video.functional import (
     vflip,
     vstack,
 )
-
 from augly.video.transforms import (
     AddNoise,
     ApplyLambda,
     AudioSwap,
+    AugmentAudio,
     BlendVideos,
     Blur,
     Brightness,
@@ -108,6 +108,7 @@ __all__ = [
     "AddNoise",
     "ApplyLambda",
     "AudioSwap",
+    "AugmentAudio",
     "BlendVideos",
     "Blur",
     "Brightness",
@@ -163,6 +164,7 @@ __all__ = [
     "add_noise",
     "apply_lambda",
     "audio_swap",
+    "augment_audio",
     "blend_videos",
     "blur",
     "brightness",

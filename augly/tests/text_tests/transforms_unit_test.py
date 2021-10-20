@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
+# @lint-ignore-every UTF8
 
 import json
 import random
@@ -34,7 +35,7 @@ def are_equal_metadata(
             if not (
                 isinstance(act_v, str)
                 and isinstance(exp_v, str)
-                and act_v[-len(exp_v):] == exp_v
+                and act_v[-len(exp_v) :] == exp_v
             ):
                 return False
 
@@ -61,10 +62,12 @@ class TransformsTextUnitTest(unittest.TestCase):
         with open(TEXT_METADATA_PATH, "r") as f:
             cls.expected_metadata = json.load(f)
 
-        cls.texts = [
-            "The quick brown 'fox' couldn't jump over the green, grassy hill."
-        ]
+        cls.texts = ["The quick brown 'fox' couldn't jump over the green, grassy hill."]
         cls.priority_words = ["green", "grassy", "hill"]
+
+        cls.fairness_texts = [
+            "The king and queen have a son named Raj and a daughter named Amanda.",
+        ]
 
     def test_ApplyLambda(self) -> None:
         augmented_apply_lambda = txtaugs.ApplyLambda()(
@@ -74,6 +77,56 @@ class TransformsTextUnitTest(unittest.TestCase):
         self.assertTrue(augmented_apply_lambda[0] == self.texts[0])
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["apply_lambda"]),
+        )
+
+    def test_ChangeCase(self) -> None:
+        augmented_words = txtaugs.ChangeCase(
+            granularity="char", cadence=5.0, case="random"
+        )(self.texts, metadata=self.metadata)
+
+        self.assertTrue(
+            augmented_words[0]
+            == "The qUick brown 'fox' couldn't jump over the Green, graSsy hill."
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["change_case"])
+        )
+
+    def test_Contractions(self) -> None:
+        augmented_words = txtaugs.Contractions(aug_p=1.0)(
+            ["I would call him but I do not know where he has gone"],
+            metadata=self.metadata,
+        )
+
+        self.assertTrue(
+            augmented_words[0] == "I'd call him but I don't know where he's gone"
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["contractions"])
+        )
+
+    def test_Compose(self) -> None:
+        random.seed(1)
+        augmented_compose = txtaugs.Compose(
+            [
+                txtaugs.OneOf([txtaugs.ReplaceSimilarChars(), txtaugs.SimulateTypos()]),
+                txtaugs.InsertPunctuationChars(),
+                txtaugs.ReplaceFunFonts(),
+            ]
+        )(self.texts, metadata=self.metadata)
+
+        self.assertEqual(
+            augmented_compose,
+            [
+                "T... h... e...... u... q... i... c... k...... b... r... o... w... "
+                "n...... '... f... o... x... '...... c... o... u... d... n... '...... "
+                "t...... j... u... m... p...... o... v... e... f...... t... j... e......"
+                " g... r... e... e... n...,...... g... r... a... s... s... y...... h... "
+                "i...,... l...."
+            ],
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["compose"]),
         )
 
     def test_GetBaseline(self) -> None:
@@ -106,6 +159,25 @@ class TransformsTextUnitTest(unittest.TestCase):
             ),
         )
 
+    def test_InsertWhitespaceChars(self) -> None:
+        aug_whitespace_text = txtaugs.InsertWhitespaceChars("all", 1.0, False)(
+            self.texts, metadata=self.metadata
+        )
+
+        # Separator inserted between every character (including spaces/punctuation).
+        self.assertEqual(
+            aug_whitespace_text,
+            [
+                "T h e   q u i c k   b r o w n   ' f o x '   c o u l d n ' t   "
+                "j u m p   o v e r   t h e   g r e e n ,   g r a s s y   h i l l ."
+            ],
+        )
+        self.assertTrue(
+            are_equal_metadata(
+                self.metadata, self.expected_metadata["insert_whitespace_chars"]
+            ),
+        )
+
     def test_InsertZeroWidthChars(self) -> None:
         aug_unicode_text = txtaugs.InsertZeroWidthChars("all", 1.0, False)(
             self.texts, metadata=self.metadata
@@ -129,6 +201,18 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(
                 self.metadata, self.expected_metadata["insert_zero_width_chars"]
             ),
+        )
+
+    def test_MergeWords(self) -> None:
+        aug_merge_words = txtaugs.MergeWords(aug_word_p=0.3)(
+            self.texts, metadata=self.metadata
+        )
+        self.assertTrue(
+            aug_merge_words[0]
+            == "The quickbrown 'fox' couldn'tjump overthe green, grassy hill."
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["merge_words"]),
         )
 
     def test_ReplaceBidirectional(self) -> None:
@@ -210,14 +294,22 @@ class TransformsTextUnitTest(unittest.TestCase):
             ),
         )
 
-    def test_SimulateTypos(self) -> None:
-        aug_typo_text = txtaugs.SimulateTypos(aug_word_p=0.3, aug_char_p=0.3)(
-            self.texts, metadata=self.metadata
+    def test_ReplaceWords(self) -> None:
+        augmented_words = txtaugs.ReplaceWords()(self.texts, metadata=self.metadata)
+
+        self.assertTrue(augmented_words[0] == self.texts[0])
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["replace_words"]),
         )
+
+    def test_SimulateTypos(self) -> None:
+        aug_typo_text = txtaugs.SimulateTypos(
+            aug_word_p=0.3, aug_char_p=0.3, typo_type="all"
+        )(self.texts, metadata=self.metadata)
 
         self.assertTrue(
             aug_typo_text[0]
-            == "Hte quici brown 'fox' fouldn' t ,ump over the green, grassy ihll."
+            == "Thw qu(ck brown 'fox' co)uldn' t jamp over the green, grassy hill.",
         )
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["simulate_typos"]),
@@ -234,6 +326,21 @@ class TransformsTextUnitTest(unittest.TestCase):
         )
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["split_words"]),
+        )
+
+    def test_SwapGenderedWords(self) -> None:
+        augmented_words = txtaugs.SwapGenderedWords()(
+            self.fairness_texts, metadata=self.metadata
+        )
+
+        self.assertTrue(
+            augmented_words[0]
+            == "The queen and king have a daughter named Raj and a son named Amanda.",
+        )
+        self.assertTrue(
+            are_equal_metadata(
+                self.metadata, self.expected_metadata["swap_gendered_words"]
+            ),
         )
 
 

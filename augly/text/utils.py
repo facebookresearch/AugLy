@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
+import json
 from copy import deepcopy
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import augly.text.intensity as txtintensity
+import augly.utils as utils
 
 
 def get_func_kwargs(
@@ -52,3 +54,21 @@ def get_metadata(
     metadata[-1]["intensity"] = getattr(
         txtintensity, f"{function_name}_intensity", lambda **_: 0.0
     )(**intensity_kwargs)
+
+
+def get_gendered_words_mapping(mapping: Union[str, Dict[str, str]]) -> Dict[str, str]:
+    """
+    Note: The `swap_gendered_words` augmentation, including this logic, was originally
+    written by Adina Williams and has been used in influential work, e.g.
+    https://arxiv.org/pdf/2005.00614.pdf
+    """
+    assert isinstance(
+        mapping, (str, Dict)
+    ), "Mapping must be either a dict or filepath to a mapping of gendered words"
+
+    if isinstance(mapping, Dict):
+        return mapping
+
+    if isinstance(mapping, str):
+        with utils.pathmgr.open(mapping) as f:
+            return json.load(f)

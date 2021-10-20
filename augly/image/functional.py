@@ -19,6 +19,8 @@ def apply_lambda(
     output_path: Optional[str] = None,
     aug_function: Callable[..., Image.Image] = lambda x: x,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
     **kwargs,
 ) -> Image.Image:
     """
@@ -40,6 +42,14 @@ def apply_lambda(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert callable(aug_function), (
@@ -53,7 +63,9 @@ def apply_lambda(
             func_kwargs["aug_function"] = aug_function.__name__
         except AttributeError:
             func_kwargs["aug_function"] = type(aug_function).__name__
+
     func_kwargs = imutils.get_func_kwargs(metadata, func_kwargs)
+    src_mode = image.mode
 
     aug_image = aug_function(image, **kwargs)
 
@@ -64,7 +76,66 @@ def apply_lambda(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+
+
+def apply_pil_filter(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    filter_type: Union[Callable, ImageFilter.Filter] = ImageFilter.EDGE_ENHANCE_MORE,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
+) -> Image.Image:
+    """
+    Applies a given PIL filter to the input image using `Image.filter()`
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param filter_type: the PIL ImageFilter to apply to the image
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = deepcopy(locals())
+
+    ftr = filter_type() if isinstance(filter_type, Callable) else filter_type
+    assert isinstance(
+        ftr, ImageFilter.Filter
+    ), "Filter type must be a PIL.ImageFilter.Filter class"
+
+    func_kwargs = imutils.get_func_kwargs(
+        metadata, func_kwargs, filter_type=getattr(ftr, "name", filter_type)
+    )
+    src_mode = image.mode
+
+    aug_image = image.filter(ftr)
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="apply_pil_filter",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def blur(
@@ -72,6 +143,8 @@ def blur(
     output_path: Optional[str] = None,
     radius: float = 2.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Blurs the image
@@ -88,6 +161,14 @@ def blur(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert radius > 0, "Radius cannot be negative"
@@ -95,8 +176,8 @@ def blur(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
-    # pyre-fixme[6]: Expected `Type[typing.Any]` for 1st param but got `GaussianBlur`.
     aug_image = image.filter(ImageFilter.GaussianBlur(radius))
 
     imutils.get_metadata(
@@ -106,7 +187,7 @@ def blur(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def brightness(
@@ -114,6 +195,8 @@ def brightness(
     output_path: Optional[str] = None,
     factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes the brightness of the image
@@ -131,17 +214,25 @@ def brightness(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
     aug_image = ImageEnhance.Brightness(image).enhance(factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    imutils.get_metadata(
-        metadata=metadata, function_name="brightness", **func_kwargs
-    )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    src_mode = image.mode
+    imutils.get_metadata(metadata=metadata, function_name="brightness", **func_kwargs)
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def change_aspect_ratio(
@@ -149,6 +240,8 @@ def change_aspect_ratio(
     output_path: Optional[str] = None,
     ratio: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes the aspect ratio of the image
@@ -165,6 +258,14 @@ def change_aspect_ratio(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert ratio > 0, "Ratio cannot be negative"
@@ -172,6 +273,7 @@ def change_aspect_ratio(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
     area = width * height
@@ -186,7 +288,82 @@ def change_aspect_ratio(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+
+
+def clip_image_size(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    min_resolution: Optional[int] = None,
+    max_resolution: Optional[int] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
+) -> Image.Image:
+    """
+    Scales the image up or down if necessary to fit in the given min and max resolution
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param min_resolution: the minimum resolution, i.e. width * height, that the
+        augmented image should have; if the input image has a lower resolution than this,
+        the image will be scaled up as necessary
+
+    @param max_resolution: the maximum resolution, i.e. width * height, that the
+        augmented image should have; if the input image has a higher resolution than
+        this, the image will be scaled down as necessary
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    assert min_resolution is None or (
+        isinstance(min_resolution, int) and min_resolution >= 0
+    ), "min_resolution must be None or a nonnegative int"
+    assert max_resolution is None or (
+        isinstance(max_resolution, int) and max_resolution >= 0
+    ), "max_resolution must be None or a nonnegative int"
+    assert not (
+        min_resolution is not None
+        and max_resolution is not None
+        and min_resolution > max_resolution
+    ), "min_resolution cannot be greater than max_resolution"
+
+    image = imutils.validate_and_load_image(image)
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+    aug_image = image
+
+    if min_resolution is not None and image.width * image.height < min_resolution:
+        resize_factor = math.sqrt(min_resolution / (image.width * image.height))
+        aug_image = scale(aug_image, factor=resize_factor)
+
+    elif max_resolution is not None and image.width * image.height > max_resolution:
+        resize_factor = math.sqrt(max_resolution / (image.width * image.height))
+        aug_image = scale(aug_image, factor=resize_factor)
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="clip_image_size",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def color_jitter(
@@ -196,6 +373,8 @@ def color_jitter(
     contrast_factor: float = 1.0,
     saturation_factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Color jitters the image
@@ -220,6 +399,14 @@ def color_jitter(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
@@ -229,11 +416,12 @@ def color_jitter(
     aug_image = ImageEnhance.Color(aug_image).enhance(saturation_factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    imutils.get_metadata(
-        metadata=metadata, function_name="color_jitter", **func_kwargs
-    )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    src_mode = image.mode
+
+    imutils.get_metadata(metadata=metadata, function_name="color_jitter", **func_kwargs)
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def contrast(
@@ -241,6 +429,8 @@ def contrast(
     output_path: Optional[str] = None,
     factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Alters the contrast of the image
@@ -259,11 +449,20 @@ def contrast(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: Image.Image - Augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     enhancer = ImageEnhance.Contrast(image)
     aug_image = enhancer.enhance(factor)
@@ -275,7 +474,7 @@ def contrast(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def convert_color(
@@ -304,6 +503,8 @@ def convert_color(
     palette: int = 0,
     colors: int = 256,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Converts the image in terms of color modes
@@ -334,14 +535,26 @@ def convert_color(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: Image.Image - Augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
+    # pyre-fixme[6]: Expected `Union[typing_extensions.Literal[0],
+    #  typing_extensions.Literal[1]]` for 4th param but got `int`.
     aug_image = image.convert(mode, matrix, dither, palette, colors)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     imutils.get_metadata(
-        metadata=metadata, function_name="convert_color", **func_kwargs,
+        metadata=metadata,
+        function_name="convert_color",
+        **func_kwargs,
     )
 
     return imutils.ret_and_save_image(aug_image, output_path)
@@ -355,6 +568,8 @@ def crop(
     x2: float = 0.75,
     y2: float = 0.75,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Crops the image
@@ -381,6 +596,14 @@ def crop(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert 0 <= x1 <= 1.0, "x1 must be a value in the range [0, 1]"
@@ -391,6 +614,7 @@ def crop(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
 
@@ -406,7 +630,7 @@ def crop(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def encoding_quality(
@@ -414,6 +638,8 @@ def encoding_quality(
     output_path: Optional[str] = None,
     quality: int = 50,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes the JPEG encoding quality level
@@ -430,6 +656,14 @@ def encoding_quality(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert 0 <= quality <= 100, "'quality' must be a value in the range [0, 100]"
@@ -437,6 +671,7 @@ def encoding_quality(
     image = imutils.validate_and_load_image(image).convert("RGB")
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     buffer = io.BytesIO()
     image.save(buffer, format="JPEG", quality=quality)
@@ -449,7 +684,7 @@ def encoding_quality(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def grayscale(
@@ -457,6 +692,8 @@ def grayscale(
     output_path: Optional[str] = None,
     mode: str = "luminosity",
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes an image to be grayscale
@@ -474,6 +711,14 @@ def grayscale(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert mode in [
@@ -484,6 +729,7 @@ def grayscale(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     # If grayscale image is passed in, return it
     if image.mode == "L":
@@ -504,13 +750,15 @@ def grayscale(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def hflip(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Horizontally flips an image
@@ -525,17 +773,25 @@ def hflip(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
     aug_image = image.transpose(Image.FLIP_LEFT_RIGHT)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
-    imutils.get_metadata(
-        metadata=metadata, function_name="hflip", **func_kwargs
-    )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    src_mode = image.mode
+    imutils.get_metadata(metadata=metadata, function_name="hflip", **func_kwargs)
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def masked_composite(
@@ -544,6 +800,8 @@ def masked_composite(
     mask: Optional[Union[str, Image.Image]] = None,
     transform_function: Optional[Callable] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Applies given augmentation function to the masked area of the image
@@ -566,6 +824,14 @@ def masked_composite(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
@@ -577,13 +843,14 @@ def masked_composite(
         except AttributeError:
             func_kwargs["transform_function"] = type(transform_function).__name__
     func_kwargs = imutils.get_func_kwargs(metadata, func_kwargs)
+    src_mode = image.mode
 
     if transform_function is None:
         masked_image = imutils.ret_and_save_image(image, output_path)
     else:
         aug_image = transform_function(image)
         if mask is None:
-            masked_image = imutils.ret_and_save_image(aug_image, output_path)
+            masked_image = imutils.ret_and_save_image(aug_image, output_path, src_mode)
         else:
             mask = imutils.validate_and_load_image(mask)
             assert image.size == mask.size, "Mask size must be equal to image size"
@@ -596,7 +863,7 @@ def masked_composite(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(masked_image, output_path)
+    return imutils.ret_and_save_image(masked_image, output_path, src_mode)
 
 
 def meme_format(
@@ -609,6 +876,8 @@ def meme_format(
     caption_height: int = 250,
     meme_bg_color: Tuple[int, int, int] = utils.WHITE_RGB_COLOR,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Creates a new image that looks like a meme, given text and an image
@@ -637,17 +906,26 @@ def meme_format(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
-    assert type(text) == str, "Expected variable `text` to be a string"
+    assert isinstance(text, str), "Expected variable `text` to be a string"
     assert 0.0 <= opacity <= 1.0, "Opacity must be a value in the range [0.0, 1.0]"
+    assert caption_height > 10, "Caption height must be greater than 10"
 
     utils.validate_rgb_color(text_color)
     utils.validate_rgb_color(meme_bg_color)
 
     image = imutils.validate_and_load_image(image)
-
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
 
@@ -673,10 +951,11 @@ def meme_format(
     draw.multiline_text(
         (x_pos, y_pos),
         text,
-        # pyre-fixme[61]: `font` may not be initialized here.
         # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 3rd param but got
         #  `FreeTypeFont`.
         font=font,
+        # pyre-fixme[6]: Expected `Union[None, Tuple[int, int, int], int, str]` for
+        #  4th param but got `Tuple[int, int, int, int]`.
         fill=(text_color[0], text_color[1], text_color[2], round(opacity * 255)),
         align="center",
     )
@@ -688,7 +967,7 @@ def meme_format(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(meme, output_path)
+    return imutils.ret_and_save_image(meme, output_path, src_mode)
 
 
 def opacity(
@@ -696,6 +975,8 @@ def opacity(
     output_path: Optional[str] = None,
     level: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Alter the opacity of an image
@@ -713,13 +994,22 @@ def opacity(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert 0 <= level <= 1, "level must be a value in the range [0, 1]"
 
-    image = imutils.validate_and_load_image(image).convert(mode="RGBA")
-
+    image = imutils.validate_and_load_image(image)
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+    image = image.convert(mode="RGBA")
 
     mask = image.convert("RGBA").getchannel("A")
     mask = Image.fromarray((np.array(mask) * level).astype(np.uint8))
@@ -733,7 +1023,7 @@ def opacity(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def overlay_emoji(
@@ -745,6 +1035,8 @@ def overlay_emoji(
     x_pos: float = 0.4,
     y_pos: float = 0.8,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlay an emoji onto the original image
@@ -768,6 +1060,14 @@ def overlay_emoji(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -805,7 +1105,10 @@ def overlay_image(
     overlay_size: float = 1.0,
     x_pos: float = 0.4,
     y_pos: float = 0.4,
+    max_visible_opacity: float = 0.75,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlays an image onto another image at position (width * x_pos, height * y_pos)
@@ -826,11 +1129,24 @@ def overlay_image(
 
     @param x_pos: position of overlaid image relative to the image width
 
+    @param max_visible_opacity: if bboxes are passed in, this param will be used as the
+        maximum opacity value through which the src image will still be considered
+        visible; see the function `overlay_image_bboxes_helper` in `utils/bboxes.py` for
+        more details about how this is used. If bboxes are not passed in this is not used
+
     @param y_pos: position of overlaid image relative to the image height
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -842,6 +1158,7 @@ def overlay_image(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     overlay = imutils.validate_and_load_image(overlay)
 
@@ -870,7 +1187,95 @@ def overlay_image(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+
+
+def overlay_onto_background_image(
+    image: Union[str, Image.Image],
+    background_image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    opacity: float = 1.0,
+    overlay_size: float = 1.0,
+    x_pos: float = 0.4,
+    y_pos: float = 0.4,
+    scale_bg: bool = False,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
+) -> Image.Image:
+    """
+    Overlays the image onto a given background image at position
+    (width * x_pos, height * y_pos)
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param background_image: the path to an image or a variable of type PIL.Image.Image
+        onto which the source image will be overlaid
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param opacity: the lower the opacity, the more transparent the overlaid image
+
+    @param overlay_size: size of the overlaid image is overlay_size * height
+        of the background image
+
+    @param x_pos: position of overlaid image relative to the background image width with
+        respect to the x-axis
+
+    @param y_pos: position of overlaid image relative to the background image height with
+        respect to the y-axis
+
+    @param scale_bg: if True, the background image will be scaled up or down so that
+        overlay_size is respected; if False, the source image will be scaled instead
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    assert 0.0 <= overlay_size <= 1.0, "Image size must be a value in the range [0, 1]"
+
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+
+    if scale_bg:
+        background_image = resize(
+            background_image,
+            width=math.floor(image.width / overlay_size),
+            height=math.floor(image.height / overlay_size),
+        )
+
+    aug_image = overlay_image(
+        background_image,
+        overlay=image,
+        output_path=output_path,
+        opacity=opacity,
+        overlay_size=overlay_size,
+        x_pos=x_pos,
+        y_pos=y_pos,
+    )
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="overlay_onto_background_image",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def overlay_onto_screenshot(
@@ -880,7 +1285,10 @@ def overlay_onto_screenshot(
     template_bboxes_filepath: str = utils.BBOXES_PATH,
     max_image_size_pixels: Optional[int] = None,
     crop_src_to_fit: bool = False,
+    resize_src_to_match_template: bool = True,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlay the image onto a screenshot template so it looks like it was
@@ -902,31 +1310,52 @@ def overlay_onto_screenshot(
         size (in pixels)
 
     @param crop_src_to_fit: if True, the src image will be cropped if necessary to fit
-        into the template image. If False, the src image will instead be resized if needed
+        into the template image if the aspect ratios are different. If False, the src
+        image will instead be resized if needed
+
+    @param resize_src_to_match_template: if True, the src image will be resized if it is
+        too big or small in both dimensions to better match the template image. If False,
+        the template image will be resized to match the src image instead. It can be
+        useful to set this to True if the src image is very large so that the augmented
+        image isn't huge, but instead is the same size as the template image
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     template, bbox = imutils.get_template_and_bbox(
         template_filepath, template_bboxes_filepath
     )
 
-    template, bbox = imutils.scale_template_image(
-        image.size[0],
-        image.size[1],
-        template,
-        bbox,
-        max_image_size_pixels,
-        crop_src_to_fit,
-    )
-    bbox_w, bbox_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    if resize_src_to_match_template:
+        bbox_w, bbox_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        image = scale(image, factor=min(bbox_w / image.width, bbox_h / image.height))
+    else:
+        template, bbox = imutils.scale_template_image(
+            image.size[0],
+            image.size[1],
+            template,
+            bbox,
+            max_image_size_pixels,
+            crop_src_to_fit,
+        )
+        bbox_w, bbox_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+
     cropped_src = imutils.resize_and_pad_to_given_size(
         image, bbox_w, bbox_h, crop=crop_src_to_fit
     )
@@ -939,7 +1368,7 @@ def overlay_onto_screenshot(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(template, output_path)
+    return imutils.ret_and_save_image(template, output_path, src_mode)
 
 
 def overlay_stripes(
@@ -952,6 +1381,8 @@ def overlay_stripes(
     line_type: Optional[str] = "solid",
     line_opacity: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlay stripe pattern onto the image (by default, white horizontal
@@ -985,20 +1416,35 @@ def overlay_stripes(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
-    assert 0.0 <= line_width <= 1.0, "Line width must be a value in the range [0.0, 1.0]"
+    assert (
+        0.0 <= line_width <= 1.0
+    ), "Line width must be a value in the range [0.0, 1.0]"
     assert (
         -360.0 <= line_angle <= 360.0
     ), "Line angle must be a degree in the range [360.0, 360.0]"
-    assert 0.0 <= line_density <= 1.0, "Line density must be a value in the range [0.0, 1.0]"
-    assert 0.0 <= line_opacity <= 1.0, "Line opacity must be a value in the range [0.0, 1.0]"
+    assert (
+        0.0 <= line_density <= 1.0
+    ), "Line density must be a value in the range [0.0, 1.0]"
+    assert (
+        0.0 <= line_opacity <= 1.0
+    ), "Line opacity must be a value in the range [0.0, 1.0]"
     assert line_type in utils.SUPPORTED_LINE_TYPES, "Stripe type not supported"
     utils.validate_rgb_color(line_color)
 
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
 
@@ -1045,13 +1491,13 @@ def overlay_stripes(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def overlay_text(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
-    text: List[int] = utils.DEFAULT_TEXT_INDICES,
+    text: List[Union[int, List[int]]] = utils.DEFAULT_TEXT_INDICES,
     font_file: str = utils.FONT_PATH,
     font_size: float = 0.15,
     opacity: float = 1.0,
@@ -1059,6 +1505,8 @@ def overlay_text(
     x_pos: float = 0.0,
     y_pos: float = 0.5,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Overlay text onto the image (by default, text is randomly overlaid)
@@ -1069,7 +1517,9 @@ def overlay_text(
     @param output_path: the path in which the resulting image will be stored.
         If None, the resulting PIL Image will still be returned
 
-    @param text: indices (into the file) of the characters to be overlaid
+    @param text: indices (into the file) of the characters to be overlaid. Each line of
+        text is represented as a list of int indices; if a list of lists is supplied,
+        multiple lines of text will be overlaid
 
     @param font_file: iopath uri to the .ttf font file
 
@@ -1088,6 +1538,14 @@ def overlay_text(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert 0.0 <= opacity <= 1.0, "Opacity must be a value in the range [0.0, 1.0]"
@@ -1099,8 +1557,15 @@ def overlay_text(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
-    image = image.convert('RGBA')
+    text_lists = text if all(isinstance(t, list) for t in text) else [text]
+    assert all(isinstance(t, list) for t in text_lists) and all(
+        all(isinstance(t, int) for t in text_l)  # pyre-ignore text_l is a List[int]
+        for text_l in text_lists
+    ), "Text must be a list of ints or a list of list of ints for multiple lines"
+
+    image = image.convert("RGBA")
     width, height = image.size
 
     local_font_path = utils.pathmgr.get_local_path(font_file)
@@ -1114,20 +1579,24 @@ def overlay_text(
         chars = pickle.load(f)
 
     try:
-        text_str = "".join([chr(chars[c % len(chars)]) for c in text])
+        text_strs = [
+            "".join([chr(chars[c % len(chars)]) for c in t]) for t in text_lists
+        ]
     except Exception:
         raise IndexError("Invalid text indices specified")
 
     draw = ImageDraw.Draw(image)
-
-    draw.text(
-        xy=(x_pos * width, y_pos * height),
-        text=text_str,
-        # pyre-fixme[6]: Expected `Union[None, Tuple[int, int, int], int, str]` for
-        #  3rd param but got `Tuple[int, int, int, int]`.
-        fill=(color[0], color[1], color[2], round(opacity * 255)),
-        font=font,
-    )
+    for i, text_str in enumerate(text_strs):
+        draw.text(
+            xy=(x_pos * width, y_pos * height + i * (font_size + 5)),
+            text=text_str,
+            # pyre-fixme[6]: Expected `Union[None, Tuple[int, int, int], int, str]` for
+            #  3rd param but got `Tuple[int, int, int, int]`.
+            fill=(color[0], color[1], color[2], round(opacity * 255)),
+            # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 4th param but got
+            #  `FreeTypeFont`.
+            font=font,
+        )
 
     imutils.get_metadata(
         metadata=metadata,
@@ -1136,7 +1605,7 @@ def overlay_text(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(image, output_path)
+    return imutils.ret_and_save_image(image, output_path, src_mode)
 
 
 def pad(
@@ -1146,6 +1615,8 @@ def pad(
     h_factor: float = 0.25,
     color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Pads the image
@@ -1168,6 +1639,14 @@ def pad(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert w_factor >= 0, "w_factor cannot be a negative number"
@@ -1177,6 +1656,7 @@ def pad(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
 
@@ -1197,7 +1677,7 @@ def pad(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def pad_square(
@@ -1205,6 +1685,8 @@ def pad_square(
     output_path: Optional[str] = None,
     color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Pads the shorter edge of the image such that it is now square-shaped
@@ -1220,6 +1702,14 @@ def pad_square(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
     @returns: the augmented PIL Image
     """
@@ -1260,6 +1750,8 @@ def perspective_transform(
     seed: Optional[int] = 42,
     crop_out_black_border: bool = False,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Apply a perspective transform to the image so it looks like it was taken
@@ -1292,6 +1784,14 @@ def perspective_transform(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert sigma >= 0, "Expected 'sigma' to be nonnegative"
@@ -1304,6 +1804,7 @@ def perspective_transform(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     rng = np.random.RandomState(seed) if seed is not None else np.random
     width, height = image.size
@@ -1333,6 +1834,7 @@ def perspective_transform(
                 "Cannot crop out black border of a perspective transform this intense"
             )
 
+        # pyre-fixme[16]: `None` has no attribute `crop`.
         aug_image = aug_image.crop((new_left, new_top, new_right, new_bottom))
 
     imutils.get_metadata(
@@ -1342,7 +1844,7 @@ def perspective_transform(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def pixelization(
@@ -1350,6 +1852,8 @@ def pixelization(
     output_path: Optional[str] = None,
     ratio: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Pixelizes an image
@@ -1367,6 +1871,14 @@ def pixelization(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert ratio > 0, "Expected 'ratio' to be a positive number"
@@ -1374,6 +1886,7 @@ def pixelization(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     width, height = image.size
     aug_image = image.resize((int(width * ratio), int(height * ratio)))
@@ -1386,7 +1899,7 @@ def pixelization(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def random_noise(
@@ -1396,6 +1909,8 @@ def random_noise(
     var: float = 0.01,
     seed: int = 42,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Adds random noise to the image
@@ -1416,6 +1931,14 @@ def random_noise(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert type(mean) in [float, int], "Mean must be an integer or a float"
@@ -1425,6 +1948,7 @@ def random_noise(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     if seed is not None:
         np.random.seed(seed=seed)
@@ -1453,7 +1977,7 @@ def random_noise(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def resize(
@@ -1462,6 +1986,8 @@ def resize(
     width: Optional[int] = None,
     height: Optional[int] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Resizes an image
@@ -1482,6 +2008,14 @@ def resize(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert width is None or type(width) == int, "Width must be an integer"
@@ -1490,6 +2024,7 @@ def resize(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     im_w, im_h = image.size
     aug_image = image.resize((width or im_w, height or im_h))
@@ -1501,7 +2036,7 @@ def resize(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def rotate(
@@ -1509,6 +2044,8 @@ def rotate(
     output_path: Optional[str] = None,
     degrees: float = 15.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Rotates the image
@@ -1526,6 +2063,14 @@ def rotate(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert type(degrees) in [float, int], "Degrees must be an integer or a float"
@@ -1533,11 +2078,12 @@ def rotate(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     rotated_image = image.rotate(degrees, expand=True)
 
     center_x, center_y = rotated_image.width / 2, rotated_image.height / 2
-    wr, hr = imutils.rotated_rect_with_max_area(image, degrees)
+    wr, hr = imutils.rotated_rect_with_max_area(image.width, image.height, degrees)
     aug_image = rotated_image.crop(
         (
             int(center_x - wr / 2),
@@ -1554,7 +2100,7 @@ def rotate(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def saturation(
@@ -1562,6 +2108,8 @@ def saturation(
     output_path: Optional[str] = None,
     factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Alters the saturation of the image
@@ -1580,11 +2128,20 @@ def saturation(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     aug_image = ImageEnhance.Color(image).enhance(factor)
 
@@ -1595,7 +2152,7 @@ def saturation(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def scale(
@@ -1604,6 +2161,8 @@ def scale(
     factor: float = 0.5,
     interpolation: Optional[int] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Alters the resolution of an image
@@ -1624,6 +2183,14 @@ def scale(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     assert factor > 0, "Expected 'factor' to be a positive number"
@@ -1640,6 +2207,7 @@ def scale(
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     if interpolation is None:
         interpolation = Image.LANCZOS if factor < 1 else Image.BILINEAR
@@ -1649,6 +2217,10 @@ def scale(
     scaled_width = int(width * factor)
     scaled_height = int(height * factor)
 
+    # pyre-fixme[6]: Expected `Union[typing_extensions.Literal[0],
+    #  typing_extensions.Literal[1], typing_extensions.Literal[2],
+    #  typing_extensions.Literal[3], typing_extensions.Literal[4],
+    #  typing_extensions.Literal[5], None]` for 2nd param but got `int`.
     aug_image = image.resize((scaled_width, scaled_height), resample=interpolation)
 
     imutils.get_metadata(
@@ -1658,7 +2230,7 @@ def scale(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def sharpen(
@@ -1666,6 +2238,8 @@ def sharpen(
     output_path: Optional[str] = None,
     factor: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Changes the sharpness of the image
@@ -1683,15 +2257,24 @@ def sharpen(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
     aug_image = ImageEnhance.Sharpness(image).enhance(factor)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
     imutils.get_metadata(metadata=metadata, function_name="sharpen", **func_kwargs)
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def shuffle_pixels(
@@ -1700,6 +2283,8 @@ def shuffle_pixels(
     factor: float = 1.0,
     seed: int = 10,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Shuffles the pixels of an image with respect to the shuffling factor. The
@@ -1722,6 +2307,14 @@ def shuffle_pixels(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     np.random.seed(seed)
@@ -1731,6 +2324,7 @@ def shuffle_pixels(
     assert 0.0 <= factor <= 1.0, "'factor' must be a value in range [0, 1]"
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     if factor == 0.0:
         aug_image = image
@@ -1762,7 +2356,7 @@ def shuffle_pixels(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def skew(
@@ -1819,6 +2413,8 @@ def vflip(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Vertically flips an image
@@ -1833,12 +2429,21 @@ def vflip(
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
 
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
     aug_image = image.transpose(Image.FLIP_TOP_BOTTOM)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
     imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)

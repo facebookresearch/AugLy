@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import augly.image.functional as F
 import augly.utils as utils
-from PIL import Image
+from PIL import Image, ImageFilter
 
 
 """
@@ -28,6 +28,8 @@ class BaseTransform(object):
         image: Image.Image,
         force: bool = False,
         metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         @param image: PIL Image to be augmented
@@ -39,6 +41,14 @@ class BaseTransform(object):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         assert isinstance(image, Image.Image), "Image passed in must be a PIL Image"
@@ -47,10 +57,14 @@ class BaseTransform(object):
         if not force and random.random() > self.p:
             return image
 
-        return self.apply_transform(image, metadata)
+        return self.apply_transform(image, metadata, bboxes, bbox_format)
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         This function is to be implemented in the child classes.
@@ -75,7 +89,11 @@ class BaseRandomRangeTransform(BaseTransform):
         self.chosen_value = None
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         @param image: PIL Image to be augmented
@@ -84,15 +102,32 @@ class BaseRandomRangeTransform(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         self.chosen_value = (
             random.random() * (self.max_val - self.min_val)
         ) + self.min_val
-        return self.apply_random_transform(image, metadata=metadata)
+        return self.apply_random_transform(
+            image,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
     def apply_random_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         This function is to be implemented in the child classes. It has
@@ -139,7 +174,11 @@ class ApplyLambda(BaseTransform):
         self.kwargs = kwargs
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Apply a user-defined lambda on an image
@@ -150,10 +189,74 @@ class ApplyLambda(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.apply_lambda(
-            image, aug_function=self.aug_function, metadata=metadata, **self.kwargs
+            image,
+            aug_function=self.aug_function,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+            **self.kwargs,
+        )
+
+
+class ApplyPILFilter(BaseTransform):
+    def __init__(
+        self,
+        filter_type: Union[
+            Callable, ImageFilter.Filter
+        ] = ImageFilter.EDGE_ENHANCE_MORE,
+        p: float = 1.0,
+    ):
+        """
+        @param filter_type: the PIL ImageFilter to apply to the image
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.filter_type = filter_type
+
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
+    ) -> Image.Image:
+        """
+        Applies a given PIL filter to the input image using `Image.filter()`
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.apply_pil_filter(
+            image,
+            filter_type=self.filter_type,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -168,7 +271,11 @@ class Blur(BaseTransform):
         self.radius = radius
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Blurs the image
@@ -179,9 +286,23 @@ class Blur(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.blur(image, radius=self.radius, metadata=metadata)
+        return F.blur(
+            image,
+            radius=self.radius,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class Brightness(BaseTransform):
@@ -197,7 +318,11 @@ class Brightness(BaseTransform):
         self.factor = factor
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Alters the brightness of the image
@@ -208,9 +333,23 @@ class Brightness(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.brightness(image, factor=self.factor, metadata=metadata)
+        return F.brightness(
+            image,
+            factor=self.factor,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class ChangeAspectRatio(BaseTransform):
@@ -224,7 +363,11 @@ class ChangeAspectRatio(BaseTransform):
         self.ratio = ratio
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Alters the aspect ratio of the image
@@ -235,9 +378,82 @@ class ChangeAspectRatio(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.change_aspect_ratio(image, ratio=self.ratio, metadata=metadata)
+        return F.change_aspect_ratio(
+            image,
+            ratio=self.ratio,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
+
+
+class ClipImageSize(BaseTransform):
+    def __init__(
+        self,
+        min_resolution: Optional[int] = None,
+        max_resolution: Optional[int] = None,
+        p: float = 1.0,
+    ):
+        """
+        @param min_resolution: the minimum resolution, i.e. width * height, that the
+            augmented image should have; if the input image has a lower resolution than this,
+            the image will be scaled up as necessary
+
+        @param max_resolution: the maximum resolution, i.e. width * height, that the
+            augmented image should have; if the input image has a higher resolution than
+            this, the image will be scaled down as necessary
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.min_resolution = min_resolution
+        self.max_resolution = max_resolution
+
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
+    ) -> Image.Image:
+        """
+        Scales the image up or down if necessary to fit in the given min and max
+        resolution
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.clip_image_size(
+            image,
+            min_resolution=self.min_resolution,
+            max_resolution=self.max_resolution,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class ColorJitter(BaseTransform):
@@ -268,7 +484,11 @@ class ColorJitter(BaseTransform):
         self.saturation_factor = saturation_factor
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Color jitters the image
@@ -279,6 +499,14 @@ class ColorJitter(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.color_jitter(
@@ -287,6 +515,8 @@ class ColorJitter(BaseTransform):
             contrast_factor=self.contrast_factor,
             saturation_factor=self.saturation_factor,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -303,7 +533,11 @@ class Contrast(BaseTransform):
         self.factor = factor
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Alters the contrast of the image
@@ -314,9 +548,23 @@ class Contrast(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.contrast(image, factor=self.factor, metadata=metadata)
+        return F.contrast(
+            image,
+            factor=self.factor,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class ConvertColor(BaseTransform):
@@ -373,7 +621,11 @@ class ConvertColor(BaseTransform):
         self.colors = colors
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Converts the image in terms of color modes
@@ -383,6 +635,14 @@ class ConvertColor(BaseTransform):
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
         @returns: Augmented PIL Image
         """
@@ -394,6 +654,8 @@ class ConvertColor(BaseTransform):
             palette=self.palette,
             colors=self.colors,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -426,7 +688,11 @@ class Crop(BaseTransform):
         self.x2, self.y2 = x2, y2
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Crops the image
@@ -437,10 +703,25 @@ class Crop(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.crop(
-            image, x1=self.x1, y1=self.y1, x2=self.x2, y2=self.y2, metadata=metadata
+            image,
+            x1=self.x1,
+            y1=self.y1,
+            x2=self.x2,
+            y2=self.y2,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -455,7 +736,11 @@ class EncodingQuality(BaseTransform):
         self.quality = quality
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Changes the JPEG encoding quality level
@@ -466,9 +751,23 @@ class EncodingQuality(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.encoding_quality(image, quality=self.quality, metadata=metadata)
+        return F.encoding_quality(
+            image,
+            quality=self.quality,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class Grayscale(BaseTransform):
@@ -483,7 +782,11 @@ class Grayscale(BaseTransform):
         self.mode = mode
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Alters an image to be grayscale
@@ -494,14 +797,32 @@ class Grayscale(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.grayscale(image, mode=self.mode, metadata=metadata)
+        return F.grayscale(
+            image,
+            mode=self.mode,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class HFlip(BaseTransform):
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Horizontally flips an image
@@ -512,9 +833,22 @@ class HFlip(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.hflip(image, metadata=metadata)
+        return F.hflip(
+            image,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class MaskedComposite(BaseTransform):
@@ -537,7 +871,11 @@ class MaskedComposite(BaseTransform):
         self.transform_function = transform_function
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Applies given augmentation function to the masked area of the image
@@ -548,6 +886,14 @@ class MaskedComposite(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.masked_composite(
@@ -555,6 +901,8 @@ class MaskedComposite(BaseTransform):
             mask=self.mask,
             transform_function=self.transform_function,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -593,7 +941,11 @@ class MemeFormat(BaseTransform):
         self.font_file = font_file
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Creates a new image that looks like a meme, given text and an image
@@ -603,6 +955,14 @@ class MemeFormat(BaseTransform):
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
         @returns: Augmented PIL Image
         """
@@ -615,6 +975,8 @@ class MemeFormat(BaseTransform):
             caption_height=self.caption_height,
             meme_bg_color=self.meme_bg_color,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -630,7 +992,11 @@ class Opacity(BaseTransform):
         self.level = level
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Alters the opacity of an image
@@ -641,9 +1007,23 @@ class Opacity(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.opacity(image, level=self.level, metadata=metadata)
+        return F.opacity(
+            image,
+            level=self.level,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class OverlayEmoji(BaseTransform):
@@ -675,7 +1055,11 @@ class OverlayEmoji(BaseTransform):
         self.x_pos, self.y_pos = x_pos, y_pos
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Overlay an emoji onto the original image
@@ -685,6 +1069,14 @@ class OverlayEmoji(BaseTransform):
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
         @returns: Augmented PIL Image
         """
@@ -696,6 +1088,8 @@ class OverlayEmoji(BaseTransform):
             x_pos=self.x_pos,
             y_pos=self.y_pos,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -707,6 +1101,7 @@ class OverlayImage(BaseTransform):
         overlay_size: float = 1.0,
         x_pos: float = 0.4,
         y_pos: float = 0.4,
+        max_visible_opacity: float = 0.75,
         p: float = 1.0,
     ):
         """
@@ -722,15 +1117,26 @@ class OverlayImage(BaseTransform):
 
         @param y_pos: position of overlaid image relative to the image height
 
+        @param max_visible_opacity: if bboxes are passed in, this param will be used as
+            the maximum opacity value through which the src image will still be
+            considered visible; see the function `overlay_image_bboxes_helper` in
+            `utils/bboxes.py` for more details about how this is used. If bboxes are not
+            passed in this is not used
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.overlay = overlay
         self.overlay_size, self.opacity = overlay_size, opacity
         self.x_pos, self.y_pos = x_pos, y_pos
+        self.max_visible_opacity = max_visible_opacity
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Overlays an image onto another image at position (width * x_pos, height * y_pos)
@@ -741,6 +1147,14 @@ class OverlayImage(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.overlay_image(
@@ -750,7 +1164,90 @@ class OverlayImage(BaseTransform):
             overlay_size=self.overlay_size,
             x_pos=self.x_pos,
             y_pos=self.y_pos,
+            max_visible_opacity=self.max_visible_opacity,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
+
+
+class OverlayOntoBackgroundImage(BaseTransform):
+    def __init__(
+        self,
+        background_image: Union[str, Image.Image],
+        opacity: float = 1.0,
+        overlay_size: float = 1.0,
+        x_pos: float = 0.4,
+        y_pos: float = 0.4,
+        scale_bg: bool = False,
+        p: float = 1.0,
+    ):
+        """
+        @param background_image: the path to an image or a variable of type
+            PIL.Image.Image onto which the source image will be overlaid
+
+        @param opacity: the lower the opacity, the more transparent the overlaid image
+
+        @param overlay_size: size of the overlaid image is overlay_size * height
+            of the background image
+
+        @param x_pos: position of overlaid image relative to the background image width
+            with respect to the x-axis
+
+        @param y_pos: position of overlaid image relative to the background image height
+            with respect to the y-axis
+
+        @param scale_bg: if True, the background image will be scaled up or down so that
+            overlay_size is respected; if False, the source image will be scaled instead
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.background_image = background_image
+        self.opacity = opacity
+        self.overlay_size = overlay_size
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+        self.scale_bg = scale_bg
+
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
+    ) -> Image.Image:
+        """
+        Overlays the image onto a given background image at position
+        (width * x_pos, height * y_pos)
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.overlay_onto_background_image(
+            image,
+            background_image=self.background_image,
+            opacity=self.opacity,
+            overlay_size=self.overlay_size,
+            x_pos=self.x_pos,
+            y_pos=self.y_pos,
+            scale_bg=self.scale_bg,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -759,6 +1256,9 @@ class OverlayOntoScreenshot(BaseTransform):
         self,
         template_filepath: str = utils.TEMPLATE_PATH,
         template_bboxes_filepath: str = utils.BBOXES_PATH,
+        max_image_size_pixels: Optional[int] = None,
+        crop_src_to_fit: bool = False,
+        resize_src_to_match_template: bool = True,
         p: float = 1.0,
     ):
         """
@@ -767,14 +1267,35 @@ class OverlayOntoScreenshot(BaseTransform):
         @param template_bboxes_filepath: iopath uri to the file containing the
             bounding box for each template
 
+        @param max_image_size_pixels: if provided, the template image and/or src image
+            will be scaled down to avoid an output image with an area greater than this
+            size (in pixels)
+
+        @param crop_src_to_fit: if True, the src image will be cropped if necessary to
+            fit into the template image if the aspect ratios are different. If False, the
+            src image will instead be resized if needed
+
+        @param resize_src_to_match_template: if True, the src image will be resized if it
+            is too big or small in both dimensions to better match the template image. If
+            False, the template image will be resized to match the src image instead. It
+            can be useful to set this to True if the src image is very large so that the
+            augmented image isn't huge, but instead is the same size as the template image
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.template_filepath = template_filepath
         self.template_bboxes_filepath = template_bboxes_filepath
+        self.max_image_size_pixels = max_image_size_pixels
+        self.crop_src_to_fit = crop_src_to_fit
+        self.resize_src_to_match_template = resize_src_to_match_template
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Overlay the image onto a screenshot template so it looks like it was
@@ -786,13 +1307,26 @@ class OverlayOntoScreenshot(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.overlay_onto_screenshot(
             image,
             template_filepath=self.template_filepath,
             template_bboxes_filepath=self.template_bboxes_filepath,
+            max_image_size_pixels=self.max_image_size_pixels,
+            crop_src_to_fit=self.crop_src_to_fit,
+            resize_src_to_match_template=self.resize_src_to_match_template,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -805,7 +1339,7 @@ class OverlayStripes(BaseTransform):
         line_density: float = 0.5,
         line_type: Optional[str] = "solid",
         line_opacity: float = 1.0,
-        p: float = 1.0
+        p: float = 1.0,
     ):
         """
         @param line_width: the width of individual stripes as a float value ranging
@@ -835,7 +1369,11 @@ class OverlayStripes(BaseTransform):
         self.line_type = line_type
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Overlay stripe pattern onto the image (by default, stripes are horizontal)
@@ -845,6 +1383,14 @@ class OverlayStripes(BaseTransform):
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
         @returns: Augmented PIL Image
         """
@@ -856,14 +1402,16 @@ class OverlayStripes(BaseTransform):
             line_density=self.line_density,
             line_type=self.line_type,
             line_opacity=self.line_opacity,
-            metadata=metadata
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
 class OverlayText(BaseTransform):
     def __init__(
         self,
-        text: List[int] = utils.DEFAULT_TEXT_INDICES,
+        text: List[Union[int, List[int]]] = utils.DEFAULT_TEXT_INDICES,
         font_file: str = utils.FONT_PATH,
         font_size: float = 0.15,
         opacity: float = 1.0,
@@ -873,7 +1421,9 @@ class OverlayText(BaseTransform):
         p: float = 1.0,
     ):
         """
-        @param text: indices (into the file) of the characters to be overlaid
+        @param text: indices (into the file) of the characters to be overlaid. Each line
+            of text is represented as a list of int indices; if a list of lists is
+            supplied, multiple lines of text will be overlaid
 
         @param font_file: iopath uri to the .ttf font file
 
@@ -897,7 +1447,11 @@ class OverlayText(BaseTransform):
         self.x_pos, self.y_pos = x_pos, y_pos
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Overlay text onto the image (by default, text is randomly overlaid)
@@ -907,6 +1461,14 @@ class OverlayText(BaseTransform):
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
         @returns: Augmented PIL Image
         """
@@ -920,6 +1482,8 @@ class OverlayText(BaseTransform):
             x_pos=self.x_pos,
             y_pos=self.y_pos,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -948,7 +1512,11 @@ class Pad(BaseTransform):
         self.color = color
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Pads the image
@@ -959,6 +1527,14 @@ class Pad(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.pad(
@@ -967,6 +1543,8 @@ class Pad(BaseTransform):
             h_factor=self.h_factor,
             color=self.color,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -983,7 +1561,11 @@ class PadSquare(BaseTransform):
         self.color = color
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Pads the shorter edge of the image such that it is now square-shaped
@@ -994,9 +1576,23 @@ class PadSquare(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.pad_square(image, color=self.color, metadata=metadata)
+        return F.pad_square(
+            image,
+            color=self.color,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class PerspectiveTransform(BaseTransform):
@@ -1023,7 +1619,11 @@ class PerspectiveTransform(BaseTransform):
         self.seed = seed
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Apply a perspective transform to the image so it looks like it was taken
@@ -1036,6 +1636,14 @@ class PerspectiveTransform(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.perspective_transform(
@@ -1045,6 +1653,8 @@ class PerspectiveTransform(BaseTransform):
             dy=self.dy,
             seed=self.seed,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -1060,7 +1670,11 @@ class Pixelization(BaseTransform):
         self.ratio = ratio
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Pixelizes an image
@@ -1071,9 +1685,23 @@ class Pixelization(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.pixelization(image, ratio=self.ratio, metadata=metadata)
+        return F.pixelization(
+            image,
+            ratio=self.ratio,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class RandomNoise(BaseTransform):
@@ -1095,7 +1723,11 @@ class RandomNoise(BaseTransform):
         self.seed = seed
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Adds random noise to the image
@@ -1106,10 +1738,24 @@ class RandomNoise(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.random_noise(
-            image, mean=self.mean, var=self.var, seed=self.seed, metadata=metadata
+            image,
+            mean=self.mean,
+            var=self.var,
+            seed=self.seed,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -1130,7 +1776,11 @@ class Resize(BaseTransform):
         self.width, self.height = width, height
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Resizes an image
@@ -1141,9 +1791,24 @@ class Resize(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.resize(image, width=self.width, height=self.height, metadata=metadata)
+        return F.resize(
+            image,
+            width=self.width,
+            height=self.height,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class Rotate(BaseTransform):
@@ -1158,7 +1823,11 @@ class Rotate(BaseTransform):
         self.degrees = degrees
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Rotates the image
@@ -1169,9 +1838,23 @@ class Rotate(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.rotate(image, degrees=self.degrees, metadata=metadata)
+        return F.rotate(
+            image,
+            degrees=self.degrees,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class Saturation(BaseTransform):
@@ -1187,7 +1870,11 @@ class Saturation(BaseTransform):
         self.factor = factor
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Alters the saturation of an image
@@ -1198,9 +1885,23 @@ class Saturation(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.saturation(image, factor=self.factor, metadata=metadata)
+        return F.saturation(
+            image,
+            factor=self.factor,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class Scale(BaseTransform):
@@ -1225,7 +1926,11 @@ class Scale(BaseTransform):
         self.interpolation = interpolation
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Alters the resolution of an image
@@ -1236,6 +1941,14 @@ class Scale(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.scale(
@@ -1243,6 +1956,8 @@ class Scale(BaseTransform):
             factor=self.factor,
             interpolation=self.interpolation,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -1258,7 +1973,11 @@ class Sharpen(BaseTransform):
         self.factor = factor
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Alters the sharpness of the image
@@ -1269,9 +1988,23 @@ class Sharpen(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.sharpen(image, factor=self.factor, metadata=metadata)
+        return F.sharpen(
+            image,
+            factor=self.factor,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class ShufflePixels(BaseTransform):
@@ -1290,7 +2023,11 @@ class ShufflePixels(BaseTransform):
         self.seed = seed
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Shuffles the pixels of an image with respect to the shuffling factor. The
@@ -1304,10 +2041,23 @@ class ShufflePixels(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
         return F.shuffle_pixels(
-            image, factor=self.factor, seed=self.seed, metadata=metadata
+            image,
+            factor=self.factor,
+            seed=self.seed,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
     
@@ -1343,7 +2093,11 @@ class Skew(BaseTransform):
 
 class VFlip(BaseTransform):
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Vertically flips an image
@@ -1354,9 +2108,22 @@ class VFlip(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.vflip(image, metadata=metadata)
+        return F.vflip(
+            image,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 """
@@ -1388,7 +2155,11 @@ class RandomAspectRatio(BaseRandomRangeTransform):
         super().__init__(min_ratio, max_ratio, p)
 
     def apply_random_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Transform that randomly changes the aspect ratio of an image
@@ -1399,9 +2170,23 @@ class RandomAspectRatio(BaseRandomRangeTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.change_aspect_ratio(image, ratio=self.chosen_value, metadata=metadata)
+        return F.change_aspect_ratio(
+            image,
+            ratio=self.chosen_value,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class RandomBlur(BaseRandomRangeTransform):
@@ -1420,7 +2205,11 @@ class RandomBlur(BaseRandomRangeTransform):
         super().__init__(min_radius, max_radius, p)
 
     def apply_random_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Transform that randomly blurs an image
@@ -1431,9 +2220,23 @@ class RandomBlur(BaseRandomRangeTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.blur(image, radius=self.chosen_value, metadata=metadata)
+        return F.blur(
+            image,
+            radius=self.chosen_value,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class RandomBrightness(BaseRandomRangeTransform):
@@ -1452,7 +2255,11 @@ class RandomBrightness(BaseRandomRangeTransform):
         super().__init__(min_factor, max_factor, p)
 
     def apply_random_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Transform that randomly changes the brightness of an image
@@ -1463,9 +2270,23 @@ class RandomBrightness(BaseRandomRangeTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.brightness(image, factor=self.chosen_value, metadata=metadata)
+        return F.brightness(
+            image,
+            factor=self.chosen_value,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class RandomEmojiOverlay(BaseTransform):
@@ -1500,7 +2321,11 @@ class RandomEmojiOverlay(BaseTransform):
         self.y_pos = y_pos
 
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Transform that overlays a random emoji onto an image
@@ -1510,6 +2335,14 @@ class RandomEmojiOverlay(BaseTransform):
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
         @returns: Augmented PIL Image
         """
@@ -1522,6 +2355,8 @@ class RandomEmojiOverlay(BaseTransform):
             x_pos=self.x_pos,
             y_pos=self.y_pos,
             metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
         )
 
 
@@ -1541,7 +2376,11 @@ class RandomPixelization(BaseRandomRangeTransform):
         super().__init__(min_ratio, max_ratio, p)
 
     def apply_random_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Transform that randomly pixelizes an image
@@ -1552,9 +2391,23 @@ class RandomPixelization(BaseRandomRangeTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.pixelization(image, ratio=self.chosen_value, metadata=metadata)
+        return F.pixelization(
+            image,
+            ratio=self.chosen_value,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class RandomRotation(BaseRandomRangeTransform):
@@ -1571,7 +2424,11 @@ class RandomRotation(BaseRandomRangeTransform):
         super().__init__(min_degrees, max_degrees, p)
 
     def apply_random_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Transform that randomly rotates an image
@@ -1582,6 +2439,20 @@ class RandomRotation(BaseRandomRangeTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
 
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
         @returns: Augmented PIL Image
         """
-        return F.rotate(image, degrees=self.chosen_value, metadata=metadata)
+        return F.rotate(
+            image,
+            degrees=self.chosen_value,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )

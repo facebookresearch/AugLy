@@ -4,10 +4,8 @@
 import json
 import math
 import os
-from copy import deepcopy
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
-import augly.image.intensity as imintensity
 import augly.utils as utils
 import numpy as np
 from PIL import Image
@@ -32,7 +30,12 @@ def validate_and_load_image(image: Union[str, Image.Image]) -> Image.Image:
     return image
 
 
-def ret_and_save_image(image: Image.Image, output_path: Optional[str]) -> Image.Image:
+def ret_and_save_image(
+    image: Image.Image, output_path: Optional[str], src_mode: Optional[str] = None
+) -> Image.Image:
+    if src_mode is not None:
+        image = image.convert(src_mode)
+
     if output_path is not None:
         if any(output_path.endswith(extension) for extension in JPEG_EXTENSIONS):
             image = image.convert("RGB")
@@ -55,62 +58,7 @@ def get_template_and_bbox(
     return template, bbox
 
 
-def get_func_kwargs(
-    metadata: Optional[List[Dict[str, Any]]], local_kwargs: Dict[str, Any], **kwargs
-) -> Dict[str, Any]:
-    if metadata is None:
-        return {}
-    func_kwargs = deepcopy(local_kwargs)
-    func_kwargs.pop("metadata")
-    func_kwargs.update(**kwargs)
-    return func_kwargs
-
-
-def get_metadata(
-    metadata: Optional[List[Dict[str, Any]]],
-    function_name: str,
-    image: Optional[Image.Image] = None,
-    aug_image: Optional[Image.Image] = None,
-    **kwargs,
-) -> None:
-    if metadata is None:
-        return
-
-    assert isinstance(
-        metadata, list
-    ), "Expected `metadata` to be set to None or of type list"
-    assert (
-        image is not None
-    ), "Expected `image` to be passed in if metadata was provided"
-    assert (
-        aug_image is not None
-    ), "Expected `aug_image` to be passed in if metadata was provided"
-
-    # Json can't represent tuples, so they're represented as lists, which should
-    # be equivalent to tuples. So let's avoid tuples in the metadata by
-    # converting any tuples to lists here.
-    kwargs_types_fixed = dict(
-        (k, list(v)) if isinstance(v, tuple) else (k, v) for k, v in kwargs.items()
-    )
-
-    metadata.append(
-        {
-            "name": function_name,
-            "src_width": image.width,
-            "src_height": image.height,
-            "dst_width": aug_image.width,
-            "dst_height": aug_image.height,
-            **kwargs_types_fixed,
-        }
-    )
-
-    intensity_kwargs = {"metadata": metadata[-1], **kwargs}
-    metadata[-1]["intensity"] = getattr(
-        imintensity, f"{function_name}_intensity", lambda **_: 0.0
-    )(**intensity_kwargs)
-
-
-def rotated_rect_with_max_area(image: Image.Image, angle: float) -> Tuple[float, float]:
+def rotated_rect_with_max_area(w: int, h: int, angle: float) -> Tuple[float, float]:
     """
     Computes the width and height of the largest possible axis-aligned
     rectangle (maximal area) within the rotated rectangle
@@ -118,7 +66,6 @@ def rotated_rect_with_max_area(image: Image.Image, angle: float) -> Tuple[float,
     source:
     https://stackoverflow.com/questions/16702966/rotate-image-and-crop-out-black-borders # noqa: B950
     """
-    w, h = image.size
     width_is_longer = w >= h
     side_long, side_short = (w, h) if width_is_longer else (h, w)
 

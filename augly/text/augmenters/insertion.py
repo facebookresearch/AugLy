@@ -23,6 +23,14 @@ CHARACTER_TYPES = {
         "\u2063",  # Invisible Separator
         "\u2064",  # Invisible Plus
     ],
+    "whitespace": [
+        " ",  # Space
+        "\t",  # Horizontal Tab
+        "\n",  # Newline
+        "\r",  # Carriage Return
+        "\v",  # Vertical Tab
+        "\f",  # Feed
+    ],
     "punctuation": [".", "?", "!", ",", ";", ":", "-", "'", "..."],
 }
 
