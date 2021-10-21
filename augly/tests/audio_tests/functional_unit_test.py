@@ -37,6 +37,9 @@ class FunctionalAudioUnitTest(BaseAudioUnitTest):
     def test_invert_channels(self):
         self.evaluate_function(audaugs.invert_channels)
 
+    def test_loop(self):
+        self.evaluate_function(audaugs.loop, n=1)
+
     def test_low_pass_filter(self):
         self.evaluate_function(audaugs.low_pass_filter, cutoff_hz=500)
 
@@ -68,9 +71,6 @@ class FunctionalAudioUnitTest(BaseAudioUnitTest):
 
     def test_to_mono(self):
         self.evaluate_function(audaugs.to_mono)
-
-    def test_loop_audio(self):
-        self.evaluate_function(audaugs.loop_audio, n=1)
 
 
 if __name__ == "__main__":

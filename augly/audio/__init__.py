@@ -12,6 +12,7 @@ from augly.audio.functional import (
     high_pass_filter,
     insert_in_background,
     invert_channels,
+    loop,
     low_pass_filter,
     normalize,
     peaking_equalizer,
@@ -22,7 +23,6 @@ from augly.audio.functional import (
     tempo,
     time_stretch,
     to_mono,
-    loop_audio,
 )
 from augly.audio.intensity import (
     add_background_noise_intensity,
@@ -34,6 +34,7 @@ from augly.audio.intensity import (
     high_pass_filter_intensity,
     insert_in_background_intensity,
     invert_channels_intensity,
+    loop_intensity,
     low_pass_filter_intensity,
     normalize_intensity,
     peaking_equalizer_intensity,
@@ -44,7 +45,6 @@ from augly.audio.intensity import (
     tempo_intensity,
     time_stretch_intensity,
     to_mono_intensity,
-    loop_audio_intensity,
 )
 from augly.audio.transforms import (
     AddBackgroundNoise,
@@ -56,6 +56,7 @@ from augly.audio.transforms import (
     HighPassFilter,
     InsertInBackground,
     InvertChannels,
+    Loop,
     LowPassFilter,
     Normalize,
     PeakingEqualizer,
@@ -66,7 +67,6 @@ from augly.audio.transforms import (
     Tempo,
     TimeStretch,
     ToMono,
-    LoopAudio,
 )
 
 
@@ -80,7 +80,7 @@ __all__ = [
     "high_pass_filter",
     "insert_in_background",
     "invert_channels",
-    "low_pass_filter",
+    "loop" "low_pass_filter",
     "normalize",
     "peaking_equalizer",
     "percussive",
@@ -100,6 +100,7 @@ __all__ = [
     "HighPassFilter",
     "InsertInBackground",
     "InvertChannels",
+    "Loop",
     "LowPassFilter",
     "Normalize",
     "OneOf",
@@ -111,7 +112,6 @@ __all__ = [
     "Tempo",
     "TimeStretch",
     "ToMono",
-    "LoopAudio",
     "add_background_noise_intensity",
     "apply_lambda_intensity",
     "change_volume_intensity",
@@ -121,6 +121,7 @@ __all__ = [
     "high_pass_filter_intensity",
     "insert_in_background_intensity",
     "invert_channels_intensity",
+    "loop_intensity",
     "low_pass_filter_intensity",
     "normalize_intensity",
     "peaking_equalizer_intensity",
@@ -131,5 +132,4 @@ __all__ = [
     "tempo_intensity",
     "time_stretch_intensity",
     "to_mono_intensity",
-    "loop_audio_intensity",
 ]
