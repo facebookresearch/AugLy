@@ -474,11 +474,6 @@ class Loop(BaseTransform):
 
         @param sample_rate: the audio sample rate of the inputted audio
 
-        @param n: the number of times the video will be looped
-
-        @param output_path: the path in which the resulting audio will be stored. If None,
-            the resulting np.ndarray will still be returned
-
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest duration, sample rates, etc. will be
             appended to the inputted list. If set to None, no metadata will be appended

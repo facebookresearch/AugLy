@@ -630,12 +630,16 @@ def loop(
         will be augmented
 
     @param sample_rate: the audio sample rate of the inputted audio
+
     @param n: the number of times the video will be looped
+
     @param output_path: the path in which the resulting audio will be stored. If None,
         the resulting np.ndarray will still be returned
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, sample rates, etc. will be
         appended to the inputted list. If set to None, no metadata will be appended
+
     @returns: the augmented audio array and sample rate
     """
     assert isinstance(n, int) and n >= 0, "Expected 'n' to be a nonnegative integer"
