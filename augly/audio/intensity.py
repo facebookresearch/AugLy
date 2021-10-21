@@ -102,6 +102,7 @@ def invert_channels_intensity(metadata: Dict[str, Any], **kwargs) -> float:
 
 def loop_intensity(n: int = 1, **kwargs) -> float:
     assert isinstance(n, int) and n >= 0, "Expected 'n' to be a nonnegative integer"
+
     max_num_loops = 100
     return min((n / max_num_loops) * 100.0, 100.0)
 
