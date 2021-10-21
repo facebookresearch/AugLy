@@ -626,6 +626,7 @@ def loop(
 ) -> Tuple[np.ndarray, int]:
     """
     Loops the audio 'n' times
+
     @param audio: the path to the audio or a variable of type np.ndarray that
         will be augmented
 
