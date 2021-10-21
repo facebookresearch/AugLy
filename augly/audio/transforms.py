@@ -477,7 +477,8 @@ class Loop(BaseTransform):
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest duration, sample rates, etc. will be
             appended to the inputted list. If set to None, no metadata will be appended
-            @returns: the augmented audio array and sample rate
+
+        @returns: the augmented audio array and sample rate
         """
         return F.loop(audio, sample_rate, self.n, metadata=metadata)
 
