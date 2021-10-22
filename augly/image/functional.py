@@ -2365,6 +2365,8 @@ def skew(
     skew_factor: float = 0.5,
     axis: int = 0,
     metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
 ) -> Image.Image:
     """
     Skews an image with respect to its x or y-axis
@@ -2384,11 +2386,20 @@ def skew(
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
+        
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
 
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+    
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
 
     w, h = image.size
 
@@ -2406,7 +2417,7 @@ def skew(
         metadata=metadata, function_name="skew", aug_image=aug_image, **func_kwargs
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def vflip(
