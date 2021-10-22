@@ -87,6 +87,9 @@ class TransformsAudioUnitTest(BaseAudioUnitTest):
     def test_InvertChannels(self):
         self.evaluate_class(audaugs.InvertChannels(), fname="invert_channels")
 
+    def Loop(self):
+        self.evaluate_class(audaugs.Loop(n=1), fname="loop")
+
     def test_LowPassFilter(self):
         self.evaluate_class(
             audaugs.LowPassFilter(cutoff_hz=500), fname="low_pass_filter"
