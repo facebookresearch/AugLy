@@ -2075,7 +2075,11 @@ class Skew(BaseTransform):
         self.axis = axis
         
     def apply_transform(
-        self, image: Image.Image, metadata: Optional[List[Dict[str, Any]]] = None
+        self, 
+        image: Image.Image, 
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Skews an image with respect to its x or y-axis
@@ -2086,9 +2090,24 @@ class Skew(BaseTransform):
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
             
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+            
         @returns: Augmented PIL Image
         """
-        return F.skew(image, skew_factor=self.skew_factor, axis=self.axis, metadata=metadata)
+        return F.skew(
+            image,
+            skew_factor=self.skew_factor,
+            axis=self.axis,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
 
 
 class VFlip(BaseTransform):
