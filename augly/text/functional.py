@@ -731,6 +731,7 @@ def simulate_typos(
     n: int = 1,
     typo_type: str = "all",
     misspelling_dict_path: Optional[str] = MISSPELLING_DICTIONARY_PATH,
+    max_typo_length: int = 1,
     priority_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> List[str]:
@@ -771,6 +772,10 @@ def simulate_typos(
         must be specified if typo_type is "misspelling" or "all", but otherwise can be
         None
 
+    @param max_typo_length: the words in the misspelling dictionary will be checked for
+        matches in the mapping up to this length; i.e. if 'max_typo_length' is 3 then
+        every substring of 2 *and* 3 words will be checked
+
     @param priority_words: list of target words that the augmenter should
         prioritize to augment first
 
@@ -792,6 +797,7 @@ def simulate_typos(
         aug_word_p,
         typo_type,
         misspelling_dict_path,
+        max_typo_length,
         priority_words,
     )
     aug_texts = typo_aug.augment(texts, n)

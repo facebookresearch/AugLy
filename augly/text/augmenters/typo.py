@@ -52,6 +52,7 @@ class TypoAugmenter(WordAugmenter):
         aug_word_p: float,
         typo_type: str,
         misspelling_dict_path: Optional[str],
+        max_typo_length: int,
         priority_words: Optional[List[str]],
     ):
         validate_augmenter_params(
@@ -114,7 +115,11 @@ class TypoAugmenter(WordAugmenter):
             assert (
                 misspelling_dict_path is not None
             ), "'misspelling_dict_path' must be provided if 'typo_type' is 'all' or 'misspelling'"
+            assert max_typo_length >= 1, "Must set 'max_typo_length' >= 1"
+            self.max_typo_length = max_typo_length
             self.model = self.get_model(misspelling_dict_path)
+        else:
+            self.max_typo_length = 1
 
         self.priority_words = (
             set(priority_words) if priority_words is not None else priority_words
@@ -149,23 +154,36 @@ class TypoAugmenter(WordAugmenter):
             get_aug_idxes(self, tokens, filtered_word_idxes, aug_word_cnt, Method.WORD)
         )
 
-        for t_i, token in enumerate(tokens):
-            if t_i not in aug_word_idxes:
-                results.append(token)
-                continue
+        for t_i in range(1, self.max_typo_length + 1):
+            i = 0
+            while i <= len(tokens) - t_i:
+                if i not in aug_word_idxes:
+                    results.append(tokens[i])
+                    i += 1
+                    continue
 
-            misspellings = self.model.replace(token) if self.model else None
-            if misspellings:
-                misspelling = self.sample(misspellings, 1)[0]
-                results.append(self.align_capitalization(token, misspelling))
-            elif len(self.augmenters) > 0:
-                aug = self.sample(self.augmenters, 1)[0]
-                new_token = aug.augment(token)
-                results.append(self.align_capitalization(token, new_token))
-            else:
-                # If no misspelling is found in the dict & no other typo types are being
-                # used, don't change the token
-                results.append(token)
+                misspellings = (
+                    self.model.replace(" ".join(tokens[i : i + t_i]))
+                    if self.model
+                    else None
+                )
+
+                if misspellings:
+                    misspelling = self.sample(misspellings, 1)[0]
+                    results.append(self.align_capitalization(tokens[i], misspelling))
+                    i += t_i - 1
+                elif len(self.augmenters) > 0:
+                    aug = self.sample(self.augmenters, 1)[0]
+                    new_token = aug.augment(tokens[i])
+                    results.append(self.align_capitalization(tokens[i], new_token))
+                else:
+                    # If no misspelling is found in the dict & no other typo types are being
+                    # used, don't change the token
+                    results.append(tokens[i])
+                i += 1
+
+            if t_i > 1:
+                results.extend(tokens[-t_i + 1 :])
 
         return detokenize(results)
 
