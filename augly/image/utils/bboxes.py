@@ -444,6 +444,29 @@ def rotate_bboxes_helper(
     )
 
 
+def skew_bboxes_helper(bbox: Tuple, skew_factor: float, axis: int, **kwargs) -> Tuple:
+    """
+    When the src image is skewed, the bounding box also gets skewed according to the axis along 
+    which the image will be skewed; can be set to 0 (x-axis) or 1 (y-axis)
+    """
+    left_factor, upper_factor, right_factor, lower_factor = bbox
+    left, upper, right, lower = (
+        left_factor * skew_factor,
+        upper_factor * skew_factor,
+        right_factor * skew_factor,
+        lower_factor * skew_factor,
+    )
+    
+    if axis == 0:
+        return (1 - right, upper, 1 - left, lower)
+    elif axis == 1:
+        return (left, 1 - lower, right, 1 - upper)
+    
+    return raise AssertionError(
+            f"Invalid 'axis' value: Got '{axis}', expected 0 for 'x-axis' or 1 for 'y-axis'"
+        )
+
+
 def vflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
     """
     Analogous to hflip, when the src image is vertically flipped, the bounding box also
