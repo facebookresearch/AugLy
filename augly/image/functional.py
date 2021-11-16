@@ -1988,6 +1988,7 @@ def resize(
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
+    interpolation: int = Image.BILINEAR
 ) -> Image.Image:
     """
     Resizes an image
@@ -2027,7 +2028,7 @@ def resize(
     src_mode = image.mode
 
     im_w, im_h = image.size
-    aug_image = image.resize((width or im_w, height or im_h))
+    aug_image = image.resize((width or im_w, height or im_h), interpolation)
 
     imutils.get_metadata(
         metadata=metadata,
