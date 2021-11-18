@@ -1985,7 +1985,7 @@ def resize(
     output_path: Optional[str] = None,
     width: Optional[int] = None,
     height: Optional[int] = None,
-    interpolation: int = Image.BILINEAR,
+    resample: int = Image.BILINEAR,
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
@@ -2004,6 +2004,11 @@ def resize(
 
     @param height: the desired height the image should be resized to have. If
         None, the original image height will be used
+    
+    @param resample: An optional resampling filter. This can be one of 
+        PIL.Image.NEAREST (use nearest neighbour), PIL.Image.BILINEAR 
+        (linear interpolation), PIL.Image.BICUBIC (cubic spline interpolation), 
+        or PIL.Image.LANCZOS (a high-quality downsampling filter).
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -2028,7 +2033,7 @@ def resize(
     src_mode = image.mode
 
     im_w, im_h = image.size
-    aug_image = image.resize((width or im_w, height or im_h), interpolation)
+    aug_image = image.resize((width or im_w, height or im_h), resample)
 
     imutils.get_metadata(
         metadata=metadata,
