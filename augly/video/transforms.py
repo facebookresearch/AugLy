@@ -5,8 +5,10 @@ import os
 import random
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+import augly.audio as audaugs
 import augly.utils as utils
 import augly.video.functional as F
+import numpy as np
 from augly.video.helpers import identity_function
 
 
@@ -270,6 +272,60 @@ class AudioSwap(BaseTransform):
         )
 
 
+class AugmentAudio(BaseTransform):
+    def __init__(
+        self,
+        audio_aug_function: Callable[
+            ..., Tuple[np.ndarray, int]
+        ] = audaugs.apply_lambda,
+        p: float = 1.0,
+        **audio_aug_kwargs,
+    ):
+        """
+        @param audio_aug_function: the augmentation function to be applied onto the
+            video's audio track. Should have the standard API of an AugLy audio
+            augmentation, i.e. expect input audio as a numpy array or path & output
+            path as input, and output the augmented audio to the output path
+
+        @param p: the probability of the transform being applied; default value is 1.0
+
+        @param audio_aug_kwargs: the input attributes to be passed into `audio_aug`
+        """
+        super().__init__(p)
+        self.audio_aug_function = audio_aug_function
+        self.audio_aug_kwargs = audio_aug_kwargs
+
+    def apply_transform(
+        self,
+        video_path: str,
+        output_path: str,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> str:
+        """
+        Augments the audio track of the input video using a given AugLy audio
+        augmentation
+
+        @param video_path: the path to the video to be augmented
+
+        @param output_path: the path in which the resulting video will be stored.
+            If not passed in, the original video file will be overwritten
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest duration, fps, etc. will be appended
+            to the inputted list. If set to None, no metadata will be appended or
+            returned
+
+        @returns: the path to the augmented video
+        """
+        return F.augment_audio(
+            video_path=video_path,
+            audio_aug_function=self.audio_aug_function,
+            output_path=output_path,
+            metadata=metadata,
+            **self.audio_aug_kwargs,
+        )
+
+
 class BlendVideos(BaseTransform):
     def __init__(
         self,
@@ -405,7 +461,12 @@ class Brightness(BaseTransform):
 
         @returns: the path to the augmented video
         """
-        return F.brightness(video_path, output_path, self.level, metadata=metadata)
+        return F.brightness(
+            video_path,
+            output_path,
+            level=self.level,
+            metadata=metadata,
+        )
 
 
 class ChangeAspectRatio(BaseTransform):
@@ -713,7 +774,10 @@ class EncodingQuality(BaseTransform):
         @returns: the path to the augmented video
         """
         return F.encoding_quality(
-            video_path, output_path, self.quality, metadata=metadata
+            video_path,
+            output_path,
+            quality=int(self.quality),
+            metadata=metadata,
         )
 
 
@@ -1622,7 +1686,12 @@ class Pixelization(BaseTransform):
 
         @returns: the path to the augmented video
         """
-        return F.pixelization(video_path, output_path, self.ratio, metadata=metadata)
+        return F.pixelization(
+            video_path,
+            output_path,
+            ratio=self.ratio,
+            metadata=metadata,
+        )
 
 
 class RemoveAudio(BaseTransform):

@@ -882,6 +882,7 @@ class SimulateTypos(BaseTransform):
         n: int = 1,
         typo_type: str = "all",
         misspelling_dict_path: Optional[str] = MISSPELLING_DICTIONARY_PATH,
+        max_typo_length: int = 1,
         priority_words: Optional[List[str]] = None,
         p: float = 1.0,
     ):
@@ -913,6 +914,10 @@ class SimulateTypos(BaseTransform):
             stored; must be specified if typo_type is "misspelling" or "all", but
             otherwise can be None
 
+        @param max_typo_length: the words in the misspelling dictionary will be checked for
+            matches in the mapping up to this length; i.e. if 'max_typo_length' is 3 then
+            every substring of 2 *and* 3 words will be checked
+
         @param priority_words: list of target words that the augmenter should
             prioritize to augment first
 
@@ -929,6 +934,7 @@ class SimulateTypos(BaseTransform):
         self.n = n
         self.typo_type = typo_type
         self.misspelling_dict_path = misspelling_dict_path
+        self.max_typo_length = max_typo_length
         self.priority_words = priority_words
 
     def apply_transform(

@@ -5,6 +5,7 @@ import json
 import random
 import unittest
 
+import augly.audio as audaugs
 import augly.video as vidaugs
 from augly.tests.base_configs import VideoAugConfig
 from augly.tests.video_tests.base_unit_test import BaseVideoUnitTest
@@ -22,6 +23,14 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
 
     def test_ApplyLambda(self):
         self.evaluate_class(vidaugs.ApplyLambda(), fname="apply_lambda")
+
+    def test_AugmentAudio(self):
+        self.evaluate_class(
+            vidaugs.AugmentAudio(
+                audio_aug_function=audaugs.PitchShift(),
+            ),
+            fname="augment_audio",
+        )
 
     def test_InsertInBackground(self):
         self.evaluate_class(
@@ -79,6 +88,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
                 source_percentage=0.7,
             ),
             fname="replace_with_background",
+            metadata_exclude_keys=["dst_duration", "dst_fps"],
         )
 
     def test_ReplaceWithColorFrames(self):
