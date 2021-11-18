@@ -1985,10 +1985,10 @@ def resize(
     output_path: Optional[str] = None,
     width: Optional[int] = None,
     height: Optional[int] = None,
+    interpolation: int = Image.BILINEAR,
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
-    interpolation: int = Image.BILINEAR
 ) -> Image.Image:
     """
     Resizes an image
