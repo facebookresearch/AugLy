@@ -617,6 +617,53 @@ def invert_channels(
     return audutils.ret_and_save_audio(aug_audio, output_path, sample_rate)
 
 
+def loop(
+    audio: Union[str, np.ndarray],
+    sample_rate: int = DEFAULT_SAMPLE_RATE,
+    n: int = 1,
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Tuple[np.ndarray, int]:
+    """
+    Loops the audio 'n' times
+
+    @param audio: the path to the audio or a variable of type np.ndarray that
+        will be augmented
+
+    @param sample_rate: the audio sample rate of the inputted audio
+
+    @param n: the number of times the video will be looped
+
+    @param output_path: the path in which the resulting audio will be stored. If None,
+        the resulting np.ndarray will still be returned
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, sample rates, etc. will be
+        appended to the inputted list. If set to None, no metadata will be appended
+
+    @returns: the augmented audio array and sample rate
+    """
+    assert isinstance(n, int) and n >= 0, "Expected 'n' to be a nonnegative integer"
+    audio, sample_rate = audutils.validate_and_load_audio(audio, sample_rate)
+
+    aug_audio = audio
+    for _ in range(n):
+        aug_audio = np.append(aug_audio, audio, axis=(0 if audio.ndim == 1 else 1))
+
+    audutils.get_metadata(
+        metadata=metadata,
+        function_name="loop",
+        audio=audio,
+        sample_rate=sample_rate,
+        dst_audio=aug_audio,
+        dst_sample_rate=sample_rate,
+        output_path=output_path,
+        n=n,
+    )
+
+    return audutils.ret_and_save_audio(aug_audio, output_path, sample_rate)
+
+
 def low_pass_filter(
     audio: Union[str, np.ndarray],
     sample_rate: int = DEFAULT_SAMPLE_RATE,

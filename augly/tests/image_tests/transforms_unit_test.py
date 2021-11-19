@@ -67,7 +67,11 @@ class TransformsImageUnitTest(BaseImageUnitTest):
         self.evaluate_class(imaugs.Contrast(), fname="contrast")
 
     def test_ConvertColor(self):
-        self.evaluate_class(imaugs.ConvertColor(mode="L"), fname="convert_color")
+        self.evaluate_class(
+            imaugs.ConvertColor(mode="L"),
+            fname="convert_color",
+            check_mode=False,
+        )
 
     def test_Crop(self):
         self.evaluate_class(imaugs.Crop(), fname="crop")

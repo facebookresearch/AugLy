@@ -52,6 +52,10 @@ class IntensityAudioUnitTest(unittest.TestCase):
         intensity = audaugs.invert_channels_intensity(metadata={"src_num_channels": 2})
         self.assertAlmostEqual(intensity, 100.0)
 
+    def test_loop_intensity(self):
+        intensity = audaugs.loop_intensity(metadata={}, n=1)
+        self.assertAlmostEqual(intensity, 1.0)
+
     def test_low_pass_filter_intensity(self):
         intensity = audaugs.low_pass_filter_intensity(metadata={}, cutoff_hz=500.0)
         self.assertAlmostEqual(intensity, 97.5)

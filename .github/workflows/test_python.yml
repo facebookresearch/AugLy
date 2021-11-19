@@ -10,6 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
       - run: sudo apt-get update
       - run: sudo apt-get install --fix-missing ffmpeg python3-soundfile
       - run: pip install pyre-check pytest torchvision
