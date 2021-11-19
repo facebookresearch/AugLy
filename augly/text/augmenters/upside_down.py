@@ -91,7 +91,7 @@ class UpsideDownAugmenter(Augmenter):
 
                 for c_i, char in enumerate(chars):
                     if char_idx in aug_char_idxes:
-                        chars[c_i] =_flip(char)
+                        chars[c_i] = _flip(char)
                     char_idx += 1
 
                 tokens[t_i] = "".join(chars)
