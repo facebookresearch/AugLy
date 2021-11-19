@@ -711,8 +711,19 @@ def hflip(
         video_path, output_path
     )
 
-    writer = WriteGear(output_filename = video_path,logging=True)
-    ffmpeg_command = ["-y", "-i", video_path , "-vf", "hflip", "-c:a", "copy", "-preset", "ultrafast", output_path]
+    writer = WriteGear(output_filename=video_path, logging=True)
+    ffmpeg_command = [
+        "-y",
+        "-i",
+        video_path,
+        "-vf",
+        "hflip",
+        "-c:a",
+        "copy",
+        "-preset",
+        "ultrafast",
+        output_path,
+    ]
     writer.execute_ffmpeg_cmd(ffmpeg_command)
     writer.close()
 
