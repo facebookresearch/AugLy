@@ -454,11 +454,16 @@ def high_pass_filter(
         func_kwargs = deepcopy(locals())
         func_kwargs.pop("metadata")
 
+    num_channels = 1 if audio.ndim == 1 else audio.shape[0]
+    audio = audio.reshape((num_channels, -1))
+
     aug_audio, out_sample_rate = sox_effects.apply_effects_tensor(
         torch.Tensor(audio), sample_rate, [["highpass", str(cutoff_hz)]]
     )
 
     high_pass_array = aug_audio.numpy()
+    if audio.shape[0] == 1:
+        aug_audio = aug_audio.reshape((aug_audio.shape[-1],))
 
     if metadata is not None:
         audutils.get_metadata(
@@ -466,7 +471,6 @@ def high_pass_filter(
             function_name="high_pass_filter",
             dst_audio=high_pass_array,
             dst_sample_rate=out_sample_rate,
-            alpha=alpha,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
