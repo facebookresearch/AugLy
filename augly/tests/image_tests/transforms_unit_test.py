@@ -6,6 +6,7 @@ import random
 import unittest
 
 import augly.image as imaugs
+from PIL import Image
 from augly.tests.image_tests.base_unit_test import BaseImageUnitTest
 from augly.utils import (
     EMOJI_PATH,
@@ -184,7 +185,7 @@ class TransformsImageUnitTest(BaseImageUnitTest):
         self.evaluate_class(imaugs.RandomRotation(), fname="RandomRotation")
 
     def test_Resize(self):
-        self.evaluate_class(imaugs.Resize(), fname="resize")
+        self.evaluate_class(imaugs.Resize(resample=Image.BICUBIC), fname="resize")
 
     def test_Rotate(self):
         self.evaluate_class(imaugs.Rotate(), fname="rotate")

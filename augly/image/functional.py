@@ -1985,7 +1985,7 @@ def resize(
     output_path: Optional[str] = None,
     width: Optional[int] = None,
     height: Optional[int] = None,
-    resample: int = Image.BILINEAR,
+    resample: Optional[int] = Image.BILINEAR,
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
@@ -2005,10 +2005,12 @@ def resize(
     @param height: the desired height the image should be resized to have. If
         None, the original image height will be used
 
-    @param resample: An optional resampling filter. This can be one of
-        PIL.Image.NEAREST (use nearest neighbour), PIL.Image.BILINEAR
-        (linear interpolation), PIL.Image.BICUBIC (cubic spline interpolation),
-        or PIL.Image.LANCZOS (a high-quality downsampling filter).
+    @param resample: An optional resampling filter. This can be one of 
+        PIL.Image.NEAREST, PIL.Image.BOX, PIL.Image.BILINEAR, PIL.Image.HAMMING, 
+        PIL.Image.BICUBIC or PIL.Image.LANCZOS. If the image has mode “1” or “P”, 
+        it is always set to PIL.Image.NEAREST. If the image mode specifies a number 
+        of bits, such as “I;16”, then the default filter is PIL.Image.NEAREST. 
+        Otherwise, the default filter is PIL.Image.BICUBIC.
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
