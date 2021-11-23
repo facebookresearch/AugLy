@@ -63,15 +63,15 @@ class ContractionAugmenter(object):
         for c_len in range(2, self.max_contraction_length + 1):
             i = 0
             while i <= len(tokens) - c_len:
+                result = tokens[i];
                 if self.rng.rand() <= self.aug_p:
                     contraction = self.contraction_mapping.replace(
                         " ".join(tokens[i : i + c_len])
                     )
                     if contraction is not None:
-                        results.append(contraction)
+                        result = contraction;
                         i += c_len - 1
-                else:
-                    results.append(tokens[i])
+                results.append(result);
                 i += 1
 
             results.extend(tokens[-c_len + 1 :])
