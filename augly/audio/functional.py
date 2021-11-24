@@ -480,7 +480,8 @@ def high_pass_filter(
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(high_pass_array, output_path, sample_rate)
+    return audutils.ret_and_save_audio(high_pass_array, output_path,
+    out_sample_rate)
 
 
 def insert_in_background(
