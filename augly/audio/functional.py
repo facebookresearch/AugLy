@@ -702,23 +702,17 @@ def low_pass_filter(
     rc = 1 / (2 * math.pi * cutoff_hz)
     dt = 1 / sample_rate
     alpha = dt / (rc + dt)
+
     num_channels = 1 if audio.ndim == 1 else audio.shape[0]
+    audio = audio.reshape((num_channels, -1))
 
-    if num_channels == 1:
-        audio = audio.reshape(1, audio.shape[0])
+    aug_audio, out_sample_rate = sox_effects.apply_effects_tensor(
+        torch.Tensor(audio), sample_rate, [["lowpass", str(cutoff_hz)]]
+    )
 
-    frame_count = audio.shape[1]
-    low_pass_array = np.zeros(audio.shape)
-
-    for i in range(num_channels):
-        low_pass_array[i][0] = alpha * audio[i][0]
-        for j in range(1, frame_count):
-            low_pass_array[i][j] = low_pass_array[i][j - 1] + alpha * (
-                audio[i][j] - low_pass_array[i][j - 1]
-            )
-
-    if num_channels == 1:
-        low_pass_array = low_pass_array.reshape((low_pass_array.shape[1],))
+    low_pass_array = aug_audio.numpy()
+    if audio.shape[0] == 1:
+        aug_audio = aug_audio.reshape((aug_audio.shape[-1],))
 
     if metadata is not None:
         audutils.get_metadata(
