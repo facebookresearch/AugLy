@@ -4,4 +4,8 @@ numpy>=1.19.5
 Pillow>=8.2.0
 python-magic>=0.4.22
 regex>=2021.4.4
+<<<<<<< HEAD
 vidgear>=0.2.4
+=======
+vidgear
+>>>>>>> 3e3ec35... wrote add_noise,loop and vflip with vidgear

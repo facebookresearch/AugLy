@@ -17,6 +17,7 @@ import augly.video.augmenters.ffmpeg as af
 import augly.video.helpers as helpers
 import augly.video.utils as vdutils
 import numpy as np
+from vidgear.gears import WriteGear
 
 
 def add_noise(
@@ -44,8 +45,24 @@ def add_noise(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    noise_aug = af.VideoAugmenterByNoise(level)
-    vdutils.apply_ffmpeg_augmenter(noise_aug, video_path, output_path)
+    video_path, output_path = helpers.validate_input_and_output_paths(
+        video_path, output_path
+    )
+    writer = WriteGear(output_filename=video_path, logging=True)
+    ffmpeg_command = [
+        "-y",
+        "-i",
+        video_path,
+        "-vf",
+        "boxblur=lr=1.2," + f"noise=c0s={level}:allf=t",
+        "-c:a",
+        "copy",
+        "-preset",
+        "ultrafast",
+        output_path,
+    ]
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
 
     if metadata is not None:
         helpers.get_metadata(
@@ -171,7 +188,6 @@ def augment_audio(
     assert callable(audio_aug_function), (
         repr(type(audio_aug_function).__name__) + " object is not callable"
     )
-
     func_kwargs = helpers.get_func_kwargs(
         metadata, locals(), video_path, audio_aug_function=audio_aug_function
     )
@@ -1036,8 +1052,24 @@ def loop(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    loop_aug = af.VideoAugmenterByLoops(num_loops)
-    vdutils.apply_ffmpeg_augmenter(loop_aug, video_path, output_path)
+    video_path, output_path = helpers.validate_input_and_output_paths(
+        video_path, output_path
+    )
+    writer = WriteGear(output_filename=video_path, logging=True)
+    ffmpeg_command = [
+        "-y",
+        "-stream_loop",
+        str(num_loops),
+        "-i",
+        video_path,
+        "-c:a",
+        "copy",
+        "-preset",
+        "ultrafast",
+        output_path,
+    ]
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="loop", **func_kwargs)
@@ -2157,10 +2189,24 @@ def vflip(
     @returns: the path to the augmented video
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
-
-    vflip_aug = af.VideoAugmenterByVFlip()
-    vdutils.apply_ffmpeg_augmenter(vflip_aug, video_path, output_path)
-
+    video_path, output_path = helpers.validate_input_and_output_paths(
+        video_path, output_path
+    )
+    writer = WriteGear(output_filename=video_path, logging=True)
+    ffmpeg_command = [
+        "-y",
+        "-i",
+        video_path,
+        "-vf",
+        "vflip",
+        "-c:a",
+        "copy",
+        "-preset",
+        "ultrafast",
+        output_path,
+    ]
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
 
