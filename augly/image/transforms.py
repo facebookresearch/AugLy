@@ -1777,7 +1777,7 @@ class Resize(BaseTransform):
 
         @param resample: An optional resampling filter. This can be one of
             PIL.Image.NEAREST, PIL.Image.BOX, PIL.Image.BILINEAR, PIL.Image.HAMMING,
-            PIL.Image.BICUBIC or PIL.Image.LANCZOS.
+            PIL.Image.BICUBIC or PIL.Image.LANCZOS
 
         @param p: the probability of the transform being applied; default value is 1.0
         """
