@@ -650,8 +650,7 @@ def loop(
 
     aug_audio = audio
     for _ in range(n):
-        aug_audio = cp.append(aug_audio, audio, axis=(0 if audio.ndim == 1
-        else 1))
+        aug_audio = cp.append(aug_audio, audio, axis=(0 if audio.ndim == 1 else 1))
 
     audutils.get_metadata(
         metadata=metadata,
