@@ -650,6 +650,7 @@ def loop(
     """
     assert isinstance(n, int) and n >= 0, "Expected 'n' to be a nonnegative integer"
     audio, sample_rate = audutils.validate_and_load_audio(audio, sample_rate)
+    if cupy_found: audio = cp.array(audio)
 
     aug_audio = audio
     for _ in range(n):
