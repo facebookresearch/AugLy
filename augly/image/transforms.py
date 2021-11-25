@@ -3,7 +3,6 @@
 
 import os
 import random
-from PIL import Image
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import augly.image.functional as F
