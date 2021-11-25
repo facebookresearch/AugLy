@@ -13,7 +13,10 @@ requirements = [
 extra_requirements = {
     "av": [
         r for r in Path("av_requirements.txt").read_text().splitlines() if "@" not in r
-    ]
+    ],
+    "gpu": [
+        "cupy"
+    ],
 }
 
 with open("README.md", encoding="utf8") as f:

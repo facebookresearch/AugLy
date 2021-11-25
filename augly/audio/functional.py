@@ -4,14 +4,18 @@
 import math
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+import importlib
 
 import augly.audio.utils as audutils
 import numpy as np
-import cupy as cp
 import torch
 from augly.utils import DEFAULT_SAMPLE_RATE
 from augly.utils.libsndfile import install_libsndfile
 
+cupy_spec = importlib.util.find_spec("cupy")
+cupy_found = cupy_spec is not None
+if cupy_found:
+    import cupy as cp
 
 install_libsndfile()
 import librosa
@@ -619,12 +623,12 @@ def invert_channels(
 
 
 def loop(
-    audio: Union[str, cp.ndarray],
+    audio: Union[str, np.ndarray],
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     n: int = 1,
     output_path: Optional[str] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[cp.ndarray, int]:
+) -> Tuple[np.ndarray, int]:
     """
     Loops the audio 'n' times
 
@@ -646,11 +650,13 @@ def loop(
     """
     assert isinstance(n, int) and n >= 0, "Expected 'n' to be a nonnegative integer"
     audio, sample_rate = audutils.validate_and_load_audio(audio, sample_rate)
-    audio = cp.array(audio)
 
     aug_audio = audio
     for _ in range(n):
-        aug_audio = cp.append(aug_audio, audio, axis=(0 if audio.ndim == 1 else 1))
+        aug_audio = (cp if cupy_found else np).append(aug_audio, audio,
+        axis=(0
+         if audio.ndim == 1
+        else 1))
 
     audutils.get_metadata(
         metadata=metadata,
