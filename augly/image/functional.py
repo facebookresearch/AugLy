@@ -2007,7 +2007,7 @@ def resize(
 
     @param resample: An optional resampling filter. This can be one of
         PIL.Image.NEAREST, PIL.Image.BOX, PIL.Image.BILINEAR, PIL.Image.HAMMING,
-        PIL.Image.BICUBIC or PIL.Image.LANCZOS.
+        PIL.Image.BICUBIC or PIL.Image.LANCZOS
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
