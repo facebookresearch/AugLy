@@ -632,7 +632,7 @@ def loop(
     """
     Loops the audio 'n' times
 
-    @param audio: the path to the audio or a variable of type cp.ndarray that
+    @param audio: the path to the audio or a variable of type np.ndarray that
         will be augmented
 
     @param sample_rate: the audio sample rate of the inputted audio
@@ -640,7 +640,7 @@ def loop(
     @param n: the number of times the video will be looped
 
     @param output_path: the path in which the resulting audio will be stored. If None,
-        the resulting cp.ndarray will still be returned
+        the resulting np.ndarray will still be returned
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, sample rates, etc. will be
