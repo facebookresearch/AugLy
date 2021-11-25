@@ -17,6 +17,7 @@ import augly.video.augmenters.ffmpeg as af
 import augly.video.helpers as helpers
 import augly.video.utils as vdutils
 import numpy as np
+from vidgear.gears import WriteGear
 
 
 def add_noise(
@@ -290,8 +291,26 @@ def blur(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    blur_aug = af.VideoAugmenterByBlur(sigma)
-    vdutils.apply_ffmpeg_augmenter(blur_aug, video_path, output_path)
+    video_path, output_path = helpers.validate_input_and_output_paths(
+        video_path, output_path
+    )
+    assert sigma >= 0, "Sigma cannot be a negative number"
+
+    writer = WriteGear(output_filename=video_path, logging=True)
+    ffmpeg_command = [
+        "-y",
+        "-i",
+        video_path,
+        "-vf",
+        f"gblur={sigma}",
+        "-c:a",
+        "copy",
+        "-preset",
+        "ultrafast",
+        output_path,
+    ]
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="blur", **func_kwargs)
@@ -324,8 +343,26 @@ def brightness(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    brightness_aug = af.VideoAugmenterByBrightness(level)
-    vdutils.apply_ffmpeg_augmenter(brightness_aug, video_path, output_path)
+    video_path, output_path = helpers.validate_input_and_output_paths(
+        video_path, output_path
+    )
+    assert -1.0 <= level <= 1.0, "Level must be a value in the range [-1.0, 1.0]"
+
+    writer = WriteGear(output_filename=video_path, logging=True)
+    ffmpeg_command = [
+        "-y",
+        "-i",
+        video_path,
+        "-vf",
+        f"eq=brightness={level}",
+        "-c:a",
+        "copy",
+        "-preset",
+        "ultrafast",
+        output_path,
+    ]
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
 
     if metadata is not None:
         helpers.get_metadata(
@@ -442,12 +479,34 @@ def color_jitter(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    color_jitter_aug = af.VideoAugmenterByColorJitter(
-        brightness_level=brightness_factor,
-        contrast_level=contrast_factor,
-        saturation_level=saturation_factor,
+    video_path, output_path = helpers.validate_input_and_output_paths(
+        video_path, output_path
     )
-    vdutils.apply_ffmpeg_augmenter(color_jitter_aug, video_path, output_path)
+    assert (
+        -1.0 <= brightness_factor <= 1.0
+    ), "Brightness factor must be a value in the range [-1.0, 1.0]"
+    assert (
+        -1000.0 <= contrast_factor <= 1000.0
+    ), "Contrast factor must be a value in the range [-1000, 1000]"
+    assert (
+        0.0 <= saturation_factor <= 3.0
+    ), "Saturation factor must be a value in the range [0.0, 3.0]"
+
+    writer = WriteGear(output_filename=video_path, logging=True)
+    ffmpeg_command = [
+        "-y",
+        "-i",
+        video_path,
+        "-vf",
+        f"eq=brightness={brightness_factor}:contrast={contrast_factor}:saturation={saturation_factor}",
+        "-c:a",
+        "copy",
+        "-preset",
+        "ultrafast",
+        output_path,
+    ]
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
 
     if metadata is not None:
         helpers.get_metadata(
