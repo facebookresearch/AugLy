@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import augly.audio.utils as audutils
 import numpy as np
+import cupy as cp
 import torch
 from augly.utils import DEFAULT_SAMPLE_RATE
 from augly.utils.libsndfile import install_libsndfile
@@ -618,16 +619,16 @@ def invert_channels(
 
 
 def loop(
-    audio: Union[str, np.ndarray],
+    audio: Union[str, cp.ndarray],
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     n: int = 1,
     output_path: Optional[str] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+) -> Tuple[cp.ndarray, int]:
     """
     Loops the audio 'n' times
 
-    @param audio: the path to the audio or a variable of type np.ndarray that
+    @param audio: the path to the audio or a variable of type cp.ndarray that
         will be augmented
 
     @param sample_rate: the audio sample rate of the inputted audio
@@ -635,7 +636,7 @@ def loop(
     @param n: the number of times the video will be looped
 
     @param output_path: the path in which the resulting audio will be stored. If None,
-        the resulting np.ndarray will still be returned
+        the resulting cp.ndarray will still be returned
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, sample rates, etc. will be
@@ -645,10 +646,12 @@ def loop(
     """
     assert isinstance(n, int) and n >= 0, "Expected 'n' to be a nonnegative integer"
     audio, sample_rate = audutils.validate_and_load_audio(audio, sample_rate)
+    audio = cp.array(audio)
 
     aug_audio = audio
     for _ in range(n):
-        aug_audio = np.append(aug_audio, audio, axis=(0 if audio.ndim == 1 else 1))
+        aug_audio = cp.append(aug_audio, audio, axis=(0 if audio.ndim == 1
+        else 1))
 
     audutils.get_metadata(
         metadata=metadata,
