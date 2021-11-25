@@ -17,7 +17,6 @@ import augly.video.augmenters.ffmpeg as af
 import augly.video.helpers as helpers
 import augly.video.utils as vdutils
 import numpy as np
-from vidgear.gears import WriteGear
 
 
 def add_noise(
@@ -711,21 +710,8 @@ def hflip(
         video_path, output_path
     )
 
-    writer = WriteGear(output_filename=video_path, logging=True)
-    ffmpeg_command = [
-        "-y",
-        "-i",
-        video_path,
-        "-vf",
-        "hflip",
-        "-c:a",
-        "copy",
-        "-preset",
-        "ultrafast",
-        output_path,
-    ]
-    writer.execute_ffmpeg_cmd(ffmpeg_command)
-    writer.close()
+    hflip_aug = af.VideoAugmenterByHFlip(video_path, output_path)
+    vdutils.apply_ffmpeg_augmenter(hflip_aug, video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="hflip", **func_kwargs)

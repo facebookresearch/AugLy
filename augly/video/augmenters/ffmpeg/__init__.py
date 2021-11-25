@@ -12,6 +12,7 @@ from augly.video.augmenters.ffmpeg.contrast import VideoAugmenterByContrast
 from augly.video.augmenters.ffmpeg.crop import VideoAugmenterByCrop
 from augly.video.augmenters.ffmpeg.fps import VideoAugmenterByFPSChange
 from augly.video.augmenters.ffmpeg.grayscale import VideoAugmenterByGrayscale
+from augly.video.augmenters.ffmpeg.hflip import VideoAugmenterByHFlip
 from augly.video.augmenters.ffmpeg.loops import VideoAugmenterByLoops
 from augly.video.augmenters.ffmpeg.no_audio import VideoAugmenterByRemovingAudio
 from augly.video.augmenters.ffmpeg.noise import VideoAugmenterByNoise
@@ -37,6 +38,7 @@ __all__ = [
     "VideoAugmenterByContrast",
     "VideoAugmenterByCrop",
     "VideoAugmenterByFPSChange",
+    "VideoAugmenterByHFlip",
     "VideoAugmenterByGrayscale",
     "VideoAugmenterByLoops",
     "VideoAugmenterByNoise",

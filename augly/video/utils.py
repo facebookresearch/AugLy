@@ -11,6 +11,7 @@ import augly.utils as utils
 import augly.video.augmenters.cv2 as ac
 import augly.video.augmenters.ffmpeg as af
 import augly.video.helpers as helpers
+from vidgear.gears import WriteGear
 
 
 """
@@ -28,11 +29,9 @@ def apply_ffmpeg_augmenter(
         video_path, output_path
     )
 
-    with tempfile.TemporaryDirectory() as tmpdir:
-        video_temp_path = os.path.join(tmpdir, os.path.basename(video_path))
-        shutil.copyfile(video_path, video_temp_path)
-        result_path = augmenter.augment(tmpdir, video_temp_path)
-        shutil.move(result_path, output_path)
+    writer = WriteGear(output_filename=video_path, logging=True)
+    writer.execute_ffmpeg_cmd(augmenter.add_augmenter())
+    writer.close()
 
 
 def apply_to_each_frame(
