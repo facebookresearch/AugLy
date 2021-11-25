@@ -706,10 +706,6 @@ def hflip(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    video_path, output_path = helpers.validate_input_and_output_paths(
-        video_path, output_path
-    )
-
     hflip_aug = af.VideoAugmenterByHFlip(video_path, output_path)
     vdutils.apply_ffmpeg_augmenter(hflip_aug, video_path, output_path)
 
