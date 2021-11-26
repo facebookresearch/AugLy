@@ -29,6 +29,20 @@ def apply_ffmpeg_augmenter(
         video_path, output_path
     )
 
+    with tempfile.TemporaryDirectory() as tmpdir:
+        video_temp_path = os.path.join(tmpdir, os.path.basename(video_path))
+        shutil.copyfile(video_path, video_temp_path)
+        result_path = augmenter.augment(tmpdir, video_temp_path)
+        shutil.move(result_path, output_path)
+
+
+def apply_ffmpeg_vidaug_augmenter(
+    augmenter: af.BaseFFMPEGAugmenter, video_path: str, output_path: Optional[str]
+) -> None:
+    video_path, output_path = helpers.validate_input_and_output_paths(
+        video_path, output_path
+    )
+
     writer = WriteGear(output_filename=video_path, logging=True)
     writer.execute_ffmpeg_cmd(augmenter.add_augmenter())
     writer.close()
