@@ -16,7 +16,9 @@ from augly.video.augmenters.ffmpeg.crop import VideoAugmenterByCrop
 from augly.video.augmenters.ffmpeg.fps import VideoAugmenterByFPSChange
 from augly.video.augmenters.ffmpeg.grayscale import VideoAugmenterByGrayscale
 from augly.video.augmenters.ffmpeg.hflip import VideoAugmenterByHFlip
+from augly.video.augmenters.ffmpeg.loops import VideoAugmenterByLoops
 from augly.video.augmenters.ffmpeg.no_audio import VideoAugmenterByRemovingAudio
+from augly.video.augmenters.ffmpeg.noise import VideoAugmenterByNoise
 from augly.video.augmenters.ffmpeg.overlay import VideoAugmenterByOverlay
 from augly.video.augmenters.ffmpeg.pad import VideoAugmenterByPadding
 from augly.video.augmenters.ffmpeg.quality import VideoAugmenterByQuality
@@ -26,6 +28,7 @@ from augly.video.augmenters.ffmpeg.rotate import VideoAugmenterByRotation
 from augly.video.augmenters.ffmpeg.speed import VideoAugmenterBySpeed
 from augly.video.augmenters.ffmpeg.stack import VideoAugmenterByStack
 from augly.video.augmenters.ffmpeg.trim import VideoAugmenterByTrim
+from augly.video.augmenters.ffmpeg.vflip import VideoAugmenterByVFlip
 
 __all__ = [
     "BaseFFMPEGAugmenter",
@@ -41,6 +44,8 @@ __all__ = [
     "VideoAugmenterByFPSChange",
     "VideoAugmenterByGrayscale",
     "VideoAugmenterByHFlip",
+    "VideoAugmenterByLoops",
+    "VideoAugmenterByNoise",
     "VideoAugmenterByOverlay",
     "VideoAugmenterByPadding",
     "VideoAugmenterByQuality",
@@ -51,4 +56,5 @@ __all__ = [
     "VideoAugmenterBySpeed",
     "VideoAugmenterByStack",
     "VideoAugmenterByTrim",
+    "VideoAugmenterByVFlip",
 ]
