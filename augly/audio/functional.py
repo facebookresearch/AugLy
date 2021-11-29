@@ -699,10 +699,6 @@ def low_pass_filter(
         func_kwargs = deepcopy(locals())
         func_kwargs.pop("metadata")
 
-    rc = 1 / (2 * math.pi * cutoff_hz)
-    dt = 1 / sample_rate
-    alpha = dt / (rc + dt)
-
     num_channels = 1 if audio.ndim == 1 else audio.shape[0]
     audio = audio.reshape((num_channels, -1))
 
@@ -719,13 +715,13 @@ def low_pass_filter(
             metadata=metadata,
             function_name="low_pass_filter",
             dst_audio=low_pass_array,
-            dst_sample_rate=sample_rate,
-            alpha=alpha,
+            dst_sample_rate=out_sample_rate,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(low_pass_array, output_path, sample_rate)
+    return audutils.ret_and_save_audio(low_pass_array, output_path,
+    out_sample_rate)
 
 
 def normalize(
