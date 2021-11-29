@@ -454,10 +454,6 @@ def high_pass_filter(
         func_kwargs = deepcopy(locals())
         func_kwargs.pop("metadata")
 
-    rc = 1 / (2 * math.pi * cutoff_hz)
-    dt = 1 / sample_rate
-    alpha = rc / (rc + dt)
-
     num_channels = 1 if audio.ndim == 1 else audio.shape[0]
     audio = audio.reshape((num_channels, -1))
 
@@ -475,7 +471,6 @@ def high_pass_filter(
             function_name="high_pass_filter",
             dst_audio=high_pass_array,
             dst_sample_rate=out_sample_rate,
-            alpha=alpha,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )

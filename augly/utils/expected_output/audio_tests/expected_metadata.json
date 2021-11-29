@@ -298,7 +298,6 @@
     ],
     "high_pass_filter": [
       {
-        "alpha": 0.6293073640480998,
         "cutoff_hz": 3000,
         "dst_duration": 0.853375,
         "dst_num_channels": 1,
