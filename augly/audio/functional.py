@@ -720,8 +720,7 @@ def low_pass_filter(
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(low_pass_array, output_path,
-    out_sample_rate)
+    return audutils.ret_and_save_audio(low_pass_array, output_path, out_sample_rate)
 
 
 def normalize(
