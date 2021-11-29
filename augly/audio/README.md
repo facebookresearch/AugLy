@@ -9,6 +9,14 @@ pip install augly[av]
 
 This ensures that not only the base dependencies, but also the heavier dependencies required for audio & video processing, are installed.
 
+
+If you have [CUDA](https://developer.nvidia.com/cuda-gpus), you can also
+install AugLy with GPU-accelerated audio augmentation support using the
+following command:
+```bash
+pip install augly[av,gpu]
+```
+
 ## Augmentations
 
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_audio.ipynb)
