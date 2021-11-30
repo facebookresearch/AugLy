@@ -44,7 +44,7 @@ def apply_ffmpeg_vidaug_augmenter(
     )
 
     writer = WriteGear(output_filename=video_path, logging=True)
-    writer.execute_ffmpeg_cmd(augmenter.add_augmenter())
+    writer.execute_ffmpeg_cmd(augmenter.add_augmenter(video_path, output_path))
     writer.close()
 
 
