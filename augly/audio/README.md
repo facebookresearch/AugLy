@@ -11,11 +11,21 @@ This ensures that not only the base dependencies, but also the heavier dependenc
 
 
 If you have [CUDA](https://developer.nvidia.com/cuda-gpus), you can also
-install AugLy with GPU-accelerated audio augmentation support using the
-following command:
+install AugLy with builtin GPU-accelerated audio augmentation support.
+
+Check if your system has CUDA by running:
 ```bash
-pip install augly[av,gpu]
+nvcc --version
 ```
+
+Based on the compiler version, you can manually install `cupy`:
+```bash
+pip install cupy-cuda<version>
+```
+Note: Remove any periods from the version number.
+
+AugLy will now automatically detect if `cupy` is available and use it for 
+GPU-accelerated audio augmentation.
 
 ## Augmentations
 
