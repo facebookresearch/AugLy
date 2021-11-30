@@ -22,9 +22,9 @@ jobs:
           cuda: '11.2.2'
 
       - run:
-          echo "Installed cuda version is: ${{steps.cuda-toolkit.outputs.cuda}}"
+          echo "Installed cuda version is ${{steps.cuda-toolkit.outputs.cuda}}"
 
       - run:
-          echo "Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
+          echo "Cuda install location ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
 
       - run: nvcc ---version
