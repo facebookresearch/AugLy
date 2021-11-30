@@ -77,7 +77,7 @@ class BaseVideoUnitTest(unittest.TestCase):
             import augly.video as vidaugs
         except ImportError:
             self.fail("vidaugs failed to import")
-        self.assertTrue(dir(vidaugs))
+        self.assertTrue(dir(vidaugs), "Video directory does not exist")
 
     @classmethod
     def setUpClass(cls):
@@ -98,7 +98,10 @@ class BaseVideoUnitTest(unittest.TestCase):
 
         with tempfile.NamedTemporaryFile(suffix=".mp4") as tmpfile:
             aug_function(output_path=tmpfile.name, **kwargs)
-            self.assertTrue(are_equal_videos(ref_vid_path, tmpfile.name))
+            self.assertTrue(
+                are_equal_videos(ref_vid_path, tmpfile.name),
+                "Expected and outputted videos do not match",
+            )
 
     def evaluate_class(
         self,
@@ -117,10 +120,13 @@ class BaseVideoUnitTest(unittest.TestCase):
             transform_class(
                 output_path=tmpfile.name, seed=seed, metadata=metadata, **kwargs
             )
-            self.assertTrue(os.path.exists(tmpfile.name))
+            self.assertTrue(
+                os.path.exists(tmpfile.name), "Output video file does not exist"
+            )
 
         self.assertTrue(
             are_equal_metadata(metadata, self.metadata[fname], metadata_exclude_keys),
+            "Expected and outputted metadata do not match",
         )
 
     def get_ref_video(self, fname: str) -> str:
