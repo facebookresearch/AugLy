@@ -1,9 +1,13 @@
 name: test_cupy
 on:
   pull_request:
-    branches: main
+    branches:
+      - main
+      - cupying
   push:
-    branches: main
+    branches:
+      - main
+      - cupying
 jobs:
   test_python:
     runs-on: ubuntu-latest
