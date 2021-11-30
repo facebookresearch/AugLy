@@ -3,11 +3,9 @@ on:
   pull_request:
     branches:
       - main
-      - cupying
   push:
     branches:
       - main
-      - cupying
 jobs:
   test_python:
     runs-on: ubuntu-latest
@@ -25,7 +23,7 @@ jobs:
       - run:
           echo "Cuda install location is ${{steps.cuda-toolkit.outputs
           .CUDA_PATH}}"
-      - run: nvcc -V
+      - run: nvcc --version
       - run: sudo apt-get update
       - run: sudo apt-get install --fix-missing ffmpeg python3-soundfile
       - run: pip install pyre-check pytest torchvision
