@@ -30,7 +30,7 @@ from augly.video.augmenters.ffmpeg.vflip import VideoAugmenterByVFlip
 
 __all__ = [
     "BaseFFMPEGAugmenter",
-    "BaseVidgearFFMPEGAugmenter"
+    "BaseVidgearFFMPEGAugmenter",
     "VideoAugmenterByAspectRatio",
     "VideoAugmenterByAudioSwap",
     "VideoAugmenterByBlur",
