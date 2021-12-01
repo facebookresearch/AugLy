@@ -13,7 +13,7 @@ Implementation of base class for FFMPEG-based video augmenters
 
 import os
 from abc import ABC, abstractmethod
-from typing import Dict, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import ffmpeg  # @manual
 from augly.utils.ffmpeg import FFMPEG_PATH
@@ -61,5 +61,24 @@ class BaseFFMPEGAugmenter(ABC):
 
         @returns: a tuple containing the FFMPEG object with the augmentation
             applied and a dictionary with any output arguments as necessary
+        """
+        raise NotImplementedError("Implement add_augmenter method")
+
+
+class BaseVidgearFFMPEGAugmenter(ABC):
+    @abstractmethod
+    def add_augmenter(
+        self, video_path: str, output_path: Optional[str] = None, **kwargs
+    ) -> List[str]:
+        """
+        Applies the specific augmentation to the video
+
+        @param video_path: the path to the video to be augmented
+
+        @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+
+        @returns: a list of strings of the FFMPEG command if it were to be written
+            in a command line
         """
         raise NotImplementedError("Implement add_augmenter method")
