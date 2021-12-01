@@ -4,6 +4,7 @@
 from augly.video.augmenters.ffmpeg.aspect_ratio import VideoAugmenterByAspectRatio
 from augly.video.augmenters.ffmpeg.audio_swap import VideoAugmenterByAudioSwap
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.augmenters.ffmpeg.blur import VideoAugmenterByBlur
 from augly.video.augmenters.ffmpeg.brightness import VideoAugmenterByBrightness
 from augly.video.augmenters.ffmpeg.color_jitter import VideoAugmenterByColorJitter
@@ -29,6 +30,7 @@ from augly.video.augmenters.ffmpeg.vflip import VideoAugmenterByVFlip
 
 __all__ = [
     "BaseFFMPEGAugmenter",
+    "BaseVidgearFFMPEGAugmenter"
     "VideoAugmenterByAspectRatio",
     "VideoAugmenterByAudioSwap",
     "VideoAugmenterByBlur",

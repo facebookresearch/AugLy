@@ -37,7 +37,9 @@ def apply_ffmpeg_augmenter(
 
 
 def apply_ffmpeg_vidaug_augmenter(
-    augmenter: af.BaseFFMPEGAugmenter, video_path: str, output_path: Optional[str]
+    augmenter: af.BaseVidgearFFMPEGAugmenter,
+    video_path: str,
+    output_path: Optional[str],
 ) -> None:
     video_path, output_path = helpers.validate_input_and_output_paths(
         video_path, output_path

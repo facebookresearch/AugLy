@@ -19,7 +19,7 @@ class VideoAugmenterByHFlip(BaseVidgearFFMPEGAugmenter):
         If not passed in, the original video file will be overwritten
 
         @returns: a list of strings of the FFMPEG command if it were to be written
-        in a command line
+            in a command line
         """
         command = [
             "-y",
