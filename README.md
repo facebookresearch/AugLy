@@ -6,6 +6,9 @@
   <a href="https://github.com/facebookresearch/AugLy/actions">
     <img alt="Github Actions" src="https://github.com/facebookresearch/AugLy/actions/workflows/test_python.yml/badge.svg"/>
   </a>
+  <a href="https://pypi.python.org/pypi/augly/">
+    <img alt="PyPI downloads per month" src="https://img.shields.io/pypi/dm/augly.svg"/>
+  </a>
   <a href="https://pypi.python.org/pypi/augly">
     <img alt="PyPI Version" src="https://img.shields.io/pypi/v/augly"/>
   </a>
