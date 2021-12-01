@@ -27,7 +27,8 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get install --fix-missing python3-soundfile
 
-      - run: pip install pyre-check pytest torchvision
+      - run: pip install pyre-check pytest cupy-cuda112
+
       - run: pip install -e .[av]
       - run: pyre --source-directory "." --noninteractive check || true
       - run: pytest --durations=10 .
