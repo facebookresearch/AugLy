@@ -7,7 +7,7 @@ on:
     branches:
       - main
 jobs:
-  test_python:
+  test_cupy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
