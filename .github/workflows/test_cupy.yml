@@ -31,4 +31,5 @@ jobs:
 
       - run: pip install -e .[av]
       - run: pyre --source-directory "." --noninteractive check || true
-      - run: pytest --durations=10 .
+      - run: pytest --durations=10 augly/tests/audio_tests/
+
