@@ -25,7 +25,8 @@ jobs:
           .CUDA_PATH}}"
       - run: nvcc --version
       - run: sudo apt-get update
-      - run: sudo apt-get install --fix-missing ffmpeg python3-soundfile
+      - run: sudo apt-get install --fix-missing python3-soundfile
+
       - run: pip install pyre-check pytest torchvision
       - run: pip install -e .[av]
       - run: pyre --source-directory "." --noninteractive check || true
