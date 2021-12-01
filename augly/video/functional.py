@@ -706,8 +706,7 @@ def hflip(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    hflip_aug = af.VideoAugmenterByHFlip()
-    vdutils.apply_ffmpeg_vidaug_augmenter(hflip_aug, video_path, output_path)
+    af.VideoAugmenterByHFlip.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="hflip", **func_kwargs)

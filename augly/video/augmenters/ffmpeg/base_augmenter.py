@@ -17,8 +17,9 @@ from typing import Dict, List, Optional, Tuple
 
 import ffmpeg  # @manual
 from augly.utils.ffmpeg import FFMPEG_PATH
-from augly.video.helpers import has_audio_stream
+from augly.video.helpers import has_audio_stream, validate_input_and_output_paths
 from ffmpeg.nodes import FilterableStream
+from vidgear.gears import WriteGear
 
 
 class BaseFFMPEGAugmenter(ABC):
@@ -66,12 +67,31 @@ class BaseFFMPEGAugmenter(ABC):
 
 
 class BaseVidgearFFMPEGAugmenter(ABC):
-    @abstractmethod
     def add_augmenter(
+        self, video_path: str, output_path: Optional[str] = None, **kwargs
+    ) -> None:
+        """
+        Applies the specific augmentation to the video
+
+        @param video_path: the path to the video to be augmented
+
+        @param output_path: the path in which the resulting video will be stored.
+        If not passed in, the original video file will be overwritten
+        """
+        video_path, output_path = validate_input_and_output_paths(
+            video_path, output_path
+        )
+
+        writer = WriteGear(output_filename=video_path, logging=True)
+        writer.execute_ffmpeg_cmd(self.get_command(video_path, output_path))
+        writer.close()
+
+    @abstractmethod
+    def get_command(
         self, video_path: str, output_path: Optional[str] = None, **kwargs
     ) -> List[str]:
         """
-        Applies the specific augmentation to the video
+        Constructs the FFMPEG so that VidGear can run it
 
         @param video_path: the path to the video to be augmented
 
@@ -81,4 +101,4 @@ class BaseVidgearFFMPEGAugmenter(ABC):
         @returns: a list of strings of the FFMPEG command if it were to be written
             in a command line
         """
-        raise NotImplementedError("Implement add_augmenter method")
+        raise NotImplementedError("Implement get_command method")

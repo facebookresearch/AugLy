@@ -7,7 +7,7 @@ from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmen
 
 
 class VideoAugmenterByHFlip(BaseVidgearFFMPEGAugmenter):
-    def add_augmenter(
+    def get_command(
         self, video_path: str, output_path: Optional[str] = None, **kwargs
     ) -> List[str]:
         """
