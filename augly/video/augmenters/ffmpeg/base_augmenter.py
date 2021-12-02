@@ -88,7 +88,7 @@ class BaseVidgearFFMPEGAugmenter(ABC):
 
     @abstractmethod
     def get_command(
-        self, video_path: str, output_path: Optional[str] = None, **kwargs
+        self, video_path: str, output_path: Optional[str] = None
     ) -> List[str]:
         """
         Constructs the FFMPEG so that VidGear can run it
