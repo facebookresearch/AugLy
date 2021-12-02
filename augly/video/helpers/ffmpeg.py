@@ -13,6 +13,7 @@ import numpy as np
 from augly.utils import pathmgr, SILENT_AUDIO_PATH
 from augly.utils.ffmpeg import FFMPEG_PATH, FFPROBE_PATH
 from ffmpeg.nodes import FilterableStream
+from vidgear.gears import WriteGear
 
 
 def combine_frames_and_audio_to_file(
@@ -28,11 +29,38 @@ def combine_frames_and_audio_to_file(
             "a directory"
         )
 
-    video_stream = ffmpeg.input(raw_frames, pattern_type="glob", framerate=framerate)
-    video_stream = video_stream.filter(
-        "pad", **{"width": "ceil(iw/2)*2", "height": "ceil(ih/2)*2"}
-    )
-    merge_video_and_audio(video_stream, audio, output_path)
+    temp_video_path = "/tmp/out.mp4"
+    writer = WriteGear(output_filename=raw_frames, logging=True)
+    ffmpeg_command = [
+        "-y",
+        "-framerate",
+        str(framerate),
+        "-pattern_type",
+        "glob",
+        "-i",
+        raw_frames,
+        "-c:v",
+        "libx264",
+        "-pix_fmt",
+        "yuv420p",
+        "-preset",
+        "ultrafast",
+        temp_video_path,
+    ]
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    ffmpeg_command = [
+        "-y",
+        "-i",
+        temp_video_path,
+        "-vf",
+        "pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2",
+        "-preset",
+        "ultrafast",
+        temp_video_path,
+    ]
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
+    merge_video_and_audio(temp_video_path, audio, output_path)
 
 
 def extract_audio_to_file(video_path: str, output_audio_path: str) -> None:
@@ -66,17 +94,34 @@ def extract_frames_to_dir(
 ) -> None:
     video_info = get_video_info(video_path)
 
-    (
-        ffmpeg.input(video_path, ss=0, loglevel="quiet")
-        .filter("scale", f"iw*{scale}", f"ih*{scale}")
-        .output(
-            os.path.join(output_dir, output_pattern),
-            vframes=video_info["nb_frames"],
-            **{"qscale:v": quality},
-        )
-        .overwrite_output()
-        .run(cmd=FFMPEG_PATH)
-    )
+    # (
+    #     ffmpeg.input(video_path, ss=0, loglevel="quiet")
+    #     .filter("scale", f"iw*{scale}", f"ih*{scale}")
+    #     .output(
+    #         os.path.join(output_dir, output_pattern),
+    #         vframes=video_info["nb_frames"],
+    #         **{"qscale:v": quality},
+    #     )
+    #     .overwrite_output()
+    #     .run(cmd=FFMPEG_PATH)
+    # )
+    writer = WriteGear(output_filename=video_path, logging=True)
+    ffmpeg_command = [
+        "-y",
+        "-i",
+        video_path,
+        "-vf",
+        f"scale=iw*{scale}:ih*{scale}",
+        "-vframes",
+        str(video_info["nb_frames"]),
+        "-qscale:v",
+        str(quality),
+        "-preset",
+        "ultrafast",
+        os.path.join(output_dir, output_pattern),
+    ]
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
 
 
 def get_audio_info(media_path: str) -> Dict[str, Any]:
@@ -179,19 +224,49 @@ def add_silent_audio(
 
 
 def merge_video_and_audio(
-    video_stream: FilterableStream,
-    audio: Optional[Union[str, io.BytesIO]],
+    video_path: str,
+    audio_path: Optional[str],
     output_path: str,
 ) -> None:
-    kwargs = {"c:v": "libx264", "c:a": "copy", "bsf:a": "aac_adtstoasc"}
-    if audio:
-        audio_stream = ffmpeg.input(audio, loglevel="quiet")
-        output = ffmpeg.output(
-            video_stream, audio_stream, output_path, pix_fmt="yuv420p", **kwargs
-        ).overwrite_output()
-    else:
-        output = ffmpeg.output(
-            video_stream, output_path, pix_fmt="yuv420p", **kwargs
-        ).overwrite_output()
+    writer = WriteGear(output_filename=video_path, logging=True)
 
-    output.run(cmd=FFMPEG_PATH)
+    if audio_path:
+        ffmpeg_command = [
+            "-y",
+            "-i",
+            video_path,
+            "-i",
+            audio_path,
+            "-vf",
+            "format=pix_fmts=yuv420p",
+            "-c:v",
+            "libx264",
+            "-c:a",
+            "copy",
+            "-bsf:a",
+            "aac_adtstoasc",
+            "-preset",
+            "ultrafast",
+            output_path,
+        ]
+    else:
+        ffmpeg_command = [
+            "-y",
+            "-i",
+            video_path,
+            "-c:v",
+            "libx264",
+            "-pix_fmts",
+            "yuv420p",
+            "-c:a",
+            "copy",
+            "-bsf:a",
+            "aac_adtstoasc",
+            "-preset",
+            "ultrafast",
+            output_path,
+        ]
+
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
+    os.remove(video_path)
