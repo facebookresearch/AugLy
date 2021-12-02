@@ -94,17 +94,6 @@ def extract_frames_to_dir(
 ) -> None:
     video_info = get_video_info(video_path)
 
-    # (
-    #     ffmpeg.input(video_path, ss=0, loglevel="quiet")
-    #     .filter("scale", f"iw*{scale}", f"ih*{scale}")
-    #     .output(
-    #         os.path.join(output_dir, output_pattern),
-    #         vframes=video_info["nb_frames"],
-    #         **{"qscale:v": quality},
-    #     )
-    #     .overwrite_output()
-    #     .run(cmd=FFMPEG_PATH)
-    # )
     writer = WriteGear(output_filename=video_path, logging=True)
     ffmpeg_command = [
         "-y",
