@@ -12,6 +12,7 @@ from augly.utils import (
     IMAGE_METADATA_PATH,
     IMG_MASK_PATH,
 )
+from PIL import Image
 
 
 class TransformsImageUnitTest(BaseImageUnitTest):
@@ -184,7 +185,7 @@ class TransformsImageUnitTest(BaseImageUnitTest):
         self.evaluate_class(imaugs.RandomRotation(), fname="RandomRotation")
 
     def test_Resize(self):
-        self.evaluate_class(imaugs.Resize(), fname="resize")
+        self.evaluate_class(imaugs.Resize(resample=Image.BICUBIC), fname="resize")
 
     def test_Rotate(self):
         self.evaluate_class(imaugs.Rotate(), fname="rotate")
