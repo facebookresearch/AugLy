@@ -398,8 +398,7 @@ def change_video_speed(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    speed_aug = af.VideoAugmenterBySpeed(factor)
-    vdutils.apply_ffmpeg_augmenter(speed_aug, video_path, output_path)
+    af.VideoAugmenterBySpeed(factor).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
