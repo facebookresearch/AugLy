@@ -5,6 +5,7 @@ import io
 import math
 import os
 import shutil
+import tempfile
 from typing import Any, Dict, Optional, Union
 
 import augly.audio.utils as audutils
@@ -29,38 +30,39 @@ def combine_frames_and_audio_to_file(
             "a directory"
         )
 
-    temp_video_path = "/tmp/out.mp4"
-    writer = WriteGear(output_filename=raw_frames, logging=True)
-    ffmpeg_command = [
-        "-y",
-        "-framerate",
-        str(framerate),
-        "-pattern_type",
-        "glob",
-        "-i",
-        raw_frames,
-        "-c:v",
-        "libx264",
-        "-pix_fmt",
-        "yuv420p",
-        "-preset",
-        "ultrafast",
-        temp_video_path,
-    ]
-    writer.execute_ffmpeg_cmd(ffmpeg_command)
-    ffmpeg_command = [
-        "-y",
-        "-i",
-        temp_video_path,
-        "-vf",
-        "pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2",
-        "-preset",
-        "ultrafast",
-        temp_video_path,
-    ]
-    writer.execute_ffmpeg_cmd(ffmpeg_command)
-    writer.close()
-    merge_video_and_audio(temp_video_path, audio, output_path)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        temp_video_path = os.path.join(tmpdir, "out.mp4")
+        writer = WriteGear(output_filename=raw_frames, logging=True)
+        ffmpeg_command = [
+            "-y",
+            "-framerate",
+            str(framerate),
+            "-pattern_type",
+            "glob",
+            "-i",
+            raw_frames,
+            "-c:v",
+            "libx264",
+            "-pix_fmt",
+            "yuv420p",
+            "-preset",
+            "ultrafast",
+            temp_video_path,
+        ]
+        writer.execute_ffmpeg_cmd(ffmpeg_command)
+        ffmpeg_command = [
+            "-y",
+            "-i",
+            temp_video_path,
+            "-vf",
+            "pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2",
+            "-preset",
+            "ultrafast",
+            temp_video_path,
+        ]
+        writer.execute_ffmpeg_cmd(ffmpeg_command)
+        writer.close()
+        merge_video_and_audio(temp_video_path, audio, output_path)
 
 
 def extract_audio_to_file(video_path: str, output_audio_path: str) -> None:
@@ -258,4 +260,3 @@ def merge_video_and_audio(
 
     writer.execute_ffmpeg_cmd(ffmpeg_command)
     writer.close()
-    os.remove(video_path)
