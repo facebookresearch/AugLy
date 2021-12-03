@@ -3,14 +3,10 @@
 
 from augly.video.augmenters.ffmpeg.aspect_ratio import VideoAugmenterByAspectRatio
 from augly.video.augmenters.ffmpeg.audio_swap import VideoAugmenterByAudioSwap
-<<<<<<< HEAD
 from augly.video.augmenters.ffmpeg.base_augmenter import (
     BaseFFMPEGAugmenter,
     BaseVidgearFFMPEGAugmenter,
 )
-=======
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
->>>>>>> 276c567... readded past ffmpeg augmenter and separated the one that depends on vidgear
 from augly.video.augmenters.ffmpeg.blur import VideoAugmenterByBlur
 from augly.video.augmenters.ffmpeg.brightness import VideoAugmenterByBrightness
 from augly.video.augmenters.ffmpeg.color_jitter import VideoAugmenterByColorJitter
