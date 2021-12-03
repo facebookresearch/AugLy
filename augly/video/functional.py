@@ -464,21 +464,9 @@ def color_jitter(
         0.0 <= saturation_factor <= 3.0
     ), "Saturation factor must be a value in the range [0.0, 3.0]"
 
-    writer = WriteGear(output_filename=video_path, logging=True)
-    ffmpeg_command = [
-        "-y",
-        "-i",
-        video_path,
-        "-vf",
-        f"eq=brightness={brightness_factor}:contrast={contrast_factor}:saturation={saturation_factor}",
-        "-c:a",
-        "copy",
-        "-preset",
-        "ultrafast",
-        output_path,
-    ]
-    writer.execute_ffmpeg_cmd(ffmpeg_command)
-    writer.close()
+    af.VideoAugmenterByColorJitter(
+        brightness_factor, contrast_factor, saturation_factor
+    ).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
