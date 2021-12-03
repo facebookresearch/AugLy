@@ -260,6 +260,136 @@ class ApplyPILFilter(BaseTransform):
         )
 
 
+class DistortBarrel(BaseTransform):
+    def __init__(
+        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1.0
+    ):
+        """
+        @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
+            barrel effect, has higher effect than b and c.
+
+        @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
+            barrel effect, has lower effect than a and higher effect than c.
+
+        @param c: Coefficient C in the equation Rsrc(r). Larger values results in more
+            barrel effect, has lower effect than a and b.
+
+        @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of
+            the image. In a positive domain, values larger than 1 will shrink the image.
+            Negative values would result in both vertically and horizontally flipped
+            image scaled in a mirrored way of positive domain.
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
+    ) -> Image.Image:
+        """
+        Applies barrel distortion to the image
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.distort_barrel(
+            image,
+            a=self.a,
+            b=self.b,
+            c=self.c,
+            d=self.d,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format
+        )
+
+
+class DistortPincushion(BaseTransform):
+    def __init__(
+        self, a: float = 0.0, b: float = 0.0, c: float = 0.0, d: float = 1.0, p: float = 1.0
+    ):
+        """
+        @param a: Coefficient A in the equation Rsrc(r). Larger values results in more
+            pincushion effect, has higher effect than b and c.
+
+        @param b: Coefficient B in the equation Rsrc(r). Larger values results in more
+            pincushion effect, has higher effect than b and c.
+
+        @param c: Coefficient C in the equation Rsrc(r). Larger values results in more
+            pincushion effect, has higher effect than b and c.
+
+        @param d: Coefficient D in the equation Rsrc(r). Controls the overall scaling of
+            the image. In a positive domain, values larger than 1 will enlarge the image
+            (zoomed in). Negative values would result in both vertically and horizontally
+            flipped image scaled in a mirrored way of positive domain.
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
+    ) -> Image.Image:
+        """
+        Applies pinchusion distortion to the image
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.distort_pincushion(
+            image,
+            a=self.a,
+            b=self.b,
+            c=self.c,
+            d=self.d,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format
+        )
+
+
 class Blur(BaseTransform):
     def __init__(self, radius: float = 2.0, p: float = 1.0):
         """

@@ -5,6 +5,7 @@ from augly.image.utils.metadata import get_func_kwargs, get_metadata
 from augly.image.utils.utils import (
     compute_stripe_mask,
     compute_transform_coeffs,
+    distort,
     get_template_and_bbox,
     pad_with_black,
     resize_and_pad_to_given_size,
@@ -21,6 +22,7 @@ __all__ = [
     "get_metadata",
     "compute_stripe_mask",
     "compute_transform_coeffs",
+    "distort",
     "get_template_and_bbox",
     "pad_with_black",
     "resize_and_pad_to_given_size",

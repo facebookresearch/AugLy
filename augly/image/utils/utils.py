@@ -9,6 +9,7 @@ from typing import List, Optional, Tuple, Union
 import augly.utils as utils
 import numpy as np
 from PIL import Image
+from wand.image import Image as wImage
 
 JPEG_EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG"]
 
@@ -226,3 +227,21 @@ def compute_stripe_mask(
     binary_mask = softmax_mask > (math.cos(math.pi * line_width) + 1) / 2
 
     return binary_mask
+
+
+def distort(
+    image: Image.Image,
+    method: str,
+    distortion_args: Tuple[float, float, float, float],
+) -> Image.Image:
+    """
+    Distorts the image with a specified type of distortion. This function wraps `Wand`
+    package `wand.image.Image.distort()` method to apply distortions. This function is
+    a helper function to apply lens distortions on the image, and it is not meant to be
+    used for methods explicitly written in AugLy. To see full set of distortion methods,
+    see https://docs.wand-py.org/en/0.5.3/wand/image.html#wand.image.DISTORTION_METHODS
+    """
+    np_image = np.array(image)
+    w_image = wImage.from_array(np_image)
+    w_image.distort(method, distortion_args)
+    return Image.fromarray(np.array(w_image))
