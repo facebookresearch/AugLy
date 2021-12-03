@@ -526,8 +526,7 @@ def contrast(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    contrast_aug = af.VideoAugmenterByContrast(level)
-    vdutils.apply_ffmpeg_augmenter(contrast_aug, video_path, output_path)
+    af.VideoAugmenterByContrast(level).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="contrast", **func_kwargs)
