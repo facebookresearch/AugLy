@@ -17,6 +17,8 @@ class VideoAugmenterByLoops(BaseVidgearFFMPEGAugmenter):
     ) -> List[str]:
         """
         Loops the video `num_loops` times
+        
+        @param video_path: the path to the video to be augmented
 
         @param output_path: the path in which the resulting video will be stored.
             If not passed in, the original video file will be overwritten
