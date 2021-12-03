@@ -17,7 +17,6 @@ import augly.video.augmenters.ffmpeg as af
 import augly.video.helpers as helpers
 import augly.video.utils as vdutils
 import numpy as np
-from vidgear.gears import WriteGear
 
 
 def add_noise(
