@@ -348,21 +348,7 @@ def brightness(
     )
     assert -1.0 <= level <= 1.0, "Level must be a value in the range [-1.0, 1.0]"
 
-    writer = WriteGear(output_filename=video_path, logging=True)
-    ffmpeg_command = [
-        "-y",
-        "-i",
-        video_path,
-        "-vf",
-        f"eq=brightness={level}",
-        "-c:a",
-        "copy",
-        "-preset",
-        "ultrafast",
-        output_path,
-    ]
-    writer.execute_ffmpeg_cmd(ffmpeg_command)
-    writer.close()
+    af.VideoAugmenterByBrightness(level).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
