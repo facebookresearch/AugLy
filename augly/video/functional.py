@@ -606,8 +606,7 @@ def encoding_quality(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    encoding_aug = af.VideoAugmenterByQuality(quality)
-    vdutils.apply_ffmpeg_augmenter(encoding_aug, video_path, output_path)
+    af.VideoAugmenterByQuality(quality).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
