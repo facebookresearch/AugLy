@@ -1053,24 +1053,7 @@ def loop(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    video_path, output_path = helpers.validate_input_and_output_paths(
-        video_path, output_path
-    )
-    writer = WriteGear(output_filename=video_path, logging=True)
-    ffmpeg_command = [
-        "-y",
-        "-stream_loop",
-        str(num_loops),
-        "-i",
-        video_path,
-        "-c:a",
-        "copy",
-        "-preset",
-        "ultrafast",
-        output_path,
-    ]
-    writer.execute_ffmpeg_cmd(ffmpeg_command)
-    writer.close()
+    af.VideoAugmenterByLoops(num_loops).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="loop", **func_kwargs)
