@@ -25,5 +25,16 @@ class VideoAugmenterBySpeed(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings of the FFMPEG command if it were to be written
             in a command line
         """
-        command = [ "-y","-i", video_path,"-vf", f"setpts={1/self.factor}*PTS","-filter:a", f"atempo={self.factor}", "-preset", "ultrafast", output_path]
+        command = [
+            "-y",
+            "-i",
+            video_path,
+            "-vf",
+            f"setpts={1/self.factor}*PTS",
+            "-filter:a",
+            f"atempo={self.factor}",
+            "-preset",
+            "ultrafast",
+            output_path,
+        ]
         return command
