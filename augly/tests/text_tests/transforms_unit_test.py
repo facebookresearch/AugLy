@@ -258,7 +258,7 @@ class TransformsTextUnitTest(unittest.TestCase):
 
         self.assertTrue(
             aug_chars[0]
-            == "The quick brown 'fox' coul|)n' t jump ov3r the green, gI2assy hi|_l."
+            == "The quick brown 'fox' could^'t jump over the green, grassy hi7l."
         )
         self.assertTrue(
             are_equal_metadata(
@@ -273,7 +273,7 @@ class TransformsTextUnitTest(unittest.TestCase):
 
         self.assertTrue(
             aug_unicode_chars[0]
-            == "The ჹuick brown 'fox' coul₫n' t jump ov∑r the green, Ĝrassy hîll."
+            == "The ჹuick brown 'fox' coỦldή't jump oṼer the green, grassy hiļl."
         )
         self.assertTrue(
             are_equal_metadata(
