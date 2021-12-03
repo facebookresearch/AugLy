@@ -291,11 +291,6 @@ def blur(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    video_path, output_path = helpers.validate_input_and_output_paths(
-        video_path, output_path
-    )
-    assert sigma >= 0, "Sigma cannot be a negative number"
-
     af.VideoAugmenterByBlur(sigma).add_augmenter(video_path, output_path)
 
     if metadata is not None:
@@ -328,11 +323,6 @@ def brightness(
     @returns: the path to the augmented video
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
-
-    video_path, output_path = helpers.validate_input_and_output_paths(
-        video_path, output_path
-    )
-    assert -1.0 <= level <= 1.0, "Level must be a value in the range [-1.0, 1.0]"
 
     af.VideoAugmenterByBrightness(level).add_augmenter(video_path, output_path)
 
@@ -450,19 +440,6 @@ def color_jitter(
     @returns: the path to the augmented video
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
-
-    video_path, output_path = helpers.validate_input_and_output_paths(
-        video_path, output_path
-    )
-    assert (
-        -1.0 <= brightness_factor <= 1.0
-    ), "Brightness factor must be a value in the range [-1.0, 1.0]"
-    assert (
-        -1000.0 <= contrast_factor <= 1000.0
-    ), "Contrast factor must be a value in the range [-1000, 1000]"
-    assert (
-        0.0 <= saturation_factor <= 3.0
-    ), "Saturation factor must be a value in the range [0.0, 3.0]"
 
     af.VideoAugmenterByColorJitter(
         brightness_factor, contrast_factor, saturation_factor
