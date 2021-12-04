@@ -1885,8 +1885,7 @@ def rotate(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    rotate_aug = af.VideoAugmenterByRotation(degrees)
-    vdutils.apply_ffmpeg_augmenter(rotate_aug, video_path, output_path)
+    af.VideoAugmenterByRotation(degrees).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="rotate", **func_kwargs)
