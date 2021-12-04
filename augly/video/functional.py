@@ -1852,8 +1852,7 @@ def resize(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    resize_aug = af.VideoAugmenterByResize(height, width)
-    vdutils.apply_ffmpeg_augmenter(resize_aug, video_path, output_path)
+    af.VideoAugmenterByResize(height, width).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="resize", **func_kwargs)
