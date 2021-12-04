@@ -1718,8 +1718,7 @@ def remove_audio(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    remove_audio_aug = af.VideoAugmenterByRemovingAudio()
-    vdutils.apply_ffmpeg_augmenter(remove_audio_aug, video_path, output_path)
+    af.VideoAugmenterByRemovingAudio().add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
