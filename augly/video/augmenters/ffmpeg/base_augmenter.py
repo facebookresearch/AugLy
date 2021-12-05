@@ -13,6 +13,8 @@ Implementation of base class for FFMPEG-based video augmenters
 
 import os
 from abc import ABC, abstractmethod
+import shutil
+import tempfile
 from typing import Dict, List, Optional, Tuple
 
 import ffmpeg  # @manual
@@ -81,10 +83,18 @@ class BaseVidgearFFMPEGAugmenter(ABC):
         video_path, output_path = validate_input_and_output_paths(
             video_path, output_path
         )
-
-        writer = WriteGear(output_filename=video_path, logging=True)
-        writer.execute_ffmpeg_cmd(self.get_command(video_path, output_path))
-        writer.close()
+        if video_path == output_path:
+            with tempfile.NamedTemporaryFile(
+                suffix=video_path[video_path.index(".") :]
+            ) as tmpfile:
+                shutil.copyfile(video_path, tmpfile.name)
+                writer = WriteGear(output_filename=tmpfile.name, logging=True)
+                writer.execute_ffmpeg_cmd(self.get_command(tmpfile.name, output_path))
+                writer.close()
+        else:
+            writer = WriteGear(output_filename=video_path, logging=True)
+            writer.execute_ffmpeg_cmd(self.get_command(video_path, output_path))
+            writer.close()
 
     @abstractmethod
     def get_command(
