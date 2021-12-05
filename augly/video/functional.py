@@ -1920,8 +1920,7 @@ def scale(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    scale_aug = af.VideoAugmenterByResolution(factor)
-    vdutils.apply_ffmpeg_augmenter(scale_aug, video_path, output_path)
+    af.VideoAugmenterByResolution(factor).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="scale", **func_kwargs)
