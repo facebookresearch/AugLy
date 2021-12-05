@@ -50,6 +50,7 @@ def combine_frames_and_audio_to_file(
             temp_video_path,
         ]
         writer.execute_ffmpeg_cmd(ffmpeg_command)
+        temp_padded_video_path = os.path.join(tmpdir, "out1.mp4")
         ffmpeg_command = [
             "-y",
             "-i",
@@ -58,11 +59,11 @@ def combine_frames_and_audio_to_file(
             "pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2",
             "-preset",
             "ultrafast",
-            temp_video_path,
+            temp_padded_video_path,
         ]
         writer.execute_ffmpeg_cmd(ffmpeg_command)
         writer.close()
-        merge_video_and_audio(temp_video_path, audio, output_path)
+        merge_video_and_audio(temp_padded_video_path, audio, output_path)
 
 
 def extract_audio_to_file(video_path: str, output_audio_path: str) -> None:
