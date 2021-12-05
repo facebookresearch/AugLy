@@ -25,7 +25,7 @@ class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
         self.orientation = orientation
 
     def get_command(
-        self, video_path: str, output_path: Optional[str] = None,
+        self, video_path: str, output_path: Optional[str] = None
     ) -> List[str]:
         """
         Stacks two videos together
