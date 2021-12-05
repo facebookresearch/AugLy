@@ -743,8 +743,9 @@ def hstack(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    hstack_aug = af.VideoAugmenterByStack(second_video_path, use_second_audio, "hstack")
-    vdutils.apply_ffmpeg_augmenter(hstack_aug, video_path, output_path)
+    af.VideoAugmenterByStack(
+        second_video_path, use_second_audio, "hstack"
+    ).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="hstack", **func_kwargs)
@@ -2194,8 +2195,9 @@ def vstack(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    vstack_aug = af.VideoAugmenterByStack(second_video_path, use_second_audio, "vstack")
-    vdutils.apply_ffmpeg_augmenter(vstack_aug, video_path, output_path)
+    af.VideoAugmenterByStack(
+        second_video_path, use_second_audio, "vstack"
+    ).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="vstack", **func_kwargs)
