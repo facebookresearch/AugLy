@@ -53,4 +53,5 @@ class VideoAugmenterByAspectRatio(BaseVidgearFFMPEGAugmenter):
             "ultrafast",
             output_path,
         ]
+        
         return command
