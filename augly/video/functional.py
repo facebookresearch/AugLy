@@ -486,7 +486,9 @@ def concat(
         metadata, locals(), video_paths[src_video_path_index]
     )
 
-    af.VideoAugmenterByConcat(video_paths, src_video_path_index).add_augmenter(video_paths[src_video_path_index], output_path)
+    af.VideoAugmenterByConcat(video_paths, src_video_path_index).add_augmenter(
+        video_paths[src_video_path_index], output_path
+    )
 
     if metadata is not None:
         helpers.get_metadata(
@@ -570,8 +572,9 @@ def crop(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    crop_aug = af.VideoAugmenterByCrop(left, top, right, bottom)
-    vdutils.apply_ffmpeg_augmenter(crop_aug, video_path, output_path)
+    af.VideoAugmenterByCrop(left, top, right, bottom).add_augmenter(
+        video_path, output_path
+    )
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="crop", **func_kwargs)
