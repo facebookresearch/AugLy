@@ -361,8 +361,7 @@ def change_aspect_ratio(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    aspect_ratio_aug = af.VideoAugmenterByAspectRatio(ratio)
-    vdutils.apply_ffmpeg_augmenter(aspect_ratio_aug, video_path, output_path)
+    af.VideoAugmenterByAspectRatio(ratio).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
