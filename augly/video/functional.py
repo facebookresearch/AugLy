@@ -486,10 +486,7 @@ def concat(
         metadata, locals(), video_paths[src_video_path_index]
     )
 
-    concat_aug = af.VideoAugmenterByConcat(video_paths, src_video_path_index)
-    vdutils.apply_ffmpeg_augmenter(
-        concat_aug, video_paths[src_video_path_index], output_path
-    )
+    af.VideoAugmenterByConcat(video_paths, src_video_path_index).add_augmenter(video_paths[src_video_path_index], output_path)
 
     if metadata is not None:
         helpers.get_metadata(

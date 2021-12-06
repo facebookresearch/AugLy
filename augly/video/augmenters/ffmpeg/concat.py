@@ -2,26 +2,26 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 from math import ceil
-from typing import Dict, List, Tuple
+from typing import List
 
-import ffmpeg  # @manual
 from augly.utils import pathmgr
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_video_info
-from ffmpeg.nodes import FilterableStream
 
 
-class VideoAugmenterByConcat(BaseFFMPEGAugmenter):
+class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
     def __init__(self, video_paths: List[str], src_video_path_index: int):
         assert len(video_paths) > 0, "Please provide at least one input video"
         assert all(
             pathmgr.exists(video_path) for video_path in video_paths
         ), "Invalid video path(s) provided"
 
-        video_paths = [pathmgr.get_local_path(video_path) for video_path in video_paths]
-        self.videos = [ffmpeg.input(video_path) for video_path in video_paths]
+        self.video_paths = [
+            pathmgr.get_local_path(video_path) for video_path in video_paths
+        ]
+        self.src_video_path_index = src_video_path_index
 
-        video_info = get_video_info(video_paths[src_video_path_index])
+        video_info = get_video_info(self.video_paths[src_video_path_index])
 
         self.height = ceil(video_info["height"] / 2) * 2
         self.width = ceil(video_info["width"] / 2) * 2
@@ -30,27 +30,41 @@ class VideoAugmenterByConcat(BaseFFMPEGAugmenter):
             "sample_aspect_ratio", self.width / self.height
         )
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Concatenates multiple videos together
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+
+        @returns: a list of strings of the FFMPEG command if it were to be written
+            in a command line
         """
-        streams = []
+        inputs = [["-i", video] for video in self.video_paths]
+        flat_inputs = [element for sublist in inputs for element in sublist]
+        scale_and_sar, maps = "", ""
+        for i in range(len(self.video_paths)):
+            scale_and_sar += f"[{i}:v]scale={self.width}:{self.height}[{i}v],[{i}v]setsar=ratio={self.sample_aspect_ratio}[{i}vf];"
 
-        for stream in self.videos:
-            streams.extend(
-                (
-                    stream.video.filter(
-                        "scale", **{"width": self.width, "height": self.height}
-                    ).filter("setsar", **{"ratio": self.sample_aspect_ratio}),
-                    stream.audio,
-                )
-            )
+        for i in range(len(self.video_paths)):
+            maps += f"[{i}vf][{i}:a]"
 
-        return ffmpeg.concat(*streams, v=1, a=1, n=len(streams) // 2), {"vsync": 2}
+        rest_command = f"concat=n={len(self.video_paths)}:v=1:a=1[v][a]"
+        command = [
+            "-y",
+            *flat_inputs,
+            "-filter_complex",
+            scale_and_sar + maps + rest_command,
+            "-map",
+            "[v]",
+            "-map",
+            "[a]",
+            "-vsync",
+            "2",
+            "-preset",
+            "ultrafast",
+            output_path,
+        ]
+
+        return command
