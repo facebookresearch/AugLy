@@ -1585,8 +1585,9 @@ def pad(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    pad_aug = af.VideoAugmenterByPadding(w_factor, h_factor, color)
-    vdutils.apply_ffmpeg_augmenter(pad_aug, video_path, output_path)
+    af.VideoAugmenterByPadding(w_factor, h_factor, color).add_augmenter(
+        video_path, output_path
+    )
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="pad", **func_kwargs)
