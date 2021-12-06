@@ -69,7 +69,7 @@ class BaseImageUnitTest(unittest.TestCase):
             import augly.image as imaugs
         except ImportError:
             self.fail("imaugs failed to import")
-        self.assertTrue(dir(imaugs))
+        self.assertTrue(dir(imaugs), "Image directory does not exist")
 
     @classmethod
     def setUpClass(cls):
@@ -88,8 +88,14 @@ class BaseImageUnitTest(unittest.TestCase):
             file_dst = Image.open(tmpfile.name)
 
         pil_dst = aug_function(self.img, **kwargs)
-        self.assertTrue(are_equal_images(pil_dst, ref))
-        self.assertTrue(are_equal_images(file_dst, ref))
+
+        self.assertTrue(
+            are_equal_images(pil_dst, ref), "Expected and outputted images do not match"
+        )
+        self.assertTrue(
+            are_equal_images(file_dst, ref),
+            "Expected and outputted images do not match",
+        )
 
     def evaluate_class(
         self,
@@ -106,12 +112,18 @@ class BaseImageUnitTest(unittest.TestCase):
         )
 
         if check_mode:
-            self.assertTrue(self.img.mode == dst.mode)
+            self.assertTrue(
+                self.img.mode == dst.mode,
+                "Expected and outputted image modes do not match",
+            )
 
         self.assertTrue(
-            are_equal_metadata(metadata, self.metadata[fname], metadata_exclude_keys)
+            are_equal_metadata(metadata, self.metadata[fname], metadata_exclude_keys),
+            "Expected and outputted metadata do not match",
         )
-        self.assertTrue(are_equal_images(dst, ref))
+        self.assertTrue(
+            are_equal_images(dst, ref), "Expected and outputted images do not match"
+        )
 
     def get_ref_image(self, fname: str) -> Image.Image:
         ref_img_name = f"test_{fname}.png"
