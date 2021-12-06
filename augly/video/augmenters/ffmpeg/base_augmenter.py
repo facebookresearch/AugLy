@@ -83,22 +83,19 @@ class BaseVidgearFFMPEGAugmenter(ABC):
         video_path, output_path = validate_input_and_output_paths(
             video_path, output_path
         )
-        if video_path == output_path:
-            with tempfile.NamedTemporaryFile(
-                suffix=video_path[video_path.index(".") :]
-            ) as tmpfile:
+        with tempfile.NamedTemporaryFile(
+            suffix=video_path[video_path.index("."):]
+        ) as tmpfile:
+            if video_path == output_path:
                 shutil.copyfile(video_path, tmpfile.name)
-                writer = WriteGear(output_filename=tmpfile.name, logging=True)
-                writer.execute_ffmpeg_cmd(self.get_command(tmpfile.name, output_path))
-                writer.close()
-        else:
+                video_path = tmpfile.name
             writer = WriteGear(output_filename=video_path, logging=True)
             writer.execute_ffmpeg_cmd(self.get_command(video_path, output_path))
             writer.close()
 
     @abstractmethod
     def get_command(
-        self, video_path: str, output_path: Optional[str] = None
+        self, video_path: str, output_path: str
     ) -> List[str]:
         """
         Constructs the FFMPEG so that VidGear can run it
@@ -106,7 +103,6 @@ class BaseVidgearFFMPEGAugmenter(ABC):
         @param video_path: the path to the video to be augmented
 
         @param output_path: the path in which the resulting video will be stored.
-            If not passed in, the original video file will be overwritten
 
         @returns: a list of strings of the FFMPEG command if it were to be written
             in a command line
