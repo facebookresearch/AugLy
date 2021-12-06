@@ -1,26 +1,38 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import Tuple, Dict
+from typing import List, Optional
 
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
-from ffmpeg.nodes import FilterableStream
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
-class VideoAugmenterByFPSChange(BaseFFMPEGAugmenter):
+class VideoAugmenterByFPSChange(BaseVidgearFFMPEGAugmenter):
     def __init__(self, fps: int):
         assert fps > 0, "FPS must be greater than zero"
         self.fps = fps
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Changes the frame rate of the video
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+
+        @returns: a list of strings of the FFMPEG command if it were to be written
+            in a command line
         """
-        return in_stream.video.filter("fps", fps=self.fps, round="up"), {}
+        command = [
+            "-y",
+            "-i",
+            video_path,
+            "-vf",
+            f"fps=fps={self.fps}:round=up",
+            "-c:a",
+            "copy",
+            "-preset",
+            "ultrafast",
+            output_path,
+        ]
+
+        return command

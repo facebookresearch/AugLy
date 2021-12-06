@@ -644,8 +644,7 @@ def fps(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    fps_aug = af.VideoAugmenterByFPSChange(fps)
-    vdutils.apply_ffmpeg_augmenter(fps_aug, video_path, output_path)
+    af.VideoAugmenterByFPSChange(fps).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="fps", **func_kwargs)
