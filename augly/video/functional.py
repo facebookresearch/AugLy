@@ -2018,10 +2018,9 @@ def time_crop(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    time_crop_aug = af.VideoAugmenterByTrim(
+    af.VideoAugmenterByTrim(
         offset_factor=offset_factor, duration_factor=duration_factor
-    )
-    vdutils.apply_ffmpeg_augmenter(time_crop_aug, video_path, output_path)
+    ).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
