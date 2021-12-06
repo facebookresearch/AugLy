@@ -15,6 +15,8 @@ import os
 import shutil
 import tempfile
 from abc import ABC, abstractmethod
+import shutil
+import tempfile
 from typing import Dict, List, Optional, Tuple
 
 import ffmpeg  # @manual
@@ -86,12 +88,20 @@ class BaseVidgearFFMPEGAugmenter(ABC):
             video_path, output_path
         )
         with tempfile.NamedTemporaryFile(
+<<<<<<< HEAD
             suffix=os.path.splitext(video_path)[1]
+=======
+            suffix=video_path[video_path.index(".") :]
+>>>>>>> 888e5d6... fix nits in documentation and remove unnecessary stuff
         ) as tmpfile:
             if video_path == output_path:
                 shutil.copyfile(video_path, tmpfile.name)
                 video_path = tmpfile.name
+<<<<<<< HEAD
             writer = WriteGear(output_filename=output_path, logging=True)
+=======
+            writer = WriteGear(output_filename=video_path, logging=True)
+>>>>>>> 888e5d6... fix nits in documentation and remove unnecessary stuff
             writer.execute_ffmpeg_cmd(self.get_command(video_path, output_path))
             writer.close()
 
@@ -104,11 +114,14 @@ class BaseVidgearFFMPEGAugmenter(ABC):
 
         @param output_path: the path in which the resulting video will be stored.
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
 =======
             If not passed in, the original video file will be overwritten
+=======
+>>>>>>> 888e5d6... fix nits in documentation and remove unnecessary stuff
 
         @returns: a list of strings of the FFMPEG command if it were to be written
             in a command line
