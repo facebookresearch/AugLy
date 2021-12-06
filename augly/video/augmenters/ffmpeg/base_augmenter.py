@@ -84,7 +84,7 @@ class BaseVidgearFFMPEGAugmenter(ABC):
             video_path, output_path
         )
         with tempfile.NamedTemporaryFile(
-            suffix=video_path[video_path.index("."):]
+            suffix=video_path[video_path.index(".") :]
         ) as tmpfile:
             if video_path == output_path:
                 shutil.copyfile(video_path, tmpfile.name)
@@ -94,9 +94,7 @@ class BaseVidgearFFMPEGAugmenter(ABC):
             writer.close()
 
     @abstractmethod
-    def get_command(
-        self, video_path: str, output_path: str
-    ) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Constructs the FFMPEG so that VidGear can run it
 
