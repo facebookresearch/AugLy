@@ -2126,8 +2126,7 @@ def trim(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    trim_aug = af.VideoAugmenterByTrim(start=start, end=end)
-    vdutils.apply_ffmpeg_augmenter(trim_aug, video_path, output_path)
+    af.VideoAugmenterByTrim(start=start, end=end).add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="trim", **func_kwargs)
