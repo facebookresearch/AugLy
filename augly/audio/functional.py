@@ -463,7 +463,7 @@ def high_pass_filter(
 
     high_pass_array = aug_audio.numpy()
     if audio.shape[0] == 1:
-        aug_audio = aug_audio.reshape((aug_audio.shape[-1],))
+        high_pass_array = high_pass_array.reshape((high_pass_array.shape[-1],))
 
     if metadata is not None:
         audutils.get_metadata(
