@@ -673,8 +673,7 @@ def grayscale(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    grayscale_aug = af.VideoAugmenterByGrayscale()
-    vdutils.apply_ffmpeg_augmenter(grayscale_aug, video_path, output_path)
+    af.VideoAugmenterByGrayscale().add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
