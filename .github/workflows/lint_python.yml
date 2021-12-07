@@ -13,7 +13,7 @@ jobs:
       - run: pip install bandit black codespell flake8 isort pyre-check pytest pyupgrade safety
       - run: bandit --recursive --skip B101,B301,B303,B311,B403 .
       - run: black --check .
-      - run: codespell --ignore-words-list="tha" --skip="*/text_tests,*assets/text/*"
+      - run: codespell --ignore-words-list="tha" --skip="*/text_tests,*assets/text/*,examples/*"
       - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
       - run: flake8 . --count --exit-zero --max-complexity=15 --max-line-length=90 --show-source --statistics
       - run: isort --check-only --profile black . || true
