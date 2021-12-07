@@ -706,21 +706,17 @@ def low_pass_filter(
         torch.Tensor(audio), sample_rate, [["lowpass", str(cutoff_hz)]]
     )
 
-    low_pass_array = aug_audio.numpy()
-    if audio.shape[0] == 1:
-        aug_audio = aug_audio.reshape((aug_audio.shape[-1],))
-
     if metadata is not None:
         audutils.get_metadata(
             metadata=metadata,
             function_name="low_pass_filter",
-            dst_audio=low_pass_array,
+            dst_audio=aug_audio,
             dst_sample_rate=out_sample_rate,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(low_pass_array, output_path, out_sample_rate)
+    return audutils.ret_and_save_audio(aug_audio, output_path, out_sample_rate)
 
 
 def normalize(
