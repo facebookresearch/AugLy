@@ -398,7 +398,8 @@ def change_video_speed(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterBySpeed(factor).add_augmenter(video_path, output_path)
+    speed_aug = af.VideoAugmenterBySpeed(factor)
+    speed_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -526,7 +527,8 @@ def contrast(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByContrast(level).add_augmenter(video_path, output_path)
+    contrast_aug = af.VideoAugmenterByContrast(level)
+    contrast_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="contrast", **func_kwargs)
@@ -606,7 +608,8 @@ def encoding_quality(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByQuality(quality).add_augmenter(video_path, output_path)
+    encoding_aug = af.VideoAugmenterByQuality(quality)
+    encoding_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
