@@ -1,35 +1,33 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import Dict, Tuple
+from typing import List
 
-import ffmpeg  # @manual
 from augly.utils import pathmgr
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_audio_info, get_video_info
-from ffmpeg.nodes import FilterableStream
 
 
-class VideoAugmenterByAudioSwap(BaseFFMPEGAugmenter):
+class VideoAugmenterByAudioSwap(BaseVidgearFFMPEGAugmenter):
     def __init__(self, audio_path: str, offset: float):
         assert offset >= 0, "Offset cannot be a negative number"
 
         self.audio_path = pathmgr.get_local_path(audio_path)
         self.offset = offset
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Swaps the audio of a video
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+
+        @returns: a list of strings of the FFMPEG command if it were to be written
+            in a command line
         """
         audio_info = get_audio_info(self.audio_path)
-        video_info = get_video_info(kwargs["video_path"])
+        video_info = get_video_info(video_path)
 
         audio_duration = float(audio_info["duration"])
         audio_sample_rate = float(audio_info["sample_rate"])
@@ -37,14 +35,23 @@ class VideoAugmenterByAudioSwap(BaseFFMPEGAugmenter):
         start = self.offset
         end = start + float(video_info["duration"])
 
-        audio = ffmpeg.input(self.audio_path).audio
+        audio_filters = f"atrim={start}:{end}," + f"asetpts=PTS-STARTPTS"
 
         if end > audio_duration:
             pad_len = (end - audio_duration) * audio_sample_rate
-            audio = audio.filter_("apad", pad_len=pad_len)
+            audio_filters += f",apad=pad_len={pad_len}"
 
-        audio = audio.filter_("atrim", start=start, end=end).filter_(
-            "asetpts", "PTS-STARTPTS"
-        )
+        command = [
+            "-y",
+            "-i",
+            video_path,
+            "-i",
+            self.audio_path,
+            "-c:v",
+            "copy",
+            "-af",
+            audio_filters,
+            output_path,
+        ]
 
-        return ffmpeg.concat(in_stream.video, audio, v=1, a=1, n=1), {}
+        return command

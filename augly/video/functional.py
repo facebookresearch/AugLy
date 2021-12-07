@@ -129,8 +129,9 @@ def audio_swap(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    audio_swap_aug = af.VideoAugmenterByAudioSwap(audio_path, offset)
-    vdutils.apply_ffmpeg_augmenter(audio_swap_aug, video_path, output_path)
+    af.VideoAugmenterByAudioSwap(audio_path, offset).add_augmenter(
+        video_path, output_path
+    )
 
     if metadata is not None:
         helpers.get_metadata(
