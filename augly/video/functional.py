@@ -1163,10 +1163,9 @@ def overlay(
         else:
             resize(overlay_path, tmp_overlay_path, overlay_h, overlay_w)
 
-    overlay_aug = af.VideoAugmenterByOverlay(
+    af.VideoAugmenterByOverlay(
         tmp_overlay_path or overlay_path, x_factor, y_factor, use_overlay_audio
-    )
-    vdutils.apply_ffmpeg_augmenter(overlay_aug, video_path, output_path)
+    ).add_augmenter(video_path, output_path)
 
     if tmp_overlay_path:
         os.remove(tmp_overlay_path)
