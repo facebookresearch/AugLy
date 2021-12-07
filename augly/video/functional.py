@@ -44,7 +44,8 @@ def add_noise(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByNoise(level).add_augmenter(video_path, output_path)
+    noise_aug = af.VideoAugmenterByNoise(level)
+    noise_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -1035,7 +1036,8 @@ def loop(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByLoops(num_loops).add_augmenter(video_path, output_path)
+    loop_aug = af.VideoAugmenterByLoops(num_loops)
+    loop_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="loop", **func_kwargs)
@@ -2156,7 +2158,8 @@ def vflip(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByVFlip().add_augmenter(video_path, output_path)
+    vflip_aug = af.VideoAugmenterByVFlip()
+    vflip_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
