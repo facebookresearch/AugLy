@@ -290,7 +290,8 @@ def blur(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByBlur(sigma).add_augmenter(video_path, output_path)
+    blur_aug = af.VideoAugmenterByBlur(sigma)
+    blur_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="blur", **func_kwargs)
@@ -323,7 +324,8 @@ def brightness(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByBrightness(level).add_augmenter(video_path, output_path)
+    brightness_aug = af.VideoAugmenterByBrightness(level)
+    brightness_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -440,9 +442,10 @@ def color_jitter(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByColorJitter(
+    color_jitter_aug = af.VideoAugmenterByColorJitter(
         brightness_factor, contrast_factor, saturation_factor
-    ).add_augmenter(video_path, output_path)
+    )
+    color_jitter_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(

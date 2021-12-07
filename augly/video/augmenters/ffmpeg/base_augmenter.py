@@ -17,6 +17,7 @@ import tempfile
 from abc import ABC, abstractmethod
 import shutil
 import tempfile
+from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Tuple
 
 import ffmpeg  # @manual
@@ -89,19 +90,27 @@ class BaseVidgearFFMPEGAugmenter(ABC):
         )
         with tempfile.NamedTemporaryFile(
 <<<<<<< HEAD
+<<<<<<< HEAD
             suffix=os.path.splitext(video_path)[1]
 =======
             suffix=video_path[video_path.index(".") :]
 >>>>>>> 888e5d6... fix nits in documentation and remove unnecessary stuff
+=======
+            suffix=os.path.splitext(video_path)[1]
+>>>>>>> a1dedf0... added suggestions from optimize-hflip
         ) as tmpfile:
             if video_path == output_path:
                 shutil.copyfile(video_path, tmpfile.name)
                 video_path = tmpfile.name
 <<<<<<< HEAD
+<<<<<<< HEAD
             writer = WriteGear(output_filename=output_path, logging=True)
 =======
             writer = WriteGear(output_filename=video_path, logging=True)
 >>>>>>> 888e5d6... fix nits in documentation and remove unnecessary stuff
+=======
+            writer = WriteGear(output_filename=output_path, logging=True)
+>>>>>>> a1dedf0... added suggestions from optimize-hflip
             writer.execute_ffmpeg_cmd(self.get_command(video_path, output_path))
             writer.close()
 
@@ -123,8 +132,13 @@ class BaseVidgearFFMPEGAugmenter(ABC):
 =======
 >>>>>>> 888e5d6... fix nits in documentation and remove unnecessary stuff
 
+<<<<<<< HEAD
         @returns: a list of strings of the FFMPEG command if it were to be written
             in a command line
 >>>>>>> c95167c... added base class vidgear
+=======
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
+>>>>>>> a1dedf0... added suggestions from optimize-hflip
         """
         raise NotImplementedError("Implement get_command method")
