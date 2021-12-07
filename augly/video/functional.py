@@ -644,7 +644,8 @@ def fps(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByFPSChange(fps).add_augmenter(video_path, output_path)
+    fps_aug = af.VideoAugmenterByFPSChange(fps)
+    fps_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="fps", **func_kwargs)
@@ -673,7 +674,8 @@ def grayscale(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByGrayscale().add_augmenter(video_path, output_path)
+    grayscale_aug = af.VideoAugmenterByGrayscale()
+    grayscale_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -2018,9 +2020,10 @@ def time_crop(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByTrim(
+    time_crop_aug = af.VideoAugmenterByTrim(
         offset_factor=offset_factor, duration_factor=duration_factor
-    ).add_augmenter(video_path, output_path)
+    )
+    time_crop_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -2125,7 +2128,8 @@ def trim(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByTrim(start=start, end=end).add_augmenter(video_path, output_path)
+    trim_aug = af.VideoAugmenterByTrim(start=start, end=end)
+    trim_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="trim", **func_kwargs)
