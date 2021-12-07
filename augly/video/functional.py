@@ -486,9 +486,8 @@ def concat(
         metadata, locals(), video_paths[src_video_path_index]
     )
 
-    af.VideoAugmenterByConcat(video_paths, src_video_path_index).add_augmenter(
-        video_paths[src_video_path_index], output_path
-    )
+    concat_aug = af.VideoAugmenterByConcat(video_paths, src_video_path_index)
+    concat_aug.add_augmenter(video_paths[src_video_path_index], output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -572,9 +571,8 @@ def crop(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByCrop(left, top, right, bottom).add_augmenter(
-        video_path, output_path
-    )
+    crop_aug = af.VideoAugmenterByCrop(left, top, right, bottom)
+    crop_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="crop", **func_kwargs)
@@ -1585,9 +1583,8 @@ def pad(
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    af.VideoAugmenterByPadding(w_factor, h_factor, color).add_augmenter(
-        video_path, output_path
-    )
+    pad_aug = af.VideoAugmenterByPadding(w_factor, h_factor, color)
+    pad_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="pad", **func_kwargs)

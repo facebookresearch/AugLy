@@ -38,8 +38,8 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
 
         @param output_path: the path in which the resulting video will be stored.
 
-        @returns: a list of strings of the FFMPEG command if it were to be written
-            in a command line
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
         inputs = [["-i", video] for video in self.video_paths]
         flat_inputs = [element for sublist in inputs for element in sublist]
