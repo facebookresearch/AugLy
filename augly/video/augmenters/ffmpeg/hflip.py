@@ -15,7 +15,8 @@ class VideoAugmenterByHFlip(BaseVidgearFFMPEGAugmenter):
 
         @param output_path: the path in which the resulting video will be stored.
 
-        @returns: a list of strings of the FFMPEG command if it were to be written
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
             in a command line
         """
         command = [

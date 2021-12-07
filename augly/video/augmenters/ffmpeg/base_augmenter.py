@@ -12,9 +12,9 @@ Implementation of base class for FFMPEG-based video augmenters
 """
 
 import os
-from abc import ABC, abstractmethod
 import shutil
 import tempfile
+from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Tuple
 
 import ffmpeg  # @manual
@@ -79,30 +79,32 @@ class BaseVidgearFFMPEGAugmenter(ABC):
 
         @param output_path: the path in which the resulting video will be stored.
             If not passed in, the original video file will be overwritten
+
+        @param kwargs: parameters for specific augmenters
         """
         video_path, output_path = validate_input_and_output_paths(
             video_path, output_path
         )
         with tempfile.NamedTemporaryFile(
-            suffix=video_path[video_path.index(".") :]
+            suffix=os.path.splitext(video_path)[1]
         ) as tmpfile:
             if video_path == output_path:
                 shutil.copyfile(video_path, tmpfile.name)
                 video_path = tmpfile.name
-            writer = WriteGear(output_filename=video_path, logging=True)
+            writer = WriteGear(output_filename=output_path, logging=True)
             writer.execute_ffmpeg_cmd(self.get_command(video_path, output_path))
             writer.close()
 
     @abstractmethod
     def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
-        Constructs the FFMPEG so that VidGear can run it
+        Constructs the FFMPEG command for VidGear
 
         @param video_path: the path to the video to be augmented
 
         @param output_path: the path in which the resulting video will be stored.
 
-        @returns: a list of strings of the FFMPEG command if it were to be written
-            in a command line
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
         raise NotImplementedError("Implement get_command method")
