@@ -99,7 +99,9 @@ def extract_frames_to_dir(
 ) -> None:
     video_info = get_video_info(video_path)
 
-    writer = WriteGear(output_filename=os.path.join(output_dir, output_pattern), logging=True)
+    writer = WriteGear(
+        output_filename=os.path.join(output_dir, output_pattern), logging=True
+    )
     ffmpeg_command = [
         "-y",
         "-i",
