@@ -32,7 +32,7 @@ def combine_frames_and_audio_to_file(
 
     with tempfile.TemporaryDirectory() as tmpdir:
         temp_video_path = os.path.join(tmpdir, "out.mp4")
-        writer = WriteGear(output_filename=raw_frames, logging=True)
+        writer = WriteGear(output_filename=temp_video_path, logging=True)
         ffmpeg_command = [
             "-y",
             "-framerate",
@@ -50,7 +50,9 @@ def combine_frames_and_audio_to_file(
             temp_video_path,
         ]
         writer.execute_ffmpeg_cmd(ffmpeg_command)
+        writer.close()
         temp_padded_video_path = os.path.join(tmpdir, "out1.mp4")
+        writer = WriteGear(output_filename=temp_padded_video_path, logging=True)
         ffmpeg_command = [
             "-y",
             "-i",
@@ -97,7 +99,7 @@ def extract_frames_to_dir(
 ) -> None:
     video_info = get_video_info(video_path)
 
-    writer = WriteGear(output_filename=video_path, logging=True)
+    writer = WriteGear(output_filename=os.path.join(output_dir, output_pattern), logging=True)
     ffmpeg_command = [
         "-y",
         "-i",
@@ -220,7 +222,7 @@ def merge_video_and_audio(
     audio_path: Optional[str],
     output_path: str,
 ) -> None:
-    writer = WriteGear(output_filename=video_path, logging=True)
+    writer = WriteGear(output_filename=output_path, logging=True)
 
     if audio_path:
         ffmpeg_command = [
