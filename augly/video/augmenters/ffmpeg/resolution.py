@@ -25,8 +25,8 @@ class VideoAugmenterByResolution(BaseVidgearFFMPEGAugmenter):
         @param output_path: the path in which the resulting video will be stored.
             If not passed in, the original video file will be overwritten
 
-        @returns: a list of strings of the FFMPEG command if it were to be written
-            in a command line
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
         command = [
             "-y",
