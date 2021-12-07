@@ -617,7 +617,7 @@ def loop(
 
     @param sample_rate: the audio sample rate of the inputted audio
 
-    @param n: the number of times the video will be looped
+    @param n: the number of times the audio will be looped
 
     @param output_path: the path in which the resulting audio will be stored. If None,
         the resulting np.ndarray will still be returned

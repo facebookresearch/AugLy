@@ -33,7 +33,7 @@ class BaseAudioUnitTest(unittest.TestCase):
             import augly.audio as audaugs
         except ImportError:
             self.fail("audaugs failed to import")
-        self.assertTrue(dir(audaugs))
+        self.assertTrue(dir(audaugs), "Audio directory does not exist")
 
     @classmethod
     def setUpClass(cls):
@@ -60,14 +60,21 @@ class BaseAudioUnitTest(unittest.TestCase):
                 aug_function(local_audio_path, output_path=tmpfile.name, **kwargs)
                 dst = librosa.load(tmpfile.name, sr=None, mono=False)[0]
 
-            self.assertTrue(are_equal_audios(dst, ref))
+            self.assertTrue(
+                are_equal_audios(dst, ref), "Expected and outputted audio do not match"
+            )
 
     def evaluate_class(self, transform_class: Callable[..., np.ndarray], fname: str):
         metadata = []
         audio, sample_rate = transform_class(
             self.audios[0], self.sample_rates[0], metadata
         )
-        self.assertEqual(metadata, self.metadata[fname])
+
+        self.assertEqual(
+            metadata,
+            self.metadata[fname],
+            "Expected and outputted metadata do not match",
+        )
 
         if audio.ndim > 1:
             audio = np.swapaxes(audio, 0, 1)
@@ -80,7 +87,9 @@ class BaseAudioUnitTest(unittest.TestCase):
             dst = librosa.load(tmpfile.name, sr=None, mono=False)[0]
 
         ref = self.get_ref_audio(fname)
-        self.assertTrue(are_equal_audios(dst, ref))
+        self.assertTrue(
+            are_equal_audios(dst, ref), "Expected and outputted audio do not match"
+        )
 
     def get_ref_audio(self, fname: str, folder: str = "mono") -> np.ndarray:
         local_ref_path = pathmgr.get_local_path(
