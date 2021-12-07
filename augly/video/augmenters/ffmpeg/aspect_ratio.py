@@ -23,8 +23,8 @@ class VideoAugmenterByAspectRatio(BaseVidgearFFMPEGAugmenter):
 
         @param output_path: the path in which the resulting video will be stored.
 
-        @returns: a list of strings of the FFMPEG command if it were to be written
-            in a command line
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
         video_info = get_video_info(video_path)
 
