@@ -461,21 +461,17 @@ def high_pass_filter(
         torch.Tensor(audio), sample_rate, [["highpass", str(cutoff_hz)]]
     )
 
-    high_pass_array = aug_audio.numpy()
-    if audio.shape[0] == 1:
-        high_pass_array = high_pass_array.reshape((high_pass_array.shape[-1],))
-
     if metadata is not None:
         audutils.get_metadata(
             metadata=metadata,
             function_name="high_pass_filter",
-            dst_audio=high_pass_array,
+            dst_audio=aug_audio,
             dst_sample_rate=out_sample_rate,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(high_pass_array, output_path, out_sample_rate)
+    return audutils.ret_and_save_audio(aug_audio, output_path, out_sample_rate)
 
 
 def insert_in_background(
