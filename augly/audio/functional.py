@@ -684,39 +684,24 @@ def low_pass_filter(
         func_kwargs = deepcopy(locals())
         func_kwargs.pop("metadata")
 
-    rc = 1 / (2 * math.pi * cutoff_hz)
-    dt = 1 / sample_rate
-    alpha = dt / (rc + dt)
     num_channels = 1 if audio.ndim == 1 else audio.shape[0]
+    audio = audio.reshape((num_channels, -1))
 
-    if num_channels == 1:
-        audio = audio.reshape(1, audio.shape[0])
-
-    frame_count = audio.shape[1]
-    low_pass_array = np.zeros(audio.shape)
-
-    for i in range(num_channels):
-        low_pass_array[i][0] = alpha * audio[i][0]
-        for j in range(1, frame_count):
-            low_pass_array[i][j] = low_pass_array[i][j - 1] + alpha * (
-                audio[i][j] - low_pass_array[i][j - 1]
-            )
-
-    if num_channels == 1:
-        low_pass_array = low_pass_array.reshape((low_pass_array.shape[1],))
+    aug_audio, out_sample_rate = sox_effects.apply_effects_tensor(
+        torch.Tensor(audio), sample_rate, [["lowpass", str(cutoff_hz)]]
+    )
 
     if metadata is not None:
         audutils.get_metadata(
             metadata=metadata,
             function_name="low_pass_filter",
-            dst_audio=low_pass_array,
-            dst_sample_rate=sample_rate,
-            alpha=alpha,
+            dst_audio=aug_audio,
+            dst_sample_rate=out_sample_rate,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(low_pass_array, output_path, sample_rate)
+    return audutils.ret_and_save_audio(aug_audio, output_path, out_sample_rate)
 
 
 def normalize(
