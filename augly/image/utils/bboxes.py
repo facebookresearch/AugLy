@@ -9,6 +9,18 @@ import augly.image.utils as imutils
 import numpy as np
 
 
+def create_test_image(w: int, h: int, bbox: Tuple) -> Image.Image:
+    """
+    Create dummy test image to help spatial_bbox_helper. 
+    """
+    image = Image.new("RGB", (w, h))
+    draw = ImageDraw.Draw(image)
+    draw.rectangle(
+        [bbox[0] * w, bbox[1] * h, bbox[2] * w, bbox[3] * h], fill="white"
+    )
+    return image
+
+
 def crop_bboxes_helper(
     bbox: Tuple, x1: float, y1: float, x2: float, y2: float, **kwargs
 ) -> Tuple:
@@ -446,14 +458,17 @@ def rotate_bboxes_helper(
 
 
 def spatial_bbox_helper(
-    bbox: Tuple, image: Image.Image, aug_function: Callable, **kwargs
+    bbox: Tuple, src_w: int, src_h: int, aug_function: Callable, **kwargs
 ) -> Tuple:
     """
-    Computes the bbox that encloses a white box in a black backgtround
-    for any augmentation.
+    Computes the bbox that encloses the transformed bbox in the image transformed by
+    `aug_function`. This helper can be used to compute the transformed bbox for any
+    augmentation which doesn't affect the color of the source image (e.g. any spatial
+    augmentation).
     """
+    dummy_image = create_test_image(w=src_w, h=src_h, bbox=bbox)
 
-    aug_image = aug_function(image, **kwargs)
+    aug_image = aug_function(dummy_image, **kwargs)
     aug_w, aug_h = aug_image.size
     array_image = np.array(aug_image)
 
