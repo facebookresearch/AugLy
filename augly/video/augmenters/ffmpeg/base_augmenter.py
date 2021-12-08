@@ -12,13 +12,16 @@ Implementation of base class for FFMPEG-based video augmenters
 """
 
 import os
+import shutil
+import tempfile
 from abc import ABC, abstractmethod
-from typing import Dict, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import ffmpeg  # @manual
 from augly.utils.ffmpeg import FFMPEG_PATH
-from augly.video.helpers import has_audio_stream
+from augly.video.helpers import has_audio_stream, validate_input_and_output_paths
 from ffmpeg.nodes import FilterableStream
+from vidgear.gears import WriteGear
 
 
 class BaseFFMPEGAugmenter(ABC):
@@ -63,3 +66,45 @@ class BaseFFMPEGAugmenter(ABC):
             applied and a dictionary with any output arguments as necessary
         """
         raise NotImplementedError("Implement add_augmenter method")
+
+
+class BaseVidgearFFMPEGAugmenter(ABC):
+    def add_augmenter(
+        self, video_path: str, output_path: Optional[str] = None, **kwargs
+    ) -> None:
+        """
+        Applies the specific augmentation to the video
+
+        @param video_path: the path to the video to be augmented
+
+        @param output_path: the path in which the resulting video will be stored.
+            If not passed in, the original video file will be overwritten
+
+        @param kwargs: parameters for specific augmenters
+        """
+        video_path, output_path = validate_input_and_output_paths(
+            video_path, output_path
+        )
+        with tempfile.NamedTemporaryFile(
+            suffix=os.path.splitext(video_path)[1]
+        ) as tmpfile:
+            if video_path == output_path:
+                shutil.copyfile(video_path, tmpfile.name)
+                video_path = tmpfile.name
+            writer = WriteGear(output_filename=output_path, logging=True)
+            writer.execute_ffmpeg_cmd(self.get_command(video_path, output_path))
+            writer.close()
+
+    @abstractmethod
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
+        """
+        Constructs the FFMPEG command for VidGear
+
+        @param video_path: the path to the video to be augmented
+
+        @param output_path: the path in which the resulting video will be stored.
+
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
+        """
+        raise NotImplementedError("Implement get_command method")
