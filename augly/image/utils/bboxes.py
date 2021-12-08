@@ -444,6 +444,31 @@ def rotate_bboxes_helper(
     )
 
 
+def spatial_bbox_helper(
+    bbox: Tuple, src_w: int, src_h: int, aug_function: Callable, **kwargs
+) -> Tuple:
+    """
+    Computes the bbox that encloses a white box in a black backgtround
+    for any augmentation.
+    """
+    dummy_image = create_test_image(w=src_w, h=src_h, bbox=bbox)
+
+    aug_image = aug_function(dummy_image, **kwargs)
+    aug_w, aug_h = aug_image.size
+
+    array_image = np.array(aug_image)
+
+    # `np.where` returns the indices where `array_image[y][x][c] > 0`
+    # `white_y` & `white_x` are the y & x indices where at least one of the RGB
+    # channels is not 0 (i.e. the pixel at (x, y) is not black)
+    white_y, white_x, _ = np.where(array_image > 0)
+    min_x, max_x = np.min(white_x), np.max(white_x)
+    min_y, max_y = np.min(white_y), np.max(white_y)
+
+    new_bbox = (min_x / aug_w, min_y / aug_h, max_x / aug_w, max_y / aug_h)
+    return new_bbox
+
+
 def vflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
     """
     Analogous to hflip, when the src image is vertically flipped, the bounding box also
