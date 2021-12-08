@@ -2,7 +2,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import math
-from PIL import Image
+from PIL import Image, ImageDraw
 from typing import Callable, List, Optional, Tuple
 
 import augly.image.utils as imutils
