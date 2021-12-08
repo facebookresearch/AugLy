@@ -458,9 +458,6 @@ def spatial_bbox_helper(
 
     array_image = np.array(aug_image)
 
-    # `np.where` returns the indices where `array_image[y][x][c] > 0`
-    # `white_y` & `white_x` are the y & x indices where at least one of the RGB
-    # channels is not 0 (i.e. the pixel at (x, y) is not black)
     white_y, white_x, _ = np.where(array_image > 0)
     min_x, max_x = np.min(white_x), np.max(white_x)
     min_y, max_y = np.min(white_y), np.max(white_y)
