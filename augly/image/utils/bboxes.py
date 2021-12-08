@@ -9,16 +9,6 @@ import augly.image.utils as imutils
 import numpy as np
 
 
-def create_test_image(w: int, h: int, bbox: Tuple) -> Image.Image:
-    """
-    Create dummy test image to help spatial_bbox_helper.
-    """
-    image = Image.new("RGB", (w, h))
-    draw = ImageDraw.Draw(image)
-    draw.rectangle([bbox[0] * w, bbox[1] * h, bbox[2] * w, bbox[3] * h], fill="white")
-    return image
-
-
 def crop_bboxes_helper(
     bbox: Tuple, x1: float, y1: float, x2: float, y2: float, **kwargs
 ) -> Tuple:
@@ -464,7 +454,9 @@ def spatial_bbox_helper(
     augmentation which doesn't affect the color of the source image (e.g. any spatial
     augmentation).
     """
-    dummy_image = create_test_image(w=src_w, h=src_h, bbox=bbox)
+    dummy_image = Image.new("RGB", (w, h))
+    draw = ImageDraw.Draw(image)
+    draw.rectangle([bbox[0] * w, bbox[1] * h, bbox[2] * w, bbox[3] * h], fill="white")
 
     aug_image = aug_function(dummy_image, **kwargs)
     aug_w, aug_h = aug_image.size
