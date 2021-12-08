@@ -14,7 +14,7 @@ Welcome to AugLy's documentation!
    augly.audio
    augly.image
    augly.video
-   augly.textu
+   augly.text
 
 Indices and tables
 ==================
