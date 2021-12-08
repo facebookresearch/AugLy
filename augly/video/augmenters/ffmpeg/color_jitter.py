@@ -35,12 +35,17 @@ class VideoAugmenterByColorJitter(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
         """
+        brightness, contrast, saturation = (
+            self.brightness_level,
+            self.contrast_level,
+            self.saturation_level,
+        )
         command = [
             "-y",
             "-i",
             video_path,
             "-vf",
-            f"eq=brightness={self.brightness_level}:contrast={self.contrast_level}:saturation={self.saturation_level}",
+            f"eq=brightness={brightness}:contrast={contrast}:saturation={saturation}",
             "-c:a",
             "copy",
             "-preset",

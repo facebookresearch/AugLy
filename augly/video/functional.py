@@ -443,7 +443,9 @@ def color_jitter(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     color_jitter_aug = af.VideoAugmenterByColorJitter(
-        brightness_factor, contrast_factor, saturation_factor
+        brightness_level=brightness_factor,
+        contrast_level=contrast_factor,
+        saturation_level=saturation_factor,
     )
     color_jitter_aug.add_augmenter(video_path, output_path)
 
