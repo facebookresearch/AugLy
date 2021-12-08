@@ -4,3 +4,7 @@ numpy>=1.19.5
 Pillow>=8.2.0
 python-magic>=0.4.22
 regex>=2021.4.4
+sphinx
+sphinx-epytext
+sphinx-autodoc-typehints
+myst-parser
