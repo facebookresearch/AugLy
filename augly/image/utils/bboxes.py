@@ -2,6 +2,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import math
+from PIL import Image
 from typing import List, Optional, Tuple, Callable
 
 import augly.image.utils as imutils
@@ -445,15 +446,14 @@ def rotate_bboxes_helper(
 
 
 def spatial_bbox_helper(
-    bbox: Tuple, src_w: int, src_h: int, aug_function: Callable, **kwargs
+    bbox: Tuple, image: Image.Image, aug_function: Callable, **kwargs
 ) -> Tuple:
     """
-    Computes the bbox that encloses a white box in a black background
+    Computes the bbox that encloses a white box in a black backgtround
     for any augmentation.
     """
-    dummy_image = create_test_image(w=src_w, h=src_h, bbox=bbox)
 
-    aug_image = aug_function(dummy_image, **kwargs)
+    aug_image = aug_function(image, **kwargs)
     aug_w, aug_h = aug_image.size
 
     array_image = np.array(aug_image)
