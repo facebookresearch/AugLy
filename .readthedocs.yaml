@@ -10,6 +10,7 @@ build:
   os: ubuntu-20.04
   apt_packages:
     - libsndfile1
+    - ffmpeg
   tools:
     python: "3.9"
     # You can also specify other tool versions:
