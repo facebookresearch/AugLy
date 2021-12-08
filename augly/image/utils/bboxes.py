@@ -455,7 +455,7 @@ def spatial_bbox_helper(
     augmentation).
     """
     dummy_image = Image.new("RGB", (src_w, src_h))
-    draw = ImageDraw.Draw(image)
+    draw = ImageDraw.Draw(dummy_image)
     draw.rectangle(
         [bbox[0] * src_w, bbox[1] * src_h, bbox[2] * src_w, bbox[3] * src_h],
         fill="white",
