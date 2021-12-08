@@ -13,13 +13,7 @@
 import os
 import sys
 
-# dirs = [
-#     '../../augly/audio',
-#     "../../augly/image",
-#     "../../augly/video",
-#     "../../augly/text"
-# ]
-sys.path.append(os.path.abspath("../../augly"))
+sys.path.insert(0, os.path.abspath('../..'))
 
 
 # -- Project information -----------------------------------------------------
