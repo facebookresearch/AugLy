@@ -2,7 +2,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import math
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Callable
 
 import augly.image.utils as imutils
 import numpy as np
@@ -448,7 +448,7 @@ def spatial_bbox_helper(
     bbox: Tuple, src_w: int, src_h: int, aug_function: Callable, **kwargs
 ) -> Tuple:
     """
-    Computes the bbox that encloses a white box in a black backgtround
+    Computes the bbox that encloses a white box in a black background
     for any augmentation.
     """
     dummy_image = create_test_image(w=src_w, h=src_h, bbox=bbox)
