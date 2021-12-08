@@ -5,4 +5,3 @@ Pillow>=8.2.0
 python-magic>=0.4.22
 regex>=2021.4.4
 vidgear>=0.2.4
-
