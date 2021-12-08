@@ -455,7 +455,6 @@ def spatial_bbox_helper(
 
     aug_image = aug_function(image, **kwargs)
     aug_w, aug_h = aug_image.size
-
     array_image = np.array(aug_image)
 
     white_y, white_x, _ = np.where(array_image > 0)
