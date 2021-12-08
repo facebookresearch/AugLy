@@ -454,9 +454,9 @@ def spatial_bbox_helper(
     augmentation which doesn't affect the color of the source image (e.g. any spatial
     augmentation).
     """
-    dummy_image = Image.new("RGB", (w, h))
+    dummy_image = Image.new("RGB", (src_w, src_h))
     draw = ImageDraw.Draw(image)
-    draw.rectangle([bbox[0] * w, bbox[1] * h, bbox[2] * w, bbox[3] * h], fill="white")
+    draw.rectangle([bbox[0] * src_w, bbox[1] * src_h, bbox[2] * src_w, bbox[3] * src_h], fill="white")
 
     aug_image = aug_function(dummy_image, **kwargs)
     aug_w, aug_h = aug_image.size
