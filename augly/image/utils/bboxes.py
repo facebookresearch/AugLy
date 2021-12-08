@@ -11,13 +11,11 @@ import numpy as np
 
 def create_test_image(w: int, h: int, bbox: Tuple) -> Image.Image:
     """
-    Create dummy test image to help spatial_bbox_helper. 
+    Create dummy test image to help spatial_bbox_helper.
     """
     image = Image.new("RGB", (w, h))
     draw = ImageDraw.Draw(image)
-    draw.rectangle(
-        [bbox[0] * w, bbox[1] * h, bbox[2] * w, bbox[3] * h], fill="white"
-    )
+    draw.rectangle([bbox[0] * w, bbox[1] * h, bbox[2] * w, bbox[3] * h], fill="white")
     return image
 
 
