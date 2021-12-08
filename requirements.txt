@@ -4,12 +4,5 @@ numpy>=1.19.5
 Pillow>=8.2.0
 python-magic>=0.4.22
 regex>=2021.4.4
-<<<<<<< HEAD
-<<<<<<< HEAD
 vidgear>=0.2.4
-=======
-vidgear>=0.2.4
->>>>>>> 888e5d6... fix nits in documentation and remove unnecessary stuff
-=======
-vidgear>=0.2.4
->>>>>>> a1dedf0... added suggestions from optimize-hflip
+

@@ -87,7 +87,7 @@ class BaseVidgearFFMPEGAugmenter(ABC):
         )
         with tempfile.NamedTemporaryFile(
             suffix=os.path.splitext(video_path)[1]
-        ) as tempfile:
+        ) as tmpfile:
             if video_path == output_path:
                 shutil.copyfile(video_path, tmpfile.name)
                 video_path = tmpfile.name
