@@ -3,7 +3,7 @@
 
 import math
 from PIL import Image
-from typing import List, Optional, Tuple, Callable
+from typing import Callable, List, Optional, Tuple
 
 import augly.image.utils as imutils
 import numpy as np
