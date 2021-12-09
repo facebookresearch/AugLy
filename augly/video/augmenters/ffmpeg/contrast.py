@@ -37,5 +37,5 @@ class VideoAugmenterByContrast(BaseVidgearFFMPEGAugmenter):
             "ultrafast",
             output_path,
         ]
-        
+
         return command
