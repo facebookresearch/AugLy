@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import List, Optional
+from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -14,9 +14,7 @@ class VideoAugmenterByResolution(BaseVidgearFFMPEGAugmenter):
 
         self.resolution = resolution
 
-    def get_command(
-        self, video_path: str, output_path: Optional[str] = None, **kwargs
-    ) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Alters the resolution of the video
 
@@ -41,4 +39,5 @@ class VideoAugmenterByResolution(BaseVidgearFFMPEGAugmenter):
             "ultrafast",
             output_path,
         ]
+
         return command
