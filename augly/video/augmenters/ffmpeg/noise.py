@@ -27,7 +27,7 @@ class VideoAugmenterByNoise(BaseVidgearFFMPEGAugmenter):
             "-i",
             video_path,
             "-vf",
-            "boxblur=lr=1.2," + f"noise=c0s={self.level}:allf=t",
+            f"boxblur=lr=1.2,noise=c0s={self.level}:allf=t",
             "-c:a",
             "copy",
             "-preset",
