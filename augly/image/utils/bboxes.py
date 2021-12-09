@@ -446,7 +446,11 @@ def rotate_bboxes_helper(
 
 
 def spatial_bbox_helper(
-    bbox: Tuple, src_w: int, src_h: int, aug_function: Callable, **kwargs
+    bbox: Tuple[float, float, float, float],
+    src_w: int,
+    src_h: int,
+    aug_function: Callable,
+    **kwargs,
 ) -> Tuple:
     """
     Computes the bbox that encloses the transformed bbox in the image transformed by
@@ -457,7 +461,7 @@ def spatial_bbox_helper(
     dummy_image = Image.new("RGB", (src_w, src_h))
     draw = ImageDraw.Draw(dummy_image)
     draw.rectangle(
-        [bbox[0] * src_w, bbox[1] * src_h, bbox[2] * src_w, bbox[3] * src_h],
+        (bbox[0] * src_w, bbox[1] * src_h, bbox[2] * src_w, bbox[3] * src_h),
         fill="white",
     )
 
