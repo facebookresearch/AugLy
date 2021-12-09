@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import List, Optional
+from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -11,9 +11,7 @@ class VideoAugmenterByQuality(BaseVidgearFFMPEGAugmenter):
         assert 0 <= quality <= 51, "Quality must be a value in the range [0, 51]"
         self.quality = quality
 
-    def get_command(
-        self, video_path: str, output_path: Optional[str] = None
-    ) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Alters the quality level of the video
 
@@ -39,4 +37,5 @@ class VideoAugmenterByQuality(BaseVidgearFFMPEGAugmenter):
             "ultrafast",
             output_path,
         ]
+        
         return command
