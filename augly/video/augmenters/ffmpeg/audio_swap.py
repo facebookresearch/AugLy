@@ -51,6 +51,10 @@ class VideoAugmenterByAudioSwap(BaseVidgearFFMPEGAugmenter):
             "copy",
             "-af",
             audio_filters,
+            "-map",
+            "0:v:0",
+            "-map",
+            "1:a:0",
             output_path,
         ]
 
