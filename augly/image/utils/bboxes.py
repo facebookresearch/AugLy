@@ -473,8 +473,7 @@ def spatial_bbox_helper(
     min_x, max_x = np.min(white_x), np.max(white_x)
     min_y, max_y = np.min(white_y), np.max(white_y)
 
-    new_bbox = (min_x / aug_w, min_y / aug_h, max_x / aug_w, max_y / aug_h)
-    return new_bbox
+    return (min_x / aug_w, min_y / aug_h, max_x / aug_w, max_y / aug_h)
 
 
 def vflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
