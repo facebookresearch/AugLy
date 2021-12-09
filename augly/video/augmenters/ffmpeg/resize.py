@@ -14,9 +14,7 @@ class VideoAugmenterByResize(BaseVidgearFFMPEGAugmenter):
         self.new_h = height or "ih"
         self.new_w = width or "iw"
 
-    def get_command(
-        self, video_path: str, output_path: Optional[str] = None, **kwargs
-    ) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Resizes the video
 
@@ -41,4 +39,5 @@ class VideoAugmenterByResize(BaseVidgearFFMPEGAugmenter):
             "ultrafast",
             output_path,
         ]
+
         return command

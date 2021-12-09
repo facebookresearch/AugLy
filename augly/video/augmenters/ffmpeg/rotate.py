@@ -2,7 +2,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import math
-from typing import List, Optional
+from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -12,9 +12,7 @@ class VideoAugmenterByRotation(BaseVidgearFFMPEGAugmenter):
         assert isinstance(degrees, (float, int)), "Expected 'degrees' to be a number"
         self.degrees = degrees
 
-    def get_command(
-        self, video_path: str, output_path: Optional[str] = None, **kwargs
-    ) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Rotates the video
 
@@ -38,4 +36,5 @@ class VideoAugmenterByRotation(BaseVidgearFFMPEGAugmenter):
             "ultrafast",
             output_path,
         ]
+
         return command
