@@ -6,7 +6,7 @@ import math
 import os
 import shutil
 import tempfile
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import augly.audio.utils as audutils
 import ffmpeg
@@ -32,7 +32,6 @@ def combine_frames_and_audio_to_file(
 
     with tempfile.TemporaryDirectory() as tmpdir:
         temp_video_path = os.path.join(tmpdir, "out.mp4")
-        writer = WriteGear(output_filename=temp_video_path, logging=True)
         ffmpeg_command = [
             "-y",
             "-framerate",
@@ -49,10 +48,8 @@ def combine_frames_and_audio_to_file(
             "ultrafast",
             temp_video_path,
         ]
-        writer.execute_ffmpeg_cmd(ffmpeg_command)
-        writer.close()
+        execute_vidgear_command(temp_video_path, ffmpeg_command)
         temp_padded_video_path = os.path.join(tmpdir, "out1.mp4")
-        writer = WriteGear(output_filename=temp_padded_video_path, logging=True)
         ffmpeg_command = [
             "-y",
             "-i",
@@ -63,9 +60,14 @@ def combine_frames_and_audio_to_file(
             "ultrafast",
             temp_padded_video_path,
         ]
-        writer.execute_ffmpeg_cmd(ffmpeg_command)
-        writer.close()
+        execute_vidgear_command(temp_padded_video_path, ffmpeg_command)
         merge_video_and_audio(temp_padded_video_path, audio, output_path)
+
+
+def execute_vidgear_command(output_path: str, ffmpeg_command: List[str]) -> None:
+    writer = WriteGear(output_filename=output_path, logging=True)
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+    writer.close()
 
 
 def extract_audio_to_file(video_path: str, output_audio_path: str) -> None:
@@ -99,9 +101,6 @@ def extract_frames_to_dir(
 ) -> None:
     video_info = get_video_info(video_path)
 
-    writer = WriteGear(
-        output_filename=os.path.join(output_dir, output_pattern), logging=True
-    )
     ffmpeg_command = [
         "-y",
         "-i",
@@ -116,8 +115,7 @@ def extract_frames_to_dir(
         "ultrafast",
         os.path.join(output_dir, output_pattern),
     ]
-    writer.execute_ffmpeg_cmd(ffmpeg_command)
-    writer.close()
+    execute_vidgear_command(os.path.join(output_dir, output_pattern), ffmpeg_command)
 
 
 def get_audio_info(media_path: str) -> Dict[str, Any]:
@@ -224,7 +222,7 @@ def merge_video_and_audio(
     audio_path: Optional[str],
     output_path: str,
 ) -> None:
-    writer = WriteGear(output_filename=output_path, logging=True)
+    ffmpeg_command = []
 
     if audio_path:
         ffmpeg_command = [
@@ -263,5 +261,4 @@ def merge_video_and_audio(
             output_path,
         ]
 
-    writer.execute_ffmpeg_cmd(ffmpeg_command)
-    writer.close()
+    execute_vidgear_command(output_path, ffmpeg_command)
