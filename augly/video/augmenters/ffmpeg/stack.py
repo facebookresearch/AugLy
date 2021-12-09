@@ -50,7 +50,7 @@ class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
             "-map",
             "[v]",
             "-map",
-            f"{int(not self.use_second_audio)}:a",
+            f"{int(self.use_second_audio)}:a",
             "-vsync",
             "2",
             "-preset",
