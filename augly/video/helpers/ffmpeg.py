@@ -19,7 +19,7 @@ from vidgear.gears import WriteGear
 
 def combine_frames_and_audio_to_file(
     raw_frames: str,
-    audio: Optional[Union[str, io.BytesIO]],
+    audio: Optional[str],
     output_path: str,
     framerate: float,
 ) -> None:
