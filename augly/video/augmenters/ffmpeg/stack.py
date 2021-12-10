@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import Dict, Tuple
+from typing import List
 
-import ffmpeg  # @manual
 from augly.utils import pathmgr
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_video_info
-from ffmpeg.nodes import FilterableStream
 
 
-class VideoAugmenterByStack(BaseFFMPEGAugmenter):
+class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
     def __init__(
         self, second_video_path: str, use_second_audio: bool, orientation: str
     ):
@@ -26,30 +24,38 @@ class VideoAugmenterByStack(BaseFFMPEGAugmenter):
         self.use_second_audio = use_second_audio
         self.orientation = orientation
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Stacks two videos together
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+            If not passed in, the original video file will be overwritten
+
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
-        video_info = get_video_info(kwargs["video_path"])
+        video_info = get_video_info(video_path)
 
-        second_video = ffmpeg.input(self.second_video_path)
-        scaled_second_video = second_video.filter(
-            "scale", **{"width": video_info["width"], "height": video_info["height"]}
-        )
-        stack_video = ffmpeg.filter([in_stream, scaled_second_video], self.orientation)
+        command = [
+            "-y",
+            "-i",
+            video_path,
+            "-i",
+            self.second_video_path,
+            "-filter_complex",
+            f"[1:v]scale={video_info['width']}:{video_info['height']}[1v];"
+            + f"[0:v][1v]{self.orientation}=inputs=2[v]",
+            "-map",
+            "[v]",
+            "-map",
+            f"{int(self.use_second_audio)}:a",
+            "-vsync",
+            "2",
+            "-preset",
+            "ultrafast",
+            output_path,
+        ]
 
-        return (
-            (
-                ffmpeg.concat(stack_video, second_video.audio, v=1, a=1)
-                if self.use_second_audio
-                else stack_video
-            ),
-            {},
-        )
+        return command

@@ -744,7 +744,7 @@ def hstack(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     hstack_aug = af.VideoAugmenterByStack(second_video_path, use_second_audio, "hstack")
-    vdutils.apply_ffmpeg_augmenter(hstack_aug, video_path, output_path)
+    hstack_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="hstack", **func_kwargs)
@@ -1719,7 +1719,7 @@ def remove_audio(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     remove_audio_aug = af.VideoAugmenterByRemovingAudio()
-    vdutils.apply_ffmpeg_augmenter(remove_audio_aug, video_path, output_path)
+    remove_audio_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -1854,7 +1854,7 @@ def resize(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     resize_aug = af.VideoAugmenterByResize(height, width)
-    vdutils.apply_ffmpeg_augmenter(resize_aug, video_path, output_path)
+    resize_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="resize", **func_kwargs)
@@ -1888,7 +1888,7 @@ def rotate(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     rotate_aug = af.VideoAugmenterByRotation(degrees)
-    vdutils.apply_ffmpeg_augmenter(rotate_aug, video_path, output_path)
+    rotate_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="rotate", **func_kwargs)
@@ -1921,7 +1921,7 @@ def scale(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     scale_aug = af.VideoAugmenterByResolution(factor)
-    vdutils.apply_ffmpeg_augmenter(scale_aug, video_path, output_path)
+    scale_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="scale", **func_kwargs)
@@ -2196,7 +2196,7 @@ def vstack(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     vstack_aug = af.VideoAugmenterByStack(second_video_path, use_second_audio, "vstack")
-    vdutils.apply_ffmpeg_augmenter(vstack_aug, video_path, output_path)
+    vstack_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="vstack", **func_kwargs)
