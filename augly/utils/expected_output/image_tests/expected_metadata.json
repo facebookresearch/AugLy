@@ -708,7 +708,7 @@
     "skew": [
         {
             "bbox_format": "yolo",
-            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_bboxes": [[0.26927083333333335, 0.125, 0.7307291666666667, 0.875]],
             "dst_height": 1080,
             "dst_width": 1920,
             "skew_factor": 0.5,
