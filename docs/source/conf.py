@@ -64,9 +64,7 @@ html_logo = "_static/logo.png"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-html_theme_options = {
-    'logo_only': True
-}
+html_theme_options = {"logo_only": True}
 
 # -- Preventing member skips -------------------------------------------------
 
