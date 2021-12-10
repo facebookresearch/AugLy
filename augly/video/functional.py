@@ -45,7 +45,7 @@ def add_noise(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     noise_aug = af.VideoAugmenterByNoise(level)
-    vdutils.apply_ffmpeg_augmenter(noise_aug, video_path, output_path)
+    noise_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -487,9 +487,7 @@ def concat(
     )
 
     concat_aug = af.VideoAugmenterByConcat(video_paths, src_video_path_index)
-    vdutils.apply_ffmpeg_augmenter(
-        concat_aug, video_paths[src_video_path_index], output_path
-    )
+    concat_aug.add_augmenter(video_paths[src_video_path_index], output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -574,7 +572,7 @@ def crop(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     crop_aug = af.VideoAugmenterByCrop(left, top, right, bottom)
-    vdutils.apply_ffmpeg_augmenter(crop_aug, video_path, output_path)
+    crop_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="crop", **func_kwargs)
@@ -1037,7 +1035,7 @@ def loop(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     loop_aug = af.VideoAugmenterByLoops(num_loops)
-    vdutils.apply_ffmpeg_augmenter(loop_aug, video_path, output_path)
+    loop_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="loop", **func_kwargs)
@@ -1586,7 +1584,7 @@ def pad(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     pad_aug = af.VideoAugmenterByPadding(w_factor, h_factor, color)
-    vdutils.apply_ffmpeg_augmenter(pad_aug, video_path, output_path)
+    pad_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="pad", **func_kwargs)
@@ -2159,7 +2157,7 @@ def vflip(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     vflip_aug = af.VideoAugmenterByVFlip()
-    vdutils.apply_ffmpeg_augmenter(vflip_aug, video_path, output_path)
+    vflip_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
