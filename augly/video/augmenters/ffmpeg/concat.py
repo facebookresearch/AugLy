@@ -45,7 +45,10 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         flat_inputs = [element for sublist in inputs for element in sublist]
         scale_and_sar, maps = "", ""
         for i in range(len(self.video_paths)):
-            scale_and_sar += f"[{i}:v]scale={self.width}:{self.height}[{i}v],[{i}v]setsar=ratio={self.sample_aspect_ratio}[{i}vf];"
+            scale_and_sar += (
+                f"[{i}:v]scale={self.width}:{self.height}[{i}v],[{i}v]setsar=ratio="
+                f"{self.sample_aspect_ratio}[{i}vf];"
+            )
 
         for i in range(len(self.video_paths)):
             maps += f"[{i}vf][{i}:a]"
