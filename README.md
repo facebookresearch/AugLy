@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/facebookresearch/AugLy/blob/main/logo.svg" alt="logo" width="70%" />
+  <img src="https://raw.githubusercontent.com/facebookresearch/AugLy/main/logo.svg" alt="logo" width="70%" />
 </p>
 
 <div align="center">
@@ -29,7 +29,7 @@ AugLy is a data augmentations library that currently supports four modalities ([
 
 AugLy is a great library to utilize for augmenting your data in model training, or to evaluate the robustness gaps of your model! We designed AugLy to include many specific data augmentations that users perform in real life on internet platforms like Facebook's -- for example making an image into a meme, overlaying text/emojis on images/videos, reposting a screenshot from social media. While AugLy contains more generic data augmentations as well, it will be particularly useful to you if you're working on a problem like copy detection, hate speech detection, or copyright infringement where these "internet user" types of data augmentations are prevalent.
 
-![Visual](https://github.com/facebookresearch/AugLy/blob/main/image_visual.png)
+![Visual](https://raw.githubusercontent.com/facebookresearch/AugLy/main/image_visual.png)
 
 To see more examples of augmentations, open the Colab notebooks in the README for each modality! (e.g. image [README](augly/image) & [Colab](https://colab.research.google.com/github/facebookresearch/AugLy/blob/main/examples/AugLy_image.ipynb))
 
