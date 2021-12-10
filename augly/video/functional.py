@@ -1719,7 +1719,7 @@ def remove_audio(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     remove_audio_aug = af.VideoAugmenterByRemovingAudio()
-    vdutils.apply_ffmpeg_augmenter(remove_audio_aug, video_path, output_path)
+    remove_audio_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -1854,7 +1854,7 @@ def resize(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     resize_aug = af.VideoAugmenterByResize(height, width)
-    vdutils.apply_ffmpeg_augmenter(resize_aug, video_path, output_path)
+    resize_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="resize", **func_kwargs)
@@ -1888,7 +1888,7 @@ def rotate(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     rotate_aug = af.VideoAugmenterByRotation(degrees)
-    vdutils.apply_ffmpeg_augmenter(rotate_aug, video_path, output_path)
+    rotate_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="rotate", **func_kwargs)
