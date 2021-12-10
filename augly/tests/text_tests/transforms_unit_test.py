@@ -3,6 +3,7 @@
 # @lint-ignore-every UTF8
 
 import json
+import os
 import random
 import unittest
 from typing import Any, Dict, List
@@ -35,7 +36,8 @@ def are_equal_metadata(
             if not (
                 isinstance(act_v, str)
                 and isinstance(exp_v, str)
-                and act_v[-len(exp_v) :] == exp_v
+                and os.path.normpath(act_v[-len(exp_v) :]).split(os.path.sep)
+                == os.path.normpath(exp_v).split(os.path.sep)
             ):
                 return False
 
@@ -256,7 +258,7 @@ class TransformsTextUnitTest(unittest.TestCase):
 
         self.assertTrue(
             aug_chars[0]
-            == "The quick brown 'fox' coul|)n' t jump ov3r the green, gI2assy hi|_l."
+            == "The quick brown 'fox' could^'t jump over the green, grassy hi7l."
         )
         self.assertTrue(
             are_equal_metadata(
@@ -271,7 +273,7 @@ class TransformsTextUnitTest(unittest.TestCase):
 
         self.assertTrue(
             aug_unicode_chars[0]
-            == "The ჹuick brown 'fox' coul₫n' t jump ov∑r the green, Ĝrassy hîll."
+            == "The ჹuick brown 'fox' coỦldή't jump oṼer the green, grassy hiļl."
         )
         self.assertTrue(
             are_equal_metadata(

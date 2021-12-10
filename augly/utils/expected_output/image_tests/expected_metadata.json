@@ -622,6 +622,7 @@
             "intensity": 0.0,
             "name": "resize",
             "output_path": null,
+            "resample": 3,
             "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
             "src_height": 1080,
             "src_width": 1920,

@@ -2,10 +2,11 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import math
-from typing import List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple
 
 import augly.image.utils as imutils
 import numpy as np
+from PIL import Image, ImageDraw
 
 
 def crop_bboxes_helper(
@@ -465,6 +466,36 @@ def skew_bboxes_helper(bbox: Tuple, skew_factor: float, axis: int, **kwargs) -> 
     return raise AssertionError(
             f"Invalid 'axis' value: Got '{axis}', expected 0 for 'x-axis' or 1 for 'y-axis'"
         )
+
+def spatial_bbox_helper(
+    bbox: Tuple[float, float, float, float],
+    src_w: int,
+    src_h: int,
+    aug_function: Callable,
+    **kwargs,
+) -> Tuple:
+    """
+    Computes the bbox that encloses the transformed bbox in the image transformed by
+    `aug_function`. This helper can be used to compute the transformed bbox for any
+    augmentation which doesn't affect the color of the source image (e.g. any spatial
+    augmentation).
+    """
+    dummy_image = Image.new("RGB", (src_w, src_h))
+    draw = ImageDraw.Draw(dummy_image)
+    draw.rectangle(
+        (bbox[0] * src_w, bbox[1] * src_h, bbox[2] * src_w, bbox[3] * src_h),
+        fill="white",
+    )
+
+    aug_image = aug_function(dummy_image, **kwargs)
+    aug_w, aug_h = aug_image.size
+    array_image = np.array(aug_image)
+
+    white_y, white_x, _ = np.where(array_image > 0)
+    min_x, max_x = np.min(white_x), np.max(white_x)
+    min_y, max_y = np.min(white_y), np.max(white_y)
+
+    return (min_x / aug_w, min_y / aug_h, max_x / aug_w, max_y / aug_h)
 
 
 def vflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:

@@ -86,8 +86,7 @@ class LetterReplacementAugmenter(CharAugmenter):
 
         @param data: the text where the letter substitution will be applied on
         """
-        results = []
-        tokens = self.tokenizer(data)
+        tokens = tokenize(data)
         aug_word_cnt = self._generate_aug_cnt(
             len(tokens), self.aug_word_min, self.aug_word_max, self.aug_word_p
         )
@@ -98,11 +97,9 @@ class LetterReplacementAugmenter(CharAugmenter):
 
         for t_i, token in enumerate(tokens):
             if t_i not in aug_word_idxes:
-                results.append(token)
                 continue
 
-            result = ""
-            chars = self.token2char(token)
+            chars = list(token)
             aug_char_cnt = self._generate_aug_cnt(
                 len(chars), self.aug_char_min, self.aug_char_max, self.aug_char_p
             )
@@ -117,19 +114,12 @@ class LetterReplacementAugmenter(CharAugmenter):
             )
 
             if not aug_char_idxes:
-                results.append(token)
                 continue
 
             for c_i, char in enumerate(chars):
-                if c_i not in aug_char_idxes:
-                    result += char
-                    continue
+                if c_i in aug_char_idxes:
+                    chars[c_i] = self.sample(self.letter_mapping.replace(char), 1)[0]
 
-                result += self.sample(self.letter_mapping.replace(chars[c_i]), 1)[0]
+            tokens[t_i] = "".join(chars)
 
-            results.append(result)
-
-        return detokenize(results)
-
-    def _tokenizer(self, text: str) -> List[str]:
-        return tokenize(text)
+        return detokenize(tokens)

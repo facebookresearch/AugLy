@@ -450,6 +450,39 @@ class InvertChannels(BaseTransform):
         return F.invert_channels(audio, sample_rate, metadata=metadata)
 
 
+class Loop(BaseTransform):
+    def __init__(self, n: int = 1, p: float = 1.0):
+        """
+        @param n: the number of times the audio will be looped
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.n = n
+
+    def apply_transform(
+        self,
+        audio: np.ndarray,
+        sample_rate: int,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> Tuple[np.ndarray, int]:
+        """
+        Loops the audio 'n' times
+
+        @param audio: the path to the audio or a variable of type np.ndarray that
+            will be augmented
+
+        @param sample_rate: the audio sample rate of the inputted audio
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest duration, sample rates, etc. will be
+            appended to the inputted list. If set to None, no metadata will be appended
+
+        @returns: the augmented audio array and sample rate
+        """
+        return F.loop(audio, sample_rate, self.n, metadata=metadata)
+
+
 class LowPassFilter(BaseTransform):
     def __init__(self, cutoff_hz: float = 500.0, p: float = 1.0):
         """

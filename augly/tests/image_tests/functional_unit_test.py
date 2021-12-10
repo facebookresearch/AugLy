@@ -6,6 +6,7 @@ import unittest
 import augly.image as imaugs
 from augly.tests.image_tests.base_unit_test import BaseImageUnitTest
 from augly.utils import EMOJI_PATH, IMG_MASK_PATH
+from PIL import Image
 
 
 class FunctionalImageUnitTest(BaseImageUnitTest):
@@ -110,7 +111,7 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
         self.evaluate_function(imaugs.random_noise)
 
     def test_resize(self):
-        self.evaluate_function(imaugs.resize)
+        self.evaluate_function(imaugs.resize, resample=Image.BICUBIC)
 
     def test_rotate(self):
         self.evaluate_function(imaugs.rotate)

@@ -298,7 +298,6 @@
     ],
     "high_pass_filter": [
       {
-        "alpha": 0.6293073640480998,
         "cutoff_hz": 3000,
         "dst_duration": 0.853375,
         "dst_num_channels": 1,
@@ -377,9 +376,33 @@
         ]
       }
     ],
+    "loop": [
+      { 
+        "dst_duration": 1.70675,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "start": 0.0,
+            "end": 0.853375
+          }
+        ],
+        "intensity": 1.0,
+        "n": 1,
+        "name": "loop",
+        "output_path": null,
+        "src_duration": 0.853375, 
+        "src_num_channels": 1, 
+        "src_sample_rate": 32000, 
+        "src_segments": [
+          {
+            "start": 0.0, "end": 0.853375
+          }
+        ]
+      }
+    ],
     "low_pass_filter": [
       {
-        "alpha": 0.08939812957705753,
         "cutoff_hz": 500,
         "dst_duration": 0.853375,
         "dst_num_channels": 1,

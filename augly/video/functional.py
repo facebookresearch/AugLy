@@ -291,7 +291,7 @@ def blur(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     blur_aug = af.VideoAugmenterByBlur(sigma)
-    vdutils.apply_ffmpeg_augmenter(blur_aug, video_path, output_path)
+    blur_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="blur", **func_kwargs)
@@ -325,7 +325,7 @@ def brightness(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     brightness_aug = af.VideoAugmenterByBrightness(level)
-    vdutils.apply_ffmpeg_augmenter(brightness_aug, video_path, output_path)
+    brightness_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -447,7 +447,7 @@ def color_jitter(
         contrast_level=contrast_factor,
         saturation_level=saturation_factor,
     )
-    vdutils.apply_ffmpeg_augmenter(color_jitter_aug, video_path, output_path)
+    color_jitter_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -707,7 +707,7 @@ def hflip(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     hflip_aug = af.VideoAugmenterByHFlip()
-    vdutils.apply_ffmpeg_augmenter(hflip_aug, video_path, output_path)
+    hflip_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="hflip", **func_kwargs)
