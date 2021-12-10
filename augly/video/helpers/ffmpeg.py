@@ -6,7 +6,7 @@ import math
 import os
 import shutil
 import tempfile
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import augly.audio.utils as audutils
 import ffmpeg
