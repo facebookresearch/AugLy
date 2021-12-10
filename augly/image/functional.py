@@ -11,8 +11,8 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 import augly.image.utils as imutils
 import augly.utils as utils
 import numpy as np
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from augly.image.utils.bboxes import spatial_bbox_helper
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 
 def apply_lambda(
