@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import Dict, Tuple
+from typing import List, Tuple
 
 from augly.utils import validate_rgb_color
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_video_info
-from ffmpeg.nodes import FilterableStream
 
 
-class VideoAugmenterByPadding(BaseFFMPEGAugmenter):
+class VideoAugmenterByPadding(BaseVidgearFFMPEGAugmenter):
     def __init__(self, w_factor: float, h_factor: float, color: Tuple[int, int, int]):
         assert w_factor >= 0, "w_factor cannot be a negative number"
         assert h_factor >= 0, "h_factor cannot be a negative number"
@@ -19,32 +18,32 @@ class VideoAugmenterByPadding(BaseFFMPEGAugmenter):
         self.h_factor = h_factor
         self.hex_color = "%02x%02x%02x" % color
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Adds padding to the video
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
-        video_info = get_video_info(kwargs["video_path"])
+        video_info = get_video_info(video_path)
 
         left = int(video_info["width"] * self.w_factor)
         top = int(video_info["height"] * self.h_factor)
+        command = [
+            "-y",
+            "-i",
+            video_path,
+            "-vf",
+            f"pad=width={left*2}+iw:height={top*2}+ih:x={left}:y={top}:color={self.hex_color}",
+            "-c:a",
+            "copy",
+            "-preset",
+            "ultrafast",
+            output_path,
+        ]
 
-        return (
-            in_stream.video.filter(
-                "pad",
-                **{
-                    "width": f"iw+{left*2}",
-                    "height": f"ih+{top*2}",
-                    "x": left,
-                    "y": top,
-                    "color": self.hex_color,
-                },
-            ),
-            {},
-        )
+        return command
