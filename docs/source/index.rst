@@ -11,6 +11,10 @@ Welcome to AugLy's documentation!
    :caption: Contents:
 
    README.md
+   README_audio.md
+   README_image.md
+   README_video.md
+   README_text.md
    augly.audio
    augly.image
    augly.video
