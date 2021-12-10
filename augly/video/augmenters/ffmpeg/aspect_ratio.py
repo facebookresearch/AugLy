@@ -44,7 +44,7 @@ class VideoAugmenterByAspectRatio(BaseVidgearFFMPEGAugmenter):
             video_path,
             "-vf",
             f"scale=width={new_w}:height={new_h},"
-            + f"pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2,"
+            + "pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2,"
             + f"setsar=ratio={self.aspect_ratio},"
             + f"setdar=ratio={self.aspect_ratio}",
             "-c:a",

@@ -35,7 +35,7 @@ class VideoAugmenterByAudioSwap(BaseVidgearFFMPEGAugmenter):
         start = self.offset
         end = start + float(video_info["duration"])
 
-        audio_filters = f"atrim={start}:{end}," + f"asetpts=PTS-STARTPTS"
+        audio_filters = f"atrim={start}:{end}," + "asetpts=PTS-STARTPTS"
 
         if end > audio_duration:
             pad_len = (end - audio_duration) * audio_sample_rate
