@@ -1,7 +1,0 @@
-timm
-pytorch
-torchvision
-augly>=0.1.10
-pandas
-Pillow
-kaleido

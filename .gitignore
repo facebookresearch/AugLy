@@ -1,51 +1,21 @@
-# compilation and distribution
-__pycache__
-_ext
-*.pyc
-*.so
+# Dependencies
+node_modules
 
-# pytorch/python/numpy formats
-*.pth
-*.npy
+# Production
+build
 
-# ipython/jupyter notebooks
-**/.ipynb_checkpoints/
+# Generated files
+.docusaurus
+.cache-loader
 
-# Editor temporaries
-*.swn
-*.swo
-*.swp
-*~
-
-# Pycharm editor settings
-.idea
-
-# project dirs
-/datasets
-/models
-/old_models
-
-slurm-*
-log.txt
-
-# OSX-specific
+# Misc
 .DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
