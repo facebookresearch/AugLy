@@ -2,7 +2,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from augly.text.augmenters.utils import (
     detokenize,
@@ -29,11 +29,11 @@ class WordReplacement(object):
         else:
             self.mapping = {}
 
-    def replace(self, word: str) -> str:
+    def replace(self, word: str) -> Tuple[str, bool]:
         new_word = self.mapping.get(word, None) or self.mapping.get(word.lower(), None)
         if new_word is not None and word[0].isupper():
             new_word = new_word.capitalize()
-        return new_word or word
+        return (new_word, True) if new_word else (word, False)
 
 
 class WordReplacementAugmenter(WordAugmenter):
@@ -98,11 +98,14 @@ class WordReplacementAugmenter(WordAugmenter):
         if not aug_word_idxes:
             return data
 
+        is_diff = False
         for t_i, token in enumerate(tokens):
             if t_i not in aug_word_idxes:
                 results.append(token)
                 continue
 
-            results.append(self.word_mapping.replace(token))
+            new_token, has_changed = self.word_mapping.replace(token)
+            is_diff = is_diff or has_changed
+            results.append(new_token)
 
-        return detokenize(results)
+        return detokenize(results) if is_diff else data
