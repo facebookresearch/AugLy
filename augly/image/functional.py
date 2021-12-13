@@ -2412,7 +2412,7 @@ def skew(
     if axis == 0:
         data = (1, skew_factor, -skew_factor * h / 2, 0, 1, 0)
     elif axis == 1:
-        data = (1, 0, 0, skew_factor, 1, -skew_factor*w/2)
+        data = (1, 0, 0, skew_factor, 1, -skew_factor * w / 2)
     else:
         raise AssertionError(
             f"Invalid 'axis' value: Got '{axis}', expected 0 for 'x-axis' or 1 for 'y-axis'"
