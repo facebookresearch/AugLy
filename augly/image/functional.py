@@ -2410,7 +2410,7 @@ def skew(
     w, h = image.size
 
     if axis == 0:
-        data = (1, skew_factor, -skew_factor*h/2, 0, 1, 0)
+        data = (1, skew_factor, -skew_factor * h / 2, 0, 1, 0)
     elif axis == 1:
         data = (1, 0, 0, skew_factor, 1, -skew_factor*w/2)
     else:
