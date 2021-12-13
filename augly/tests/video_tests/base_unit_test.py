@@ -74,7 +74,7 @@ class BaseVideoUnitTest(unittest.TestCase):
 
     def test_import(self) -> None:
         try:
-            import augly.video as vidaugs
+            from augly import video as vidaugs
         except ImportError:
             self.fail("vidaugs failed to import")
         self.assertTrue(dir(vidaugs), "Video directory does not exist")

@@ -8,15 +8,15 @@ import shutil
 import tempfile
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.audio as audaugs
-import augly.audio.utils as audutils
-import augly.image as imaugs
-import augly.utils as utils
-import augly.video.augmenters.cv2 as ac
-import augly.video.augmenters.ffmpeg as af
-import augly.video.helpers as helpers
-import augly.video.utils as vdutils
 import numpy as np
+from augly import audio as audaugs
+from augly import image as imaugs
+from augly import utils
+from augly.audio import utils as audutils
+from augly.video import helpers
+from augly.video import utils as vdutils
+from augly.video.augmenters import cv2 as ac
+from augly.video.augmenters import ffmpeg as af
 
 
 def add_noise(

@@ -4,10 +4,10 @@
 import numbers
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import augly.audio.intensity as audintensity
-import augly.utils as utils
 import numpy as np
 import torch
+from augly import utils
+from augly.audio import intensity as audintensity
 from augly.utils.libsndfile import install_libsndfile
 
 

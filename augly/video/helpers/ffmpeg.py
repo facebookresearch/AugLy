@@ -8,9 +8,9 @@ import shutil
 import tempfile
 from typing import Any, Dict, List, Optional
 
-import augly.audio.utils as audutils
 import ffmpeg
 import numpy as np
+from augly.audio import utils as audutils
 from augly.utils import pathmgr, SILENT_AUDIO_PATH
 from augly.utils.ffmpeg import FFMPEG_PATH, FFPROBE_PATH
 from ffmpeg.nodes import FilterableStream

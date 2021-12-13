@@ -5,9 +5,9 @@ import math
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.audio.utils as audutils
 import numpy as np
 import torch
+from augly.audio import utils as audutils
 from augly.utils import DEFAULT_SAMPLE_RATE
 from augly.utils.libsndfile import install_libsndfile
 

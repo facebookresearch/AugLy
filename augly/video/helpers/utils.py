@@ -7,12 +7,12 @@ import shutil
 import tempfile
 from typing import Any, Dict, List, Optional, Tuple
 
-import augly.utils as utils
-import augly.video.helpers as helpers
 import cv2
 import ffmpeg
 import numpy as np
+from augly import utils
 from augly.utils.ffmpeg import FFMPEG_PATH
+from augly.video import helpers
 
 
 DEFAULT_FRAME_RATE = 10

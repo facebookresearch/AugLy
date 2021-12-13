@@ -3,8 +3,8 @@
 
 from typing import Any, Dict, List, Optional, Tuple
 
-import augly.image.intensity as imint
-import augly.image.utils as imutils
+from augly.image import intensity as imint
+from augly.image import utils as imutils
 from augly.video.helpers import get_video_info
 
 

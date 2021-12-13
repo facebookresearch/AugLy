@@ -4,7 +4,7 @@
 import json
 import unittest
 
-import augly.video as vidaugs
+from augly import video as vidaugs
 from augly.tests.video_tests.base_unit_test import BaseVideoUnitTest
 from augly.utils import VIDEO_METADATA_PATH
 from augly.utils.ffmpeg import get_conditional_for_skipping_video_tests

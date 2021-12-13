@@ -30,7 +30,7 @@ class BaseAudioUnitTest(unittest.TestCase):
 
     def test_import(self) -> None:
         try:
-            import augly.audio as audaugs
+            from augly import audio as audaugs
         except ImportError:
             self.fail("audaugs failed to import")
         self.assertTrue(dir(audaugs), "Audio directory does not exist")

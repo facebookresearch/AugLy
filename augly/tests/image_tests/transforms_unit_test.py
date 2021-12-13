@@ -5,7 +5,7 @@ import json
 import random
 import unittest
 
-import augly.image as imaugs
+from augly import image as imaugs
 from augly.tests.image_tests.base_unit_test import BaseImageUnitTest
 from augly.utils import (
     EMOJI_PATH,

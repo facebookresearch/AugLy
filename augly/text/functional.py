@@ -4,8 +4,8 @@
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Union
 
-import augly.text.augmenters as a
-import augly.text.utils as txtutils
+from augly.text import augmenters as a
+from augly.text import utils as txtutils
 from augly.utils import (
     CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,

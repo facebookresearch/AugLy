@@ -5,10 +5,10 @@ import os
 import random
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-import augly.audio as audaugs
-import augly.utils as utils
-import augly.video.functional as F
 import numpy as np
+from augly import audio as audaugs
+from augly import utils
+from augly.video import functional as F
 from augly.video.helpers import identity_function
 
 

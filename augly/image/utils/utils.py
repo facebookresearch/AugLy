@@ -6,8 +6,8 @@ import math
 import os
 from typing import List, Optional, Tuple, Union
 
-import augly.utils as utils
 import numpy as np
+from augly import utils
 from PIL import Image
 
 JPEG_EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG"]
