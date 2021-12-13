@@ -1,0 +1,21 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+:root {
+  --ifm-color-primary: #199696;
+  --ifm-color-primary-dark: #1d7b7b;
+  --ifm-color-primary-darker: #1e6262;
+  --ifm-color-primary-darkest: #1b4949;
+  --ifm-color-primary-light: #52a7a7;
+  --ifm-color-primary-lighter: #78b9b8;
+  --ifm-color-primary-lightest: #9bcac9;
+  --ifm-code-font-size: 95%;
+}
+
+.main-wrapper a:link:not(.button) {
+  text-decoration: underline;
+}
