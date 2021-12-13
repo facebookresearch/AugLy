@@ -2423,7 +2423,7 @@ def skew(
         metadata=metadata,
         function_name="skew",
         aug_image=aug_image,
-        bbox_helper_func=spatial_bbox_helper,
+        bboxes_helper_func=spatial_bbox_helper,
         **func_kwargs,
     )
 
