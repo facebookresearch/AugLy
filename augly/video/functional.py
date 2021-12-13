@@ -130,7 +130,7 @@ def audio_swap(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     audio_swap_aug = af.VideoAugmenterByAudioSwap(audio_path, offset)
-    vdutils.apply_ffmpeg_augmenter(audio_swap_aug, video_path, output_path)
+    audio_swap_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -362,7 +362,7 @@ def change_aspect_ratio(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     aspect_ratio_aug = af.VideoAugmenterByAspectRatio(ratio)
-    vdutils.apply_ffmpeg_augmenter(aspect_ratio_aug, video_path, output_path)
+    aspect_ratio_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -1164,7 +1164,7 @@ def overlay(
     overlay_aug = af.VideoAugmenterByOverlay(
         tmp_overlay_path or overlay_path, x_factor, y_factor, use_overlay_audio
     )
-    vdutils.apply_ffmpeg_augmenter(overlay_aug, video_path, output_path)
+    overlay_aug.add_augmenter(video_path, output_path)
 
     if tmp_overlay_path:
         os.remove(tmp_overlay_path)
