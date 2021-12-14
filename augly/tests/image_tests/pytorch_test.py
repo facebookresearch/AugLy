@@ -3,9 +3,9 @@
 
 import unittest
 
-import augly.image as imaugs
 import torch
 import torchvision.transforms as transforms  # @manual
+from augly import image as imaugs
 from augly.tests import ImageAugConfig
 from augly.utils import pathmgr
 from PIL import Image

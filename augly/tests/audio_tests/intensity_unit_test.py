@@ -3,8 +3,8 @@
 
 import unittest
 
-import augly.audio as audaugs
 import numpy as np
+from augly import audio as audaugs
 
 
 class IntensityAudioUnitTest(unittest.TestCase):

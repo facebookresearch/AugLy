@@ -8,7 +8,7 @@ import random
 import unittest
 from typing import Any, Dict, List
 
-import augly.text as txtaugs
+from augly import text as txtaugs
 from augly.utils import TEXT_METADATA_PATH
 
 

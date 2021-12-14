@@ -4,8 +4,8 @@
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-import augly.image.intensity as imintensity
-import augly.image.utils.bboxes as imbboxes
+from augly.image import intensity as imintensity
+from augly.image.utils import bboxes as imbboxes
 from PIL import Image
 
 

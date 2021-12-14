@@ -5,7 +5,7 @@
 import random
 import unittest
 
-import augly.text as txtaugs
+from augly import text as txtaugs
 from augly.utils import FUN_FONTS_GREEK_PATH
 
 

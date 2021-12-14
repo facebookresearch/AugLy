@@ -5,8 +5,8 @@ import json
 import random
 import unittest
 
-import augly.audio as audaugs
-import augly.video as vidaugs
+from augly import audio as audaugs
+from augly import video as vidaugs
 from augly.tests.base_configs import VideoAugConfig
 from augly.tests.video_tests.base_unit_test import BaseVideoUnitTest
 from augly.utils import VIDEO_METADATA_PATH

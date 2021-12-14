@@ -4,9 +4,9 @@
 from copy import deepcopy
 from typing import Any, Dict, List, Optional, Tuple
 
-import augly.utils as utils
-import augly.video.helpers as helpers
-import augly.video.helpers.intensity as vdintensity
+from augly import utils
+from augly.video import helpers
+from augly.video.helpers import intensity as vdintensity
 
 
 Segment = utils.Segment

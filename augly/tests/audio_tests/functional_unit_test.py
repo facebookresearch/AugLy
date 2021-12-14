@@ -3,7 +3,7 @@
 
 import unittest
 
-import augly.audio as audaugs
+from augly import audio as audaugs
 from augly.tests.audio_tests.base_unit_test import BaseAudioUnitTest
 
 

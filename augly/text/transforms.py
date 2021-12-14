@@ -5,7 +5,7 @@ import inspect
 import random
 from typing import Any, Callable, Dict, List, Optional, Union
 
-import augly.text.functional as F
+from augly.text import functional as F
 from augly.utils import (
     CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,

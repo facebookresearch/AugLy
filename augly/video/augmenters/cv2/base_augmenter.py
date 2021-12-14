@@ -22,9 +22,9 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Iterator, List, Optional, Tuple
 
-import augly.utils as utils
 import cv2
 import numpy as np
+from augly import utils
 from augly.video.helpers import extract_frames_to_dir
 
 
