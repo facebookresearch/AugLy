@@ -88,6 +88,7 @@ class BaseImageUnitTest(unittest.TestCase):
             file_dst = Image.open(tmpfile.name)
 
         pil_dst = aug_function(self.img, **kwargs)
+        pil_dst.save("/tmp/test_skew.png")
 
         self.assertTrue(
             are_equal_images(pil_dst, ref), "Expected and outputted images do not match"

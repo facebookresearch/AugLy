@@ -128,10 +128,10 @@ def transform_bboxes(
             imbboxes, f"{function_name}_bboxes_helper", lambda bbox, **_: bbox
         )
 
+    func_kwargs = deepcopy(kwargs)
+    func_kwargs.pop("src_bboxes", None)
     transformed_norm_bboxes = [
-        bboxes_helper_func(
-            bbox=bbox, function_name=function_name, src_w=src_w, src_h=src_h, **kwargs
-        )
+        bboxes_helper_func(bbox=bbox, src_w=src_w, src_h=src_h, **func_kwargs)
         for bbox in norm_bboxes
     ]
 
@@ -187,7 +187,7 @@ def get_metadata(
         function_name=function_name,
         image=image,
         aug_image=aug_image,
-        bbox_helper_func=bboxes_helper_func,
+        bboxes_helper_func=bboxes_helper_func,
         **kwargs,
     )
 
@@ -197,6 +197,7 @@ def get_metadata(
     kwargs_types_fixed = dict(
         (k, list(v)) if isinstance(v, tuple) else (k, v) for k, v in kwargs.items()
     )
+    kwargs_types_fixed.pop("aug_function", None)
 
     metadata.append(
         {

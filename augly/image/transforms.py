@@ -2069,36 +2069,36 @@ class ShufflePixels(BaseTransform):
             bbox_format=bbox_format,
         )
 
-    
+
 class Skew(BaseTransform):
     def __init__(self, skew_factor: float = 0.5, axis: int = 0, p: float = 1.0):
         """
         @param skew_factor: the level of skew to apply to the image; a larger absolute value will
             result in a more intense skew. Recommended range is between [-2, 2]
-            
+
         @param axis: the axis along which the image will be skewed; can be set to 0 (x-axis)
             or 1 (y-axis)
         """
         super().__init__(p)
         self.skew_factor = skew_factor
         self.axis = axis
-        
+
     def apply_transform(
-        self, 
-        image: Image.Image, 
+        self,
+        image: Image.Image,
         metadata: Optional[List[Dict[str, Any]]] = None,
         bboxes: Optional[List[Tuple]] = None,
         bbox_format: Optional[str] = None,
     ) -> Image.Image:
         """
         Skews an image with respect to its x or y-axis
-        
+
         @param image: PIL Image to be augmented
-        
+
         @param metadata: if set to be a list, metadata about the function execution
             including its name, the source & dest width, height, etc. will be appended to
             the inputted list. If set to None, no metadata will be appended or returned
-            
+
         @param bboxes: a list of bounding boxes can be passed in here if desired. If
             provided, this list will be modified in place such that each bounding box is
             transformed according to this function
@@ -2106,7 +2106,7 @@ class Skew(BaseTransform):
         @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
             specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
             are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
-            
+
         @returns: Augmented PIL Image
         """
         return F.skew(
