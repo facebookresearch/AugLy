@@ -22,7 +22,7 @@ with open("README.md", encoding="utf8") as f:
 
 setuptools.setup(
     name="augly",
-    version=open("version.txt", "r").read(),
+    version=open("version.txt", "r").read().strip(),
     description="A data augmentations library for audio, image, text, & video.",
     long_description=readme,
     long_description_content_type="text/markdown",
