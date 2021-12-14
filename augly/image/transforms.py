@@ -5,8 +5,8 @@ import os
 import random
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.image.functional as F
-import augly.utils as utils
+from augly import utils
+from augly.image import functional as F
 from PIL import Image, ImageFilter
 
 

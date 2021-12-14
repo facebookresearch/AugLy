@@ -7,10 +7,10 @@ import shutil
 import tempfile
 from typing import Callable, Dict, List, Optional, Union
 
-import augly.utils as utils
-import augly.video.augmenters.cv2 as ac
-import augly.video.augmenters.ffmpeg as af
-import augly.video.helpers as helpers
+from augly import utils
+from augly.video import helpers as helpers
+from augly.video.augmenters import cv2 as ac
+from augly.video.augmenters import ffmpeg as af
 
 
 """

@@ -5,8 +5,8 @@ import json
 import random
 import unittest
 
-import augly.audio as audaugs
 import numpy as np
+from augly import audio as audaugs
 from augly.tests.audio_tests.base_unit_test import BaseAudioUnitTest
 from augly.utils import AUDIO_METADATA_PATH
 

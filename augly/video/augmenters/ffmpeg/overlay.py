@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-from typing import Dict, Tuple
+from typing import List
 
-import ffmpeg  # @manual
 from augly.utils import is_image_file, is_video_file, pathmgr
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_video_info
-from ffmpeg.nodes import FilterableStream
 
 
-class VideoAugmenterByOverlay(BaseFFMPEGAugmenter):
+class VideoAugmenterByOverlay(BaseVidgearFFMPEGAugmenter):
     def __init__(
         self,
         overlay_path: str,
@@ -32,30 +30,35 @@ class VideoAugmenterByOverlay(BaseFFMPEGAugmenter):
         self.y_factor = y_factor
         self.use_overlay_audio = use_overlay_audio and is_video_file(overlay_path)
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Overlays media onto the video
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
-        video_info = get_video_info(kwargs["video_path"])
+        video_info = get_video_info(video_path)
 
         new_width = video_info["width"] * self.x_factor
         new_height = video_info["height"] * self.y_factor
 
-        overlay = ffmpeg.input(self.overlay_path)
-        overlayed_video = ffmpeg.overlay(in_stream, overlay, x=new_width, y=new_height)
+        command = [
+            "-y",
+            "-i",
+            video_path,
+            "-i",
+            self.overlay_path,
+            "-filter_complex",
+            f"[0:v][1:v] overlay={new_width}:{new_height}",
+            "-map",
+            f"{int(self.use_overlay_audio)}:a:0",
+            "-preset",
+            "ultrafast",
+            output_path,
+        ]
 
-        return (
-            (
-                ffmpeg.concat(overlayed_video, overlay.audio, v=1, a=1)
-                if self.use_overlay_audio
-                else overlayed_video
-            ),
-            {},
-        )
+        return command

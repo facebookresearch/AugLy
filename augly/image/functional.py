@@ -8,10 +8,10 @@ import pickle
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.image.utils as imutils
-import augly.utils as utils
 import numpy as np
 from augly.image.utils.bboxes import spatial_bbox_helper
+from augly import utils
+from augly.image import utils as imutils
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 

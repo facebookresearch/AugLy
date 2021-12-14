@@ -4,9 +4,9 @@
 import random
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.audio.functional as F
-import augly.utils as utils
 import numpy as np
+from augly import utils
+from augly.audio import functional as F
 from augly.audio.utils import RNGSeed
 
 

@@ -66,7 +66,7 @@ class BaseImageUnitTest(unittest.TestCase):
 
     def test_import(self) -> None:
         try:
-            import augly.image as imaugs
+            from augly import image as imaugs
         except ImportError:
             self.fail("imaugs failed to import")
         self.assertTrue(dir(imaugs), "Image directory does not exist")

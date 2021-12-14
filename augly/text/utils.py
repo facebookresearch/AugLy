@@ -5,8 +5,8 @@ import json
 from copy import deepcopy
 from typing import Any, Dict, List, Optional, Union
 
-import augly.text.intensity as txtintensity
-import augly.utils as utils
+from augly import utils
+from augly.text import intensity as txtintensity
 
 
 def get_func_kwargs(

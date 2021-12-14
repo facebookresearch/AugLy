@@ -4,8 +4,8 @@
 import math
 from typing import Callable, List, Optional, Tuple
 
-import augly.image.utils as imutils
 import numpy as np
+from augly.image import utils as imutils
 from PIL import Image, ImageDraw
 
 
