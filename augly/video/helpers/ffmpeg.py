@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-import io
 import math
 import os
 import shutil
@@ -13,7 +12,6 @@ import numpy as np
 from augly.audio import utils as audutils
 from augly.utils import pathmgr, SILENT_AUDIO_PATH
 from augly.utils.ffmpeg import FFMPEG_PATH, FFPROBE_PATH
-from ffmpeg.nodes import FilterableStream
 from vidgear.gears import WriteGear
 
 
