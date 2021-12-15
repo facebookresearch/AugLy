@@ -197,7 +197,8 @@ def get_metadata(
     kwargs_types_fixed = dict(
         (k, list(v)) if isinstance(v, tuple) else (k, v) for k, v in kwargs.items()
     )
-    kwargs_types_fixed.pop("aug_function", None)
+    if bboxes_helper_func.__name__ == "spatial_bbox_helper":
+        kwargs_types_fixed.pop("aug_function", None)
 
     metadata.append(
         {
