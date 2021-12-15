@@ -23,7 +23,7 @@ copyright = "2021, Joanna Bitton and Zoe Papakipos"
 author = "Joanna Bitton and Zoe Papakipos"
 
 # The full version, including alpha/beta/rc tags
-release = open("../../version.txt", "r").read()
+release = open("../../version.txt", "r").read().strip()
 
 
 # -- General configuration ---------------------------------------------------
