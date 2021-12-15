@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import os
 import random
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.image.functional as F
-import augly.utils as utils
+from augly import utils
+from augly.image import functional as F
 from PIL import Image, ImageFilter
 
 

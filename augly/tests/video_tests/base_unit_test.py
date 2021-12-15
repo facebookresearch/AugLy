@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import hashlib
 import os
@@ -74,7 +78,7 @@ class BaseVideoUnitTest(unittest.TestCase):
 
     def test_import(self) -> None:
         try:
-            import augly.video as vidaugs
+            from augly import video as vidaugs
         except ImportError:
             self.fail("vidaugs failed to import")
         self.assertTrue(dir(vidaugs), "Video directory does not exist")

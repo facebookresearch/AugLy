@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import os
 import random
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-import augly.audio as audaugs
-import augly.utils as utils
-import augly.video.functional as F
 import numpy as np
+from augly import audio as audaugs
+from augly import utils
+from augly.video import functional as F
 from augly.video.helpers import identity_function
 
 

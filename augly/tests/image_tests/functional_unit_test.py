@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import unittest
 
-import augly.image as imaugs
+from augly import image as imaugs
 from augly.tests.image_tests.base_unit_test import BaseImageUnitTest
 from augly.utils import EMOJI_PATH, IMG_MASK_PATH
 from PIL import Image

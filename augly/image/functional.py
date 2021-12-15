@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import io
 import math
@@ -8,9 +12,9 @@ import pickle
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.image.utils as imutils
-import augly.utils as utils
 import numpy as np
+from augly import utils
+from augly.image import utils as imutils
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 

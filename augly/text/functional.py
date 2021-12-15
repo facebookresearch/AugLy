@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Union
 
-import augly.text.augmenters as a
-import augly.text.utils as txtutils
+from augly.text import augmenters as a
+from augly.text import utils as txtutils
 from augly.utils import (
     CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,

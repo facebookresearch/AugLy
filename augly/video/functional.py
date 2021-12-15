@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import functools
 import math
@@ -8,15 +12,15 @@ import shutil
 import tempfile
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.audio as audaugs
-import augly.audio.utils as audutils
-import augly.image as imaugs
-import augly.utils as utils
-import augly.video.augmenters.cv2 as ac
-import augly.video.augmenters.ffmpeg as af
-import augly.video.helpers as helpers
-import augly.video.utils as vdutils
 import numpy as np
+from augly import audio as audaugs
+from augly import image as imaugs
+from augly import utils
+from augly.audio import utils as audutils
+from augly.video import helpers
+from augly.video import utils as vdutils
+from augly.video.augmenters import cv2 as ac
+from augly.video.augmenters import ffmpeg as af
 
 
 def add_noise(
@@ -130,7 +134,7 @@ def audio_swap(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     audio_swap_aug = af.VideoAugmenterByAudioSwap(audio_path, offset)
-    vdutils.apply_ffmpeg_augmenter(audio_swap_aug, video_path, output_path)
+    audio_swap_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -362,7 +366,7 @@ def change_aspect_ratio(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     aspect_ratio_aug = af.VideoAugmenterByAspectRatio(ratio)
-    vdutils.apply_ffmpeg_augmenter(aspect_ratio_aug, video_path, output_path)
+    aspect_ratio_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -399,7 +403,7 @@ def change_video_speed(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     speed_aug = af.VideoAugmenterBySpeed(factor)
-    vdutils.apply_ffmpeg_augmenter(speed_aug, video_path, output_path)
+    speed_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -526,7 +530,7 @@ def contrast(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     contrast_aug = af.VideoAugmenterByContrast(level)
-    vdutils.apply_ffmpeg_augmenter(contrast_aug, video_path, output_path)
+    contrast_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="contrast", **func_kwargs)
@@ -607,7 +611,7 @@ def encoding_quality(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     encoding_aug = af.VideoAugmenterByQuality(quality)
-    vdutils.apply_ffmpeg_augmenter(encoding_aug, video_path, output_path)
+    encoding_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -643,7 +647,7 @@ def fps(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     fps_aug = af.VideoAugmenterByFPSChange(fps)
-    vdutils.apply_ffmpeg_augmenter(fps_aug, video_path, output_path)
+    fps_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="fps", **func_kwargs)
@@ -673,7 +677,7 @@ def grayscale(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     grayscale_aug = af.VideoAugmenterByGrayscale()
-    vdutils.apply_ffmpeg_augmenter(grayscale_aug, video_path, output_path)
+    grayscale_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -1164,7 +1168,7 @@ def overlay(
     overlay_aug = af.VideoAugmenterByOverlay(
         tmp_overlay_path or overlay_path, x_factor, y_factor, use_overlay_audio
     )
-    vdutils.apply_ffmpeg_augmenter(overlay_aug, video_path, output_path)
+    overlay_aug.add_augmenter(video_path, output_path)
 
     if tmp_overlay_path:
         os.remove(tmp_overlay_path)
@@ -2021,7 +2025,7 @@ def time_crop(
     time_crop_aug = af.VideoAugmenterByTrim(
         offset_factor=offset_factor, duration_factor=duration_factor
     )
-    vdutils.apply_ffmpeg_augmenter(time_crop_aug, video_path, output_path)
+    time_crop_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(
@@ -2127,7 +2131,7 @@ def trim(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     trim_aug = af.VideoAugmenterByTrim(start=start, end=end)
-    vdutils.apply_ffmpeg_augmenter(trim_aug, video_path, output_path)
+    trim_aug.add_augmenter(video_path, output_path)
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, function_name="trim", **func_kwargs)

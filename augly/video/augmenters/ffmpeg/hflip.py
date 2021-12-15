@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 from typing import List
 
@@ -16,7 +20,7 @@ class VideoAugmenterByHFlip(BaseVidgearFFMPEGAugmenter):
         @param output_path: the path in which the resulting video will be stored.
 
         @returns: a list of strings containing the CLI FFMPEG command for
-            the augmentation in a command line
+            the augmentation
         """
         command = [
             "-y",

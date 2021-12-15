@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import os
 import tempfile
@@ -66,7 +70,7 @@ class BaseImageUnitTest(unittest.TestCase):
 
     def test_import(self) -> None:
         try:
-            import augly.image as imaugs
+            from augly import image as imaugs
         except ImportError:
             self.fail("imaugs failed to import")
         self.assertTrue(dir(imaugs), "Image directory does not exist")
