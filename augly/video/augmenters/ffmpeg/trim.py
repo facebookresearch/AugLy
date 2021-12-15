@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
-from typing import Dict, Optional, Tuple
+from typing import List, Optional
 
-import ffmpeg  # @manual
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
-from augly.video.helpers import get_video_info, has_audio_stream
-from ffmpeg.nodes import FilterableStream
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
+from augly.video.helpers import get_video_info
 
 
-class VideoAugmenterByTrim(BaseFFMPEGAugmenter):
+class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
     def __init__(
         self,
         start: Optional[float] = None,
@@ -39,18 +41,18 @@ class VideoAugmenterByTrim(BaseFFMPEGAugmenter):
             self.offset_factor = offset_factor
             self.duration_factor = duration_factor
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Trims the video
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
-        video_info = get_video_info(kwargs["video_path"])
+        video_info = get_video_info(video_path)
         duration = float(video_info["duration"])
 
         if self.start is None and self.end is None:
@@ -62,15 +64,17 @@ class VideoAugmenterByTrim(BaseFFMPEGAugmenter):
         elif self.end is None:
             self.end = duration
 
-        video = in_stream.video.trim(start=self.start, end=self.end).setpts(
-            "PTS-STARTPTS"
-        )
+        command = [
+            "-y",
+            "-i",
+            video_path,
+            "-vf",
+            f"trim={self.start}:{self.end}," + "setpts=PTS-STARTPTS",
+            "-af",
+            f"atrim={self.start}:{self.end}," + "asetpts=PTS-STARTPTS",
+            "-preset",
+            "ultrafast",
+            output_path,
+        ]
 
-        if has_audio_stream(kwargs["video_path"]):
-            audio = in_stream.audio.filter_(
-                "atrim", start=self.start, end=self.end
-            ).filter_("asetpts", "PTS-STARTPTS")
-
-            return ffmpeg.concat(video, audio, v=1, a=1), {}
-
-        return video, {}
+        return command

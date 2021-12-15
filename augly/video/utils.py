@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import functools
 import os
@@ -7,10 +11,10 @@ import shutil
 import tempfile
 from typing import Callable, Dict, List, Optional, Union
 
-import augly.utils as utils
-import augly.video.augmenters.cv2 as ac
-import augly.video.augmenters.ffmpeg as af
-import augly.video.helpers as helpers
+from augly import utils
+from augly.video import helpers as helpers
+from augly.video.augmenters import cv2 as ac
+from augly.video.augmenters import ffmpeg as af
 
 
 """

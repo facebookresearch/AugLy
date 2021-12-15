@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 # @lint-ignore-every UTF8
 
 import random
 import unittest
 
-import augly.text as txtaugs
+from augly import text as txtaugs
 from augly.utils import FUN_FONTS_GREEK_PATH
 
 

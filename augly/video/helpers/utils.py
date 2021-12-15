@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import math
 import os
@@ -7,12 +11,12 @@ import shutil
 import tempfile
 from typing import Any, Dict, List, Optional, Tuple
 
-import augly.utils as utils
-import augly.video.helpers as helpers
 import cv2
 import ffmpeg
 import numpy as np
+from augly import utils
 from augly.utils.ffmpeg import FFMPEG_PATH
+from augly.video import helpers
 
 
 DEFAULT_FRAME_RATE = 10

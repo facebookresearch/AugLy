@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
-import math
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.audio.utils as audutils
 import numpy as np
 import torch
+from augly.audio import utils as audutils
 from augly.utils import DEFAULT_SAMPLE_RATE
 from augly.utils.libsndfile import install_libsndfile
 
@@ -460,18 +463,19 @@ def high_pass_filter(
     aug_audio, out_sample_rate = sox_effects.apply_effects_tensor(
         torch.Tensor(audio), sample_rate, [["highpass", str(cutoff_hz)]]
     )
+    high_pass_array = aug_audio.numpy()
 
     if metadata is not None:
         audutils.get_metadata(
             metadata=metadata,
             function_name="high_pass_filter",
-            dst_audio=aug_audio,
+            dst_audio=high_pass_array,
             dst_sample_rate=out_sample_rate,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(aug_audio, output_path, out_sample_rate)
+    return audutils.ret_and_save_audio(high_pass_array, output_path, out_sample_rate)
 
 
 def insert_in_background(
@@ -690,18 +694,19 @@ def low_pass_filter(
     aug_audio, out_sample_rate = sox_effects.apply_effects_tensor(
         torch.Tensor(audio), sample_rate, [["lowpass", str(cutoff_hz)]]
     )
+    low_pass_array = aug_audio.numpy()
 
     if metadata is not None:
         audutils.get_metadata(
             metadata=metadata,
             function_name="low_pass_filter",
-            dst_audio=aug_audio,
+            dst_audio=low_pass_array,
             dst_sample_rate=out_sample_rate,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(aug_audio, output_path, out_sample_rate)
+    return audutils.ret_and_save_audio(low_pass_array, output_path, out_sample_rate)
 
 
 def normalize(
