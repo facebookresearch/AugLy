@@ -12,13 +12,13 @@ Welcome to AugLy's documentation!
 
    README.md
    README_audio.md
-   README_image.md
-   README_video.md
-   README_text.md
    augly.audio
+   README_image.md
    augly.image
-   augly.video
+   README_text.md
    augly.text
+   README_video.md
+   augly.video
 
 Indices and tables
 ==================

@@ -9,9 +9,7 @@ Subpackages
 
    augly.audio
    augly.image
-   augly.tests
    augly.text
-   augly.utils
    augly.video
 
 Module contents

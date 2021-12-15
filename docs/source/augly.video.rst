@@ -37,14 +37,6 @@ augly.video.transforms module
    :undoc-members:
    :show-inheritance:
 
-augly.video.utils module
-------------------------
-
-.. automodule:: augly.video.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

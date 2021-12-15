@@ -20,14 +20,6 @@ augly.video.helpers.intensity module
    :undoc-members:
    :show-inheritance:
 
-augly.video.helpers.metadata module
------------------------------------
-
-.. automodule:: augly.video.helpers.metadata
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 augly.video.helpers.utils module
 --------------------------------
 

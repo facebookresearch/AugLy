@@ -36,14 +36,6 @@ augly.audio.transforms module
    :undoc-members:
    :show-inheritance:
 
-augly.audio.utils module
-------------------------
-
-.. automodule:: augly.audio.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 
