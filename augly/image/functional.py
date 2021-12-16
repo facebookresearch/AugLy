@@ -1087,10 +1087,6 @@ def overlay_emoji(
     """
     image = imutils.validate_and_load_image(image)
 
-    func_kwargs = imutils.get_func_kwargs(metadata, locals())
-
-    local_emoji_path = utils.pathmgr.get_local_path(emoji_path)
-
     np.random.seed(seed)
 
     if isinstance(emoji_size, tuple):
@@ -1099,6 +1095,10 @@ def overlay_emoji(
         x_pos = np.random.uniform(x_pos[0], x_pos[1])
     if isinstance(y_pos, tuple):
         y_pos = np.random.uniform(y_pos[0], y_pos[1])
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+
+    local_emoji_path = utils.pathmgr.get_local_path(emoji_path)
 
     aug_image = overlay_image(
         image,
