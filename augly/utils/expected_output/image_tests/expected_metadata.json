@@ -152,7 +152,8 @@
             "src_height": 1080,
             "src_width": 1920,
             "x_pos": 0.4,
-            "y_pos": 0.8
+            "y_pos": 0.8,
+            "seed": 42
         }
     ],
     "contrast": [
@@ -318,7 +319,8 @@
             "src_height": 1080,
             "src_width": 1920,
             "x_pos": 0.4,
-            "y_pos": 0.8
+            "y_pos": 0.8,
+            "seed": 42
         }
     ],
     "overlay_image": [
@@ -569,9 +571,9 @@
             "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
             "dst_height": 1080,
             "dst_width": 1920,
-            "emoji_path": "twemojis/smileys/beating_heart.png",
-            "emoji_size": 0.15,
-            "intensity": 2.25,
+            "emoji_path": "twemojis/smileys/face_screaming_in_fear.png",
+            "emoji_size": 0.20618101782710435,
+            "intensity": 4.251061211222072,
             "name": "overlay_emoji",
             "opacity": 1.0,
             "output_path": null,
@@ -579,7 +581,8 @@
             "src_height": 1080,
             "src_width": 1920,
             "x_pos": 0.4,
-            "y_pos": 0.4
+            "y_pos": 0.8,
+            "seed": 42
         }
     ],
     "RandomPixelization": [
