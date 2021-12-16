@@ -2318,6 +2318,7 @@ class RandomBrightness(BaseRandomRangeTransform):
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,
+            seed=self.seed,
         )
 
 
@@ -2326,9 +2327,10 @@ class RandomEmojiOverlay(BaseTransform):
         self,
         emoji_directory: str = utils.SMILEY_EMOJI_DIR,
         opacity: float = 1.0,
-        emoji_size: float = 0.15,
-        x_pos: float = 0.4,
-        y_pos: float = 0.4,
+        emoji_size: Union[float, Tuple[float, float]] = 0.15,
+        x_pos: Union[float, Tuple[float, float]] = 0.4,
+        y_pos: Union[float, Tuple[float, float]] = 0.8,
+        seed: Optional[int] = 42,
         p: float = 1.0,
     ):
         """
@@ -2336,11 +2338,20 @@ class RandomEmojiOverlay(BaseTransform):
 
         @param opacity: the lower the opacity, the more transparent the overlaid emoji
 
-        @param emoji_size: size of the emoji is emoji_size * height of the original image
+        @param emoji_size: size of the emoji is emoji_size * height of the original image.
+            If set to tuple, value will be randomly chosen from the range of the first value
+            to the second value
 
-        @param x_pos: position of emoji relative to the image width
+        @param x_pos: position of emoji relative to the image width.
+            If set to tuple, value will be randomly chosen from the range of the first value
+            to the second value
 
-        @param y_pos: position of emoji relative to the image height
+        @param y_pos: position of emoji relative to the image height.
+            If set to tuple, value will be randomly chosen from the range of the first value
+            to the second value
+
+        @param seed: if provided, this will set the random seed to ensure
+            consistency between runs
 
         @param p: the probability of the transform being applied; default value is 1.0
         """
@@ -2351,6 +2362,7 @@ class RandomEmojiOverlay(BaseTransform):
         self.emoji_size = emoji_size
         self.x_pos = x_pos
         self.y_pos = y_pos
+        self.seed = seed
 
     def apply_transform(
         self,

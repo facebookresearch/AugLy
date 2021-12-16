@@ -1036,12 +1036,13 @@ def overlay_emoji(
     output_path: Optional[str] = None,
     emoji_path: str = utils.EMOJI_PATH,
     opacity: float = 1.0,
-    emoji_size: float = 0.15,
-    x_pos: float = 0.4,
-    y_pos: float = 0.8,
+    emoji_size: Union[float, Tuple[float, float]] = 0.15,
+    x_pos: Union[float, Tuple[float, float]] = 0.4,
+    y_pos: Union[float, Tuple[float, float]] = 0.8,
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
+    seed: int = 42,
 ) -> Image.Image:
     """
     Overlay an emoji onto the original image
@@ -1056,11 +1057,17 @@ def overlay_emoji(
 
     @param opacity: the lower the opacity, the more transparent the overlaid emoji
 
-    @param emoji_size: size of the emoji is emoji_size * height of the original image
+    @param emoji_size: size of the emoji is emoji_size * height of the original image.
+        If set to tuple, value will be randomly chosen from the range of the first value
+        to the second value
 
-    @param x_pos: position of emoji relative to the image width
+    @param x_pos: position of emoji relative to the image width.
+        If set to tuple, value will be randomly chosen from the range of the first value
+        to the second value
 
-    @param y_pos: position of emoji relative to the image height
+    @param y_pos: position of emoji relative to the image height.
+        If set to tuple, value will be randomly chosen from the range of the first value
+        to the second value
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -1074,6 +1081,8 @@ def overlay_emoji(
         specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
         "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
 
+    @param seed: seed for numpy random generator to select random pixels for shuffling
+
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
@@ -1081,6 +1090,15 @@ def overlay_emoji(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
     local_emoji_path = utils.pathmgr.get_local_path(emoji_path)
+
+    np.random.seed(seed)
+
+    if isinstance(emoji_size, tuple):
+        emoji_size = np.random.uniform(emoji_size[0], emoji_size[1])
+    if isinstance(x_pos, tuple):
+        x_pos = np.random.uniform(x_pos[0], x_pos[1])
+    if isinstance(y_pos, tuple):
+        y_pos = np.random.uniform(y_pos[0], y_pos[1])
 
     aug_image = overlay_image(
         image,
