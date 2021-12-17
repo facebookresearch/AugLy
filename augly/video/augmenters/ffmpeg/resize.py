@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
-from typing import Dict, Optional, Tuple
+from typing import List, Optional
 
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
-from ffmpeg.nodes import FilterableStream
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
-class VideoAugmenterByResize(BaseFFMPEGAugmenter):
+class VideoAugmenterByResize(BaseVidgearFFMPEGAugmenter):
     def __init__(self, height: Optional[int], width: Optional[int]):
         assert height is None or height > 0, "Height must be set to None or be positive"
         assert width is None or width > 0, "Width must be set to None or be positive"
@@ -15,20 +18,21 @@ class VideoAugmenterByResize(BaseFFMPEGAugmenter):
         self.new_h = height or "ih"
         self.new_w = width or "iw"
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Resizes the video
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+            If not passed in, the original video file will be overwritten
+
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
-        return (
-            in_stream.video.filter(
-                "scale", **{"width": self.new_w, "height": self.new_h}
-            ).filter("pad", **{"width": "ceil(iw/2)*2", "height": "ceil(ih/2)*2"}),
-            {},
-        )
+        filters = [
+            f"scale=height:{self.new_h}:width={self.new_w},"
+            + "pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2",
+        ]
+
+        return self.standard_filter_fmt(video_path, filters, output_path)

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 # @lint-ignore-every UTF8
 
 import json
@@ -8,7 +12,7 @@ import random
 import unittest
 from typing import Any, Dict, List
 
-import augly.text as txtaugs
+from augly import text as txtaugs
 from augly.utils import TEXT_METADATA_PATH
 
 
@@ -258,7 +262,7 @@ class TransformsTextUnitTest(unittest.TestCase):
 
         self.assertTrue(
             aug_chars[0]
-            == "The quick brown 'fox' coul|)n' t jump ov3r the green, gI2assy hi|_l."
+            == "The quick brown 'fox' could^'t jump over the green, grassy hi7l."
         )
         self.assertTrue(
             are_equal_metadata(
@@ -273,7 +277,7 @@ class TransformsTextUnitTest(unittest.TestCase):
 
         self.assertTrue(
             aug_unicode_chars[0]
-            == "The ჹuick brown 'fox' coul₫n' t jump ov∑r the green, Ĝrassy hîll."
+            == "The ჹuick brown 'fox' coỦldή't jump oṼer the green, grassy hiļl."
         )
         self.assertTrue(
             are_equal_metadata(

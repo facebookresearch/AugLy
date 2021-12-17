@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 from augly.video.augmenters.ffmpeg.aspect_ratio import VideoAugmenterByAspectRatio
 from augly.video.augmenters.ffmpeg.audio_swap import VideoAugmenterByAudioSwap
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.augmenters.ffmpeg.blur import VideoAugmenterByBlur
 from augly.video.augmenters.ffmpeg.brightness import VideoAugmenterByBrightness
 from augly.video.augmenters.ffmpeg.color_jitter import VideoAugmenterByColorJitter
@@ -28,7 +32,7 @@ from augly.video.augmenters.ffmpeg.trim import VideoAugmenterByTrim
 from augly.video.augmenters.ffmpeg.vflip import VideoAugmenterByVFlip
 
 __all__ = [
-    "BaseFFMPEGAugmenter",
+    "BaseVidgearFFMPEGAugmenter",
     "VideoAugmenterByAspectRatio",
     "VideoAugmenterByAudioSwap",
     "VideoAugmenterByBlur",

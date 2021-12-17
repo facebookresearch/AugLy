@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import json
 import math
 import os
 from typing import List, Optional, Tuple, Union
 
-import augly.utils as utils
 import numpy as np
+from augly import utils
 from PIL import Image
 
 JPEG_EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG"]

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 """
 Implementation of base class for video distractors
@@ -22,9 +26,9 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Iterator, List, Optional, Tuple
 
-import augly.utils as utils
 import cv2
 import numpy as np
+from augly import utils
 from augly.video.helpers import extract_frames_to_dir
 
 

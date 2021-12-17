@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import os
 import random
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.image.functional as F
-import augly.utils as utils
+from augly import utils
+from augly.image import functional as F
 from PIL import Image, ImageFilter
 
 
@@ -1761,7 +1765,11 @@ class RandomNoise(BaseTransform):
 
 class Resize(BaseTransform):
     def __init__(
-        self, width: Optional[int] = None, height: Optional[int] = None, p: float = 1.0
+        self,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        resample: Any = Image.BILINEAR,
+        p: float = 1.0,
     ):
         """
         @param width: the desired width the image should be resized to have. If None,
@@ -1770,10 +1778,14 @@ class Resize(BaseTransform):
         @param height: the desired height the image should be resized to have. If None,
             the original image height will be used
 
+        @param resample: A resampling filter. This can be one of PIL.Image.NEAREST,
+            PIL.Image.BOX, PIL.Image.BILINEAR, PIL.Image.HAMMING, PIL.Image.BICUBIC, or
+            PIL.Image.LANCZOS
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
-        self.width, self.height = width, height
+        self.width, self.height, self.resample = width, height, resample
 
     def apply_transform(
         self,
@@ -1805,6 +1817,7 @@ class Resize(BaseTransform):
             image,
             width=self.width,
             height=self.height,
+            resample=self.resample,
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,

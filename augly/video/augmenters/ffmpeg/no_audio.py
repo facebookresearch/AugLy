@@ -1,22 +1,32 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
-from typing import Tuple, Dict
+from typing import List
 
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
-from ffmpeg.nodes import FilterableStream
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
-class VideoAugmenterByRemovingAudio(BaseFFMPEGAugmenter):
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+class VideoAugmenterByRemovingAudio(BaseVidgearFFMPEGAugmenter):
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Removes the audio from the video
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+            If not passed in, the original video file will be overwritten
+
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
-        return in_stream.video, {"an": None}
+        return [
+            *self.input_fmt(video_path),
+            "-c",
+            "copy",
+            "-an",
+            *self.output_fmt(output_path),
+        ]

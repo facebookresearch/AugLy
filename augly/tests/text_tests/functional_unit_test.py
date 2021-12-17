@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 # @lint-ignore-every UTF8
 
 import random
 import unittest
 
-import augly.text as txtaugs
+from augly import text as txtaugs
 from augly.utils import FUN_FONTS_GREEK_PATH
 
 
@@ -317,8 +321,8 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_chars,
             [
-                "7he qui{k brDwn 'fox' c0uldn' t jump ov3r the green, grassy hill.",
-                "+he quick |3rown 'f[]x' couldn' t jump Dver 7he green, grassy hill.",
+                "T|-|e quick brown 'fox' could^'t jump over the green, grassy hill.",
+                "The quick 13rown 'fox' couldn't jump over the gr3en, grassy hill.",
             ],
         )
         augmented_chars_targetted = txtaugs.replace_similar_chars(
@@ -331,8 +335,8 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_chars_targetted,
             [
-                "The quick 13rown 'fox' couldn' t jump ove/2 the gr3en, 9rassy hi|_l.",
-                "The quic|( brown 'fox' couldn' t jump over +he gree^, grassy hil!.",
+                "The quick brown 'fox' couldn't jump over the gI2een, 9rassy hil|_.",
+                "The quick brown 'fox' couldn't jump over t/-/e 9reen, gr4ssy h!ll.",
             ],
         )
 
@@ -343,8 +347,8 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_unicode_chars,
             [
-                "†he qui⊂k browŅ 'fox' coỦldn' t jump o∨er the green, grassy hill.",
-                "The ჹuick brown 'ⓕox' couldn' t jumρ over the ġreen, grassy hilŀ.",
+                "Tℌe ჹuick brown 'fox' coỦldή't jump oṼer the green, grassy hill.",
+                "The quick ␢rown 'ⓕox' couldn't jumρ over the ġreen, grassy hill.",
             ],
         )
         augmented_unicode_chars_targetted = txtaugs.replace_similar_unicode_chars(
@@ -357,8 +361,8 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_unicode_chars_targetted,
             [
-                "Thė quick brown 'fox' couldn' t jump over ₸he grèen, gras$y hiḽl.",
-                "TΉe quick brown 'fox' couldn' t jump oveř the gree⋒, grasకy hiℒl.",
+                "The quick brown 'fox' couldn't jump over †he ǥreen, gℝassy hiĽl.",
+                "The quick brown 'fox' couldn't jump over tҺe Ġreen, grⓐssy hilĻ.",
             ],
         )
 

@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
-import math
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.audio.utils as audutils
 import numpy as np
 import torch
+from augly.audio import utils as audutils
 from augly.utils import DEFAULT_SAMPLE_RATE
 from augly.utils.libsndfile import install_libsndfile
 
@@ -454,39 +457,25 @@ def high_pass_filter(
         func_kwargs = deepcopy(locals())
         func_kwargs.pop("metadata")
 
-    rc = 1 / (2 * math.pi * cutoff_hz)
-    dt = 1 / sample_rate
-    alpha = rc / (rc + dt)
     num_channels = 1 if audio.ndim == 1 else audio.shape[0]
+    audio = audio.reshape((num_channels, -1))
 
-    if num_channels == 1:
-        audio = audio.reshape(1, audio.shape[0])
-
-    frame_count = audio.shape[1]
-    high_pass_array = np.zeros(audio.shape)
-
-    for i in range(num_channels):
-        high_pass_array[i][0] = audio[i][0]
-        for j in range(1, frame_count):
-            high_pass_array[i][j] = alpha * (
-                high_pass_array[i][j - 1] + audio[i][j] - audio[i][j - 1]
-            )
-
-    if num_channels == 1:
-        high_pass_array = high_pass_array.reshape((high_pass_array.shape[1],))
+    aug_audio, out_sample_rate = sox_effects.apply_effects_tensor(
+        torch.Tensor(audio), sample_rate, [["highpass", str(cutoff_hz)]]
+    )
+    high_pass_array = aug_audio.numpy()
 
     if metadata is not None:
         audutils.get_metadata(
             metadata=metadata,
             function_name="high_pass_filter",
             dst_audio=high_pass_array,
-            dst_sample_rate=sample_rate,
-            alpha=alpha,
+            dst_sample_rate=out_sample_rate,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(high_pass_array, output_path, sample_rate)
+    return audutils.ret_and_save_audio(high_pass_array, output_path, out_sample_rate)
 
 
 def insert_in_background(
@@ -632,7 +621,7 @@ def loop(
 
     @param sample_rate: the audio sample rate of the inputted audio
 
-    @param n: the number of times the video will be looped
+    @param n: the number of times the audio will be looped
 
     @param output_path: the path in which the resulting audio will be stored. If None,
         the resulting np.ndarray will still be returned
@@ -699,39 +688,25 @@ def low_pass_filter(
         func_kwargs = deepcopy(locals())
         func_kwargs.pop("metadata")
 
-    rc = 1 / (2 * math.pi * cutoff_hz)
-    dt = 1 / sample_rate
-    alpha = dt / (rc + dt)
     num_channels = 1 if audio.ndim == 1 else audio.shape[0]
+    audio = audio.reshape((num_channels, -1))
 
-    if num_channels == 1:
-        audio = audio.reshape(1, audio.shape[0])
-
-    frame_count = audio.shape[1]
-    low_pass_array = np.zeros(audio.shape)
-
-    for i in range(num_channels):
-        low_pass_array[i][0] = alpha * audio[i][0]
-        for j in range(1, frame_count):
-            low_pass_array[i][j] = low_pass_array[i][j - 1] + alpha * (
-                audio[i][j] - low_pass_array[i][j - 1]
-            )
-
-    if num_channels == 1:
-        low_pass_array = low_pass_array.reshape((low_pass_array.shape[1],))
+    aug_audio, out_sample_rate = sox_effects.apply_effects_tensor(
+        torch.Tensor(audio), sample_rate, [["lowpass", str(cutoff_hz)]]
+    )
+    low_pass_array = aug_audio.numpy()
 
     if metadata is not None:
         audutils.get_metadata(
             metadata=metadata,
             function_name="low_pass_filter",
             dst_audio=low_pass_array,
-            dst_sample_rate=sample_rate,
-            alpha=alpha,
+            dst_sample_rate=out_sample_rate,
             # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 
-    return audutils.ret_and_save_audio(low_pass_array, output_path, sample_rate)
+    return audutils.ret_and_save_audio(low_pass_array, output_path, out_sample_rate)
 
 
 def normalize(

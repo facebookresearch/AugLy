@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import math
-from typing import List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple
 
-import augly.image.utils as imutils
 import numpy as np
+from augly.image import utils as imutils
+from PIL import Image, ImageDraw
 
 
 def crop_bboxes_helper(
@@ -442,6 +447,37 @@ def rotate_bboxes_helper(
         x2=cropped_img_right / rotated_img_w,
         y2=cropped_img_lower / rotated_img_h,
     )
+
+
+def spatial_bbox_helper(
+    bbox: Tuple[float, float, float, float],
+    src_w: int,
+    src_h: int,
+    aug_function: Callable,
+    **kwargs,
+) -> Tuple:
+    """
+    Computes the bbox that encloses the transformed bbox in the image transformed by
+    `aug_function`. This helper can be used to compute the transformed bbox for any
+    augmentation which doesn't affect the color of the source image (e.g. any spatial
+    augmentation).
+    """
+    dummy_image = Image.new("RGB", (src_w, src_h))
+    draw = ImageDraw.Draw(dummy_image)
+    draw.rectangle(
+        (bbox[0] * src_w, bbox[1] * src_h, bbox[2] * src_w, bbox[3] * src_h),
+        fill="white",
+    )
+
+    aug_image = aug_function(dummy_image, **kwargs)
+    aug_w, aug_h = aug_image.size
+    array_image = np.array(aug_image)
+
+    white_y, white_x, _ = np.where(array_image > 0)
+    min_x, max_x = np.min(white_x), np.max(white_x)
+    min_y, max_y = np.min(white_y), np.max(white_y)
+
+    return (min_x / aug_w, min_y / aug_h, max_x / aug_w, max_y / aug_h)
 
 
 def vflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:

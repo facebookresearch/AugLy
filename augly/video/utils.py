@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import functools
 import os
@@ -7,10 +11,9 @@ import shutil
 import tempfile
 from typing import Callable, Dict, List, Optional, Union
 
-import augly.utils as utils
-import augly.video.augmenters.cv2 as ac
-import augly.video.augmenters.ffmpeg as af
-import augly.video.helpers as helpers
+from augly import utils
+from augly.video import helpers as helpers
+from augly.video.augmenters import cv2 as ac
 
 
 """
@@ -19,20 +22,6 @@ Utility Functions: Augmentation Application Functions
 - For CV2-Based Functions
 - For Applying Image Functions to Each Frame
 """
-
-
-def apply_ffmpeg_augmenter(
-    augmenter: af.BaseFFMPEGAugmenter, video_path: str, output_path: Optional[str]
-) -> None:
-    video_path, output_path = helpers.validate_input_and_output_paths(
-        video_path, output_path
-    )
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        video_temp_path = os.path.join(tmpdir, os.path.basename(video_path))
-        shutil.copyfile(video_path, video_temp_path)
-        result_path = augmenter.augment(tmpdir, video_temp_path)
-        shutil.move(result_path, output_path)
 
 
 def apply_to_each_frame(

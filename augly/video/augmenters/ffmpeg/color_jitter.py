@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
-from typing import Tuple, Dict
+from typing import List
 
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
-from ffmpeg.nodes import FilterableStream
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
-class VideoAugmenterByColorJitter(BaseFFMPEGAugmenter):
+class VideoAugmenterByColorJitter(BaseVidgearFFMPEGAugmenter):
     def __init__(
         self, brightness_level: float, contrast_level: float, saturation_level: float
     ):
@@ -25,25 +28,21 @@ class VideoAugmenterByColorJitter(BaseFFMPEGAugmenter):
         self.contrast_level = contrast_level
         self.saturation_level = saturation_level
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Color jitters the video
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
-        return (
-            in_stream.video.filter(
-                "eq",
-                **{
-                    "brightness": self.brightness_level,
-                    "contrast": self.contrast_level,
-                    "saturation": self.saturation_level,
-                }
-            ),
-            {},
-        )
+        filters = [
+            f"eq=brightness={self.brightness_level}"
+            + f":contrast={self.contrast_level}"
+            + f":saturation={self.saturation_level}"
+        ]
+
+        return self.standard_filter_fmt(video_path, filters, output_path)

@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import unittest
 
-import augly.image as imaugs
 import torch
 import torchvision.transforms as transforms  # @manual
+from augly import image as imaugs
 from augly.tests import ImageAugConfig
 from augly.utils import pathmgr
 from PIL import Image

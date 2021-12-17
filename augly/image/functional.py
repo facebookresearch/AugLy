@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import io
 import math
@@ -8,9 +12,9 @@ import pickle
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-import augly.image.utils as imutils
-import augly.utils as utils
 import numpy as np
+from augly import utils
+from augly.image import utils as imutils
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 
@@ -1985,6 +1989,7 @@ def resize(
     output_path: Optional[str] = None,
     width: Optional[int] = None,
     height: Optional[int] = None,
+    resample: Any = Image.BILINEAR,
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
@@ -2003,6 +2008,10 @@ def resize(
 
     @param height: the desired height the image should be resized to have. If
         None, the original image height will be used
+
+    @param resample: A resampling filter. This can be one of PIL.Image.NEAREST,
+        PIL.Image.BOX, PIL.Image.BILINEAR, PIL.Image.HAMMING, PIL.Image.BICUBIC, or
+        PIL.Image.LANCZOS
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -2027,7 +2036,7 @@ def resize(
     src_mode = image.mode
 
     im_w, im_h = image.size
-    aug_image = image.resize((width or im_w, height or im_h))
+    aug_image = image.resize((width or im_w, height or im_h), resample)
 
     imutils.get_metadata(
         metadata=metadata,

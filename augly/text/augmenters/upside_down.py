@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 from typing import List, Union
 
@@ -66,7 +70,7 @@ class UpsideDownAugmenter(Augmenter):
             return self.flip_text(data)
 
         tokens = tokenize(data)
-        results = []
+
         if self.granularity == "word":
             aug_word_cnt = self._generate_aug_cnt(
                 len(tokens), self.aug_min, self.aug_max, self.aug_p
@@ -78,28 +82,22 @@ class UpsideDownAugmenter(Augmenter):
             )
 
             for i, token in enumerate(tokens):
-                if i not in aug_word_idxes:
-                    results.append(token)
-                    continue
-
-                results.append(self.flip_text(token))
+                if i in aug_word_idxes:
+                    tokens[i] = self.flip_text(token)
 
         elif self.granularity == "char":
             all_chars = [char for token in tokens for char in list(token)]
             aug_char_idxes = self.generate_aug_idxes(all_chars)
             char_idx = 0
 
-            for token in tokens:
-                result = ""
+            for t_i, token in enumerate(tokens):
                 chars = list(token)
 
-                for char in chars:
-                    if char_idx not in aug_char_idxes:
-                        result += char
-                    else:
-                        result += _flip(char)
+                for c_i, char in enumerate(chars):
+                    if char_idx in aug_char_idxes:
+                        chars[c_i] = _flip(char)
                     char_idx += 1
 
-                results.append(result)
+                tokens[t_i] = "".join(chars)
 
-        return detokenize(results)
+        return detokenize(tokens)

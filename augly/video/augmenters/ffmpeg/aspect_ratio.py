@@ -1,33 +1,36 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import math
-from typing import Dict, Tuple, Union
+from typing import List, Union
 
-from augly.video.augmenters.ffmpeg.base_augmenter import BaseFFMPEGAugmenter
+from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_video_info
-from ffmpeg.nodes import FilterableStream
 
 
-class VideoAugmenterByAspectRatio(BaseFFMPEGAugmenter):
+class VideoAugmenterByAspectRatio(BaseVidgearFFMPEGAugmenter):
     def __init__(self, ratio: Union[float, str]):
         assert (isinstance(ratio, str) and len(ratio.split(":")) == 2) or (
             isinstance(ratio, (int, float)) and ratio > 0
         ), "Aspect ratio must be a valid string ratio or a positive number"
         self.aspect_ratio = ratio
 
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
+    def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
         Changes the sample (sar) & display (dar) aspect ratios of the video
 
-        @param in_stream: the FFMPEG object of the video
+        @param video_path: the path to the video to be augmented
 
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
+        @param output_path: the path in which the resulting video will be stored.
+
+        @returns: a list of strings containing the CLI FFMPEG command for
+            the augmentation
         """
-        video_info = get_video_info(kwargs["video_path"])
+        video_info = get_video_info(video_path)
 
         area = int(video_info["width"]) * int(video_info["height"])
         if isinstance(self.aspect_ratio, float):
@@ -39,10 +42,11 @@ class VideoAugmenterByAspectRatio(BaseFFMPEGAugmenter):
         new_w = int(math.sqrt(area * aspect_ratio))
         new_h = int(area / new_w)
 
-        return (
-            in_stream.video.filter("scale", **{"width": new_w, "height": new_h})
-            .filter("pad", **{"width": "ceil(iw/2)*2", "height": "ceil(ih/2)*2"})
-            .filter("setsar", **{"ratio": self.aspect_ratio})
-            .filter("setdar", **{"ratio": self.aspect_ratio}),
-            {},
-        )
+        filters = [
+            f"scale=width={new_w}:height={new_h},"
+            + "pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2,"
+            + f"setsar=ratio={self.aspect_ratio},"
+            + f"setdar=ratio={self.aspect_ratio}",
+        ]
+
+        return self.standard_filter_fmt(video_path, filters, output_path)

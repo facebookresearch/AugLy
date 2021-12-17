@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 import json
 from typing import Any, Dict, List, Optional, Union
@@ -63,14 +67,15 @@ class ContractionAugmenter(object):
         for c_len in range(2, self.max_contraction_length + 1):
             i = 0
             while i <= len(tokens) - c_len:
-                contraction = self.contraction_mapping.replace(
-                    " ".join(tokens[i : i + c_len])
-                )
-                if contraction is not None and self.rng.rand() <= self.aug_p:
-                    results.append(contraction)
-                    i += c_len - 1
-                else:
-                    results.append(tokens[i])
+                result = tokens[i]
+                if self.rng.rand() <= self.aug_p:
+                    contraction = self.contraction_mapping.replace(
+                        " ".join(tokens[i : i + c_len])
+                    )
+                    if contraction is not None:
+                        result = contraction
+                        i += c_len - 1
+                results.append(result)
                 i += 1
 
             results.extend(tokens[-c_len + 1 :])
