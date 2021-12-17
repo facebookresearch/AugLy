@@ -45,10 +45,8 @@ class VideoAugmenterByAudioSwap(BaseVidgearFFMPEGAugmenter):
             pad_len = (end - audio_duration) * audio_sample_rate
             audio_filters += f",apad=pad_len={pad_len}"
 
-        command = [
-            "-y",
-            "-i",
-            video_path,
+        return [
+            *self.input_fmt(video_path),
             "-i",
             self.audio_path,
             "-c:v",
@@ -61,5 +59,3 @@ class VideoAugmenterByAudioSwap(BaseVidgearFFMPEGAugmenter):
             "1:a:0",
             output_path,
         ]
-
-        return command

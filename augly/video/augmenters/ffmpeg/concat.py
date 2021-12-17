@@ -58,7 +58,8 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
             maps += f"[{i}vf][{i}:a]"
 
         rest_command = f"concat=n={len(self.video_paths)}:v=1:a=1[v][a]"
-        command = [
+
+        return [
             "-y",
             *flat_inputs,
             "-filter_complex",
@@ -69,9 +70,5 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
             "[a]",
             "-vsync",
             "2",
-            "-preset",
-            "ultrafast",
-            output_path,
+            *self.output_fmt(output_path),
         ]
-
-        return command
