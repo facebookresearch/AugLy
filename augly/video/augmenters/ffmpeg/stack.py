@@ -42,10 +42,8 @@ class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
         """
         video_info = get_video_info(video_path)
 
-        command = [
-            "-y",
-            "-i",
-            video_path,
+        return [
+            *self.input_fmt(video_path),
             "-i",
             self.second_video_path,
             "-filter_complex",
@@ -57,9 +55,5 @@ class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
             f"{int(self.use_second_audio)}:a",
             "-vsync",
             "2",
-            "-preset",
-            "ultrafast",
-            output_path,
+            *self.output_fmt(output_path),
         ]
-
-        return command
