@@ -27,7 +27,7 @@ class VideoAugmenterByLoops(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
         """
-        command = [
+        return [
             "-y",
             "-stream_loop",
             str(self.num_loops),
@@ -35,9 +35,5 @@ class VideoAugmenterByLoops(BaseVidgearFFMPEGAugmenter):
             video_path,
             "-c:a",
             "copy",
-            "-preset",
-            "ultrafast",
-            output_path,
+            *self.output_fmt(output_path),
         ]
-
-        return command

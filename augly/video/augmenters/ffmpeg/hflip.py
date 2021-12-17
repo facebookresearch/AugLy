@@ -22,17 +22,4 @@ class VideoAugmenterByHFlip(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
         """
-        command = [
-            "-y",
-            "-i",
-            video_path,
-            "-vf",
-            "hflip",
-            "-c:a",
-            "copy",
-            "-preset",
-            "ultrafast",
-            output_path,
-        ]
-
-        return command
+        return self.standard_filter_fmt(video_path, ["hflip"], output_path)
