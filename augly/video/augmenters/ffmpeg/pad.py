@@ -37,17 +37,10 @@ class VideoAugmenterByPadding(BaseVidgearFFMPEGAugmenter):
 
         left = int(video_info["width"] * self.w_factor)
         top = int(video_info["height"] * self.h_factor)
-        command = [
-            "-y",
-            "-i",
-            video_path,
-            "-vf",
-            f"pad=width={left*2}+iw:height={top*2}+ih:x={left}:y={top}:color={self.hex_color}",
-            "-c:a",
-            "copy",
-            "-preset",
-            "ultrafast",
-            output_path,
+
+        filters = [
+            f"pad=width={left*2}+iw:height={top*2}+ih"
+            + f":x={left}:y={top}:color={self.hex_color}"
         ]
 
-        return command
+        return self.standard_filter_fmt(video_path, filters, output_path)

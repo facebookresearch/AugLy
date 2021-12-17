@@ -64,17 +64,11 @@ class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
         elif self.end is None:
             self.end = duration
 
-        command = [
-            "-y",
-            "-i",
-            video_path,
+        return [
+            *self.input_fmt(video_path),
             "-vf",
             f"trim={self.start}:{self.end}," + "setpts=PTS-STARTPTS",
             "-af",
             f"atrim={self.start}:{self.end}," + "asetpts=PTS-STARTPTS",
-            "-preset",
-            "ultrafast",
-            output_path,
+            *self.output_fmt(output_path),
         ]
-
-        return command

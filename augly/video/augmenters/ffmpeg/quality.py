@@ -27,19 +27,13 @@ class VideoAugmenterByQuality(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
         """
-        command = [
-            "-y",
-            "-i",
-            video_path,
+        return [
+            *self.input_fmt(video_path),
             "-c:v",
             "libx264",
             "-crf",
             f"{self.quality}",
             "-c:a",
             "copy",
-            "-preset",
-            "ultrafast",
-            output_path,
+            *self.output_fmt(output_path),
         ]
-
-        return command
