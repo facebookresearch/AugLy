@@ -41,17 +41,6 @@ class VideoAugmenterByCrop(BaseVidgearFFMPEGAugmenter):
         width = int(video_info["width"] * (self.right - self.left))
         height = int(video_info["height"] * (self.bottom - self.top))
 
-        command = [
-            "-y",
-            "-i",
-            video_path,
-            "-vf",
-            f"crop=w={width}:h={height}:x={x1}:y={y1}",
-            "-c:a",
-            "copy",
-            "-preset",
-            "ultrafast",
-            output_path,
-        ]
-
-        return command
+        return self.standard_filter_fmt(
+            video_path, [f"crop=w={width}:h={height}:x={x1}:y={y1}"], output_path
+        )

@@ -29,17 +29,6 @@ class VideoAugmenterByContrast(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
         """
-        command = [
-            "-y",
-            "-i",
-            video_path,
-            "-vf",
-            f"eq=contrast={self.level}",
-            "-c:a",
-            "copy",
-            "-preset",
-            "ultrafast",
-            output_path,
-        ]
-
-        return command
+        return self.standard_filter_fmt(
+            video_path, [f"eq=contrast={self.level}"], output_path
+        )
