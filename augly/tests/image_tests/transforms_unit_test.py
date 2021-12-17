@@ -206,6 +206,9 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_ShufflePixels(self):
         self.evaluate_class(imaugs.ShufflePixels(factor=0.5), fname="shuffle_pixels")
 
+    def test_Skew(self):
+        self.evaluate_class(imaugs.Skew(), fname="skew")
+
     def test_VFlip(self):
         self.evaluate_class(imaugs.VFlip(), fname="vflip")
 
