@@ -1,14 +1,6 @@
 augly.image package
 ===================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   augly.image.utils
-
 Submodules
 ----------
 

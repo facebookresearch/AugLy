@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   augly.video.augmenters
    augly.video.helpers
 
 Submodules

@@ -1,14 +1,6 @@
 augly.text package
 ==================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   augly.text.augmenters
-
 Submodules
 ----------
 
@@ -40,14 +32,6 @@ augly.text.transforms module
 ----------------------------
 
 .. automodule:: augly.text.transforms
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-augly.text.utils module
------------------------
-
-.. automodule:: augly.text.utils
    :members:
    :undoc-members:
    :show-inheritance:
