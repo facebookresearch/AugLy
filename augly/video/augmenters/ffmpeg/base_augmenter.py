@@ -9,67 +9,18 @@
 Implementation of base class for FFMPEG-based video augmenters
 
 - Method to override:
-    - `add_augmenter(self, in_stream: FilterableStream, **kwargs)`:
-      takes as input the FFMPEG video object and returns the output FFMPEG object
-      with the augmentation applied along with a dictionary containing output
-      arguments if needed.
+    - `get_command(self, video_path: str, output_path: str)`:
+      returns a list of strings containing the options to pass into the ffmpeg command
 """
 
 import os
 import shutil
 import tempfile
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional
 
-import ffmpeg  # @manual
-from augly.utils.ffmpeg import FFMPEG_PATH
-from augly.video.helpers import has_audio_stream, validate_input_and_output_paths
-from ffmpeg.nodes import FilterableStream
+from augly.video.helpers import validate_input_and_output_paths
 from vidgear.gears import WriteGear
-
-
-class BaseFFMPEGAugmenter(ABC):
-    def augment(self, video_temp_dir: str, video_temp_path: str, **kwargs) -> str:
-        """
-        Augments a video (resolution change, etc.)
-
-        @param video_temp_dir: local temp directory storing the video
-
-        @param video_temp_path: local temp path of the video that needs augmentation
-
-        @param kwargs: parameters for specific augmenters
-
-        @returns: the path to the new video
-        """
-        output_path = os.path.join(video_temp_dir, "augmenter_final.mp4")
-        in_stream = ffmpeg.input(video_temp_path)
-        kwargs = {"video_path": video_temp_path, **kwargs}
-        video, outputargs = self.add_augmenter(in_stream, **kwargs)
-        video = video.filter(  # pyre-fixme[16]: `FilterableStream` has no attribute `filter`
-            "pad", **{"width": "ceil(iw/2)*2", "height": "ceil(ih/2)*2"}
-        )
-        audio = in_stream.audio
-        output = (
-            ffmpeg.output(video, audio, output_path, **outputargs)
-            if has_audio_stream(video_temp_path)
-            else ffmpeg.output(video, output_path, **outputargs)
-        )
-        output.overwrite_output().run(cmd=FFMPEG_PATH)
-        return output_path
-
-    @abstractmethod
-    def add_augmenter(
-        self, in_stream: FilterableStream, **kwargs
-    ) -> Tuple[FilterableStream, Dict]:
-        """
-        Applies the specific augmentation to the video
-
-        @param in_stream: the FFMPEG object of the video
-
-        @returns: a tuple containing the FFMPEG object with the augmentation
-            applied and a dictionary with any output arguments as necessary
-        """
-        raise NotImplementedError("Implement add_augmenter method")
 
 
 class BaseVidgearFFMPEGAugmenter(ABC):
@@ -112,3 +63,24 @@ class BaseVidgearFFMPEGAugmenter(ABC):
             the augmentation
         """
         raise NotImplementedError("Implement get_command method")
+
+    @staticmethod
+    def input_fmt(video_path: str) -> List[str]:
+        return ["-y", "-i", video_path]
+
+    @staticmethod
+    def output_fmt(output_path: str) -> List[str]:
+        return ["-preset", "ultrafast", output_path]
+
+    @staticmethod
+    def standard_filter_fmt(
+        video_path: str, filters: List[str], output_path: str
+    ) -> List[str]:
+        return [
+            *BaseVidgearFFMPEGAugmenter.input_fmt(video_path),
+            "-vf",
+            *filters,
+            "-c:a",
+            "copy",
+            *BaseVidgearFFMPEGAugmenter.output_fmt(output_path),
+        ]

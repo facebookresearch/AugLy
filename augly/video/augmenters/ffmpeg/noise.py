@@ -26,17 +26,6 @@ class VideoAugmenterByNoise(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
         """
-        command = [
-            "-y",
-            "-i",
-            video_path,
-            "-vf",
-            f"boxblur=lr=1.2,noise=c0s={self.level}:allf=t",
-            "-c:a",
-            "copy",
-            "-preset",
-            "ultrafast",
-            output_path,
-        ]
-
-        return command
+        return self.standard_filter_fmt(
+            video_path, [f"boxblur=lr=1.2,noise=c0s={self.level}:allf=t"], output_path
+        )
