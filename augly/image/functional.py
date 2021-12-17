@@ -2428,7 +2428,7 @@ def skew(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path, src_mode)  # noqa
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)  # pyre-ignore
 
 
 def vflip(
