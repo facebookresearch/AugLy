@@ -23,10 +23,13 @@ extra_requirements = {
 with open("README.md", encoding="utf8") as f:
     readme = f.read()
 
+with open("version.txt", "r") as f:
+    version = f.read().strip()
+
 
 setuptools.setup(
     name="augly",
-    version=open("version.txt", "r").read().strip(),
+    version=version,
     description="A data augmentations library for audio, image, text, & video.",
     long_description=readme,
     long_description_content_type="text/markdown",
