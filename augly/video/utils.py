@@ -14,7 +14,6 @@ from typing import Callable, Dict, List, Optional, Union
 from augly import utils
 from augly.video import helpers as helpers
 from augly.video.augmenters import cv2 as ac
-from augly.video.augmenters import ffmpeg as af
 
 
 """
@@ -23,20 +22,6 @@ Utility Functions: Augmentation Application Functions
 - For CV2-Based Functions
 - For Applying Image Functions to Each Frame
 """
-
-
-def apply_ffmpeg_augmenter(
-    augmenter: af.BaseFFMPEGAugmenter, video_path: str, output_path: Optional[str]
-) -> None:
-    video_path, output_path = helpers.validate_input_and_output_paths(
-        video_path, output_path
-    )
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        video_temp_path = os.path.join(tmpdir, os.path.basename(video_path))
-        shutil.copyfile(video_path, video_temp_path)
-        result_path = augmenter.augment(tmpdir, video_temp_path)
-        shutil.move(result_path, output_path)
 
 
 def apply_to_each_frame(
