@@ -28,17 +28,6 @@ class VideoAugmenterByRotation(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
         """
-        command = [
-            "-y",
-            "-i",
-            video_path,
-            "-vf",
-            f"rotate={self.degrees * (math.pi / 180)}",
-            "-c:a",
-            "copy",
-            "-preset",
-            "ultrafast",
-            output_path,
-        ]
-
-        return command
+        return self.standard_filter_fmt(
+            video_path, [f"rotate={self.degrees * (math.pi / 180)}"], output_path
+        )

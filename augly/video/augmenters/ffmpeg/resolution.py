@@ -30,18 +30,9 @@ class VideoAugmenterByResolution(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
         """
-        command = [
-            "-y",
-            "-i",
-            video_path,
-            "-vf",
+        filters = [
             f"scale=height:ih*{self.resolution}:width=iw*{self.resolution},"
-            + "pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2",
-            "-c:a",
-            "copy",
-            "-preset",
-            "ultrafast",
-            output_path,
+            + "pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2"
         ]
 
-        return command
+        return self.standard_filter_fmt(video_path, filters, output_path)

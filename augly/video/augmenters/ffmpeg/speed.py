@@ -27,17 +27,11 @@ class VideoAugmenterBySpeed(BaseVidgearFFMPEGAugmenter):
         @returns: a list of strings containing the CLI FFMPEG command for
             the augmentation
         """
-        command = [
-            "-y",
-            "-i",
-            video_path,
+        return [
+            *self.input_fmt(video_path),
             "-vf",
             f"setpts={1/self.factor}*PTS",
             "-filter:a",
             f"atempo={self.factor}",
-            "-preset",
-            "ultrafast",
-            output_path,
+            *self.output_fmt(output_path),
         ]
-
-        return command

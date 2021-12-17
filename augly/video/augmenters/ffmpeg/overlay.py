@@ -50,19 +50,13 @@ class VideoAugmenterByOverlay(BaseVidgearFFMPEGAugmenter):
         new_width = video_info["width"] * self.x_factor
         new_height = video_info["height"] * self.y_factor
 
-        command = [
-            "-y",
-            "-i",
-            video_path,
+        return [
+            *self.input_fmt(video_path),
             "-i",
             self.overlay_path,
             "-filter_complex",
             f"[0:v][1:v] overlay={new_width}:{new_height}",
             "-map",
             f"{int(self.use_overlay_audio)}:a:0",
-            "-preset",
-            "ultrafast",
-            output_path,
+            *self.output_fmt(output_path),
         ]
-
-        return command
