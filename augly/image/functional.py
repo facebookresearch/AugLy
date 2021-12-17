@@ -15,6 +15,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 import numpy as np
 from augly import utils
 from augly.image import utils as imutils
+from augly.image.utils.bboxes import spatial_bbox_helper
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 
@@ -2366,6 +2367,72 @@ def shuffle_pixels(
     )
 
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+
+
+def skew(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    skew_factor: float = 0.5,
+    axis: int = 0,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
+) -> Image.Image:
+    """
+    Skews an image with respect to its x or y-axis
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param skew_factor: the level of skew to apply to the image; a larger absolute value will
+        result in a more intense skew. Recommended range is between [-2, 2]
+
+    @param axis: the axis along which the image will be skewed; can be set to 0 (x-axis)
+        or 1 (y-axis)
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    image = imutils.validate_and_load_image(image)
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+
+    w, h = image.size
+
+    if axis == 0:
+        data = (1, skew_factor, -skew_factor * h / 2, 0, 1, 0)
+    elif axis == 1:
+        data = (1, 0, 0, skew_factor, 1, -skew_factor * w / 2)
+    else:
+        raise AssertionError(
+            f"Invalid 'axis' value: Got '{axis}', expected 0 for 'x-axis' or 1 for 'y-axis'"
+        )
+
+    aug_image = image.transform((w, h), Image.AFFINE, data, resample=Image.BILINEAR)
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="skew",
+        aug_image=aug_image,
+        bboxes_helper_func=spatial_bbox_helper,
+        aug_function=skew,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)  # pyre-ignore
 
 
 def vflip(
