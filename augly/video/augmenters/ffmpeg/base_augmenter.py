@@ -9,10 +9,8 @@
 Implementation of base class for FFMPEG-based video augmenters
 
 - Method to override:
-    - `add_augmenter(self, in_stream: FilterableStream, **kwargs)`:
-      takes as input the FFMPEG video object and returns the output FFMPEG object
-      with the augmentation applied along with a dictionary containing output
-      arguments if needed.
+    - `get_command(self, video_path: str, output_path: str)`:
+      returns a list of strings containing the options to pass into the ffmpeg command
 """
 
 import os
@@ -65,3 +63,24 @@ class BaseVidgearFFMPEGAugmenter(ABC):
             the augmentation
         """
         raise NotImplementedError("Implement get_command method")
+
+    @staticmethod
+    def input_fmt(video_path: str) -> List[str]:
+        return ["-y", "-i", video_path]
+
+    @staticmethod
+    def output_fmt(output_path: str) -> List[str]:
+        return ["-preset", "ultrafast", output_path]
+
+    @staticmethod
+    def standard_filter_fmt(
+        video_path: str, filters: List[str], output_path: str
+    ) -> List[str]:
+        return [
+            *BaseVidgearFFMPEGAugmenter.input_fmt(video_path),
+            "-vf",
+            *filters,
+            "-c:a",
+            "copy",
+            *BaseVidgearFFMPEGAugmenter.output_fmt(output_path),
+        ]
