@@ -1058,16 +1058,13 @@ def overlay_emoji(
     @param opacity: the lower the opacity, the more transparent the overlaid emoji
 
     @param emoji_size: size of the emoji is emoji_size * height of the original image.
-        If set to tuple, value will be randomly chosen from the range of the first value
-        to the second value
+        If set to a tuple, the value will be randomly chosen from that range [low, high)
 
-    @param x_pos: position of emoji relative to the image width.
-        If set to tuple, value will be randomly chosen from the range of the first value
-        to the second value
+    @param x_pos: position of emoji relative to the image width. If set to a tuple, the
+        value will be randomly chosen from that range [low, high)
 
-    @param y_pos: position of emoji relative to the image height.
-        If set to tuple, value will be randomly chosen from the range of the first value
-        to the second value
+    @param y_pos: position of emoji relative to the image height. If set to tuple, value
+        will be randomly chosen from that range [low, high)
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
