@@ -1066,6 +1066,8 @@ def overlay_emoji(
     @param y_pos: position of emoji relative to the image height. If set to tuple, value
         will be randomly chosen from that range [low, high)
 
+    @param seed: seed for numpy random generator to select random pixels for shuffling
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
@@ -1077,8 +1079,6 @@ def overlay_emoji(
     @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
         specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
         "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
-
-    @param seed: seed for numpy random generator to select random pixels for shuffling
 
     @returns: the augmented PIL Image
     """
