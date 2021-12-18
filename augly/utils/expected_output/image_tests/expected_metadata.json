@@ -571,7 +571,7 @@
             "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
             "dst_height": 1080,
             "dst_width": 1920,
-            "emoji_path": "twemojis/smileys/face_screaming_in_fear.png",
+            "emoji_path": "twemojis/smileys/smiling_face.png",
             "emoji_size": 0.20618101782710435,
             "intensity": 4.251061211222072,
             "name": "overlay_emoji",
