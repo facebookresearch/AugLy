@@ -2398,6 +2398,7 @@ class RandomEmojiOverlay(BaseTransform):
             emoji_size=self.emoji_size,
             x_pos=self.x_pos,
             y_pos=self.y_pos,
+            seed=self.seed,
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,

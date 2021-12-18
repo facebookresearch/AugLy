@@ -1039,10 +1039,10 @@ def overlay_emoji(
     emoji_size: Union[float, Tuple[float, float]] = 0.15,
     x_pos: Union[float, Tuple[float, float]] = 0.4,
     y_pos: Union[float, Tuple[float, float]] = 0.8,
+    seed: int = 42,
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
-    seed: int = 42,
 ) -> Image.Image:
     """
     Overlay an emoji onto the original image
