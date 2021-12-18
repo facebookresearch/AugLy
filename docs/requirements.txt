@@ -1,0 +1,4 @@
+sphinx
+sphinx-epytext
+sphinx-autodoc-typehints
+myst-parser
