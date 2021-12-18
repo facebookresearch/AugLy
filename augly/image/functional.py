@@ -1090,10 +1090,19 @@ def overlay_emoji(
     np.random.seed(seed)
 
     if isinstance(emoji_size, tuple):
+        assert emoji_size[0] < emoji_size[1], (
+            "emoji_size must be a float or a tuple [low, high) to sample the value from"
+        )
         emoji_size = np.random.uniform(emoji_size[0], emoji_size[1])
     if isinstance(x_pos, tuple):
+        assert x_pos[0] < x_pos[1], (
+            "x_pos must be a float or a tuple [low, high) to sample the value from"
+        )
         x_pos = np.random.uniform(x_pos[0], x_pos[1])
     if isinstance(y_pos, tuple):
+        assert y_pos[0] < y_pos[1], (
+            "y_pos must be a float or a tuple [low, high) to sample the value from"
+        )
         y_pos = np.random.uniform(y_pos[0], y_pos[1])
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
