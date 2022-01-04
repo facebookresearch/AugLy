@@ -1039,7 +1039,7 @@ def overlay_emoji(
     emoji_size: Union[float, Tuple[float, float]] = 0.15,
     x_pos: Union[float, Tuple[float, float]] = 0.4,
     y_pos: Union[float, Tuple[float, float]] = 0.8,
-    seed: int = 42,
+    seed: Optional[int] = 42,
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
@@ -1066,7 +1066,8 @@ def overlay_emoji(
     @param y_pos: position of emoji relative to the image height. If set to tuple, value
         will be randomly chosen from that range [low, high)
 
-    @param seed: seed for numpy random generator to select random pixels for shuffling
+    @param seed: if provided, this will set the random seed to ensure
+            consistency between runs
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -1084,22 +1085,23 @@ def overlay_emoji(
     """
     image = imutils.validate_and_load_image(image)
 
-    np.random.seed(seed)
+    if seed is not None:
+        np.random.seed(seed)
 
     if isinstance(emoji_size, tuple):
-        assert emoji_size[0] < emoji_size[1], (
-            "emoji_size must be a float or a tuple [low, high) to sample the value from"
-        )
+        assert (
+            emoji_size[0] < emoji_size[1]
+        ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
         emoji_size = np.random.uniform(emoji_size[0], emoji_size[1])
     if isinstance(x_pos, tuple):
-        assert x_pos[0] < x_pos[1], (
-            "x_pos must be a float or a tuple [low, high) to sample the value from"
-        )
+        assert (
+            x_pos[0] < x_pos[1]
+        ), "x_pos must be a float or a tuple [low, high) to sample the value from"
         x_pos = np.random.uniform(x_pos[0], x_pos[1])
     if isinstance(y_pos, tuple):
-        assert y_pos[0] < y_pos[1], (
-            "y_pos must be a float or a tuple [low, high) to sample the value from"
-        )
+        assert (
+            y_pos[0] < y_pos[1]
+        ), "y_pos must be a float or a tuple [low, high) to sample the value from"
         y_pos = np.random.uniform(y_pos[0], y_pos[1])
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())

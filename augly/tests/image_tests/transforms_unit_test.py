@@ -176,7 +176,8 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_RandomEmojiOverlay(self):
         random.seed(1)
         self.evaluate_class(
-            imaugs.RandomEmojiOverlay(emoji_size=(0.15, 0.3)), fname="RandomEmojiOverlay"
+            imaugs.RandomEmojiOverlay(emoji_size=(0.15, 0.3)),
+            fname="RandomEmojiOverlay",
         )
 
     def test_RandomNoise(self):
