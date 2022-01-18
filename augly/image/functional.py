@@ -1585,7 +1585,10 @@ def overlay_text(
 
     try:
         text_strs = [
-            "".join([chr(chars[c % len(chars)]) for c in t]) for t in text_lists
+            # pyre-fixme[16]: Item `int` of `Union[List[int], List[Union[List[int],
+            #  int]], int]` has no attribute `__iter__`.
+            "".join([chr(chars[c % len(chars)]) for c in t])
+            for t in text_lists
         ]
     except Exception:
         raise IndexError("Invalid text indices specified")
