@@ -9,7 +9,7 @@ module.exports = {
   tagline: 'A data augmentations library for audio, image, text, and video.',
   url: 'https://augly.io',
   baseUrl: '/',
-  organizationName: 'meta',
+  organizationName: 'facebookresearch',
   projectName: 'AugLy',
   favicon: 'img/favicon.ico',
   presets: [['@docusaurus/preset-classic', {
