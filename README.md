@@ -70,7 +70,9 @@ sudo apt-get install python3-magic
 
 ## Documentation
 
-To find documentation about each sub-library, please see the READMEs in the respective directories.
+Check out our [documentation](https://augly.readthedocs.io/en/latest/) on ReadtheDocs!
+
+For more details about how to use each sub-library, how to run the tests, and links to colab notebooks with runnable examples, please see the READMEs in each respective directory ([audio](augly/audio/), [image](augly/image/), [text](augly/text/), & [video](augly/video/)).
 
 ## Assets
 
@@ -92,7 +94,9 @@ We provide various media assets to use with some of our augmentations. These ass
 
 ## Citation
 
-If you use AugLy in your work, please cite:
+If you use AugLy in your work, please cite our [Arxiv paper](TODO: add link)!
+
+You can also additionally cite the GitHub repository using the below citation:
 
 ```bibtex
 @misc{bitton2021augly,
