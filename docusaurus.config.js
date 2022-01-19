@@ -33,7 +33,7 @@ module.exports = {
         label: 'Docs',
         position: 'right'
       }, {
-        href: 'https://github.com/facebook/draft-js',
+        href: 'https://github.com/facebookresearch/AugLy',
         label: 'GitHub',
         position: 'right'
       }]
