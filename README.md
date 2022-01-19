@@ -85,7 +85,8 @@ We provide various media assets to use with some of our augmentations. These ass
 
 1. Facebook AI blog post: https://ai.facebook.com/blog/augly-a-new-data-augmentation-library-to-help-build-more-robust-ai-models/
 2. PyPi package: https://pypi.org/project/augly/
-3. Examples: https://github.com/facebookresearch/AugLy/tree/main/examples
+3. Arxiv paper: https://arxiv.org/abs/2201.06494
+4. Examples: https://github.com/facebookresearch/AugLy/tree/main/examples
 
 ## Uses of AugLy in the wild
 1. [Image Similarity Challenge](https://ai.facebook.com/blog/the-image-similarity-challenge-and-data-set-for-detecting-image-manipulation) - a NeurIPS 2021 competition run by Facebook AI with $200k in prizes, currently open for sign ups; also produced the DISC21 dataset, which will be made publicly available after the challenge concludes!
@@ -94,7 +95,7 @@ We provide various media assets to use with some of our augmentations. These ass
 
 ## Citation
 
-If you use AugLy in your work, please cite our [Arxiv paper](TODO: add link)!
+If you use AugLy in your work, please cite our [Arxiv paper](https://arxiv.org/abs/2201.06494)!
 
 You can also additionally cite the GitHub repository using the below citation:
 
