@@ -39,7 +39,7 @@ function Home() {
               <div>
                 <Link
                   className="button button--secondary button--lg"
-                  to={useBaseUrl('docs/getting-started')}>
+                  to={'https://github.com/facebookresearch/AugLy'}>
                   Get Started
                 </Link>
               </div>

@@ -9,7 +9,7 @@ module.exports = {
   tagline: 'A data augmentations library for audio, image, text, and video.',
   url: 'https://augly.io',
   baseUrl: '/',
-  organizationName: 'meta',
+  organizationName: 'facebookresearch',
   projectName: 'AugLy',
   favicon: 'img/favicon.ico',
   presets: [['@docusaurus/preset-classic', {
@@ -33,7 +33,7 @@ module.exports = {
         label: 'Docs',
         position: 'right'
       }, {
-        href: 'https://github.com/facebook/draft-js',
+        href: 'https://github.com/facebookresearch/AugLy',
         label: 'GitHub',
         position: 'right'
       }]
