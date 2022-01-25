@@ -1036,10 +1036,9 @@ def overlay_emoji(
     output_path: Optional[str] = None,
     emoji_path: str = utils.EMOJI_PATH,
     opacity: float = 1.0,
-    emoji_size: Union[float, Tuple[float, float]] = 0.15,
-    x_pos: Union[float, Tuple[float, float]] = 0.4,
-    y_pos: Union[float, Tuple[float, float]] = 0.8,
-    seed: Optional[int] = 42,
+    emoji_size: float = 0.15,
+    x_pos: float = 0.4,
+    y_pos: float = 0.8,
     metadata: Optional[List[Dict[str, Any]]] = None,
     bboxes: Optional[List[Tuple]] = None,
     bbox_format: Optional[str] = None,
@@ -1057,17 +1056,11 @@ def overlay_emoji(
 
     @param opacity: the lower the opacity, the more transparent the overlaid emoji
 
-    @param emoji_size: size of the emoji is emoji_size * height of the original image.
-        If set to a tuple, the value will be randomly chosen from that range [low, high)
+    @param emoji_size: size of the emoji is emoji_size * height of the original image
 
-    @param x_pos: position of emoji relative to the image width. If set to a tuple, the
-        value will be randomly chosen from that range [low, high)
+    @param x_pos: position of emoji relative to the image width
 
-    @param y_pos: position of emoji relative to the image height. If set to tuple, value
-        will be randomly chosen from that range [low, high)
-
-    @param seed: if provided, this will set the random seed to ensure
-            consistency between runs
+    @param y_pos: position of emoji relative to the image height
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
@@ -1084,25 +1077,6 @@ def overlay_emoji(
     @returns: the augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
-
-    if seed is not None:
-        np.random.seed(seed)
-
-    if isinstance(emoji_size, tuple):
-        assert (
-            emoji_size[0] < emoji_size[1]
-        ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
-        emoji_size = np.random.uniform(emoji_size[0], emoji_size[1])
-    if isinstance(x_pos, tuple):
-        assert (
-            x_pos[0] < x_pos[1]
-        ), "x_pos must be a float or a tuple [low, high) to sample the value from"
-        x_pos = np.random.uniform(x_pos[0], x_pos[1])
-    if isinstance(y_pos, tuple):
-        assert (
-            y_pos[0] < y_pos[1]
-        ), "y_pos must be a float or a tuple [low, high) to sample the value from"
-        y_pos = np.random.uniform(y_pos[0], y_pos[1])
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
 
