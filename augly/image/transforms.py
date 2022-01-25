@@ -2339,16 +2339,13 @@ class RandomEmojiOverlay(BaseTransform):
         @param opacity: the lower the opacity, the more transparent the overlaid emoji
 
         @param emoji_size: size of the emoji is emoji_size * height of the original image.
-            If set to tuple, value will be randomly chosen from the range of the first value
-            to the second value
+            If set to a tuple, a position will randomly be chosen from the range provided
 
         @param x_pos: position of emoji relative to the image width.
-            If set to tuple, value will be randomly chosen from the range of the first value
-            to the second value
+            If set to a tuple, a position will randomly be chosen from the range provided
 
         @param y_pos: position of emoji relative to the image height.
-            If set to tuple, value will be randomly chosen from the range of the first value
-            to the second value
+            If set to a tuple, a position will randomly be chosen from the range provided
 
         @param seed: if provided, this will set the random seed to ensure
             consistency between runs
