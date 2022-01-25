@@ -100,12 +100,13 @@ If you use AugLy in your work, please cite our [Arxiv paper](https://arxiv.org/a
 You can also additionally cite the GitHub repository using the below citation:
 
 ```bibtex
-@misc{bitton2021augly,
-  author       = {Joanna Bitton and Zoe Papakipos},
+@misc{papakipos2022augly,
+  author       = {Zoe Papakipos and Joanna Bitton},
   title        = {AugLy: A data augmentations library for audio, image, text, and video.},
-  year         = {2021},
-  howpublished = {\url{https://github.com/facebookresearch/AugLy}},
-  doi          = {10.5281/zenodo.5014032}
+  year         = {2022},
+  eprint       = {2201.06494},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI}}
 }
 ```
 
