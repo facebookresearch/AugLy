@@ -101,12 +101,12 @@ You can also additionally cite the GitHub repository using the below citation:
 
 ```bibtex
 @misc{papakipos2022augly,
-  author       = {Zoe Papakipos and Joanna Bitton},
-  title        = {AugLy: A data augmentations library for audio, image, text, and video.},
-  year         = {2022},
-  eprint       = {2201.06494},
-  archivePrefix= {arXiv},
-  primaryClass = {cs.AI}}
+  author        = {Zoe Papakipos and Joanna Bitton},
+  title         = {AugLy: A data augmentations library for audio, image, text, and video.},
+  year          = {2022},
+  eprint        = {2201.06494},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI}}
 }
 ```
 
