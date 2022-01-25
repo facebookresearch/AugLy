@@ -571,9 +571,9 @@
             "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
             "dst_height": 1080,
             "dst_width": 1920,
-            "emoji_path": "twemojis/smileys/smiling_face.png",
-            "emoji_size": 0.20618101782710435,
-            "intensity": 4.251061211222072,
+            "emoji_path": "twemojis/smileys/astonished_face.png",
+            "emoji_size": 0.24591401976868255,
+            "intensity": 6.047370511879199,
             "name": "overlay_emoji",
             "opacity": 1.0,
             "output_path": null,
@@ -581,8 +581,7 @@
             "src_height": 1080,
             "src_width": 1920,
             "x_pos": 0.4,
-            "y_pos": 0.8,
-            "seed": 42
+            "y_pos": 0.8
         }
     ],
     "RandomPixelization": [

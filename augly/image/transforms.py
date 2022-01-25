@@ -2390,15 +2390,39 @@ class RandomEmojiOverlay(BaseTransform):
 
         @returns: Augmented PIL Image
         """
+        if self.seed is not None:
+            random.seed(self.seed)
+
+        if isinstance(self.emoji_size, tuple):
+            assert (
+                self.emoji_size[0] < self.emoji_size[1]
+            ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
+            emoji_size = random.uniform(self.emoji_size[0], self.emoji_size[1])
+        else:
+            emoji_size = self.emoji_size
+        if isinstance(self.x_pos, tuple):
+            assert (
+                self.x_pos[0] < self.x_pos[1]
+            ), "x_pos must be a float or a tuple [low, high) to sample the value from"
+            x_pos = random.uniform(self.x_pos[0], self.x_pos[1])
+        else:
+            x_pos = self.x_pos
+        if isinstance(self.y_pos, tuple):
+            assert (
+                self.y_pos[0] < self.y_pos[1]
+            ), "y_pos must be a float or a tuple [low, high) to sample the value from"
+            y_pos = random.uniform(self.y_pos[0], self.y_pos[1])
+        else:
+            y_pos = self.y_pos
+
         emoji_path = random.choice(self.emoji_paths)
         return F.overlay_emoji(
             image,
             emoji_path=os.path.join(self.emoji_directory, emoji_path),
             opacity=self.opacity,
-            emoji_size=self.emoji_size,
-            x_pos=self.x_pos,
-            y_pos=self.y_pos,
-            seed=self.seed,
+            emoji_size=emoji_size,
+            x_pos=x_pos,
+            y_pos=y_pos,
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,
