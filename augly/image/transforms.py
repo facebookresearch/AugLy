@@ -2318,7 +2318,6 @@ class RandomBrightness(BaseRandomRangeTransform):
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,
-            seed=self.seed,
         )
 
 
