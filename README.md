@@ -95,14 +95,12 @@ We provide various media assets to use with some of our augmentations. These ass
 
 ## Citation
 
-If you use AugLy in your work, please cite our [Arxiv paper](https://arxiv.org/abs/2201.06494)!
-
-You can also additionally cite the GitHub repository using the below citation:
+If you use AugLy in your work, please cite our [Arxiv paper](https://arxiv.org/abs/2201.06494) using the citation below:
 
 ```bibtex
 @misc{papakipos2022augly,
   author        = {Zoe Papakipos and Joanna Bitton},
-  title         = {AugLy: A data augmentations library for audio, image, text, and video.},
+  title         = {AugLy: Data Augmentations for Robustness},
   year          = {2022},
   eprint        = {2201.06494},
   archivePrefix = {arXiv},
