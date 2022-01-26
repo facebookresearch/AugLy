@@ -70,7 +70,9 @@ sudo apt-get install python3-magic
 
 ## Documentation
 
-To find documentation about each sub-library, please see the READMEs in the respective directories.
+Check out our [documentation](https://augly.readthedocs.io/en/latest/) on ReadtheDocs!
+
+For more details about how to use each sub-library, how to run the tests, and links to colab notebooks with runnable examples, please see the READMEs in each respective directory ([audio](augly/audio/), [image](augly/image/), [text](augly/text/), & [video](augly/video/)).
 
 ## Assets
 
@@ -83,7 +85,8 @@ We provide various media assets to use with some of our augmentations. These ass
 
 1. Facebook AI blog post: https://ai.facebook.com/blog/augly-a-new-data-augmentation-library-to-help-build-more-robust-ai-models/
 2. PyPi package: https://pypi.org/project/augly/
-3. Examples: https://github.com/facebookresearch/AugLy/tree/main/examples
+3. Arxiv paper: https://arxiv.org/abs/2201.06494
+4. Examples: https://github.com/facebookresearch/AugLy/tree/main/examples
 
 ## Uses of AugLy in the wild
 1. [Image Similarity Challenge](https://ai.facebook.com/blog/the-image-similarity-challenge-and-data-set-for-detecting-image-manipulation) - a NeurIPS 2021 competition run by Facebook AI with $200k in prizes, currently open for sign ups; also produced the DISC21 dataset, which will be made publicly available after the challenge concludes!
@@ -92,15 +95,16 @@ We provide various media assets to use with some of our augmentations. These ass
 
 ## Citation
 
-If you use AugLy in your work, please cite:
+If you use AugLy in your work, please cite our [Arxiv paper](https://arxiv.org/abs/2201.06494) using the citation below:
 
 ```bibtex
-@misc{bitton2021augly,
-  author       = {Joanna Bitton and Zoe Papakipos},
-  title        = {AugLy: A data augmentations library for audio, image, text, and video.},
-  year         = {2021},
-  howpublished = {\url{https://github.com/facebookresearch/AugLy}},
-  doi          = {10.5281/zenodo.5014032}
+@misc{papakipos2022augly,
+  author        = {Zoe Papakipos and Joanna Bitton},
+  title         = {AugLy: Data Augmentations for Robustness},
+  year          = {2022},
+  eprint        = {2201.06494},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI}}
 }
 ```
 
