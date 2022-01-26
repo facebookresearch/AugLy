@@ -2337,17 +2337,18 @@ class RandomEmojiOverlay(BaseTransform):
 
         @param opacity: the lower the opacity, the more transparent the overlaid emoji
 
-        @param emoji_size: size of the emoji is emoji_size * height of the original image.
-            If set to a tuple, a position will randomly be chosen from the range provided
+        @param emoji_size: size of the emoji is emoji_size * height of the original
+            image. If set to a tuple, a position will randomly be chosen from the range
+            provided
 
-        @param x_pos: position of emoji relative to the image width.
-            If set to a tuple, a position will randomly be chosen from the range provided
+        @param x_pos: position of emoji relative to the image width. If set to a tuple, a
+            position will randomly be chosen from the range provided
 
-        @param y_pos: position of emoji relative to the image height.
-            If set to a tuple, a position will randomly be chosen from the range provided
+        @param y_pos: position of emoji relative to the image height. If set to a tuple, a
+            position will randomly be chosen from the range provided
 
-        @param seed: if provided, this will set the random seed to ensure
-            consistency between runs
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
 
         @param p: the probability of the transform being applied; default value is 1.0
         """
@@ -2386,9 +2387,6 @@ class RandomEmojiOverlay(BaseTransform):
 
         @returns: Augmented PIL Image
         """
-        if self.seed is not None:
-            random.seed(self.seed)
-
         assert isinstance(self.emoji_size, (float, int)) or (
             isinstance(self.emoji_size, tuple)
             and self.emoji_size[0] < self.emoji_size[1]
@@ -2399,6 +2397,9 @@ class RandomEmojiOverlay(BaseTransform):
         assert isinstance(self.y_pos, (float, int)) or (
             isinstance(self.y_pos, tuple) and self.y_pos[0] < self.y_pos[1]
         ), "y_pos must be a float or a tuple [low, high) to sample the value from"
+
+        if self.seed is not None:
+            random.seed(self.seed)
         
         emoji_size = (
             random.uniform(self.emoji_size[0], self.emoji_size[1])
