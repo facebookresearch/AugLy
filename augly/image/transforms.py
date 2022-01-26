@@ -2389,27 +2389,31 @@ class RandomEmojiOverlay(BaseTransform):
         if self.seed is not None:
             random.seed(self.seed)
 
-        if isinstance(self.emoji_size, tuple):
-            assert (
-                self.emoji_size[0] < self.emoji_size[1]
-            ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
-            emoji_size = random.uniform(self.emoji_size[0], self.emoji_size[1])
-        else:
-            emoji_size = self.emoji_size
-        if isinstance(self.x_pos, tuple):
-            assert (
-                self.x_pos[0] < self.x_pos[1]
-            ), "x_pos must be a float or a tuple [low, high) to sample the value from"
-            x_pos = random.uniform(self.x_pos[0], self.x_pos[1])
-        else:
-            x_pos = self.x_pos
-        if isinstance(self.y_pos, tuple):
-            assert (
-                self.y_pos[0] < self.y_pos[1]
-            ), "y_pos must be a float or a tuple [low, high) to sample the value from"
-            y_pos = random.uniform(self.y_pos[0], self.y_pos[1])
-        else:
-            y_pos = self.y_pos
+        assert isinstance(self.emoji_size, (float, int)) or (
+            isinstance(self.emoji_size, tuple) and self.emoji_size[0] < self.emoji_size[1]
+        ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
+        assert isinstance(self.x_pos, (float, int)) or (
+            isinstance(self.x_pos, tuple) and self.x_pos[0] < self.x_pos[1]
+        ), "x_pos must be a float or a tuple [low, high) to sample the value from"
+        assert isinstance(self.y_pos, (float, int)) or (
+            isinstance(self.y_pos, tuple) and self.y_pos[0] < self.y_pos[1]
+        ), "y_pos must be a float or a tuple [low, high) to sample the value from"
+        
+        emoji_size = (
+            random.uniform(self.emoji_size[0], self.emoji_size[1])
+            if isinstance(self.emoji_size, tuple)
+            else self.emoji_size
+        )
+        x_pos = (
+            random.uniform(self.x_pos[0], self.x_pos[1])
+            if isinstance(self.x_pos, tuple)
+            else self.x_pos
+        )
+        y_pos = (
+            random.uniform(self.y_pos[0], self.y_pos[1])
+            if isinstance(self.y_pos, tuple)
+            else self.y_pos
+        )
 
         emoji_path = random.choice(self.emoji_paths)
         return F.overlay_emoji(
