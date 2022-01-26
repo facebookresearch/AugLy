@@ -2390,7 +2390,8 @@ class RandomEmojiOverlay(BaseTransform):
             random.seed(self.seed)
 
         assert isinstance(self.emoji_size, (float, int)) or (
-            isinstance(self.emoji_size, tuple) and self.emoji_size[0] < self.emoji_size[1]
+            isinstance(self.emoji_size, tuple)
+            and self.emoji_size[0] < self.emoji_size[1]
         ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
         assert isinstance(self.x_pos, (float, int)) or (
             isinstance(self.x_pos, tuple) and self.x_pos[0] < self.x_pos[1]
