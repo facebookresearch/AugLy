@@ -2389,30 +2389,30 @@ class RandomEmojiOverlay(BaseTransform):
         """
         assert isinstance(self.emoji_size, (float, int)) or (
             isinstance(self.emoji_size, tuple)
-            and self.emoji_size[0] < self.emoji_size[1]  # noqa
+            and self.emoji_size[0] < self.emoji_size[1]  # pyre-ignore
         ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
         assert isinstance(self.x_pos, (float, int)) or (
-            isinstance(self.x_pos, tuple) and self.x_pos[0] < self.x_pos[1]  # noqa
+            isinstance(self.x_pos, tuple) and self.x_pos[0] < self.x_pos[1]
         ), "x_pos must be a float or a tuple [low, high) to sample the value from"
         assert isinstance(self.y_pos, (float, int)) or (
-            isinstance(self.y_pos, tuple) and self.y_pos[0] < self.y_pos[1]  # noqa
+            isinstance(self.y_pos, tuple) and self.y_pos[0] < self.y_pos[1]
         ), "y_pos must be a float or a tuple [low, high) to sample the value from"
 
         if self.seed is not None:
             random.seed(self.seed)
 
-        emoji_size = (
-            random.uniform(self.emoji_size[0], self.emoji_size[1])  # noqa
+        emoji_size = float(
+            random.uniform(self.emoji_size[0], self.emoji_size[1])  # pyre-ignore
             if isinstance(self.emoji_size, tuple)
             else self.emoji_size
         )
-        x_pos = (
-            random.uniform(self.x_pos[0], self.x_pos[1])  # noqa
+        x_pos = float(
+            random.uniform(self.x_pos[0], self.x_pos[1])  # pyre-ignore
             if isinstance(self.x_pos, tuple)
             else self.x_pos
         )
-        y_pos = (
-            random.uniform(self.y_pos[0], self.y_pos[1])  # noqa
+        y_pos = float(
+            random.uniform(self.y_pos[0], self.y_pos[1])  # pyre-ignore
             if isinstance(self.y_pos, tuple)
             else self.y_pos
         )
@@ -2422,9 +2422,9 @@ class RandomEmojiOverlay(BaseTransform):
             image,
             emoji_path=os.path.join(self.emoji_directory, emoji_path),
             opacity=self.opacity,
-            emoji_size=emoji_size,  # noqa
-            x_pos=x_pos,  # noqa
-            y_pos=y_pos,  # noqa
+            emoji_size=emoji_size,
+            x_pos=x_pos,
+            y_pos=y_pos,
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,
