@@ -2392,10 +2392,12 @@ class RandomEmojiOverlay(BaseTransform):
             and self.emoji_size[0] < self.emoji_size[1]  # pyre-ignore
         ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
         assert isinstance(self.x_pos, (float, int)) or (
-            isinstance(self.x_pos, tuple) and self.x_pos[0] < self.x_pos[1]
+            isinstance(self.x_pos, tuple)
+            and self.x_pos[0] < self.x_pos[1]  # pyre-ignore
         ), "x_pos must be a float or a tuple [low, high) to sample the value from"
         assert isinstance(self.y_pos, (float, int)) or (
-            isinstance(self.y_pos, tuple) and self.y_pos[0] < self.y_pos[1]
+            isinstance(self.y_pos, tuple)
+            and self.y_pos[0] < self.y_pos[1]  # pyre-ignore
         ), "y_pos must be a float or a tuple [low, high) to sample the value from"
 
         if self.seed is not None:
