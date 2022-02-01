@@ -883,7 +883,7 @@ def replace_with_background(
     background_offset: float = 0.0,
     source_percentage: float = 0.5,
     metadata: Optional[List[Dict[str, Any]]] = None,
-):
+) -> str:
     """
     Replaces the beginning and end of the source video with the background video, keeping the
     total duration of the output video equal to the original duration of the source video
