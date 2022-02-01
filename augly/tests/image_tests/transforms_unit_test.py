@@ -175,7 +175,10 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     @unittest.skip("Failing on some envs, will fix")
     def test_RandomEmojiOverlay(self):
         random.seed(1)
-        self.evaluate_class(imaugs.RandomEmojiOverlay(), fname="RandomEmojiOverlay")
+        self.evaluate_class(
+            imaugs.RandomEmojiOverlay(emoji_size=(0.15, 0.3)),
+            fname="RandomEmojiOverlay",
+        )
 
     def test_RandomNoise(self):
         self.evaluate_class(imaugs.RandomNoise(), fname="random_noise")
