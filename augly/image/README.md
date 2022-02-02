@@ -65,7 +65,7 @@ aug_image = TRANSFORMS(image)
 aug_tensor_image = TENSOR_TRANSFORMS(image)
 ```
 
-### Numpy wrapper
+### NumPy wrapper
 If your image is currently in the form of a NumPy array and you don't want to save the image as a file before using the augmentation functions, you can use our NumPy wrapper:
 ```python
 from augly.image import aug_np_wrapper, overlay_emoji
@@ -80,7 +80,9 @@ If the images you're augmenting have associated bounding boxes which you want to
 ```python
 import augly.image as imaugs
 
-aug_image = imaugs.crop(image_path, bboxes=[(0.25, 0.5, 0.75, 0.8)], bbox_format="pascal_voc_norm")
+aug_image = imaugs.crop(
+    image_path, bboxes=[(0.25, 0.5, 0.75, 0.8)], bbox_format="pascal_voc_norm"
+)
 ```
 
 The supported bounding box formats are:
