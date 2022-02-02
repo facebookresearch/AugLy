@@ -104,18 +104,18 @@ def crop_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
-def encoding_quality_intensity(quality: int, **kwargs):
+def encoding_quality_intensity(quality: int, **kwargs) -> float:
     assert (
         isinstance(quality, int) and 0 <= quality <= 100
     ), "quality must be a number in [0, 100]"
     return ((100 - quality) / 100) * 100.0
 
 
-def grayscale_intensity(**kwargs):
+def grayscale_intensity(**kwargs) -> float:
     return 100.0
 
 
-def hflip_intensity(**kwargs):
+def hflip_intensity(**kwargs) -> float:
     return 100.0
 
 

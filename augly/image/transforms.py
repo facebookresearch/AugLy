@@ -2326,9 +2326,10 @@ class RandomEmojiOverlay(BaseTransform):
         self,
         emoji_directory: str = utils.SMILEY_EMOJI_DIR,
         opacity: float = 1.0,
-        emoji_size: float = 0.15,
-        x_pos: float = 0.4,
-        y_pos: float = 0.4,
+        emoji_size: Union[float, Tuple[float, float]] = 0.15,
+        x_pos: Union[float, Tuple[float, float]] = 0.4,
+        y_pos: Union[float, Tuple[float, float]] = 0.8,
+        seed: Optional[int] = 42,
         p: float = 1.0,
     ):
         """
@@ -2336,11 +2337,18 @@ class RandomEmojiOverlay(BaseTransform):
 
         @param opacity: the lower the opacity, the more transparent the overlaid emoji
 
-        @param emoji_size: size of the emoji is emoji_size * height of the original image
+        @param emoji_size: size of the emoji is emoji_size * height of the original
+            image. If set to a tuple, a position will randomly be chosen from the range
+            provided
 
-        @param x_pos: position of emoji relative to the image width
+        @param x_pos: position of emoji relative to the image width. If set to a tuple, a
+            position will randomly be chosen from the range provided
 
-        @param y_pos: position of emoji relative to the image height
+        @param y_pos: position of emoji relative to the image height. If set to a tuple, a
+            position will randomly be chosen from the range provided
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
 
         @param p: the probability of the transform being applied; default value is 1.0
         """
@@ -2351,6 +2359,7 @@ class RandomEmojiOverlay(BaseTransform):
         self.emoji_size = emoji_size
         self.x_pos = x_pos
         self.y_pos = y_pos
+        self.seed = seed
 
     def apply_transform(
         self,
@@ -2378,14 +2387,46 @@ class RandomEmojiOverlay(BaseTransform):
 
         @returns: Augmented PIL Image
         """
+        assert isinstance(self.emoji_size, (float, int)) or (
+            isinstance(self.emoji_size, tuple)
+            and self.emoji_size[0] < self.emoji_size[1]  # pyre-ignore
+        ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
+        assert isinstance(self.x_pos, (float, int)) or (
+            isinstance(self.x_pos, tuple)
+            and self.x_pos[0] < self.x_pos[1]  # pyre-ignore
+        ), "x_pos must be a float or a tuple [low, high) to sample the value from"
+        assert isinstance(self.y_pos, (float, int)) or (
+            isinstance(self.y_pos, tuple)
+            and self.y_pos[0] < self.y_pos[1]  # pyre-ignore
+        ), "y_pos must be a float or a tuple [low, high) to sample the value from"
+
+        if self.seed is not None:
+            random.seed(self.seed)
+
+        emoji_size = float(
+            random.uniform(self.emoji_size[0], self.emoji_size[1])  # pyre-ignore
+            if isinstance(self.emoji_size, tuple)
+            else self.emoji_size
+        )
+        x_pos = float(
+            random.uniform(self.x_pos[0], self.x_pos[1])  # pyre-ignore
+            if isinstance(self.x_pos, tuple)
+            else self.x_pos
+        )
+        y_pos = float(
+            random.uniform(self.y_pos[0], self.y_pos[1])  # pyre-ignore
+            if isinstance(self.y_pos, tuple)
+            else self.y_pos
+        )
+
         emoji_path = random.choice(self.emoji_paths)
         return F.overlay_emoji(
             image,
             emoji_path=os.path.join(self.emoji_directory, emoji_path),
             opacity=self.opacity,
-            emoji_size=self.emoji_size,
-            x_pos=self.x_pos,
-            y_pos=self.y_pos,
+            emoji_size=emoji_size,
+            x_pos=x_pos,
+            y_pos=y_pos,
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,

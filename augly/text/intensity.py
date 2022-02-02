@@ -48,7 +48,7 @@ def merge_words_intensity(aug_word_p: float, aug_word_max: int, **kwargs) -> flo
     return replace_intensity_helper(aug_word_p, aug_word_max)
 
 
-def replace_bidirectional_intensity(**kwargs):
+def replace_bidirectional_intensity(**kwargs) -> float:
     return 100.0
 
 

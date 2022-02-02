@@ -84,7 +84,7 @@ def change_aspect_ratio_intensity(
     return min((ratio_change / max_ratio_change) * 100.0, 100.0)
 
 
-def change_video_speed_intensity(factor: float, **kwargs):
+def change_video_speed_intensity(factor: float, **kwargs) -> float:
     assert (
         isinstance(factor, (float, int)) and factor > 0
     ), "factor must be a positive number"
@@ -131,25 +131,25 @@ def crop_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
-def encoding_quality_intensity(quality: int, **kwargs):
+def encoding_quality_intensity(quality: int, **kwargs) -> float:
     assert (
         isinstance(quality, int) and 0 <= quality <= 51
     ), "quality must be a number in [0, 51]"
     return (quality / 51) * 100.0
 
 
-def fps_intensity(fps: int, metadata: Dict[str, Any], **kwargs):
+def fps_intensity(fps: int, metadata: Dict[str, Any], **kwargs) -> float:
     assert isinstance(fps, (float, int)), "fps must be a number"
 
     src_fps = metadata["src_fps"]
     return min(((src_fps - fps) / src_fps) * 100.0, 100.0)
 
 
-def grayscale_intensity(**kwargs):
+def grayscale_intensity(**kwargs) -> float:
     return 100.0
 
 
-def hflip_intensity(**kwargs):
+def hflip_intensity(**kwargs) -> float:
     return 100.0
 
 
@@ -378,7 +378,7 @@ def distractor_overlay_intensity_helper(
     bottomright: Optional[Tuple[float, float]],
     num_overlay_content: int,
     **kwargs,
-):
+) -> float:
     """
     Computes intensity of any distractor-type transform, which adds some kind
     of media (images, emojis, text, dots, logos) on top of the src video within
