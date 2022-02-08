@@ -80,8 +80,12 @@ If the images you're augmenting have associated bounding boxes which you want to
 ```python
 import augly.image as imaugs
 
+meta = []
 aug_image = imaugs.crop(
-    image_path, bboxes=[(0.25, 0.5, 0.75, 0.8)], bbox_format="pascal_voc_norm"
+    image_path,
+    bboxes=[(0.25, 0.5, 0.75, 0.8)],
+    bbox_format="pascal_voc_norm",
+    metadata=meta,
 )
 ```
 
@@ -91,7 +95,7 @@ The supported bounding box formats are:
 - `coco`: (`left`, `upper`, `width`, `height`) - all coordinates in pixels
 - `yolo`: (`x_center`, `y_center`, `width`, `height`) - all coordinates normalized by the width/height of the image respectively
 
-See [here](https://albumentations.ai/docs/getting_started/bounding_boxes_augmentation/) to read more about these common bounding box formats and about structured data in general.
+See [here](https://towardsdatascience.com/coco-data-format-for-object-detection-a4c5eaf518c5) to read more about some of these common bounding box formats and about structured data in general.
 
 ## Unit Tests
 
