@@ -769,7 +769,9 @@ def normalize(
         func_kwargs["norm"] = str(func_kwargs["norm"])
         func_kwargs.pop("metadata")
 
-    aug_audio = librosa.util.normalize(audio, norm, axis, threshold, fill)
+    aug_audio = librosa.util.normalize(
+        audio, norm=norm, axis=axis, threshold=threshold, fill=fill
+    )
 
     if metadata is not None:
         audutils.get_metadata(
@@ -956,12 +958,12 @@ def pitch_shift(
     audio, sample_rate = audutils.validate_and_load_audio(audio, sample_rate)
     num_channels = 1 if audio.ndim == 1 else audio.shape[0]
     if num_channels == 1:
-        aug_audio = librosa.effects.pitch_shift(audio, sample_rate, n_steps)
+        aug_audio = librosa.effects.pitch_shift(audio, sr=sample_rate, n_steps=n_steps)
     else:
         aug_audio = np.vstack(
             [
                 librosa.effects.pitch_shift(
-                    np.asfortranarray(audio[c]), sample_rate, n_steps
+                    np.asfortranarray(audio[c]), sr=sample_rate, n_steps=n_steps
                 )
                 for c in range(num_channels)
             ]
@@ -1231,11 +1233,11 @@ def time_stretch(
     audio, sample_rate = audutils.validate_and_load_audio(audio, sample_rate)
     num_channels = 1 if audio.ndim == 1 else audio.shape[0]
     if num_channels == 1:
-        aug_audio = librosa.effects.time_stretch(audio, rate)
+        aug_audio = librosa.effects.time_stretch(audio, rate=rate)
     else:
         aug_audio = np.vstack(
             [
-                librosa.effects.time_stretch(np.asfortranarray(audio[c]), rate)
+                librosa.effects.time_stretch(np.asfortranarray(audio[c]), rate=rate)
                 for c in range(num_channels)
             ]
         )
