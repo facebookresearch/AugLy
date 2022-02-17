@@ -65,7 +65,7 @@ aug_image = TRANSFORMS(image)
 aug_tensor_image = TENSOR_TRANSFORMS(image)
 ```
 
-### Numpy Wrapper
+### NumPy wrapper
 If your image is currently in the form of a NumPy array and you don't want to save the image as a file before using the augmentation functions, you can use our NumPy wrapper:
 ```python
 from augly.image import aug_np_wrapper, overlay_emoji
@@ -74,6 +74,28 @@ np_image = np.zeros((300, 300))
 # pass in function arguments as kwargs
 np_aug_img = aug_np_wrapper(np_image, overlay_emoji, **{'opacity': 0.5, 'y_pos': 0.45})
 ```
+
+### Augmenting structured data
+If the images you're augmenting have associated bounding boxes which you want to preserve after augmentation, you can pass in the bounding boxes to each augmentation you apply. You must also pass in the `metadata` arg, which will then contain metadata about the augmentations applied including the src & dst coordinates of the bounding boxes you passed in, in the specified format.
+```python
+import augly.image as imaugs
+
+meta = []
+aug_image = imaugs.crop(
+    image_path,
+    bboxes=[(0.25, 0.5, 0.75, 0.8)],
+    bbox_format="pascal_voc_norm",
+    metadata=meta,
+)
+```
+
+The supported bounding box formats are:
+- `pascal_voc`: (`left`, `upper`, `right`, `lower`) - all coordinates in pixels
+- `pascal_voc_norm`: (`left`, `upper`, `right`, `lower`) - all coordinates normalized by the width/height of the image respectively
+- `coco`: (`left`, `upper`, `width`, `height`) - all coordinates in pixels
+- `yolo`: (`x_center`, `y_center`, `width`, `height`) - all coordinates normalized by the width/height of the image respectively
+
+See [here](https://towardsdatascience.com/coco-data-format-for-object-detection-a4c5eaf518c5) to read more about some of these common bounding box formats and about structured data in general.
 
 ## Unit Tests
 
