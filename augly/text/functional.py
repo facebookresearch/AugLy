@@ -24,7 +24,7 @@ def apply_lambda(
     aug_function: Callable[..., List[str]] = lambda x: x,
     metadata: Optional[List[Dict[str, Any]]] = None,
     **kwargs,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Apply a user-defined lambda on a list of text documents
 
@@ -74,7 +74,7 @@ def change_case(
     case: str = "random",
     seed: Optional[int] = 10,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Changes the case (e.g. upper, lower, title) of random chars, words, or the entire
     text
@@ -123,7 +123,7 @@ def contractions(
     max_contraction_length: int = 2,
     seed: Optional[int] = 10,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Replaces pairs (or longer strings) of words with contractions given a mapping
 
@@ -169,7 +169,7 @@ def contractions(
 def get_baseline(
     texts: Union[str, List[str]],
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Generates a baseline by tokenizing and detokenizing the text
 
@@ -202,7 +202,7 @@ def insert_punctuation_chars(
     cadence: float = 1.0,
     vary_chars: bool = False,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Inserts punctuation characters in each input text
 
@@ -247,7 +247,7 @@ def insert_whitespace_chars(
     cadence: float = 1.0,
     vary_chars: bool = False,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Inserts whitespace characters in each input text
 
@@ -292,7 +292,7 @@ def insert_zero_width_chars(
     cadence: float = 1.0,
     vary_chars: bool = False,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Inserts zero-width characters in each input text
 
@@ -340,7 +340,7 @@ def merge_words(
     n: int = 1,
     priority_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Merges words in the text together
 
@@ -387,7 +387,7 @@ def replace_bidirectional(
     granularity: str = "all",
     split_word: bool = False,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Reverses each word (or part of the word) in each input text and uses
     bidirectional marks to render the text in its original order. It reverses
@@ -433,7 +433,7 @@ def replace_fun_fonts(
     n: int = 1,
     priority_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-):
+) -> Union[str, List[str]]:
     """
     Replaces words or characters depending on the granularity with fun fonts applied
 
@@ -493,7 +493,7 @@ def replace_similar_chars(
     mapping_path: Optional[str] = None,
     priority_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Replaces letters in each text with similar characters
 
@@ -564,7 +564,7 @@ def replace_similar_unicode_chars(
     mapping_path: str = UNICODE_MAPPING_PATH,
     priority_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Replaces letters in each text with similar unicodes
 
@@ -630,7 +630,7 @@ def replace_upside_down(
     granularity: str = "all",
     n: int = 1,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Flips words in the text upside down depending on the granularity
 
@@ -678,7 +678,7 @@ def replace_words(
     priority_words: Optional[List[str]] = None,
     ignore_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Replaces words in each text based on a given mapping
 
@@ -738,7 +738,7 @@ def simulate_typos(
     max_typo_length: int = 1,
     priority_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Simulates typos in each text using misspellings, keyboard distance, and swapping.
     You can specify a typo_type: charmix, which does a combination of character-level
@@ -825,7 +825,7 @@ def split_words(
     n: int = 1,
     priority_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Splits words in the text into subwords
 
@@ -877,7 +877,7 @@ def swap_gendered_words(
     priority_words: Optional[List[str]] = None,
     ignore_words: Optional[List[str]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
-) -> List[str]:
+) -> Union[str, List[str]]:
     """
     Replaces words in each text based on a provided `mapping`, which can either be a dict
     already constructed mapping words from one gender to another or a file path to a

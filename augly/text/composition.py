@@ -58,7 +58,7 @@ class Compose(BaseComposition):
         texts: Union[str, List[str]],
         seed: Optional[int] = None,
         metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Applies the list of transforms in order to the text
 
@@ -102,7 +102,7 @@ class OneOf(BaseComposition):
         force: bool = False,
         seed: Optional[int] = None,
         metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         @param texts: a string or a list of text documents to be augmented
 
