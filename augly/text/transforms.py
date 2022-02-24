@@ -38,7 +38,7 @@ class BaseTransform(object):
         force: bool = False,
         metadata: Optional[List[Dict[str, Any]]] = None,
         **kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         @param texts: a string or a list of text documents to be augmented
 
@@ -87,7 +87,7 @@ class BaseTransform(object):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         This function is to be implemented in the child classes. From this function, call
         the augmentation function, passing in 'texts', 'metadata', & the given
@@ -138,7 +138,7 @@ class ApplyLambda(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Apply a user-defined lambda on a list of text documents
 
@@ -194,7 +194,7 @@ class ChangeCase(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Changes the case (e.g. upper, lower, title) of random chars, words, or the entire
         text
@@ -249,7 +249,7 @@ class Contractions(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Replaces pairs (or longer strings) of words with contractions given a mapping
 
@@ -273,7 +273,7 @@ class GetBaseline(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Generates a baseline by tokenizing and detokenizing the text
 
@@ -322,7 +322,7 @@ class InsertPunctuationChars(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Inserts punctuation characters in each input text
 
@@ -371,7 +371,7 @@ class InsertWhitespaceChars(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Inserts whitespace characters in each input text
 
@@ -420,7 +420,7 @@ class InsertZeroWidthChars(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Inserts zero-width characters in each input text
 
@@ -478,7 +478,7 @@ class MergeWords(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Merges words in the text together
 
@@ -521,7 +521,7 @@ class ReplaceBidirectional(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Reverses each word (or part of the word) in each input text and uses
         bidirectional marks to render the text in its original order. It reverses
@@ -590,7 +590,7 @@ class ReplaceFunFonts(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Replaces words or characters depending on the granularity with fun fonts applied
 
@@ -664,7 +664,7 @@ class ReplaceSimilarChars(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Replaces letters in each text with similar characters
 
@@ -738,7 +738,7 @@ class ReplaceSimilarUnicodeChars(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Replaces letters in each text with similar unicodes
 
@@ -792,7 +792,7 @@ class ReplaceUpsideDown(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Flips words in the text upside down depending on the granularity
 
@@ -855,7 +855,7 @@ class ReplaceWords(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Replaces words in each text based on a given mapping
 
@@ -946,7 +946,7 @@ class SimulateTypos(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Simulates typos in each text using misspellings, keyboard distance, and swapping.
         You can specify a typo_type: charmix, which does a combination of character-level
@@ -1009,7 +1009,7 @@ class SplitWords(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Splits words in the text into subwords
 
@@ -1073,7 +1073,7 @@ class SwapGenderedWords(BaseTransform):
         texts: Union[str, List[str]],
         metadata: Optional[List[Dict[str, Any]]] = None,
         **aug_kwargs,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """
         Replaces words in each text based on a provided `mapping`, which can either be a
         dict already constructed mapping words from one gender to another or a file path
