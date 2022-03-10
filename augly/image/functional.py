@@ -1969,7 +1969,7 @@ def random_noise(
     else:
         low_clip = 0.0
 
-    sigma = var ** 0.5
+    sigma = var**0.5
     gauss = np.random.normal(mean, sigma, (np_image.shape))
     noisy_image = np_image + gauss
     noisy_image = np.clip(noisy_image, low_clip, 1.0)
