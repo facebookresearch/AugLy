@@ -345,7 +345,7 @@ def overlay_media_intensity_helper(
         and 0 <= overlay_content_size <= 1
     ), "content size factor must be a number in [0, 1]"
 
-    return (opacity * (overlay_content_size**2)) * 100.0
+    return (opacity * (overlay_content_size ** 2)) * 100.0
 
 
 def resize_intensity_helper(metadata: Dict[str, Any]) -> float:
