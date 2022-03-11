@@ -6,6 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import hashlib
+import inspect
 import os
 import tempfile
 import unittest
