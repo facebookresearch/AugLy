@@ -16,26 +16,23 @@ from augly.tests import VideoAugConfig
 from augly.utils import TEST_URI, pathmgr
 
 
-def are_equal_videos(a_path: str, b_path: str) -> bool:
-    md5_kwargs = (
-        {"usedforsecurity": False}
+def md5_hash(file_path) -> str:
+    hasher = (
+        hashlib.md5(usedforsecurity=False)
         if "usedforsecurity" in inspect.getfullargspec(hashlib.md5).kwonlyargs
-        else {}
+        else hashlib.md5()
     )
 
-    hasher = hashlib.md5(**md5_kwargs)
-    with open(a_path, "rb") as afile:
-        buf = afile.read()
+    with open(file_path, "rb") as f:
+        buf = f.read()
         hasher.update(buf)
-        a_md5_hash = hasher.hexdigest()
+        md5_hash = hasher.hexdigest()
+    
+    return md5_hash
 
-    hasher = hashlib.md5(**md5_kwargs)
-    with open(b_path, "rb") as bfile:
-        buf = bfile.read()
-        hasher.update(buf)
-        b_md5_hash = hasher.hexdigest()
 
-    return a_md5_hash == b_md5_hash
+def are_equal_videos(a_path: str, b_path: str) -> bool:
+    return md5_hash(a_path) == md5_hash(b_path)
 
 
 def are_equal_metadata(
