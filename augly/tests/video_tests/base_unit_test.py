@@ -19,7 +19,7 @@ from augly.utils import TEST_URI, pathmgr
 def are_equal_videos(a_path: str, b_path: str) -> bool:
     md5_kwargs = (
         {"usedforsecurity": False}
-        if inspect.getfullargspec(hashlib.md5).kwonlyargs
+        if "usedforsecurity" in inspect.getfullargspec(hashlib.md5).kwonlyargs
         else {}
     )
 
