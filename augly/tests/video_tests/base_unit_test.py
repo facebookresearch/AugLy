@@ -6,7 +6,6 @@
 # LICENSE file in the root directory of this source tree.
 
 import hashlib
-import inspect
 import os
 import tempfile
 import unittest
@@ -16,23 +15,20 @@ from augly.tests import VideoAugConfig
 from augly.utils import TEST_URI, pathmgr
 
 
-def md5_hash(file_path) -> str:
-    hasher = (
-        hashlib.md5(usedforsecurity=False)
-        if "usedforsecurity" in inspect.getfullargspec(hashlib.md5).kwonlyargs
-        else hashlib.md5()
-    )
-
-    with open(file_path, "rb") as f:
-        buf = f.read()
-        hasher.update(buf)
-        md5_hash = hasher.hexdigest()
-    
-    return md5_hash
-
-
 def are_equal_videos(a_path: str, b_path: str) -> bool:
-    return md5_hash(a_path) == md5_hash(b_path)
+    hasher = hashlib.md5()
+    with open(a_path, "rb") as afile:
+        buf = afile.read()
+        hasher.update(buf)
+        a_md5_hash = hasher.hexdigest()
+
+    hasher = hashlib.md5()
+    with open(b_path, "rb") as bfile:
+        buf = bfile.read()
+        hasher.update(buf)
+        b_md5_hash = hasher.hexdigest()
+
+    return a_md5_hash == b_md5_hash
 
 
 def are_equal_metadata(

@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - run: pip install bandit black==21.12b0 codespell flake8 isort pyre-check pytest pyupgrade safety
-      - run: bandit --recursive --skip B101,B301,B303,B311,B403 .
+      - run: bandit --recursive --skip B101,B301,B303,B311,B324,B403 .
       - run: black --check .
       - run: codespell --ignore-words-list="tha" --skip="*/text_tests,*assets/text/*,*examples/*"
       - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
