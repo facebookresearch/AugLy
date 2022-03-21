@@ -1,0 +1,739 @@
+{
+    "apply_lambda": [
+        {
+            "aug_function": "<lambda>",
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "kwargs": {},
+            "name": "apply_lambda",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "apply_pil_filter": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "filter_type": "Edge-enhance More",
+            "intensity": 100.0,
+            "name": "apply_pil_filter",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "blur": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 2.0,
+            "name": "blur",
+            "output_path": null,
+            "radius": 2.0,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "brightness": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 1.0,
+            "intensity": 0.0,
+            "name": "brightness",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "change_aspect_ratio": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1440,
+            "dst_width": 1440,
+            "intensity": 10.0,
+            "name": "change_aspect_ratio",
+            "output_path": null,
+            "ratio": 1.0,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "clip_image_size": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 918,
+            "dst_width": 1632,
+            "intensity": 27.750000000000004,
+            "name": "clip_image_size",
+            "output_path": null,
+            "min_resolution": null,
+            "max_resolution": 1500000,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "color_jitter": [
+        {
+            "bbox_format": "yolo",
+            "brightness_factor": 1.0,
+            "contrast_factor": 1.0,
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 0.0,
+            "name": "color_jitter",
+            "output_path": null,
+            "saturation_factor": 1.0,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "compose": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 2.0,
+            "name": "blur",
+            "output_path": null,
+            "radius": 2.0,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        },
+        {
+            "bbox_format": "yolo",
+            "brightness_factor": 1.0,
+            "contrast_factor": 1.0,
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 5.0,
+            "name": "color_jitter",
+            "output_path": null,
+            "saturation_factor": 1.5,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        },
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "emoji_path": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "emoji_size": 0.15,
+            "intensity": 2.25,
+            "name": "overlay_emoji",
+            "opacity": 1.0,
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "x_pos": 0.4,
+            "y_pos": 0.8
+        }
+    ],
+    "contrast": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 1.0,
+            "intensity": 0.0,
+            "name": "contrast",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "convert_color": [
+        {
+            "bbox_format": "yolo",
+            "colors": 256,
+            "dither": null,
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "matrix": null,
+            "mode": "L",
+            "name": "convert_color",
+            "output_path": null,
+            "palette": 0,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "crop": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.5, 1.0]],
+            "dst_height": 540,
+            "dst_width": 960,
+            "intensity": 75.0,
+            "name": "crop",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "x1": 0.25,
+            "x2": 0.75,
+            "y1": 0.25,
+            "y2": 0.75
+        }
+    ],
+    "encoding_quality": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 70.0,
+            "name": "encoding_quality",
+            "output_path": null,
+            "quality": 30,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "grayscale": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "mode": "luminosity",
+            "name": "grayscale",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "hflip": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "hflip",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "masked_composite": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 50.0,
+            "mask": "masks/dfdc_mask.png",
+            "name": "masked_composite",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "transform_function": "Brightness"
+        }
+    ],
+    "meme_format": [
+        {
+            "bbox_format": "yolo",
+            "caption_height": 250,
+            "dst_bboxes": [[0.5, 0.5939849624060152, 0.25, 0.6090225563909775]],
+            "dst_height": 1330,
+            "dst_width": 1920,
+            "font_file": "fonts/Raleway-ExtraBold.ttf",
+            "intensity": 18.796992481203006,
+            "meme_bg_color": [255, 255, 255],
+            "name": "meme_format",
+            "opacity": 1.0,
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "text": "LOL",
+            "text_color": [0, 0, 0]
+        }
+    ],
+    "opacity": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 0.0,
+            "level": 1.0,
+            "name": "opacity",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "overlay_emoji": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "emoji_path": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "emoji_size": 0.15,
+            "intensity": 2.25,
+            "name": "overlay_emoji",
+            "opacity": 1.0,
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "x_pos": 0.4,
+            "y_pos": 0.8
+        }
+    ],
+    "overlay_image": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 2.25,
+            "max_visible_opacity": 0.75,
+            "name": "overlay_image",
+            "opacity": 1.0,
+            "output_path": null,
+            "overlay": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "overlay_size": 0.15,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "x_pos": 0.4,
+            "y_pos": 0.8
+        }
+    ],
+    "overlay_onto_background_image": [
+        {
+            "bbox_format": "yolo",
+            "background_image": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "dst_bboxes": [[0.65, 0.65, 0.125, 0.375]],
+            "dst_height": 2160,
+            "dst_width": 3840,
+            "intensity": 75.0,
+            "name": "overlay_onto_background_image",
+            "opacity": 1.0,
+            "output_path": null,
+            "overlay_size": 0.5,
+            "scale_bg": true,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "x_pos": 0.4,
+            "y_pos": 0.4
+        }
+    ],
+    "overlay_onto_screenshot": [
+        {
+            "bbox_format": "yolo",
+            "crop_src_to_fit": false,
+            "dst_bboxes": [
+                [
+                    0.5020501138952164,
+                    0.465223786509771,
+                    0.21867881548974938,
+                    0.1702038243328431
+                ]
+            ],
+            "dst_height": 4759,
+            "dst_width": 2195,
+            "intensity": 96.59655533383336,
+            "max_image_size_pixels": null,
+            "name": "overlay_onto_screenshot",
+            "output_path": null,
+            "resize_src_to_match_template": false,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "template_bboxes_filepath": "screenshot_templates/bboxes.json",
+            "template_filepath": "excluded"
+        }
+    ],
+    "overlay_stripes": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 24.81515775034294,
+            "line_angle": 0,
+            "line_color": [255, 255, 255],
+            "line_density": 0.5,
+            "line_opacity": 1.0,
+            "line_type": "solid",
+            "line_width": 0.5,
+            "name": "overlay_stripes",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "overlay_text": [
+        {
+            "bbox_format": "yolo",
+            "color": [255, 0, 0],
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "font_file": "fonts/NotoNaskhArabic-Regular.ttf",
+            "font_size": 0.15,
+            "intensity": 2.25,
+            "name": "overlay_text",
+            "opacity": 1.0,
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "text": [5, 3, 1, 2, 1000, 221],
+            "x_pos": 0.0,
+            "y_pos": 0.5
+        }
+    ],
+    "pad": [
+        {
+            "bbox_format": "yolo",
+            "color": [0, 0, 0],
+            "dst_bboxes": [[0.5, 0.5, 0.16666666666666669, 0.5]],
+            "dst_height": 1620,
+            "dst_width": 2880,
+            "h_factor": 0.25,
+            "intensity": 55.55555555555556,
+            "name": "pad",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "w_factor": 0.25
+        }
+    ],
+    "pad_square": [
+        {
+            "bbox_format": "yolo",
+            "color": [0, 0, 0],
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.421875]],
+            "dst_height": 1920,
+            "dst_width": 1920,
+            "intensity": 43.75,
+            "name": "pad_square",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "perspective_transform": [
+        {
+            "bbox_format": "yolo",
+            "crop_out_black_border": false,
+            "dst_bboxes": [
+                [
+                    0.592357170952575,
+                    0.5549891857123999,
+                    0.24435008827448074,
+                    0.7309474206821104
+                ]
+            ],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "dx": 0.0,
+            "dy": 0.0,
+            "intensity": 100.0,
+            "name": "perspective_transform",
+            "output_path": null,
+            "seed": 42,
+            "sigma": 100.0,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "pixelization": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 0.0,
+            "name": "pixelization",
+            "output_path": null,
+            "ratio": 1.0,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "random_noise": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 0.01,
+            "mean": 0.0,
+            "name": "random_noise",
+            "output_path": null,
+            "seed": 42,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "var": 0.01
+        }
+    ],
+    "RandomAspectRatio": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1082,
+            "dst_width": 1916,
+            "intensity": 17.71150605405849,
+            "name": "change_aspect_ratio",
+            "output_path": null,
+            "ratio": 1.771150605405849,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomBlur": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 8.474337369372327,
+            "name": "blur",
+            "output_path": null,
+            "radius": 8.474337369372327,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomBrightness": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 1.6948674738744653,
+            "intensity": 16.948674738744653,
+            "name": "brightness",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomEmojiOverlay": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "emoji_path": "twemojis/smileys/astonished_face.png",
+            "emoji_size": 0.24591401976868255,
+            "intensity": 6.047370511879199,
+            "name": "overlay_emoji",
+            "opacity": 1.0,
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "x_pos": 0.4,
+            "y_pos": 0.8
+        }
+    ],
+    "RandomPixelization": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 13.730963675649054,
+            "name": "pixelization",
+            "output_path": null,
+            "ratio": 0.8626903632435095,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "RandomRotation": [
+        {
+            "bbox_format": "yolo",
+            "degrees": 152.53807264870187,
+            "dst_bboxes": [[0.5004269854824936, 0.5, 0.6831767719897525, 1]],
+            "dst_height": 609,
+            "dst_width": 1171,
+            "intensity": 84.74337369372326,
+            "name": "rotate",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "resize": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "height": null,
+            "intensity": 0.0,
+            "name": "resize",
+            "output_path": null,
+            "resample": 3,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920,
+            "width": null
+        }
+    ],
+    "rotate": [
+        {
+            "bbox_format": "yolo",
+            "degrees": 15.0,
+            "dst_bboxes": [[0.5002748763056625, 0.5, 0.37053326003298515, 1]],
+            "dst_height": 631,
+            "dst_width": 1819,
+            "intensity": 8.333333333333332,
+            "name": "rotate",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "saturation": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 0.5,
+            "intensity": 20.0,
+            "name": "saturation",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "scale": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 540,
+            "dst_width": 960,
+            "factor": 0.5,
+            "intensity": 20.0,
+            "interpolation": null,
+            "name": "scale",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "sharpen": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 2.0,
+            "intensity": 20.0,
+            "name": "sharpen",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "shuffle_pixels": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "factor": 0.5,
+            "intensity": 50.0,
+            "name": "shuffle_pixels",
+            "output_path": null,
+            "seed": 10,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "skew": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.4614583333333333, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "skew_factor": 0.5,
+            "axis": 0,
+            "intensity": 25.0,
+            "name": "skew",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
+    "vflip": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "vflip",
+            "output_path": null,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ]
+}

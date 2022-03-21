@@ -20,10 +20,10 @@ IMG_MASK_DIR = os.path.join(ASSETS_BASE_DIR, "masks")
 SCREENSHOT_TEMPLATES_DIR = os.path.join(ASSETS_BASE_DIR, "screenshot_templates")
 TEMPLATE_PATH = os.path.join(SCREENSHOT_TEMPLATES_DIR, "web.png")
 
-TEST_URI = os.path.join(ASSETS_BASE_DIR, "tests")
+TEST_URI = os.path.join(MODULE_BASE_DIR, "tests", "assets")
 
 # test paths
-METADATA_BASE_PATH = os.path.join(MODULE_BASE_DIR, "utils", "expected_output")
+METADATA_BASE_PATH = os.path.join(TEST_URI, "expected_metadata")
 METADATA_FILENAME = "expected_metadata.json"
 
 AUDIO_METADATA_PATH = os.path.join(METADATA_BASE_PATH, "audio_tests", METADATA_FILENAME)

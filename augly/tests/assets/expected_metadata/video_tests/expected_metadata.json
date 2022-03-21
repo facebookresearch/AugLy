@@ -1,0 +1,1644 @@
+{
+    "add_noise": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 10.0,
+            "level": 10,
+            "name": "add_noise",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "apply_lambda": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 0.0,
+            "name": "identity_function",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "audio_swap": [
+        {
+            "audio_path": "video/inputs/input_1.aac",
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "audio_swap",
+            "offset": 0.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "augment_audio": [
+        {
+            "audio_aug_function": "PitchShift",
+            "audio_aug_kwargs": {},
+            "audio_metadata": [
+                {
+                    "dst_duration": 10.005333333333333,
+                    "dst_num_channels": 1,
+                    "dst_sample_rate": 48000,
+                    "dst_segments": [
+                        {
+                            "end": 10.005333333333333,
+                            "start": 0
+                        }
+                    ],
+                    "intensity": 1.1904761904761905,
+                    "n_steps": 1,
+                    "name": "pitch_shift",
+                    "output_path": null,
+                    "src_duration": 10.005333333333333,
+                    "src_num_channels": 1,
+                    "src_sample_rate": 48000,
+                    "src_segments": [
+                        {
+                            "end": 10.005333333333333,
+                            "start": 0
+                        }
+                    ]
+                }
+            ],
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "end": 10.027855,
+                    "start": 0
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 1.1904761904761905,
+            "name": "augment_audio",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "end": 10.027855,
+                    "start": 0
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "blend_videos": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 50.0,
+            "name": "blend_videos",
+            "opacity": 0.5,
+            "overlay_path": "video/inputs/input_2.mp4",
+            "overlay_size": 1.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "use_second_audio": true,
+            "x_pos": 0.0,
+            "y_pos": 0.0
+        }
+    ],
+    "blur": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 3.0,
+            "name": "blur",
+            "sigma": 3,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "brightness": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 15.0,
+            "level": 0.15,
+            "name": "brightness",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "change_aspect_ratio": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1440,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1440,
+            "intensity": 7.777777777777777,
+            "name": "change_aspect_ratio",
+            "ratio": 1.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "change_video_speed": [
+        {
+            "dst_duration": 5.08078,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 5.08078
+                }
+            ],
+            "dst_width": 1920,
+            "factor": 2.0,
+            "intensity": 20.0,
+            "name": "change_video_speed",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "color_jitter": [
+        {
+            "brightness_factor": 0.15,
+            "contrast_factor": 1.3,
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 0.013,
+            "name": "color_jitter",
+            "saturation_factor": 2.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "compose": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "vflip",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        },
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 15.0,
+            "level": 0.15,
+            "name": "brightness",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        },
+        {
+            "name": "grayscale",
+            "src_duration": 10.027855,
+            "dst_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "dst_fps": 29.916666666666668,
+            "src_width": 1920,
+            "src_height": 1080,
+            "dst_width": 1920,
+            "dst_height": 1080,
+            "src_segments": [{"start": 0.0, "end": 10.027855}],
+            "dst_segments": [{"start": 0.0, "end": 10.027855}],
+            "intensity": 100.0
+        }
+    ],
+    "concat": [
+        {
+            "dst_duration": 20.05571,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 50.0,
+            "name": "concat",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_video_path_index": 0,
+            "src_width": 1920,
+            "video_paths": [
+                "video/inputs/input_1.mp4",
+                "video/inputs/input_2.mp4"
+            ]
+        }
+    ],
+    "contrast": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 0.13,
+            "level": 1.3,
+            "name": "contrast",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "crop": [
+        {
+            "bottom": 0.75,
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 540,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 960,
+            "intensity": 75.0,
+            "left": 0.25,
+            "name": "crop",
+            "right": 0.75,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "top": 0.25
+        }
+    ],
+    "encoding_quality": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 72.54901960784314,
+            "name": "encoding_quality",
+            "quality": 37,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "fps": [
+        {
+            "dst_duration": 10.066667,
+            "dst_fps": 15.0,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "fps": 15,
+            "intensity": 49.86072423398329,
+            "name": "fps",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "grayscale": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "grayscale",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "hflip": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "hflip",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "hstack": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 3840,
+            "intensity": 50.0,
+            "name": "hstack",
+            "second_video_path": "video/inputs/input_2.mp4",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "use_second_audio": false
+        }
+    ],
+    "insert_in_background": [
+        {
+            "background_path": null,
+            "background_video_duration": 10.1,
+            "dst_duration": 20.2,
+            "dst_fps": 10.0,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 2.525,
+                    "end": 12.552855000000001
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 50.35715346534653,
+            "name": "insert_in_background",
+            "offset_factor": 0.25,
+            "seed": null,
+            "source_percentage": null,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "loop": [
+        {
+            "dst_duration": 20.05571,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+        },
+        {
+            "start": 10.027855,
+                    "end": 20.05571
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 1.0,
+            "name": "loop",
+            "num_loops": 1,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+        },
+        {
+            "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "meme_format": [
+        {
+            "caption_height": 250,
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1330,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "font_file": "fonts/Raleway-ExtraBold.ttf",
+            "intensity": 18.796992481203006,
+            "meme_bg_color": [255, 255, 255],
+            "name": "meme_format",
+            "opacity": 1.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "text": "LOL",
+            "text_color": [0, 0, 0]
+        }
+    ],
+    "overlay": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "overlay",
+            "overlay_path": "video/inputs/input_2.mp4",
+            "overlay_size": null,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "use_overlay_audio": false,
+            "x_factor": 0.0,
+            "y_factor": 0.0
+        }
+    ],
+    "overlay_dots": [
+        {
+            "dot_type": "colored",
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 1.0,
+            "kwargs": {},
+            "name": "overlay_dots",
+            "num_dots": 100,
+            "random_movement": true,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "overlay_emoji": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "emoji_path": "twemojis/smileys/smiling_face_with_heart_eyes.png",
+            "emoji_size": 0.15,
+            "intensity": 1.265625,
+            "name": "overlay_emoji",
+            "opacity": 1.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "x_factor": 0.4,
+            "y_factor": 0.4
+        }
+    ],
+    "overlay_onto_background_video": [
+        {
+            "background_path": "video/inputs/input_2.mp4",
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 51.0,
+            "name": "overlay_onto_background_video",
+            "overlay_size": 0.7,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "use_background_audio": false,
+            "x_factor": 0.0,
+            "y_factor": 0.0
+        }
+    ],
+    "overlay_onto_screenshot": [
+        {
+            "crop_src_to_fit": false,
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 4760,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 2196,
+            "intensity": 96.59881985581119,
+            "max_image_size_pixels": null,
+            "name": "overlay_onto_screenshot",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "template_bboxes_filepath": "screenshot_templates/bboxes.json",
+            "template_filepath": "excluded"
+        }
+    ],
+    "overlay_shapes": [
+        {
+            "bottomright": null,
+            "colors": null,
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "kwargs": {},
+            "name": "overlay_shapes",
+            "num_shapes": 1,
+            "radius": null,
+            "random_movement": true,
+            "shape_type": null,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "thickness": null,
+            "topleft": null
+        }
+    ],
+    "overlay_text": [
+        {
+            "bottomright": [0.5, 0.25],
+            "colors": null,
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "fonts": null,
+            "fontscales": null,
+            "intensity": 0.125,
+            "kwargs": {},
+            "name": "overlay_text",
+            "random_movement": false,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "text_change_nth": null,
+            "text_len": 10,
+            "thickness": null,
+            "topleft": [0, 0]
+        }
+    ],
+    "pad": [
+        {
+            "color": [0, 0, 0],
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1620,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 2880,
+            "h_factor": 0.25,
+            "intensity": 55.55555555555556,
+            "name": "pad",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "w_factor": 0.25
+        }
+    ],
+    "perspective_transform_and_shake": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 10.0,
+            "name": "perspective_transform_and_shake",
+            "seed": 10,
+            "shake_radius": 20,
+            "sigma": 50.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "pixelization": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 90.0,
+            "name": "pixelization",
+            "ratio": 0.1,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomAspectRatio": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1720,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1206,
+            "intensity": 10.762314116091758,
+            "name": "change_aspect_ratio",
+            "ratio": 0.7015463661686019,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomBlur": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 1.3436424411240122,
+            "name": "blur",
+            "sigma": 1.3436424411240122,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomBrightness": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 73.12715117751975,
+            "level": -0.7312715117751976,
+            "name": "brightness",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomContrast": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 0.3656357558875988,
+            "level": -3.656357558875988,
+            "name": "contrast",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomEmojiOverlay": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "emoji_path": "twemojis/smileys/beating_heart.png",
+            "emoji_size": 0.15,
+            "intensity": 1.265625,
+            "name": "overlay_emoji",
+            "opacity": 1.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "x_factor": 0.4,
+            "y_factor": 0.4
+        }
+    ],
+    "RandomEncodingQuality": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 27.450980392156865,
+            "name": "encoding_quality",
+            "quality": 14,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomFPS": [
+        {
+            "dst_duration": 10.048921,
+            "dst_fps": 8.3591061028478,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "fps": 8.359106102810031,
+            "intensity": 72.05869826358764,
+            "name": "fps",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomNoise": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 6.0,
+            "level": 6,
+            "name": "add_noise",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomPixelization": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 81.52566263062766,
+            "name": "pixelization",
+            "ratio": 0.1847433736937233,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomRotation": [
+        {
+            "degrees": 24.18556394023222,
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 13.436424411240122,
+            "name": "rotate",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "RandomVideoSpeed": [
+        {
+            "dst_duration": 13.303621,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 13.303621
+                }
+            ],
+            "dst_width": 1920,
+            "factor": 0.7538659154215046,
+            "intensity": 13.26495839039063,
+            "name": "change_video_speed",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "remove_audio": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "remove_audio",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "replace_with_background": [
+        {
+            "background_offset": 0,
+            "background_path": null,
+            "dst_duration": 10.3,
+            "dst_fps": 10.0,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.30083565000000007,
+                    "end": 7.32033415
+                }
+            ],
+            "dst_width": 1920,
+            "ending_background_duration": 2.7075208500000003,
+            "intensity": 30.000000000000004,
+            "name": "replace_with_background",
+            "source_duration": 7.0194985,
+            "source_offset": 0.1,
+            "source_percentage": 0.7,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "starting_background_duration": 0.30083565000000007
+        }
+    ],
+    "replace_with_color_frames": [
+        {
+            "color": [0, 0, 0],
+            "dst_duration": 10.1,
+            "dst_fps": 10.0,
+            "dst_height": 1080,
+            "dst_segments": [],
+            "dst_width": 1920,
+            "duration_factor": 1.0,
+            "intensity": 100.0,
+            "name": "replace_with_color_frames",
+            "offset_factor": 0.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [],
+            "src_width": 1920
+        }
+    ],
+    "resize": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 300,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 300,
+            "height": 300,
+            "intensity": 95.65972222222221,
+            "name": "resize",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "width": 300
+        }
+    ],
+    "rotate": [
+        {
+            "degrees": 15,
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 8.333333333333332,
+            "name": "rotate",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "scale": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 540,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 960,
+            "factor": 0.5,
+            "intensity": 20.0,
+            "name": "scale",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "shift": [
+        {
+            "color": [0, 0, 0],
+            "dst_duration": 10.1,
+            "dst_fps": 10.0,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 56.25,
+            "name": "shift",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "x_factor": 0.25,
+            "y_factor": 0.25
+        }
+    ],
+    "time_crop": [
+        {
+            "dst_duration": 5.013928,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 5.0139275
+                }
+            ],
+            "dst_width": 1920,
+            "duration_factor": 0.5,
+            "intensity": 49.999995013888814,
+            "name": "time_crop",
+            "offset_factor": 0.0,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 5.0139275
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "time_decimate": [
+        {
+            "dst_duration": 6.016713,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 2.005571
+        },
+        {
+            "start": 2.005571,
+                    "end": 4.0111419999999995
+        },
+        {
+            "start": 4.0111419999999995,
+                    "end": 6.016712999999999
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 40.0,
+            "name": "time_decimate",
+            "off_factor": 0.5,
+            "on_factor": 0.2,
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 2.0055709999999998
+                },
+                {
+                    "start": 3.0083565000000005,
+                    "end": 5.0139275
+                },
+                {
+                    "start": 6.016713000000001,
+                    "end": 8.022284
+                }
+            ],
+            "src_width": 1920
+            }
+        ],
+        "trim": [
+        {
+            "dst_duration": 5.013928,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 5.0
+                }
+            ],
+            "dst_width": 1920,
+                    "end": 5,
+            "intensity": 49.999995013888814,
+            "name": "trim",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 5.0
+                }
+            ],
+            "src_width": 1920,
+            "start": null
+        }
+    ],
+    "vflip": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 1080,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 100.0,
+            "name": "vflip",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920
+        }
+    ],
+    "vstack": [
+        {
+            "dst_duration": 10.027855,
+            "dst_fps": 29.916666666666668,
+            "dst_height": 2160,
+            "dst_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "dst_width": 1920,
+            "intensity": 50.0,
+            "name": "vstack",
+            "second_video_path": "video/inputs/input_2.mp4",
+            "src_duration": 10.027855,
+            "src_fps": 29.916666666666668,
+            "src_height": 1080,
+            "src_segments": [
+                {
+                    "start": 0.0,
+                    "end": 10.027855
+                }
+            ],
+            "src_width": 1920,
+            "use_second_audio": false
+        }
+    ]
+}
