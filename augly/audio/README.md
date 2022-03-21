@@ -4,7 +4,7 @@
 
 If you would like to use the audio augmentations, please install AugLy using the following command:
 ```bash
-pip install augly[av]
+pip install augly[audio]
 ```
 
 This ensures that not only the base dependencies, but also the heavier dependencies required for audio & video processing, are installed.
