@@ -41,7 +41,10 @@ def ret_and_save_image(
         image = image.convert(src_mode)
 
     if output_path is not None:
-        if any(output_path.endswith(extension) for extension in JPEG_EXTENSIONS):
+        if (
+            any(output_path.endswith(extension) for extension in JPEG_EXTENSIONS)
+            or image.mode == "CMYK"
+        ):
             image = image.convert("RGB")
 
         utils.validate_output_path(output_path)
