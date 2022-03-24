@@ -1,0 +1,5 @@
+ffmpeg-python>=0.2.0
+numpy>=1.19.5
+opencv-python>=4.5.2.54
+Pillow>=8.2.0,<9.0.0
+vidgear>=0.2.4

@@ -5,6 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+import os
 from pathlib import Path
 
 import setuptools
@@ -15,10 +16,18 @@ requirements = [
 ]
 
 extra_requirements = {
-    "av": [
-        r for r in Path("av_requirements.txt").read_text().splitlines() if "@" not in r
+    module: [
+        r
+        for r in Path(os.path.join("augly", module, "requirements.txt"))
+        .read_text()
+        .splitlines()
+        if "@" not in r
     ]
+    for module in ["audio", "image", "text", "video"]
 }
+
+extra_requirements["video"].extend(extra_requirements["audio"])
+extra_requirements["all"] = [r for reqs in extra_requirements.values() for r in reqs]
 
 with open("README.md", encoding="utf8") as f:
     readme = f.read()
