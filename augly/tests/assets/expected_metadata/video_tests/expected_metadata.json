@@ -54,7 +54,7 @@
     ],
     "audio_swap": [
         {
-            "audio_path": "tests/video/inputs/input_1.aac",
+            "audio_path": "video/inputs/input_1.aac",
             "dst_duration": 10.027855,
             "dst_fps": 29.916666666666668,
             "dst_height": 1080,
@@ -149,7 +149,7 @@
             "intensity": 50.0,
             "name": "blend_videos",
             "opacity": 0.5,
-            "overlay_path": "tests/video/inputs/input_2.mp4",
+            "overlay_path": "video/inputs/input_2.mp4",
             "overlay_size": 1.0,
             "src_duration": 10.027855,
             "src_fps": 29.916666666666668,
@@ -394,8 +394,8 @@
             "src_video_path_index": 0,
             "src_width": 1920,
             "video_paths": [
-                "tests/video/inputs/input_1.mp4",
-                "tests/video/inputs/input_2.mp4"
+                "video/inputs/input_1.mp4",
+                "video/inputs/input_2.mp4"
             ]
         }
     ],
@@ -576,7 +576,7 @@
             "dst_width": 3840,
             "intensity": 50.0,
             "name": "hstack",
-            "second_video_path": "tests/video/inputs/input_2.mp4",
+            "second_video_path": "video/inputs/input_2.mp4",
             "src_duration": 10.027855,
             "src_fps": 29.916666666666668,
             "src_height": 1080,
@@ -702,7 +702,7 @@
             "dst_width": 1920,
             "intensity": 100.0,
             "name": "overlay",
-            "overlay_path": "tests/video/inputs/input_2.mp4",
+            "overlay_path": "video/inputs/input_2.mp4",
             "overlay_size": null,
             "src_duration": 10.027855,
             "src_fps": 29.916666666666668,
@@ -782,7 +782,7 @@
     ],
     "overlay_onto_background_video": [
         {
-            "background_path": "tests/video/inputs/input_2.mp4",
+            "background_path": "video/inputs/input_2.mp4",
             "dst_duration": 10.027855,
             "dst_fps": 29.916666666666668,
             "dst_height": 1080,
@@ -1627,7 +1627,7 @@
             "dst_width": 1920,
             "intensity": 50.0,
             "name": "vstack",
-            "second_video_path": "tests/video/inputs/input_2.mp4",
+            "second_video_path": "video/inputs/input_2.mp4",
             "src_duration": 10.027855,
             "src_fps": 29.916666666666668,
             "src_height": 1080,
