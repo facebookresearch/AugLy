@@ -16,13 +16,13 @@ from augly.utils import TEST_URI, pathmgr
 
 
 def are_equal_videos(a_path: str, b_path: str) -> bool:
-    hasher = hashlib.md5(usedforsecurity=False)
+    hasher = hashlib.md5()
     with open(a_path, "rb") as afile:
         buf = afile.read()
         hasher.update(buf)
         a_md5_hash = hasher.hexdigest()
 
-    hasher = hashlib.md5(usedforsecurity=False)
+    hasher = hashlib.md5()
     with open(b_path, "rb") as bfile:
         buf = bfile.read()
         hasher.update(buf)

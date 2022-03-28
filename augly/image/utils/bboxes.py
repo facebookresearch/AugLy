@@ -400,8 +400,8 @@ def rotate_bboxes_helper(
         round(math.cos(angle_rad), 15),
         round(math.sin(angle_rad), 15),
         0.0,
-        round(-math.sin(angle_rad), 15),
-        round(math.cos(angle_rad), 15),
+        round(math.sin(angle_rad), 15),
+        round(-math.cos(angle_rad), 15),
         0.0,
     ]
     rotation_matrix[2], rotation_matrix[5] = transform(
