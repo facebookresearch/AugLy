@@ -259,10 +259,9 @@ class TransformsTextUnitTest(unittest.TestCase):
         aug_chars = txtaugs.ReplaceSimilarChars(aug_word_p=0.3, aug_char_p=0.3)(
             self.texts, metadata=self.metadata
         )
-
         self.assertTrue(
             aug_chars[0]
-            == "The quick brown 'fox' could^'t jump over the green, grassy hi7l."
+            == "The quick brown 'fox' coul|)n't jump 0ver the green, grassy hill."
         )
         self.assertTrue(
             are_equal_metadata(
@@ -277,7 +276,7 @@ class TransformsTextUnitTest(unittest.TestCase):
 
         self.assertTrue(
             aug_unicode_chars[0]
-            == "The ჹuick brown 'fox' coỦldή't jump oṼer the green, grassy hiļl."
+            == "The ℚuick brown 'fox' coul₫n't jump ov६r the green, grassy hill."
         )
         self.assertTrue(
             are_equal_metadata(
