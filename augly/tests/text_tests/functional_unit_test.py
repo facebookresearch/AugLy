@@ -321,8 +321,8 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_chars,
             [
-                "T|-|e quick brown 'fox' could^'t jump over the green, grassy hill.",
-                "The quick 13rown 'fox' couldn't jump over the gr3en, grassy hill.",
+                "T/-/e quick brown 'fox' coul|)n't jump over the green, grassy hill.",
+                "T)-(e quick br0wn 'fox' couldn't jump over the green, g12assy hill.",
             ],
         )
         augmented_chars_targetted = txtaugs.replace_similar_chars(
@@ -335,8 +335,8 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_chars_targetted,
             [
-                "The quick brown 'fox' couldn't jump over the gI2een, 9rassy hil|_.",
-                "The quick brown 'fox' couldn't jump over t/-/e 9reen, gr4ssy h!ll.",
+                "The quic|{ brown 'fox' couldn't jump Dver the green, gr4ssy hill.",
+                "7he quick brown 'fox' couldn't jump over the green, gr4ssy hill.",
             ],
         )
 
@@ -347,8 +347,8 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_unicode_chars,
             [
-                "Tℌe ჹuick brown 'fox' coỦldή't jump oṼer the green, grassy hill.",
-                "The quick ␢rown 'ⓕox' couldn't jumρ over the ġreen, grassy hill.",
+                "TĦe ℚuick brown 'fox' coul₫n't jump over the green, grassy hill.",
+                "Ŧhe quick browŅ 'fox' couldn't jÙmp over the green, grassy hill.",
             ],
         )
         augmented_unicode_chars_targetted = txtaugs.replace_similar_unicode_chars(
@@ -361,8 +361,8 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertEqual(
             augmented_unicode_chars_targetted,
             [
-                "The quick brown 'fox' couldn't jump over †he ǥreen, gℝassy hiĽl.",
-                "The quick brown 'fox' couldn't jump over tҺe Ġreen, grⓐssy hilĻ.",
+                "⍡he quick brown 'fox' couldn't jump oveℛ the green, ġrassy hill.",
+                "The quick brown 'fox' couldn't jump over thė green, gℝassy hill.",
             ],
         )
 

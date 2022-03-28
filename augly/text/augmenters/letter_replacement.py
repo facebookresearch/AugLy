@@ -9,15 +9,14 @@ import json
 from typing import List, Optional
 
 from augly.text.augmenters.utils import (
-    detokenize,
     get_aug_idxes,
     LETTER_CHAR_MAPPING,
-    tokenize,
+    split_words_on_whitespace,
+    rejoin_words_and_whitespace,
     validate_augmenter_params,
 )
 from augly.utils import pathmgr
 from augly.utils.libsndfile import install_libsndfile
-
 
 install_libsndfile()
 from nlpaug.augmenter.char import CharAugmenter  # @manual
@@ -90,7 +89,7 @@ class LetterReplacementAugmenter(CharAugmenter):
 
         @param data: the text where the letter substitution will be applied on
         """
-        tokens = tokenize(data)
+        tokens, whitespaces = split_words_on_whitespace(data)
         aug_word_cnt = self._generate_aug_cnt(
             len(tokens), self.aug_word_min, self.aug_word_max, self.aug_word_p
         )
@@ -126,4 +125,4 @@ class LetterReplacementAugmenter(CharAugmenter):
 
             tokens[t_i] = "".join(chars)
 
-        return detokenize(tokens)
+        return rejoin_words_and_whitespace(tokens, whitespaces)
