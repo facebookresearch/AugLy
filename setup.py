@@ -26,8 +26,8 @@ extra_requirements = {
     for module in ["audio", "image", "text", "video"]
 }
 
-extra_requirements["video"].extend(extra_requirements["audio"])
-extra_requirements["all"] = [r for reqs in extra_requirements.values() for r in reqs]
+extra_requirements["video"].extend(extra_requirements["audio"] + extra_requirements["image"])
+extra_requirements["all"] = list({r for reqs in extra_requirements.values() for r in reqs})
 
 with open("README.md", encoding="utf8") as f:
     readme = f.read()
