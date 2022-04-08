@@ -3,7 +3,7 @@
 ## Installation   
 If you would like to use the text augmentations, please install AugLy using the following command:
 ```bash 
-pip install augly
+pip install augly[text]
 ```
 
 ## Augmentations
