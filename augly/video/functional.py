@@ -465,6 +465,8 @@ def concat(
     video_paths: List[str],
     output_path: Optional[str] = None,
     src_video_path_index: int = 0,
+    transition: Optional[af.ConcatTransition] = None,
+    transition_kwargs: Optional[Dict[str, Any]] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -480,6 +482,11 @@ def concat(
     @param src_video_path_index: for metadata purposes, this indicates which video in
         the list `video_paths` should be considered the `source` or original video
 
+    @param transition: optional transition effect between the clips
+
+    @param transition_kwargs: optional dictionary with transition parameters,
+        e.g. the "duration" in seconds of the effect to apply
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
@@ -490,7 +497,9 @@ def concat(
         metadata, locals(), video_paths[src_video_path_index]
     )
 
-    concat_aug = af.VideoAugmenterByConcat(video_paths, src_video_path_index)
+    concat_aug = af.VideoAugmenterByConcat(
+        video_paths, src_video_path_index, transition, transition_kwargs
+    )
     concat_aug.add_augmenter(video_paths[src_video_path_index], output_path)
 
     if metadata is not None:

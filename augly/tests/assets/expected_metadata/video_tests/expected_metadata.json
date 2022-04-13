@@ -393,6 +393,8 @@
             ],
             "src_video_path_index": 0,
             "src_width": 1920,
+            "transition": null,
+            "transition_kwargs": null,
             "video_paths": [
                 "video/inputs/input_1.mp4",
                 "video/inputs/input_2.mp4"
