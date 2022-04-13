@@ -11,8 +11,8 @@ from typing import List, Optional
 from augly.text.augmenters.utils import (
     get_aug_idxes,
     LETTER_CHAR_MAPPING,
-    split_words_on_whitespace,
     rejoin_words_and_whitespace,
+    split_words_on_whitespace,
     validate_augmenter_params,
 )
 from augly.utils import pathmgr

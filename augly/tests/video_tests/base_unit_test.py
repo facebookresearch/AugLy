@@ -12,7 +12,7 @@ import unittest
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from augly.tests import VideoAugConfig
-from augly.utils import TEST_URI, pathmgr
+from augly.utils import pathmgr, TEST_URI
 
 
 def are_equal_videos(a_path: str, b_path: str) -> bool:

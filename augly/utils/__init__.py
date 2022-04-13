@@ -27,9 +27,9 @@ from augly.utils.base_paths import (
     METADATA_BASE_PATH,
     SCREENSHOT_TEMPLATES_DIR,
     TEMPLATE_PATH,
+    TEST_URI,
     TEXT_DIR,
     TEXT_METADATA_PATH,
-    TEST_URI,
     VIDEO_METADATA_PATH,
 )
 from augly.utils.classes import Segment

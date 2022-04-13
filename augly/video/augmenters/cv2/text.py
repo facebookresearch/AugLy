@@ -8,7 +8,7 @@
 import pickle
 import random
 import string
-from typing import Any, List, Iterator, Optional, Tuple
+from typing import Any, Iterator, List, Optional, Tuple
 
 import cv2
 import numpy as np

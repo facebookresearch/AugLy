@@ -7,8 +7,7 @@
 
 from typing import Any, Dict, List, Optional, Tuple
 
-from augly.image import intensity as imint
-from augly.image import utils as imutils
+from augly.image import intensity as imint, utils as imutils
 from augly.video.helpers import get_video_info
 
 

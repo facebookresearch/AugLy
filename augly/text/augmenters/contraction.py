@@ -9,10 +9,7 @@ import json
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
-from augly.text.augmenters.utils import (
-    detokenize,
-    tokenize,
-)
+from augly.text.augmenters.utils import detokenize, tokenize
 from augly.utils import pathmgr
 
 

@@ -12,7 +12,7 @@ from typing import Callable
 
 import numpy as np
 from augly.tests import AudioAugConfig
-from augly.utils import TEST_URI, pathmgr
+from augly.utils import pathmgr, TEST_URI
 from augly.utils.libsndfile import install_libsndfile
 
 

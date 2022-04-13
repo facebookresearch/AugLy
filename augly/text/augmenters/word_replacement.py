@@ -8,11 +8,7 @@
 import json
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from augly.text.augmenters.utils import (
-    detokenize,
-    get_aug_idxes,
-    tokenize,
-)
+from augly.text.augmenters.utils import detokenize, get_aug_idxes, tokenize
 from augly.utils import pathmgr
 from augly.utils.libsndfile import install_libsndfile
 
