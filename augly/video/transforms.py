@@ -12,6 +12,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 import numpy as np
 from augly import audio as audaugs, utils
 from augly.video import functional as F
+from augly.video.augmenters import ffmpeg as af
 from augly.video.helpers import identity_function
 
 
@@ -604,6 +605,8 @@ class Concat(BaseTransform):
         self,
         other_video_paths: List[str],
         src_video_path_index: int = 0,
+        transition: Optional[af.ConcatTransition] = None,
+        transition_kwargs: Optional[Dict[str, Any]] = None,
         p: float = 1.0,
     ):
         """
@@ -614,11 +617,19 @@ class Concat(BaseTransform):
         @param src_video_path_index: for metadata purposes, this indicates which video in
             the list `video_paths` should be considered the `source` or original video
 
+        @param transition: if provided, transition will specify the type of effect desired
+            between segments
+
+        @param transition_kwargs: if provided, it will allow specifying transition parameters,
+            e.g. the duration in seconds; only used if transition is set
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.other_video_paths = other_video_paths
         self.src_video_path_index = src_video_path_index
+        self.transition = transition
+        self.transition_kwargs = transition_kwargs
 
     def apply_transform(
         self,
@@ -648,7 +659,12 @@ class Concat(BaseTransform):
             + self.other_video_paths[self.src_video_path_index :]
         )
         return F.concat(
-            video_paths, output_path, self.src_video_path_index, metadata=metadata
+            video_paths,
+            output_path,
+            self.src_video_path_index,
+            transition=self.transition,
+            transition_kwargs=self.transition_kwargs,
+            metadata=metadata,
         )
 
 
@@ -920,6 +936,8 @@ class InsertInBackground(BaseTransform):
         self,
         background_path: Optional[str] = None,
         offset_factor: float = 0.0,
+        transition: Optional[af.ConcatTransition] = None,
+        transition_kwargs: Optional[Dict[str, Any]] = None,
         p: float = 1.0,
     ):
         """
@@ -931,11 +949,19 @@ class InsertInBackground(BaseTransform):
             starts to play (this factor is multiplied by the background video duration
             to determine the start point)
 
+        @param transition: if provided, transition will specify the type of effect desired
+            between segments
+
+        @param transition_kwargs: if provided, it will allow specifying transition parameters,
+            e.g. the duration in seconds; only used if transition is set
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.background_path = background_path
         self.offset_factor = offset_factor
+        self.transition = transition
+        self.transition_kwargs = transition_kwargs
 
     def apply_transform(
         self,
@@ -963,6 +989,8 @@ class InsertInBackground(BaseTransform):
             output_path,
             self.background_path,
             self.offset_factor,
+            transition=self.transition,
+            transition_kwargs=self.transition_kwargs,
             metadata=metadata,
         )
 
@@ -1728,6 +1756,8 @@ class ReplaceWithBackground(BaseTransform):
         source_offset: float = 0.0,
         background_offset: float = 0.0,
         source_percentage: float = 0.5,
+        transition: Optional[af.ConcatTransition] = None,
+        transition_kwargs: Optional[Dict[str, Any]] = None,
         p: float = 1.0,
     ):
         """
@@ -1739,6 +1769,12 @@ class ReplaceWithBackground(BaseTransform):
             starts to play (this factor is multiplied by the background video duration
             to determine the start point)
 
+        @param transition: if provided, transition will specify the type of effect desired
+            between segments
+
+        @param transition_kwargs: if provided, it will allow specifying transition parameters,
+            e.g. the duration in seconds; only used if transition is set
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
@@ -1746,6 +1782,8 @@ class ReplaceWithBackground(BaseTransform):
         self.source_offset = source_offset
         self.background_offset = background_offset
         self.source_percentage = source_percentage
+        self.transition = transition
+        self.transition_kwargs = transition_kwargs
 
     def apply_transform(
         self,
@@ -1775,6 +1813,8 @@ class ReplaceWithBackground(BaseTransform):
             source_offset=self.source_offset,
             background_offset=self.background_offset,
             source_percentage=self.source_percentage,
+            transition=self.transition,
+            transition_kwargs=self.transition_kwargs,
             metadata=metadata,
         )
 
@@ -1785,6 +1825,8 @@ class ReplaceWithColorFrames(BaseTransform):
         offset_factor: float = 0.0,
         duration_factor: float = 1.0,
         color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+        transition: Optional[af.ConcatTransition] = None,
+        transition_kwargs: Optional[Dict[str, Any]] = None,
         p: float = 1.0,
     ):
         """
@@ -1796,11 +1838,19 @@ class ReplaceWithColorFrames(BaseTransform):
 
         @param color: RGB color of the replaced frames. Default color is black
 
+        @param transition: if provided, transition will specify the type of effect desired
+            between segments
+
+        @param transition_kwargs: if provided, it will allow specifying transition parameters,
+            e.g. the duration in seconds; only used if transition is set
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.offset_factor, self.duration_factor = offset_factor, duration_factor
         self.color = color
+        self.transition = transition
+        self.transition_kwargs = transition_kwargs
 
     def apply_transform(
         self,
@@ -1828,6 +1878,8 @@ class ReplaceWithColorFrames(BaseTransform):
             self.offset_factor,
             self.duration_factor,
             self.color,
+            transition=self.transition,
+            transition_kwargs=self.transition_kwargs,
             metadata=metadata,
         )
 
@@ -2042,7 +2094,14 @@ class TimeCrop(BaseTransform):
 
 
 class TimeDecimate(BaseTransform):
-    def __init__(self, on_factor: float = 0.2, off_factor: float = 0.5, p: float = 1.0):
+    def __init__(
+        self,
+        on_factor: float = 0.2,
+        off_factor: float = 0.5,
+        transition: Optional[af.ConcatTransition] = None,
+        transition_kwargs: Optional[Dict[str, Any]] = None,
+        p: float = 1.0,
+    ):
         """
         @param on_factor: relative to the video duration; the amount of time each
             "on" video chunk should be
@@ -2050,10 +2109,18 @@ class TimeDecimate(BaseTransform):
         @param off_factor: relative to the "on" duration; the amount of time each
             "off" video chunk should be
 
+        @param transition: if provided, transition will specify the type of effect desired
+            between segments
+
+        @param transition_kwargs: if provided, it will allow specifying transition parameters,
+            e.g. the duration in seconds; only used if transition is set
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.on_factor, self.off_factor = on_factor, off_factor
+        self.transition = transition
+        self.transition_kwargs = transition_kwargs
 
     def apply_transform(
         self,
@@ -2077,7 +2144,13 @@ class TimeDecimate(BaseTransform):
         @returns: the path to the augmented video
         """
         return F.time_decimate(
-            video_path, output_path, self.on_factor, self.off_factor, metadata
+            video_path,
+            output_path,
+            self.on_factor,
+            self.off_factor,
+            transition=self.transition,
+            transition_kwargs=self.transition_kwargs,
+            metadata=metadata,
         )
 
 
