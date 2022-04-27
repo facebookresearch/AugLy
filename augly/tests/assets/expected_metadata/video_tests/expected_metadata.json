@@ -610,6 +610,8 @@
             "name": "insert_in_background",
             "offset_factor": 0.25,
             "seed": null,
+            "transition": null,
+            "transition_kwargs": null,
             "source_percentage": null,
             "src_duration": 10.027855,
             "src_fps": 29.916666666666668,
@@ -1356,7 +1358,9 @@
                 }
             ],
             "src_width": 1920,
-            "starting_background_duration": 0.30083565000000007
+            "starting_background_duration": 0.30083565000000007,
+            "transition": null,
+            "transition_kwargs": null
         }
     ],
     "replace_with_color_frames": [
@@ -1375,7 +1379,9 @@
             "src_fps": 29.916666666666668,
             "src_height": 1080,
             "src_segments": [],
-            "src_width": 1920
+            "src_width": 1920,
+            "transition": null,
+            "transition_kwargs": null
         }
     ],
     "resize": [
@@ -1558,7 +1564,9 @@
                     "end": 8.022284
                 }
             ],
-            "src_width": 1920
+            "src_width": 1920,
+            "transition": null,
+            "transition_kwargs": null
             }
         ],
         "trim": [
