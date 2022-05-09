@@ -13,7 +13,8 @@ from augly.video.augmenters.ffmpeg.brightness import VideoAugmenterByBrightness
 from augly.video.augmenters.ffmpeg.color_jitter import VideoAugmenterByColorJitter
 from augly.video.augmenters.ffmpeg.concat import (
     VideoAugmenterByConcat,
-    ConcatTransition,
+    TransitionConfig,
+    TransitionEffect,
 )
 from augly.video.augmenters.ffmpeg.contrast import VideoAugmenterByContrast
 from augly.video.augmenters.ffmpeg.crop import VideoAugmenterByCrop
@@ -36,7 +37,8 @@ from augly.video.augmenters.ffmpeg.vflip import VideoAugmenterByVFlip
 
 __all__ = [
     "BaseVidgearFFMPEGAugmenter",
-    "ConcatTransition",
+    "TransitionConfig",
+    "TransitionEffect",
     "VideoAugmenterByAspectRatio",
     "VideoAugmenterByAudioSwap",
     "VideoAugmenterByBlur",

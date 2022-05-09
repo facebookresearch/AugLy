@@ -1,3 +1,4 @@
+dataclasses-json>=0.5.2
 iopath>=0.1.8
 python-magic>=0.4.22
 regex>=2021.4.4
