@@ -5,16 +5,18 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+from dataclasses import dataclass
 from enum import Enum
 from math import ceil
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from augly.utils import pathmgr
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_video_info
+from dataclasses_json import dataclass_json
 
 
-class ConcatTransition(Enum):
+class TransitionEffect(Enum):
     DISSOLVE = 2
     RADIAL = 3
     CIRCLEOPEN = 4
@@ -38,13 +40,20 @@ class ConcatTransition(Enum):
     SLIDERIGHT = 22
 
 
+@dataclass_json
+@dataclass
+class TransitionConfig:
+    effect: TransitionEffect
+    # transition duration in seconds.
+    duration: float = 2.0
+
+
 class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
     def __init__(
         self,
         video_paths: List[str],
         src_video_path_index: int,
-        transition: Optional[ConcatTransition] = None,
-        transition_kwargs: Optional[Dict[str, Any]] = None,
+        transition: Optional[TransitionConfig] = None,
     ):
         assert len(video_paths) > 0, "Please provide at least one input video"
         assert all(
@@ -65,7 +74,6 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
             "sample_aspect_ratio", self.width / self.height
         )
         self.transition = transition
-        self.transition_duration = (transition_kwargs or {}).get("duration", 2.0)
 
     def _create_transition_filters(
         self,
@@ -74,9 +82,9 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         out_video: str = "[v]",
         out_audio: str = "[a]",
     ) -> List[str]:
-        if self.transition is None:
-            raise ValueError("cannot handle null transition")
-        transition = self.transition.name.lower()
+        assert self.transition is not None, "Transition cannot be None here."
+        transition = self.transition
+        effect = transition.effect.name.lower()
 
         video_durations = [
             float(get_video_info(video_path)["duration"])
@@ -85,7 +93,7 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         # There are 2 steps:
         # 1. Harmonize the timebase between clips;
         # 2. Add the transition filter.
-        td = self.transition_duration
+        td = transition.duration
         concat_filters = []
         for i, name in enumerate(video_streams):
             fps_filter = f"[{i}fps]"
@@ -99,14 +107,14 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
             out_filter = f"[{i}m]"
             offset = cum_dur - td
             concat_filters.append(
-                f"{prev}{fps_filter}xfade=transition={transition}:duration={td}:offset={offset}{out_filter}"
+                f"{prev}{fps_filter}xfade=transition={effect}:duration={td}:offset={offset}{out_filter}"
             )
             prev = out_filter
             cum_dur += dur - td
 
         # Special processing for the last filter to comply with out_video requirement.
         concat_filters.append(
-            f"{prev}[{len(video_durations) - 1}fps]xfade=transition={transition}:duration={td}:offset={cum_dur - td}{out_video}"
+            f"{prev}[{len(video_durations) - 1}fps]xfade=transition={effect}:duration={td}:offset={cum_dur - td}{out_video}"
         )
 
         # Concat audio filters.

@@ -465,8 +465,7 @@ def concat(
     video_paths: List[str],
     output_path: Optional[str] = None,
     src_video_path_index: int = 0,
-    transition: Optional[af.ConcatTransition] = None,
-    transition_kwargs: Optional[Dict[str, Any]] = None,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -482,11 +481,7 @@ def concat(
     @param src_video_path_index: for metadata purposes, this indicates which video in
         the list `video_paths` should be considered the `source` or original video
 
-    @param transition: if provided, transition will specify the type of effect desired
-        between segments
-
-    @param transition_kwargs: if provided, it will allow specifying transition parameters,
-        e.g. the duration in seconds; only used if transition is set
+    @param transition: optional transition configuration to apply between the clips
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
@@ -499,7 +494,9 @@ def concat(
     )
 
     concat_aug = af.VideoAugmenterByConcat(
-        video_paths, src_video_path_index, transition, transition_kwargs
+        video_paths,
+        src_video_path_index,
+        transition,
     )
     concat_aug.add_augmenter(video_paths[src_video_path_index], output_path)
 
@@ -771,8 +768,7 @@ def insert_in_background(
     offset_factor: float = 0.0,
     source_percentage: Optional[float] = None,
     seed: Optional[int] = None,
-    transition: Optional[af.ConcatTransition] = None,
-    transition_kwargs: Optional[Dict[str, Any]] = None,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -801,11 +797,7 @@ def insert_in_background(
     @param seed: if provided, this will set the random seed to ensure consistency
         between runs
 
-    @param transition: if provided, transition will specify the type of effect desired
-        between segments
-
-    @param transition_kwargs: if provided, it will allow specifying transition parameters,
-        e.g. the duration in seconds; only used if transition is set
+    @param transition: optional transition configuration to apply between the clips
 
     @param metadata: if set to be a list, metadata about the function execution including
         its name, the source & dest duration, fps, etc. will be appended to the inputted
@@ -885,7 +877,6 @@ def insert_in_background(
             output_path or video_path,
             src_video_path_index,
             transition=transition,
-            transition_kwargs=transition_kwargs,
         )
 
     if metadata is not None:
@@ -906,8 +897,7 @@ def replace_with_background(
     source_offset: float = 0.0,
     background_offset: float = 0.0,
     source_percentage: float = 0.5,
-    transition: Optional[af.ConcatTransition] = None,
-    transition_kwargs: Optional[Dict[str, Any]] = None,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -938,11 +928,7 @@ def replace_with_background(
         If the background video is not long enough to get the desired source percentage,
         it will be looped
 
-    @param transition: if provided, transition will specify the type of effect desired
-        between segments
-
-    @param transition_kwargs: if provided, it will allow specifying transition parameters,
-        e.g. the duration in seconds; only used if transition is set
+    @param transition: optional transition configuration to apply between the clips
 
     @param metadata: if set to be a list, metadata about the function execution including
         its name, the source & dest duration, fps, etc. will be appended to the inputted
@@ -1035,7 +1021,6 @@ def replace_with_background(
             output_path or video_path,
             src_video_path_index,
             transition=transition,
-            transition_kwargs=transition_kwargs,
         )
 
     if metadata is not None:
@@ -1775,8 +1760,7 @@ def replace_with_color_frames(
     offset_factor: float = 0.0,
     duration_factor: float = 1.0,
     color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
-    transition: Optional[af.ConcatTransition] = None,
-    transition_kwargs: Optional[Dict[str, Any]] = None,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -1795,11 +1779,7 @@ def replace_with_color_frames(
 
     @param color: RGB color of the replaced frames. Default color is black
 
-    @param transition: if provided, transition will specify the type of effect desired
-        between segments
-
-    @param transition_kwargs: if provided, it will allow specifying transition parameters,
-        e.g. the duration in seconds; only used if transition is set
+    @param transition: optional transition configuration to apply between the clips
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
@@ -1869,7 +1849,6 @@ def replace_with_color_frames(
             output_path,
             src_video_path_index=src_video_path_index,
             transition=transition,
-            transition_kwargs=transition_kwargs,
         )
 
     if metadata is not None:
@@ -2092,8 +2071,7 @@ def time_decimate(
     output_path: Optional[str] = None,
     on_factor: float = 0.2,
     off_factor: float = 0.5,
-    transition: Optional[af.ConcatTransition] = None,
-    transition_kwargs: Optional[Dict[str, Any]] = None,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -2111,11 +2089,7 @@ def time_decimate(
     @param off_factor: relative to the "on" duration; the amount of time each
         "off" video chunk should be
 
-    @param transition: if provided, transition will specify the type of effect desired
-        between segments
-
-    @param transition_kwargs: if provided, it will allow specifying transition parameters,
-        e.g. the duration in seconds; only used if transition is set
+    @param transition: optional transition configuration to apply between the clips
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
@@ -2155,7 +2129,6 @@ def time_decimate(
             subclips,
             output_path,
             transition=transition,
-            transition_kwargs=transition_kwargs,
         )
 
     if metadata is not None:
