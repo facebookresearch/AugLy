@@ -165,6 +165,20 @@ class TransformsTextUnitTest(unittest.TestCase):
             ),
         )
 
+    def test_InsertText(self) -> None:
+        aug_inserted_text = txtaugs.InsertText(seed=42)(
+            self.texts, metadata=self.metadata, insert_text=["wolf", "sheep"]
+        )
+
+        self.assertEqual(
+            aug_inserted_text,
+            ["wolf The quick brown 'fox' couldn't jump over the green, grassy hill."],
+        )
+
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["insert_text"]),
+        )
+
     def test_InsertWhitespaceChars(self) -> None:
         aug_whitespace_text = txtaugs.InsertWhitespaceChars("all", 1.0, False)(
             self.texts, metadata=self.metadata

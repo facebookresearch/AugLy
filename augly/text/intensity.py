@@ -32,6 +32,15 @@ def insert_punctuation_chars_intensity(
     return char_insertion_intensity_helper(granularity, cadence)
 
 
+def insert_text_intensity(num_insertions: int, **kwargs) -> float:
+    assert (
+        isinstance(num_insertions, int) and num_insertions >= 0
+    ), "Expected 'num_insertions' to be a nonnegative integer"
+
+    max_insertions = 10
+    return min((num_insertions / max_insertions) * 100.0, 100.0)
+
+
 def insert_whitespace_chars_intensity(
     granularity: str, cadence: float, **kwargs
 ) -> float:
