@@ -103,6 +103,19 @@
             "vary_chars": false
         }
     ],
+    "insert_text": [
+        {
+            "dst_length": 1,
+            "input_type": "list",
+            "insertion_location": "random",
+            "insert_text": ["wolf", "sheep"],
+            "intensity": 10.0,
+            "name": "insert_text",
+            "num_insertions": 1,
+            "seed": 42,
+            "src_length": 1
+        }
+    ],
     "insert_whitespace_chars": [
         {
             "cadence": 1.0,

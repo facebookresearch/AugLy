@@ -10,6 +10,7 @@ from augly.text.augmenters.bidirectional import BidirectionalAugmenter
 from augly.text.augmenters.case import CaseAugmenter
 from augly.text.augmenters.contraction import ContractionAugmenter
 from augly.text.augmenters.fun_fonts import FunFontsAugmenter
+from augly.text.augmenters.insert_text import InsertTextAugmenter
 from augly.text.augmenters.insertion import InsertionAugmenter
 from augly.text.augmenters.letter_replacement import LetterReplacementAugmenter
 from augly.text.augmenters.typo import TypoAugmenter
@@ -24,6 +25,7 @@ __all__ = [
     "CaseAugmenter",
     "ContractionAugmenter",
     "FunFontsAugmenter",
+    "InsertTextAugmenter",
     "InsertionAugmenter",
     "LetterReplacementAugmenter",
     "WordsAugmenter",

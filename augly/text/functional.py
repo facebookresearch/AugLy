@@ -240,6 +240,53 @@ def insert_punctuation_chars(
     return aug_texts
 
 
+def insert_text(
+    texts: Union[str, List[str]],
+    insert_text: List[str],
+    num_insertions: int = 1,
+    insertion_location: str = "random",
+    seed: Optional[int] = 10,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Union[str, List[str]]:
+    """
+    Inserts some specified text into the input text a given number of times at a given
+    location
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param insert_text: a list of text to sample from and insert into each text in texts
+
+    @param num_insertions: the number of times to sample from insert_text and insert
+
+    @param insertion_location: where to insert the insert_text in the input text; valid
+        values are "prepend", "append", or "random" (inserts at a random index between
+        words in the input text)
+
+    @param seed: if provided, this will set the random seed to ensure consistency between
+        runs
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    insert_texts_aug = a.InsertTextAugmenter(num_insertions, insertion_location, seed)
+    aug_texts = insert_texts_aug.augment(texts, insert_text)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="insert_text",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
 def insert_whitespace_chars(
     texts: Union[str, List[str]],
     granularity: str = "all",

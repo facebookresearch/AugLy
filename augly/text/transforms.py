@@ -54,6 +54,7 @@ class BaseTransform(object):
 
         @returns: the list of augmented text documents
         """
+
         assert isinstance(
             texts, (str, list)
         ), "Expected types List[str] or str for variable 'texts'"
@@ -338,6 +339,54 @@ class InsertPunctuationChars(BaseTransform):
         @returns: the list of augmented text documents
         """
         return F.insert_punctuation_chars(texts, metadata=metadata, **aug_kwargs)
+
+
+class InsertText(BaseTransform):
+    def __init__(
+        self,
+        num_insertions: int = 1,
+        insertion_location: str = "random",
+        seed: Optional[int] = 10,
+        p: float = 1.0,
+    ):
+        """
+        @param num_insertions: the number of times to sample from insert_text and insert
+
+        @param insertion_location: where to insert the insert_text in the input text;
+            valid values are "prepend", "append", or "random"
+            (inserts at a random index between words in the input text)
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.num_insertions = num_insertions
+        self.insertion_location = insertion_location
+        self.seed = seed
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
+    ) -> Union[str, List[str]]:
+        """
+        Inserts some specified text into the input text a given number of times at a
+        given location
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param insert_text: a list of text to sample from and insert into each text in
+            texts
+
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+            set in __init__
+
+        @returns: the list of augmented text documents
+        """
+        return F.insert_text(texts, metadata=metadata, **aug_kwargs)
 
 
 class InsertWhitespaceChars(BaseTransform):
