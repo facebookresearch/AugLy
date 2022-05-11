@@ -13,6 +13,7 @@ from augly.text.augmenters.fun_fonts import FunFontsAugmenter
 from augly.text.augmenters.insert_text import InsertTextAugmenter
 from augly.text.augmenters.insertion import InsertionAugmenter
 from augly.text.augmenters.letter_replacement import LetterReplacementAugmenter
+from augly.text.augmenters.text_replacement import TextReplacementAugmenter
 from augly.text.augmenters.typo import TypoAugmenter
 from augly.text.augmenters.upside_down import UpsideDownAugmenter
 from augly.text.augmenters.word_replacement import WordReplacementAugmenter
@@ -29,6 +30,7 @@ __all__ = [
     "InsertionAugmenter",
     "LetterReplacementAugmenter",
     "WordsAugmenter",
+    "TextReplacementAugmenter",
     "TypoAugmenter",
     "UpsideDownAugmenter",
     "WordReplacementAugmenter",

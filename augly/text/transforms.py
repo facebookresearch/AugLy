@@ -805,6 +805,43 @@ class ReplaceSimilarUnicodeChars(BaseTransform):
         return F.replace_similar_unicode_chars(texts, metadata=metadata, **aug_kwargs)
 
 
+class ReplaceText(BaseTransform):
+    def __init__(
+        self,
+        replace_text: Union[str, Dict[str, str]],
+        p: float = 1.0,
+    ):
+        """
+        @param replace_text: specifies the text to replace the input text with,
+            either as a string or a mapping from input text to new text
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.replace_text = replace_text
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
+    ) -> Union[str, List[str]]:
+        """
+        Replaces the input text entirely with some specified text
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param aug_kwargs: kwargs to pass into the augmentation that will override values
+
+        @returns: the list of augmented text documents
+        """
+        return F.replace_text(texts, metadata=metadata, **aug_kwargs)
+
+
 class ReplaceUpsideDown(BaseTransform):
     def __init__(
         self,

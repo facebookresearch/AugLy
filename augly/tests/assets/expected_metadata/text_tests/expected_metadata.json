@@ -221,6 +221,20 @@
             "src_length": 1
         }
     ],
+    "replace_text": [
+        {
+            "name": "replace_text",
+            "input_type": "list",
+            "src_length": 3,
+            "dst_length": 3,
+            "replace_text": {
+                "jump over the blue": "jump over the red",
+                "The quick brown": "The slow green",
+                "couldn't jump": "jumped"
+            },
+            "intensity": 100.0
+        }
+    ],
     "replace_upside_down": [
         {
             "aug_max": 1000,
