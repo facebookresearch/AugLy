@@ -298,6 +298,27 @@ class TransformsTextUnitTest(unittest.TestCase):
             ),
         )
 
+    def test_ReplaceText(self) -> None:
+        texts = [
+            "The quick brown 'fox' couldn't jump over the green, grassy hill.",
+            "The quick brown",
+            "jump over the green",
+        ]
+        replace_texts = {
+            "couldn't jump": "jumped",
+            "jump over the blue": "jump over the red",
+            "The quick brown": "The slow green",
+        }
+        aug_replaced_text = txtaugs.ReplaceText(replace_texts)(
+            texts=texts, metadata=self.metadata
+        )
+        self.assertEqual(
+            aug_replaced_text, [texts[0], replace_texts[texts[1]], texts[2]]
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["replace_text"]),
+        )
+
     def test_ReplaceUpsideDown(self) -> None:
         aug_upside_down_text = txtaugs.ReplaceUpsideDown()(
             self.texts, metadata=self.metadata

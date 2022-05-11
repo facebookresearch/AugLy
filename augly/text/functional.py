@@ -668,6 +668,40 @@ def replace_similar_unicode_chars(
     return aug_texts
 
 
+def replace_text(
+    texts: Union[str, List[str]],
+    replace_text: Union[str, Dict[str, str]],
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Union[str, List[str]]:
+    """
+    Replaces the input text entirely with some specified text
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param replace_text: specifies the text to replace the input text with,
+        either as a string or a mapping from input text to new text
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: a string or a list of augmented text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    text_aug = a.TextReplacementAugmenter()
+    aug_texts = text_aug.augment(texts, replace_text)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="replace_text",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
 def replace_upside_down(
     texts: Union[str, List[str]],
     aug_p: float = 0.3,

@@ -28,7 +28,7 @@ def get_metadata(
     metadata: Optional[List[Dict[str, Any]]],
     function_name: str,
     texts: Optional[List[str]] = None,
-    aug_texts: Optional[List[str]] = None,
+    aug_texts: Optional[Union[List[str], str]] = None,
     **kwargs,
 ) -> None:
     if metadata is None:
@@ -49,12 +49,12 @@ def get_metadata(
             "name": function_name,
             "input_type": "list" if isinstance(texts, list) else "string",
             "src_length": len(texts) if isinstance(texts, list) else 1,
-            "dst_length": len(aug_texts),
+            "dst_length": len(aug_texts) if isinstance(aug_texts, list) else 1,
             **kwargs,
         }
     )
 
-    intensity_kwargs = {"metadata": metadata[-1], **kwargs}
+    intensity_kwargs = {"metadata": metadata[-1], "texts": texts, **kwargs}
     metadata[-1]["intensity"] = getattr(
         txtintensity, f"{function_name}_intensity", lambda **_: 0.0
     )(**intensity_kwargs)

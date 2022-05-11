@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 
 def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
@@ -82,6 +82,16 @@ def replace_similar_unicode_chars_intensity(
     # we only care if aug_*_max is zero or not, so it's okay to multiply the values here
     return replace_intensity_helper(
         aug_word_p * aug_char_p, aug_word_max * aug_char_max
+    )
+
+
+def replace_text_intensity(
+    texts: Union[List[str], str], replace_text: Union[Dict[str, str], str], **kwargs
+) -> float:
+    return (
+        100.0
+        if isinstance(replace_text, str) or any(t in texts for t in replace_text)
+        else 0.0
     )
 
 
