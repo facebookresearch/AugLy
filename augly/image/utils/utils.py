@@ -158,7 +158,7 @@ def scale_template_image(
     # resize the template image to the max image size.
     if max_image_size_pixels is not None:
         template_size = template_w * template_h
-        if template_size * resize_factor ** 2 > max_image_size_pixels:
+        if template_size * resize_factor**2 > max_image_size_pixels:
             resize_factor = math.sqrt(max_image_size_pixels / template_size)
 
     template_w = int(template_w * resize_factor)
