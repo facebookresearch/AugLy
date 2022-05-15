@@ -6,7 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 
 from random import Random
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 
 class InsertTextAugmenter(object):

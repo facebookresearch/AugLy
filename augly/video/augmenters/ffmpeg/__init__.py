@@ -12,9 +12,9 @@ from augly.video.augmenters.ffmpeg.blur import VideoAugmenterByBlur
 from augly.video.augmenters.ffmpeg.brightness import VideoAugmenterByBrightness
 from augly.video.augmenters.ffmpeg.color_jitter import VideoAugmenterByColorJitter
 from augly.video.augmenters.ffmpeg.concat import (
-    VideoAugmenterByConcat,
     TransitionConfig,
     TransitionEffect,
+    VideoAugmenterByConcat,
 )
 from augly.video.augmenters.ffmpeg.contrast import VideoAugmenterByContrast
 from augly.video.augmenters.ffmpeg.crop import VideoAugmenterByCrop
