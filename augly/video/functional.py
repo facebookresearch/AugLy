@@ -830,7 +830,9 @@ def insert_in_background(
             helpers.create_color_video(resized_bg_path, video_duration, height, width)
         else:
             resize(background_path, resized_bg_path, height, width)
-            helpers.add_silent_audio(resized_bg_path)
+            silent_bg_path = os.path.join(tmpdir, "silent.mp4")
+            helpers.add_silent_audio(resized_bg_path, silent_bg_path)
+            resized_bg_path = silent_bg_path
 
         bg_video_info = helpers.get_video_info(resized_bg_path)
         bg_video_duration = float(bg_video_info["duration"])
