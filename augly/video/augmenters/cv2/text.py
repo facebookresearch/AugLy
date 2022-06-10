@@ -41,7 +41,7 @@ class VideoDistractorByText(BaseCV2Augmenter):
         random_movement: bool = False,
         topleft: Optional[Tuple[float, float]] = None,
         bottomright: Optional[Tuple[float, float]] = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         assert text_len > 0, "Text length must be greater than zero"
         assert (
