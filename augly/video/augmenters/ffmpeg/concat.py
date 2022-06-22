@@ -5,6 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+import logging
 from dataclasses import dataclass
 from enum import Enum
 from math import ceil
@@ -14,6 +15,9 @@ from augly.utils import pathmgr
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_video_info
 from dataclasses_json import dataclass_json
+
+
+log = logging.getLogger(__name__)
 
 
 class TransitionEffect(Enum):
@@ -90,6 +94,7 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
             float(get_video_info(video_path)["duration"])
             for video_path in self.video_paths
         ]
+        log.info(f"Video durations = {video_durations}.")
         # There are 2 steps:
         # 1. Harmonize the timebase between clips;
         # 2. Add the transition filter.
@@ -98,6 +103,10 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         for i, name in enumerate(video_streams):
             fps_filter = f"[{i}fps]"
             concat_filters.append(f"{name}settb=AVTB,fps=30/1{fps_filter}")
+
+        if td > min(video_durations):
+            log.info(f"Transition duration {td} > {min(video_durations)}. Decreasing.")
+            td = min(video_durations)
 
         prev = "[0fps]"
         cum_dur = video_durations[0]
