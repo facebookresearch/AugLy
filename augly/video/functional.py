@@ -801,7 +801,8 @@ def insert_in_background(
 
     @returns: the path to the augmented video
     """
-    utils.validate_video_path(video_path)
+    local_path = utils.pathmgr.get_local_path(video_path)
+    utils.validate_video_path(local_path)
     assert (
         0.0 <= offset_factor <= 1.0
     ), "Offset factor must be a value in the range [0.0, 1.0]"
@@ -811,9 +812,9 @@ def insert_in_background(
             0.0 <= source_percentage <= 1.0
         ), "Source percentage must be a value in the range [0.0, 1.0]"
 
-    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), local_path)
 
-    video_info = helpers.get_video_info(video_path)
+    video_info = helpers.get_video_info(local_path)
     video_duration = float(video_info["duration"])
     width, height = video_info["width"], video_info["height"]
 

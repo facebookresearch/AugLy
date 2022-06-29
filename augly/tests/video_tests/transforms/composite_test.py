@@ -39,7 +39,12 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
         self.evaluate_class(
             vidaugs.InsertInBackground(offset_factor=0.25),
             fname="insert_in_background",
-            metadata_exclude_keys=["dst_duration", "dst_fps", "intensity"],
+            metadata_exclude_keys=[
+                "dst_duration",
+                "dst_fps",
+                "intensity",
+                "local_path",
+            ],
         )
 
     def test_Compose(self):
