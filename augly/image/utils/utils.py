@@ -5,6 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+import functools
 import json
 import math
 import os
@@ -53,14 +54,22 @@ def ret_and_save_image(
     return image
 
 
+@functools.lru_cache
+def get_bboxes(template_bboxes_filepath: Optional[str] = None):
+    if template_bboxes_filepath is None:
+        template_bboxes_filepath = utils.BBOXES_PATH
+    local_bbox_path = utils.pathmgr.get_local_path(template_bboxes_filepath)
+    return json.load(open(local_bbox_path, "rb"))
+
+
 def get_template_and_bbox(
-    template_filepath: str, template_bboxes_filepath: str
+    template_filepath: str, template_bboxes_filepath: Optional[str]
 ) -> Tuple[Image.Image, Tuple[int, int, int, int]]:
-    template_key = os.path.basename(template_filepath)
     local_template_path = utils.pathmgr.get_local_path(template_filepath)
     template = Image.open(local_template_path)
-    local_bbox_path = utils.pathmgr.get_local_path(template_bboxes_filepath)
-    bbox = json.load(open(local_bbox_path, "rb"))[template_key]
+    bboxes = get_bboxes(template_bboxes_filepath)
+    template_key = os.path.basename(template_filepath)
+    bbox = bboxes[template_key]
 
     return template, bbox
 

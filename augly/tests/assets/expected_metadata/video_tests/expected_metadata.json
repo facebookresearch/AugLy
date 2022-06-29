@@ -606,6 +606,7 @@
             ],
             "dst_width": 1920,
             "intensity": 50.35715346534653,
+            "local_path": null,
             "name": "insert_in_background",
             "offset_factor": 0.25,
             "seed": null,
