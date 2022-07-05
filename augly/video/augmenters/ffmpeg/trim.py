@@ -18,6 +18,7 @@ class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
         end: Optional[float] = None,
         offset_factor: float = 0.0,
         duration_factor: float = 1.0,
+        minimum_duration: float = 0.0,
     ):
         assert start is None or start >= 0, "Start cannot be a negative number"
         assert (
@@ -35,11 +36,13 @@ class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
             self.end = end
             self.offset_factor = None
             self.duration_factor = None
+            self.minimum_duration = 0.0
         else:
             self.start = None
             self.end = None
             self.offset_factor = offset_factor
             self.duration_factor = duration_factor
+            self.minimum_duration = minimum_duration
 
     def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
@@ -57,7 +60,10 @@ class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
 
         if self.start is None and self.end is None:
             self.start = self.offset_factor * duration
-            duration = min(self.duration_factor * duration, duration - self.start)
+            duration = min(
+                max(self.minimum_duration, self.duration_factor * duration),
+                duration - self.start,
+            )
             self.end = self.start + duration
         elif self.start is None:
             self.start = 0

@@ -2028,6 +2028,7 @@ def time_crop(
     output_path: Optional[str] = None,
     offset_factor: float = 0.0,
     duration_factor: float = 1.0,
+    minimum_duration: float = 0.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -2044,6 +2045,8 @@ def time_crop(
     @param duration_factor: the length of the crop relative to the video duration
         (this parameter is multiplied by the video duration)
 
+    @param minimum_duration: the minimum duration of a segment selected
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
@@ -2053,7 +2056,9 @@ def time_crop(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     time_crop_aug = af.VideoAugmenterByTrim(
-        offset_factor=offset_factor, duration_factor=duration_factor
+        offset_factor=offset_factor,
+        duration_factor=duration_factor,
+        minimum_duration=minimum_duration,
     )
     time_crop_aug.add_augmenter(video_path, output_path)
 

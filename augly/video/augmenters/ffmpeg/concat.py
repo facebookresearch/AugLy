@@ -105,8 +105,12 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
             concat_filters.append(f"{name}settb=AVTB,fps=30/1{fps_filter}")
 
         if td > min(video_durations):
-            log.info(f"Transition duration {td} > {min(video_durations)}. Decreasing.")
-            td = min(video_durations)
+            # Decrease transition duration (with padding) to prevent hung ffmpeg calls.
+            new_td = max(0, min(video_durations) - 0.1)
+            log.info(
+                f"Transition duration {td} > {min(video_durations)}. Decreasing to {new_td}."
+            )
+            td = new_td
 
         prev = "[0fps]"
         cum_dur = video_durations[0]
