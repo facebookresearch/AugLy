@@ -79,6 +79,18 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         )
         self.transition = transition
 
+    def _create_null_transition_filters(
+        self,
+        video_streams: List[str],
+        audio_streams: List[str],
+    ) -> List[str]:
+        # Interleave the video and audio streams.
+        all_streams = [v for pair in zip(video_streams, audio_streams) for v in pair]
+        filters = [
+            f"{''.join(all_streams)}concat=n={len(self.video_paths)}:v=1:a=1[v][a]"
+        ]
+        return filters
+
     def _create_transition_filters(
         self,
         video_streams: List[str],
@@ -86,7 +98,9 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         out_video: str = "[v]",
         out_audio: str = "[a]",
     ) -> List[str]:
-        assert self.transition is not None, "Transition cannot be None here."
+        if self.transition is None:
+            return self._create_null_transition_filters(video_streams, audio_streams)
+
         transition = self.transition
         effect = transition.effect.name.lower()
 
@@ -107,6 +121,12 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         if td > min(video_durations):
             # Decrease transition duration (with padding) to prevent hung ffmpeg calls.
             new_td = max(0, min(video_durations) - 0.1)
+            if new_td < 0.5:
+                log.warn("Disabling transitions due to low duration: %f", new_td)
+                return self._create_null_transition_filters(
+                    video_streams, audio_streams
+                )
+
             log.info(
                 f"Transition duration {td} > {min(video_durations)}. Decreasing to {new_td}."
             )
@@ -172,16 +192,7 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
             video_streams.append(f"[{i}vf]")
             audio_streams.append(f"[{i}:a]")
 
-        # Interleave the video and audio streams.
-        if self.transition is None:
-            all_streams = [
-                v for pair in zip(video_streams, audio_streams) for v in pair
-            ]
-            filters += [
-                f"{''.join(all_streams)}concat=n={len(self.video_paths)}:v=1:a=1[v][a]"
-            ]
-        else:
-            filters += self._create_transition_filters(video_streams, audio_streams)
+        filters += self._create_transition_filters(video_streams, audio_streams)
 
         return [
             "-y",
