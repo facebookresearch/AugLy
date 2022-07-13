@@ -16,7 +16,6 @@ from augly.utils import VIDEO_METADATA_PATH
 from augly.utils.ffmpeg import get_conditional_for_skipping_video_tests
 
 
-@unittest.skipUnless(*get_conditional_for_skipping_video_tests())
 class TransformsVideoUnitTest(BaseVideoUnitTest):
     @classmethod
     def setUpClass(cls):
@@ -27,6 +26,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
     def test_ApplyLambda(self):
         self.evaluate_class(vidaugs.ApplyLambda(), fname="apply_lambda")
 
+    @unittest.skipUnless(*get_conditional_for_skipping_video_tests())
     def test_AugmentAudio(self):
         self.evaluate_class(
             vidaugs.AugmentAudio(
