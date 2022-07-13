@@ -801,8 +801,6 @@ def insert_in_background(
 
     @returns: the path to the augmented video
     """
-    local_path = utils.pathmgr.get_local_path(video_path)
-    utils.validate_video_path(local_path)
     assert (
         0.0 <= offset_factor <= 1.0
     ), "Offset factor must be a value in the range [0.0, 1.0]"
@@ -812,6 +810,8 @@ def insert_in_background(
             0.0 <= source_percentage <= 1.0
         ), "Source percentage must be a value in the range [0.0, 1.0]"
 
+    local_path = utils.pathmgr.get_local_path(video_path)
+    utils.validate_video_path(local_path)
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), local_path)
 
     video_info = helpers.get_video_info(local_path)
@@ -935,7 +935,6 @@ def replace_with_background(
 
     @returns: the path to the augmented video
     """
-    utils.validate_video_path(video_path)
     assert (
         0.0 <= source_offset <= 1.0
     ), "Source offset factor must be a value in the range [0.0, 1.0]"
@@ -948,6 +947,8 @@ def replace_with_background(
         0.0 <= source_percentage <= 1.0
     ), "Source percentage must be a value in the range [0.0, 1.0]"
 
+    local_path = utils.pathmgr.get_local_path(video_path)
+    utils.validate_video_path(local_path)
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     video_info = helpers.get_video_info(video_path)
@@ -2103,12 +2104,13 @@ def time_decimate(
     """
     assert 0 < on_factor <= 1, "on_factor must be a value in the range (0, 1]"
     assert 0 <= off_factor <= 1, "off_factor must be a value in the range [0, 1]"
-    utils.validate_video_path(video_path)
+    local_path = utils.pathmgr.get_local_path(video_path)
+    utils.validate_video_path(local_path)
 
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
-    video_info = helpers.get_video_info(video_path)
-    _, video_ext = os.path.splitext(video_path)
+    video_info = helpers.get_video_info(local_path)
+    _, video_ext = os.path.splitext(local_path)
 
     duration = float(video_info["duration"])
     on_segment = duration * on_factor
@@ -2121,13 +2123,14 @@ def time_decimate(
     # subclips: 0->a, a+b -> 2*a + b, 2a+2b -> 3a+2b, .., na+nb -> (n+1)a + nb
     with tempfile.TemporaryDirectory() as tmpdir:
         for i in range(n):
-            subclips.append(os.path.join(tmpdir, f"{i}{video_ext}"))
+            clip_path = os.path.join(tmpdir, f"{i}{video_ext}")
             trim(
                 video_path,
-                subclips[-1],
+                clip_path,
                 start=i * on_segment + i * off_segment,
                 end=min(duration, (i + 1) * on_segment + i * off_segment),
             )
+            subclips.append(clip_path)
 
         concat(
             subclips,
