@@ -73,10 +73,11 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
 
         self.height = ceil(video_info["height"] / 2) * 2
         self.width = ceil(video_info["width"] / 2) * 2
+        log.info("Width=%d height=%d", self.width, self.height)
 
-        self.sample_aspect_ratio = video_info.get(
-            "sample_aspect_ratio", self.width / self.height
-        )
+        self.sample_aspect_ratio = video_info.get("sample_aspect_ratio", 1.0)
+        log.info("Aspect ratio=%f", self.sample_aspect_ratio)
+
         self.transition = transition
 
     def _create_null_transition_filters(
@@ -207,8 +208,8 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         audio_streams = []
         for i in range(len(self.video_paths)):
             filters.append(
-                f"[{i}:v]scale={self.width}:{self.height}[{i}v],[{i}v]setsar=ratio="
-                f"{self.sample_aspect_ratio}[{i}vf]"
+                f"[{i}:v]scale={self.width}:{self.height}[{i}v],[{i}v]"
+                f"setsar=ratio={self.sample_aspect_ratio}[{i}vf]"
             )
             video_streams.append(f"[{i}vf]")
             audio_streams.append(f"[{i}:a]")
