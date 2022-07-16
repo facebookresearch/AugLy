@@ -13,7 +13,7 @@ from typing import List, Optional
 
 from augly.utils import pathmgr
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
-from augly.video.helpers import get_video_info
+from augly.video.helpers import get_video_info, has_audio_stream
 from dataclasses_json import dataclass_json
 
 
@@ -83,11 +83,20 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         self,
         video_streams: List[str],
         audio_streams: List[str],
+        process_audio: bool,
     ) -> List[str]:
-        # Interleave the video and audio streams.
-        all_streams = [v for pair in zip(video_streams, audio_streams) for v in pair]
+        if process_audio:
+            # Interleave the video and audio streams.
+            all_streams = [
+                v for pair in zip(video_streams, audio_streams) for v in pair
+            ]
+            out_streams = "v=1:a=1[v][a]"
+        else:
+            all_streams = video_streams
+            out_streams = "v=1[v]"
+
         filters = [
-            f"{''.join(all_streams)}concat=n={len(self.video_paths)}:v=1:a=1[v][a]"
+            f"{''.join(all_streams)}concat=n={len(self.video_paths)}:{out_streams}"
         ]
         return filters
 
@@ -95,11 +104,14 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         self,
         video_streams: List[str],
         audio_streams: List[str],
+        process_audio: bool,
         out_video: str = "[v]",
         out_audio: str = "[a]",
     ) -> List[str]:
         if self.transition is None:
-            return self._create_null_transition_filters(video_streams, audio_streams)
+            return self._create_null_transition_filters(
+                video_streams, audio_streams, process_audio
+            )
 
         transition = self.transition
         effect = transition.effect.name.lower()
@@ -124,7 +136,7 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
             if new_td < 0.5:
                 log.warn("Disabling transitions due to low duration: %f", new_td)
                 return self._create_null_transition_filters(
-                    video_streams, audio_streams
+                    video_streams, audio_streams, process_audio
                 )
 
             log.info(
@@ -151,26 +163,30 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         )
 
         # Concat audio filters.
-        prev = audio_streams[0]
-        cum_dur = video_durations[0]
-        for i in range(1, len(video_durations) - 1):
-            dur = video_durations[i]
-            in_f = audio_streams[i]
-            out_f = f"[a{i}m]"
-            offset = cum_dur - td
-            concat_filters.append(f"{prev}{in_f}acrossfade=d={td}:c1=tri:c2=tri{out_f}")
-            prev = out_f
-            cum_dur += dur - td
+        if process_audio:
+            prev = audio_streams[0]
+            cum_dur = video_durations[0]
+            for i in range(1, len(video_durations) - 1):
+                dur = video_durations[i]
+                in_f = audio_streams[i]
+                out_f = f"[a{i}m]"
+                offset = cum_dur - td
+                concat_filters.append(
+                    f"{prev}{in_f}acrossfade=d={td}:c1=tri:c2=tri{out_f}"
+                )
+                prev = out_f
+                cum_dur += dur - td
 
-        concat_filters.append(
-            f"{prev}[{len(video_durations) - 1}:a]acrossfade=d={td}:c1=tri:c2=tri{out_audio}"
-        )
+            concat_filters.append(
+                f"{prev}[{len(video_durations) - 1}:a]acrossfade=d={td}:c1=tri:c2=tri{out_audio}"
+            )
 
         return concat_filters
 
     def get_command(self, video_path: str, output_path: str) -> List[str]:
         """
-        Concatenates multiple videos together
+        Concatenates multiple videos together on both channels, if present.
+        If any of the input files does not have an audio stream, then audio will not be processed.
 
         @param video_path: the path to the video to be augmented
 
@@ -182,6 +198,11 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         inputs = [["-i", video] for video in self.video_paths]
         flat_inputs = [element for sublist in inputs for element in sublist]
         filters = []
+
+        process_audio = all(has_audio_stream(v) for v in self.video_paths)
+        if not process_audio:
+            log.warn("Audio processing will be skipped.")
+
         video_streams = []
         audio_streams = []
         for i in range(len(self.video_paths)):
@@ -192,18 +213,26 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
             video_streams.append(f"[{i}vf]")
             audio_streams.append(f"[{i}:a]")
 
-        filters += self._create_transition_filters(video_streams, audio_streams)
+        filters += self._create_transition_filters(
+            video_streams, audio_streams, process_audio
+        )
 
-        return [
+        result = [
             "-y",
             *flat_inputs,
             "-filter_complex",
             ";".join(filters),
             "-map",
             "[v]",
-            "-map",
-            "[a]",
+        ]
+
+        if process_audio:
+            result += ["-map", "[a]"]
+
+        result += [
             "-vsync",
             "2",
             *self.output_fmt(output_path),
         ]
+
+        return result
