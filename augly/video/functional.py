@@ -2074,6 +2074,7 @@ def time_crop(
 def time_decimate(
     video_path: str,
     output_path: Optional[str] = None,
+    start_offset_factor: float = 0.0,
     on_factor: float = 0.2,
     off_factor: float = 0.5,
     transition: Optional[af.TransitionConfig] = None,
@@ -2087,6 +2088,9 @@ def time_decimate(
 
     @param output_path: the path in which the resulting video will be stored.
         If not passed in, the original video file will be overwritten
+
+    @param start_offset_factor: relative to the video duration; the offset
+        at which to start taking "on" segments
 
     @param on_factor: relative to the video duration; the amount of time each
         "on" video chunk should be
@@ -2102,6 +2106,9 @@ def time_decimate(
 
     @returns: the path to the augmented video
     """
+    assert (
+        0 <= start_offset_factor < 1
+    ), f"start_offset_factor value {start_offset_factor} must be in the range [0, 1)"
     assert 0 < on_factor <= 1, "on_factor must be a value in the range (0, 1]"
     assert 0 <= off_factor <= 1, "off_factor must be a value in the range [0, 1]"
 
@@ -2113,11 +2120,12 @@ def time_decimate(
     _, video_ext = os.path.splitext(local_path)
 
     duration = float(video_info["duration"])
+    start_offset = duration * start_offset_factor
     on_segment = duration * on_factor
     off_segment = on_segment * off_factor
 
     subclips = []
-    n = int(duration / (on_segment + off_segment))
+    n = int((duration - start_offset) / (on_segment + off_segment))
 
     # let a = on_segment and b = off_segment
     # subclips: 0->a, a+b -> 2*a + b, 2a+2b -> 3a+2b, .., na+nb -> (n+1)a + nb
@@ -2127,8 +2135,10 @@ def time_decimate(
             trim(
                 video_path,
                 clip_path,
-                start=i * on_segment + i * off_segment,
-                end=min(duration, (i + 1) * on_segment + i * off_segment),
+                start=start_offset + i * on_segment + i * off_segment,
+                end=min(
+                    duration, start_offset + (i + 1) * on_segment + i * off_segment
+                ),
             )
             subclips.append(clip_path)
 

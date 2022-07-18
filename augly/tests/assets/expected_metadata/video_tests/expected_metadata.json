@@ -1544,6 +1544,7 @@
             "name": "time_decimate",
             "off_factor": 0.5,
             "on_factor": 0.2,
+            "start_offset_factor": 0.0,
             "src_duration": 10.027855,
             "src_fps": 29.916666666666668,
             "src_height": 1080,

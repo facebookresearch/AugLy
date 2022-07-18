@@ -2068,12 +2068,16 @@ class TimeCrop(BaseTransform):
 class TimeDecimate(BaseTransform):
     def __init__(
         self,
+        start_offset_factor: float = 0.0,
         on_factor: float = 0.2,
         off_factor: float = 0.5,
         transition: Optional[af.TransitionConfig] = None,
         p: float = 1.0,
     ):
         """
+        @param start_offset_factor: relative to the video duration; the offset
+            at which to start taking "on" segments
+
         @param on_factor: relative to the video duration; the amount of time each
             "on" video chunk should be
 
@@ -2085,6 +2089,7 @@ class TimeDecimate(BaseTransform):
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
+        self.start_offset_factor = start_offset_factor
         self.on_factor, self.off_factor = on_factor, off_factor
         self.transition = transition
 
@@ -2112,8 +2117,9 @@ class TimeDecimate(BaseTransform):
         return F.time_decimate(
             video_path,
             output_path,
-            self.on_factor,
-            self.off_factor,
+            start_offset_factor=self.start_offset_factor,
+            on_factor=self.on_factor,
+            off_factor=self.off_factor,
             transition=self.transition,
             metadata=metadata,
         )
