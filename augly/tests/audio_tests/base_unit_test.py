@@ -11,7 +11,6 @@ import unittest
 from typing import Callable
 
 import numpy as np
-from augly.audio.utils import ret_and_save_audio
 from augly.tests import AudioAugConfig
 from augly.utils import pathmgr, TEST_URI
 from augly.utils.libsndfile import install_libsndfile
@@ -65,12 +64,9 @@ class BaseAudioUnitTest(unittest.TestCase):
                 aug_function(local_audio_path, output_path=tmpfile.name, **kwargs)
                 dst = librosa.load(tmpfile.name, sr=None, mono=False)[0]
 
-            if not are_equal_audios(dst, ref):
-                ret_and_save_audio(dst, f"augly/tests/assets/audio/speech_commands_expected_output/{aug_function.__name__}_{folders[i]}_new.wav")
-
-#             self.assertTrue(
-#                 are_equal_audios(dst, ref), "Expected and outputted audio do not match"
-#             )
+            self.assertTrue(
+                are_equal_audios(dst, ref), "Expected and outputted audio do not match"
+            )
 
     def evaluate_class(self, transform_class: Callable[..., np.ndarray], fname: str):
         metadata = []
@@ -95,9 +91,9 @@ class BaseAudioUnitTest(unittest.TestCase):
             dst = librosa.load(tmpfile.name, sr=None, mono=False)[0]
 
         ref = self.get_ref_audio(fname)
-#         self.assertTrue(
-#             are_equal_audios(dst, ref), "Expected and outputted audio do not match"
-#         )
+        self.assertTrue(
+            are_equal_audios(dst, ref), "Expected and outputted audio do not match"
+        )
 
     def get_ref_audio(self, fname: str, folder: str = "mono") -> np.ndarray:
         local_ref_path = pathmgr.get_local_path(
