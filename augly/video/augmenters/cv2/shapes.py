@@ -6,7 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import random
-from typing import Optional, List, Tuple, Iterator
+from typing import Iterator, List, Optional, Tuple
 
 import cv2
 import numpy as np
@@ -24,7 +24,7 @@ class VideoDistractorByShapes(BaseCV2Augmenter):
         random_movement: bool = True,
         topleft: Optional[Tuple[float, float]] = None,
         bottomright: Optional[Tuple[float, float]] = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         assert num_shapes > 0, "Number of shapes must be greater than zero"
         assert shape_type is None or shape_type in [

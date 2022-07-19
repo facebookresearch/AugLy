@@ -8,7 +8,7 @@
 import pickle
 import random
 import string
-from typing import Any, List, Iterator, Optional, Tuple
+from typing import Any, Iterator, List, Optional, Tuple
 
 import cv2
 import numpy as np
@@ -41,7 +41,7 @@ class VideoDistractorByText(BaseCV2Augmenter):
         random_movement: bool = False,
         topleft: Optional[Tuple[float, float]] = None,
         bottomright: Optional[Tuple[float, float]] = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         assert text_len > 0, "Text length must be greater than zero"
         assert (

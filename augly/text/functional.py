@@ -8,8 +8,7 @@
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from augly.text import augmenters as a
-from augly.text import utils as txtutils
+from augly.text import augmenters as a, utils as txtutils
 from augly.utils import (
     CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
@@ -234,6 +233,53 @@ def insert_punctuation_chars(
     txtutils.get_metadata(
         metadata=metadata,
         function_name="insert_punctuation_chars",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
+def insert_text(
+    texts: Union[str, List[str]],
+    insert_text: List[str],
+    num_insertions: int = 1,
+    insertion_location: str = "random",
+    seed: Optional[int] = 10,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Union[str, List[str]]:
+    """
+    Inserts some specified text into the input text a given number of times at a given
+    location
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param insert_text: a list of text to sample from and insert into each text in texts
+
+    @param num_insertions: the number of times to sample from insert_text and insert
+
+    @param insertion_location: where to insert the insert_text in the input text; valid
+        values are "prepend", "append", or "random" (inserts at a random index between
+        words in the input text)
+
+    @param seed: if provided, this will set the random seed to ensure consistency between
+        runs
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented text documents
+    """
+
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    insert_texts_aug = a.InsertTextAugmenter(num_insertions, insertion_location, seed)
+    aug_texts = insert_texts_aug.augment(texts, insert_text)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="insert_text",
         aug_texts=aug_texts,
         **func_kwargs,
     )
@@ -615,6 +661,40 @@ def replace_similar_unicode_chars(
     txtutils.get_metadata(
         metadata=metadata,
         function_name="replace_similar_unicode_chars",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+
+    return aug_texts
+
+
+def replace_text(
+    texts: Union[str, List[str]],
+    replace_text: Union[str, Dict[str, str]],
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Union[str, List[str]]:
+    """
+    Replaces the input text entirely with some specified text
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param replace_text: specifies the text to replace the input text with,
+        either as a string or a mapping from input text to new text
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: a string or a list of augmented text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    text_aug = a.TextReplacementAugmenter()
+    aug_texts = text_aug.augment(texts, replace_text)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="replace_text",
         aug_texts=aug_texts,
         **func_kwargs,
     )

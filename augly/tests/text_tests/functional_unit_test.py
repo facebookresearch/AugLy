@@ -152,6 +152,43 @@ class FunctionalTextUnitTest(unittest.TestCase):
             ],
         )
 
+    def test_insert_text(self) -> None:
+        # Single insertion in random location
+        insert_single_word = txtaugs.insert_text(self.texts, ["wolf", "sheep"], seed=42)
+        self.assertEqual(
+            insert_single_word,
+            ["wolf The quick brown 'fox' couldn't jump over the green, grassy hill."],
+        )
+
+        # Three insertions in random locations
+        insert_multiple = txtaugs.insert_text(
+            self.texts, ["wolf", "sheep"], num_insertions=3
+        )
+        self.assertEqual(
+            insert_multiple,
+            [
+                "The quick brown wolf 'fox' couldn't jump wolf over the sheep green, grassy hill."
+            ],
+        )
+
+        # Single insertion in prepend mode
+        prepend = txtaugs.insert_text(
+            self.texts, ["wolf", "sheep"], insertion_location="prepend"
+        )
+        self.assertEqual(
+            prepend,
+            ["wolf The quick brown 'fox' couldn't jump over the green, grassy hill."],
+        )
+
+        append = txtaugs.insert_text(
+            self.texts, ["wolf", "sheep"], insertion_location="append"
+        )
+        # Single insertion in append mode
+        self.assertEqual(
+            append,
+            ["The quick brown 'fox' couldn't jump over the green, grassy hill. wolf"],
+        )
+
     def test_insert_zero_width_chars(self) -> None:
         augmented_every_char = txtaugs.insert_zero_width_chars(
             self.texts, "all", 1.0, False
@@ -365,6 +402,41 @@ class FunctionalTextUnitTest(unittest.TestCase):
                 "The quick brown 'fox' couldn't jump over thė green, gℝassy hill.",
             ],
         )
+
+    def test_replace_text(self) -> None:
+        texts = [
+            "The quick brown 'fox' couldn't jump over the green, grassy hill.",
+            "The quick brown",
+            "jump over the green",
+        ]
+        replace_texts = {
+            "jump over the blue": "jump over the red",
+            "The quick brown": "The slow green",
+            "couldn't jump": "jumped",
+        }
+
+        replace_string = "The slow green"
+
+        augmented_text_from_list = txtaugs.replace_text(texts, replace_texts)
+        self.assertEqual(
+            augmented_text_from_list,
+            [texts[0], replace_texts[texts[1]], texts[2]],
+        )
+
+        augmented_text_from_string = txtaugs.replace_text(texts, replace_string)
+        self.assertEqual(
+            augmented_text_from_string,
+            [replace_string, replace_string, replace_string],
+        )
+
+        augmented_string_from_list = txtaugs.replace_text(texts[0], replace_texts)
+        self.assertTrue(augmented_string_from_list == texts[0])
+
+        augmented_string_from_list = txtaugs.replace_text(texts[1], replace_texts)
+        self.assertTrue(augmented_string_from_list == replace_texts[texts[1]])
+
+        augmented_string_from_string = txtaugs.replace_text(texts[2], replace_string)
+        self.assertTrue(augmented_string_from_string == replace_string)
 
     def test_replace_upside_down(self) -> None:
         augmented_upside_down_all = txtaugs.replace_upside_down(self.texts)

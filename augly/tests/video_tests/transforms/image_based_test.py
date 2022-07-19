@@ -15,7 +15,6 @@ from augly.utils import VIDEO_METADATA_PATH
 from augly.utils.ffmpeg import get_conditional_for_skipping_video_tests
 
 
-@unittest.skipUnless(*get_conditional_for_skipping_video_tests())
 class TransformsVideoUnitTest(BaseVideoUnitTest):
     @classmethod
     def setUpClass(cls):
@@ -45,6 +44,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
             ],
         )
 
+    @unittest.skipUnless(*get_conditional_for_skipping_video_tests())
     def test_PerspectiveTransformAndShake(self):
         self.evaluate_class(
             vidaugs.PerspectiveTransformAndShake(shake_radius=20, seed=10),

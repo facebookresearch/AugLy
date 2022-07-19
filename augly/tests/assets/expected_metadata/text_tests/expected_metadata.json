@@ -103,6 +103,19 @@
             "vary_chars": false
         }
     ],
+    "insert_text": [
+        {
+            "dst_length": 1,
+            "input_type": "list",
+            "insertion_location": "random",
+            "insert_text": ["wolf", "sheep"],
+            "intensity": 10.0,
+            "name": "insert_text",
+            "num_insertions": 1,
+            "seed": 42,
+            "src_length": 1
+        }
+    ],
     "insert_whitespace_chars": [
         {
             "cadence": 1.0,
@@ -206,6 +219,20 @@
             "name": "replace_similar_unicode_chars",
             "priority_words": null,
             "src_length": 1
+        }
+    ],
+    "replace_text": [
+        {
+            "name": "replace_text",
+            "input_type": "list",
+            "src_length": 3,
+            "dst_length": 3,
+            "replace_text": {
+                "jump over the blue": "jump over the red",
+                "The quick brown": "The slow green",
+                "couldn't jump": "jumped"
+            },
+            "intensity": 100.0
         }
     ],
     "replace_upside_down": [

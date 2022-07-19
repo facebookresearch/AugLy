@@ -165,6 +165,20 @@ class TransformsTextUnitTest(unittest.TestCase):
             ),
         )
 
+    def test_InsertText(self) -> None:
+        aug_inserted_text = txtaugs.InsertText(seed=42)(
+            self.texts, metadata=self.metadata, insert_text=["wolf", "sheep"]
+        )
+
+        self.assertEqual(
+            aug_inserted_text,
+            ["wolf The quick brown 'fox' couldn't jump over the green, grassy hill."],
+        )
+
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["insert_text"]),
+        )
+
     def test_InsertWhitespaceChars(self) -> None:
         aug_whitespace_text = txtaugs.InsertWhitespaceChars("all", 1.0, False)(
             self.texts, metadata=self.metadata
@@ -282,6 +296,27 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(
                 self.metadata, self.expected_metadata["replace_similar_unicode_chars"]
             ),
+        )
+
+    def test_ReplaceText(self) -> None:
+        texts = [
+            "The quick brown 'fox' couldn't jump over the green, grassy hill.",
+            "The quick brown",
+            "jump over the green",
+        ]
+        replace_texts = {
+            "couldn't jump": "jumped",
+            "jump over the blue": "jump over the red",
+            "The quick brown": "The slow green",
+        }
+        aug_replaced_text = txtaugs.ReplaceText(replace_texts)(
+            texts=texts, metadata=self.metadata
+        )
+        self.assertEqual(
+            aug_replaced_text, [texts[0], replace_texts[texts[1]], texts[2]]
+        )
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["replace_text"]),
         )
 
     def test_ReplaceUpsideDown(self) -> None:

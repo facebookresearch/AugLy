@@ -11,11 +11,7 @@ import unittest
 
 from augly import image as imaugs
 from augly.tests.image_tests.base_unit_test import BaseImageUnitTest
-from augly.utils import (
-    EMOJI_PATH,
-    IMAGE_METADATA_PATH,
-    IMG_MASK_PATH,
-)
+from augly.utils import EMOJI_PATH, IMAGE_METADATA_PATH, IMG_MASK_PATH
 from PIL import Image
 
 

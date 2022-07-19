@@ -13,14 +13,10 @@ import tempfile
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
-from augly import audio as audaugs
-from augly import image as imaugs
-from augly import utils
+from augly import audio as audaugs, image as imaugs, utils
 from augly.audio import utils as audutils
-from augly.video import helpers
-from augly.video import utils as vdutils
-from augly.video.augmenters import cv2 as ac
-from augly.video.augmenters import ffmpeg as af
+from augly.video import helpers, utils as vdutils
+from augly.video.augmenters import cv2 as ac, ffmpeg as af
 
 
 def add_noise(
@@ -465,6 +461,7 @@ def concat(
     video_paths: List[str],
     output_path: Optional[str] = None,
     src_video_path_index: int = 0,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -480,6 +477,8 @@ def concat(
     @param src_video_path_index: for metadata purposes, this indicates which video in
         the list `video_paths` should be considered the `source` or original video
 
+    @param transition: optional transition configuration to apply between the clips
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
@@ -490,7 +489,11 @@ def concat(
         metadata, locals(), video_paths[src_video_path_index]
     )
 
-    concat_aug = af.VideoAugmenterByConcat(video_paths, src_video_path_index)
+    concat_aug = af.VideoAugmenterByConcat(
+        video_paths,
+        src_video_path_index,
+        transition,
+    )
     concat_aug.add_augmenter(video_paths[src_video_path_index], output_path)
 
     if metadata is not None:
@@ -761,6 +764,7 @@ def insert_in_background(
     offset_factor: float = 0.0,
     source_percentage: Optional[float] = None,
     seed: Optional[int] = None,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -789,13 +793,14 @@ def insert_in_background(
     @param seed: if provided, this will set the random seed to ensure consistency
         between runs
 
+    @param transition: optional transition configuration to apply between the clips
+
     @param metadata: if set to be a list, metadata about the function execution including
         its name, the source & dest duration, fps, etc. will be appended to the inputted
         list. If set to None, no metadata will be appended or returned
 
     @returns: the path to the augmented video
     """
-    utils.validate_video_path(video_path)
     assert (
         0.0 <= offset_factor <= 1.0
     ), "Offset factor must be a value in the range [0.0, 1.0]"
@@ -806,8 +811,10 @@ def insert_in_background(
         ), "Source percentage must be a value in the range [0.0, 1.0]"
 
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+    local_path = utils.pathmgr.get_local_path(video_path)
+    utils.validate_video_path(local_path)
 
-    video_info = helpers.get_video_info(video_path)
+    video_info = helpers.get_video_info(local_path)
     video_duration = float(video_info["duration"])
     width, height = video_info["width"], video_info["height"]
 
@@ -824,7 +831,9 @@ def insert_in_background(
             helpers.create_color_video(resized_bg_path, video_duration, height, width)
         else:
             resize(background_path, resized_bg_path, height, width)
-            helpers.add_silent_audio(resized_bg_path)
+            silent_bg_path = os.path.join(tmpdir, "silent.mp4")
+            helpers.add_silent_audio(resized_bg_path, silent_bg_path)
+            resized_bg_path = silent_bg_path
 
         bg_video_info = helpers.get_video_info(resized_bg_path)
         bg_video_duration = float(bg_video_info["duration"])
@@ -862,7 +871,12 @@ def insert_in_background(
         trim(resized_bg_path, after_path, start=bg_start + offset, end=bg_end)
         video_paths.append(after_path)
 
-        concat(video_paths, output_path or video_path, src_video_path_index)
+        concat(
+            video_paths,
+            output_path or video_path,
+            src_video_path_index,
+            transition=transition,
+        )
 
     if metadata is not None:
         helpers.get_metadata(
@@ -882,6 +896,7 @@ def replace_with_background(
     source_offset: float = 0.0,
     background_offset: float = 0.0,
     source_percentage: float = 0.5,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -912,13 +927,14 @@ def replace_with_background(
         If the background video is not long enough to get the desired source percentage,
         it will be looped
 
+    @param transition: optional transition configuration to apply between the clips
+
     @param metadata: if set to be a list, metadata about the function execution including
         its name, the source & dest duration, fps, etc. will be appended to the inputted
         list. If set to None, no metadata will be appended or returned
 
     @returns: the path to the augmented video
     """
-    utils.validate_video_path(video_path)
     assert (
         0.0 <= source_offset <= 1.0
     ), "Source offset factor must be a value in the range [0.0, 1.0]"
@@ -932,6 +948,8 @@ def replace_with_background(
     ), "Source percentage must be a value in the range [0.0, 1.0]"
 
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+    local_path = utils.pathmgr.get_local_path(video_path)
+    utils.validate_video_path(local_path)
 
     video_info = helpers.get_video_info(video_path)
     video_duration = float(video_info["duration"])
@@ -998,7 +1016,12 @@ def replace_with_background(
             )
             video_paths.append(after_path)
 
-        concat(video_paths, output_path or video_path, src_video_path_index)
+        concat(
+            video_paths,
+            output_path or video_path,
+            src_video_path_index,
+            transition=transition,
+        )
 
     if metadata is not None:
         helpers.get_metadata(
@@ -1737,6 +1760,7 @@ def replace_with_color_frames(
     offset_factor: float = 0.0,
     duration_factor: float = 1.0,
     color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -1754,6 +1778,8 @@ def replace_with_color_frames(
         duration (this parameter is multiplied by the video duration)
 
     @param color: RGB color of the replaced frames. Default color is black
+
+    @param transition: optional transition configuration to apply between the clips
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
@@ -1818,7 +1844,12 @@ def replace_with_color_frames(
             trim(video_path, after_path, start=offset + duration)
             video_paths.append(after_path)
 
-        concat(video_paths, output_path, src_video_path_index=src_video_path_index)
+        concat(
+            video_paths,
+            output_path,
+            src_video_path_index=src_video_path_index,
+            transition=transition,
+        )
 
     if metadata is not None:
         helpers.get_metadata(metadata=metadata, **func_kwargs)
@@ -1998,6 +2029,7 @@ def time_crop(
     output_path: Optional[str] = None,
     offset_factor: float = 0.0,
     duration_factor: float = 1.0,
+    minimum_duration: float = 0.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -2014,6 +2046,8 @@ def time_crop(
     @param duration_factor: the length of the crop relative to the video duration
         (this parameter is multiplied by the video duration)
 
+    @param minimum_duration: the minimum duration of a segment selected
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
@@ -2023,7 +2057,9 @@ def time_crop(
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
 
     time_crop_aug = af.VideoAugmenterByTrim(
-        offset_factor=offset_factor, duration_factor=duration_factor
+        offset_factor=offset_factor,
+        duration_factor=duration_factor,
+        minimum_duration=minimum_duration,
     )
     time_crop_aug.add_augmenter(video_path, output_path)
 
@@ -2038,8 +2074,10 @@ def time_crop(
 def time_decimate(
     video_path: str,
     output_path: Optional[str] = None,
+    start_offset_factor: float = 0.0,
     on_factor: float = 0.2,
     off_factor: float = 0.5,
+    transition: Optional[af.TransitionConfig] = None,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -2051,11 +2089,16 @@ def time_decimate(
     @param output_path: the path in which the resulting video will be stored.
         If not passed in, the original video file will be overwritten
 
+    @param start_offset_factor: relative to the video duration; the offset
+        at which to start taking "on" segments
+
     @param on_factor: relative to the video duration; the amount of time each
         "on" video chunk should be
 
     @param off_factor: relative to the "on" duration; the amount of time each
         "off" video chunk should be
+
+    @param transition: optional transition configuration to apply between the clips
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest duration, fps, etc. will be appended
@@ -2063,35 +2106,47 @@ def time_decimate(
 
     @returns: the path to the augmented video
     """
+    assert (
+        0 <= start_offset_factor < 1
+    ), f"start_offset_factor value {start_offset_factor} must be in the range [0, 1)"
     assert 0 < on_factor <= 1, "on_factor must be a value in the range (0, 1]"
     assert 0 <= off_factor <= 1, "off_factor must be a value in the range [0, 1]"
-    utils.validate_video_path(video_path)
 
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+    local_path = utils.pathmgr.get_local_path(video_path)
+    utils.validate_video_path(local_path)
 
-    video_info = helpers.get_video_info(video_path)
-    _, video_ext = os.path.splitext(video_path)
+    video_info = helpers.get_video_info(local_path)
+    _, video_ext = os.path.splitext(local_path)
 
     duration = float(video_info["duration"])
+    start_offset = duration * start_offset_factor
     on_segment = duration * on_factor
     off_segment = on_segment * off_factor
 
     subclips = []
-    n = int(duration / (on_segment + off_segment))
+    n = int((duration - start_offset) / (on_segment + off_segment))
 
     # let a = on_segment and b = off_segment
     # subclips: 0->a, a+b -> 2*a + b, 2a+2b -> 3a+2b, .., na+nb -> (n+1)a + nb
     with tempfile.TemporaryDirectory() as tmpdir:
         for i in range(n):
-            subclips.append(os.path.join(tmpdir, f"{i}{video_ext}"))
+            clip_path = os.path.join(tmpdir, f"{i}{video_ext}")
             trim(
                 video_path,
-                subclips[-1],
-                start=i * on_segment + i * off_segment,
-                end=min(duration, (i + 1) * on_segment + i * off_segment),
+                clip_path,
+                start=start_offset + i * on_segment + i * off_segment,
+                end=min(
+                    duration, start_offset + (i + 1) * on_segment + i * off_segment
+                ),
             )
+            subclips.append(clip_path)
 
-        concat(subclips, output_path)
+        concat(
+            subclips,
+            output_path,
+            transition=transition,
+        )
 
     if metadata is not None:
         helpers.get_metadata(

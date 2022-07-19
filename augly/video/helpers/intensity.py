@@ -7,8 +7,7 @@
 
 from typing import Any, Dict, List, Optional, Tuple
 
-from augly.image import intensity as imint
-from augly.image import utils as imutils
+from augly.image import intensity as imint, utils as imutils
 from augly.video.helpers import get_video_info
 
 
@@ -181,7 +180,7 @@ def overlay_intensity(
         isinstance(overlay_size, (float, int)) and 0 < overlay_size <= 1
     ), "overlay_size must be a value in the range (0, 1]"
     if overlay_size is not None:
-        return (overlay_size ** 2) * 100.0
+        return (overlay_size**2) * 100.0
 
     try:
         img = imutils.validate_and_load_image(overlay_path)
@@ -220,7 +219,7 @@ def overlay_onto_background_video_intensity(
     overlay_size: Optional[float], metadata: Dict[str, Any], **kwargs
 ) -> float:
     if overlay_size is not None:
-        return (1 - overlay_size ** 2) * 100.0
+        return (1 - overlay_size**2) * 100.0
 
     src_area = metadata["src_width"] * metadata["src_height"]
     dst_area = metadata["dst_width"] * metadata["dst_height"]

@@ -393,6 +393,7 @@
             ],
             "src_video_path_index": 0,
             "src_width": 1920,
+            "transition": null,
             "video_paths": [
                 "video/inputs/input_1.mp4",
                 "video/inputs/input_2.mp4"
@@ -608,6 +609,7 @@
             "name": "insert_in_background",
             "offset_factor": 0.25,
             "seed": null,
+            "transition": null,
             "source_percentage": null,
             "src_duration": 10.027855,
             "src_fps": 29.916666666666668,
@@ -1354,7 +1356,8 @@
                 }
             ],
             "src_width": 1920,
-            "starting_background_duration": 0.30083565000000007
+            "starting_background_duration": 0.30083565000000007,
+            "transition": null
         }
     ],
     "replace_with_color_frames": [
@@ -1373,7 +1376,8 @@
             "src_fps": 29.916666666666668,
             "src_height": 1080,
             "src_segments": [],
-            "src_width": 1920
+            "src_width": 1920,
+            "transition": null
         }
     ],
     "resize": [
@@ -1501,6 +1505,7 @@
             "dst_width": 1920,
             "duration_factor": 0.5,
             "intensity": 49.999995013888814,
+            "minimum_duration": 0.0,
             "name": "time_crop",
             "offset_factor": 0.0,
             "src_duration": 10.027855,
@@ -1539,6 +1544,7 @@
             "name": "time_decimate",
             "off_factor": 0.5,
             "on_factor": 0.2,
+            "start_offset_factor": 0.0,
             "src_duration": 10.027855,
             "src_fps": 29.916666666666668,
             "src_height": 1080,
@@ -1556,7 +1562,8 @@
                     "end": 8.022284
                 }
             ],
-            "src_width": 1920
+            "src_width": 1920,
+            "transition": null
             }
         ],
         "trim": [

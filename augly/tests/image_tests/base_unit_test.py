@@ -12,7 +12,7 @@ from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
 from augly.tests import ImageAugConfig
-from augly.utils import TEST_URI, pathmgr
+from augly.utils import pathmgr, TEST_URI
 from PIL import Image
 
 

@@ -9,15 +9,13 @@ import json
 import random
 import unittest
 
-from augly import audio as audaugs
-from augly import video as vidaugs
+from augly import audio as audaugs, video as vidaugs
 from augly.tests.base_configs import VideoAugConfig
 from augly.tests.video_tests.base_unit_test import BaseVideoUnitTest
 from augly.utils import VIDEO_METADATA_PATH
 from augly.utils.ffmpeg import get_conditional_for_skipping_video_tests
 
 
-@unittest.skipUnless(*get_conditional_for_skipping_video_tests())
 class TransformsVideoUnitTest(BaseVideoUnitTest):
     @classmethod
     def setUpClass(cls):
@@ -28,6 +26,7 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
     def test_ApplyLambda(self):
         self.evaluate_class(vidaugs.ApplyLambda(), fname="apply_lambda")
 
+    @unittest.skipUnless(*get_conditional_for_skipping_video_tests())
     def test_AugmentAudio(self):
         self.evaluate_class(
             vidaugs.AugmentAudio(
@@ -40,7 +39,12 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
         self.evaluate_class(
             vidaugs.InsertInBackground(offset_factor=0.25),
             fname="insert_in_background",
-            metadata_exclude_keys=["dst_duration", "dst_fps", "intensity"],
+            metadata_exclude_keys=[
+                "dst_duration",
+                "dst_fps",
+                "intensity",
+                "local_path",
+            ],
         )
 
     def test_Compose(self):

@@ -959,8 +959,6 @@ def meme_format(
         # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 3rd param but got
         #  `FreeTypeFont`.
         font=font,
-        # pyre-fixme[6]: Expected `Union[None, Tuple[int, int, int], int, str]` for
-        #  4th param but got `Tuple[int, int, int, int]`.
         fill=(text_color[0], text_color[1], text_color[2], round(opacity * 255)),
         align="center",
     )
@@ -1598,8 +1596,6 @@ def overlay_text(
         draw.text(
             xy=(x_pos * width, y_pos * height + i * (font_size + 5)),
             text=text_str,
-            # pyre-fixme[6]: Expected `Union[None, Tuple[int, int, int], int, str]` for
-            #  3rd param but got `Tuple[int, int, int, int]`.
             fill=(color[0], color[1], color[2], round(opacity * 255)),
             # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 4th param but got
             #  `FreeTypeFont`.
@@ -1842,7 +1838,6 @@ def perspective_transform(
                 "Cannot crop out black border of a perspective transform this intense"
             )
 
-        # pyre-fixme[16]: `None` has no attribute `crop`.
         aug_image = aug_image.crop((new_left, new_top, new_right, new_bottom))
 
     imutils.get_metadata(
@@ -1969,7 +1964,7 @@ def random_noise(
     else:
         low_clip = 0.0
 
-    sigma = var ** 0.5
+    sigma = var**0.5
     gauss = np.random.normal(mean, sigma, (np_image.shape))
     noisy_image = np_image + gauss
     noisy_image = np.clip(noisy_image, low_clip, 1.0)
@@ -2435,7 +2430,7 @@ def skew(
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(aug_image, output_path, src_mode)  # pyre-ignore
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def vflip(
