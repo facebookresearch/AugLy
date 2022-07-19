@@ -18,3 +18,16 @@ jobs:
       - run: pip install -e .[all]
       - run: pyre --source-directory "." --noninteractive check || true
       - run: pytest --durations=10 .
+      - name: 'Upload pitch_shift_mono_new.wav'
+        uses: actions/upload-artifact@v3
+        with:
+          name: pitch_shift
+          path: pitch_shift_mono_new.wav
+          retention-days: 5
+      - name: 'Upload pitch_shift_stereo_new.wav'
+        uses: actions/upload-artifact@v3
+        with:
+          name: pitch_shift_stereo
+          path: pitch_shift_stereo_new.wav
+          retention-days: 5
+

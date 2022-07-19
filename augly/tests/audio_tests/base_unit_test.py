@@ -64,6 +64,9 @@ class BaseAudioUnitTest(unittest.TestCase):
                 aug_function(local_audio_path, output_path=tmpfile.name, **kwargs)
                 dst = librosa.load(tmpfile.name, sr=None, mono=False)[0]
 
+            if not are_equal_audios(dst, ref):
+                dst.save(f"{aug_function.__name__}_{folders[i]}_new.wav")
+
             self.assertTrue(
                 are_equal_audios(dst, ref), "Expected and outputted audio do not match"
             )
