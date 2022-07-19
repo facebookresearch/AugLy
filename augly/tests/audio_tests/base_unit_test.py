@@ -11,6 +11,7 @@ import unittest
 from typing import Callable
 
 import numpy as np
+from augly.audio.utils import ret_and_save_audio
 from augly.tests import AudioAugConfig
 from augly.utils import pathmgr, TEST_URI
 from augly.utils.libsndfile import install_libsndfile
@@ -65,7 +66,7 @@ class BaseAudioUnitTest(unittest.TestCase):
                 dst = librosa.load(tmpfile.name, sr=None, mono=False)[0]
 
             if not are_equal_audios(dst, ref):
-                dst.save(f"{aug_function.__name__}_{folders[i]}_new.wav")
+                ret_and_save_audio(dst, f"{aug_function.__name__}_{folders[i]}_new.wav")
 
 #             self.assertTrue(
 #                 are_equal_audios(dst, ref), "Expected and outputted audio do not match"
