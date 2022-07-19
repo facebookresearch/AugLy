@@ -2142,11 +2142,18 @@ def time_decimate(
             )
             subclips.append(clip_path)
 
-        concat(
-            subclips,
-            output_path,
-            transition=transition,
-        )
+        # Skip concatenation if only 1 clip.
+        if n > 1:
+            concat(
+                subclips,
+                output_path,
+                transition=transition,
+            )
+        else:
+            if output_path is not None:
+                shutil.copy(subclips[0], output_path)
+            else:
+                shutil.copy(subclips[0], local_path)
 
     if metadata is not None:
         helpers.get_metadata(

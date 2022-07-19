@@ -75,8 +75,8 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         self.width = ceil(video_info["width"] / 2) * 2
         log.info("Width=%d height=%d", self.width, self.height)
 
-        self.sample_aspect_ratio = video_info.get("sample_aspect_ratio", 1.0)
-        log.info("Aspect ratio=%f", self.sample_aspect_ratio)
+        self.sample_aspect_ratio = video_info.get("sample_aspect_ratio", "1")
+        log.info("Aspect ratio=%s", self.sample_aspect_ratio)
 
         self.transition = transition
 
