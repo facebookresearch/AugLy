@@ -66,7 +66,7 @@ class BaseAudioUnitTest(unittest.TestCase):
                 dst = librosa.load(tmpfile.name, sr=None, mono=False)[0]
 
             if not are_equal_audios(dst, ref):
-                ret_and_save_audio(dst, f"{aug_function.__name__}_{folders[i]}_new.wav")
+                ret_and_save_audio(dst, f"augly/tests/assets/audio/speech_commands_expected_output/{aug_function.__name__}_{folders[i]}_new.wav")
 
 #             self.assertTrue(
 #                 are_equal_audios(dst, ref), "Expected and outputted audio do not match"
