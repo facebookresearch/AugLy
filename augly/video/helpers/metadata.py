@@ -44,6 +44,7 @@ def compute_time_crop_segments(
     crop_end: float,
     new_src_segments: List[Segment],
     new_dst_segments: List[Segment],
+    end_dst_offset: float = 0.0,
 ) -> None:
     """
     Calculates how the given matching pair src_segment & dst_segment change
@@ -64,15 +65,15 @@ def compute_time_crop_segments(
     # new_start represents where the matching segment starts in the dst audio
     # (if negative, then part of the matching segment is getting cut out, so
     # we need to adjust both the src & dst starts).
-    new_start = dst_segment.start - crop_start
+    # Note: if the video was sped up before, we need to take this into account
+    # (the matching segment that is e.g. 10 seconds of dst audio might
+    # correspond to 5 seconds of src audio, if it was previously
+    # slowed down by 0.5x).
+    new_start = (dst_segment.start - crop_start) * speed_factor
     src_start, src_end = src_segment
     if new_start < 0:
         # We're cropping the beginning of the matching segment.
-        # Note: if the video was sped up before, we need to take this into account
-        # (the matching segment that is e.g. 10 seconds of dst audio might
-        # correspond to 5 seconds of src audio, if it was previously
-        # slowed down by 0.5x).
-        src_start = src_segment.start - new_start * speed_factor
+        src_start = src_segment.start - new_start
         new_start = 0
     new_end = min(dst_segment.end - crop_start, crop_end - crop_start)
     if crop_end < dst_segment.end:
@@ -82,7 +83,9 @@ def compute_time_crop_segments(
         src_end = src_segment.end - (dst_segment.end - crop_end) * speed_factor
 
     new_src_segments.append(Segment(src_start, src_end))
-    new_dst_segments.append(Segment(new_start, new_end))
+    new_dst_segments.append(
+        Segment(new_start + end_dst_offset, new_end + end_dst_offset)
+    )
 
 
 def compute_time_decimate_segments(
@@ -98,6 +101,7 @@ def compute_time_decimate_segments(
     off_segment = on_segment * kwargs["off_factor"]
     n = int(src_duration / (on_segment + off_segment))
 
+    dst_offset = 0
     for i in range(n):
         crop_start = i * on_segment + i * off_segment
         crop_end = min(src_duration, (i + 1) * on_segment + i * off_segment)
@@ -113,14 +117,9 @@ def compute_time_decimate_segments(
             crop_end,
             new_src_segments,
             new_dst_segments,
+            end_dst_offset=dst_offset,
         )
-
-    for i in range(1, len(new_dst_segments)):
-        new_start = new_dst_segments[i].start + new_dst_segments[i - 1].end
-        new_dst_segments[i] = Segment(
-            new_start,
-            new_start + new_dst_segments[i].end,
-        )
+        dst_offset = new_dst_segments[-1].end
 
 
 def compute_changed_segments(
@@ -150,14 +149,17 @@ def compute_changed_segments(
                 Segment(dst_segment.start + offset, dst_segment.end + offset)
             )
         elif name == "replace_with_background":
-            new_src_segments.append(src_segment)
             clip_start = kwargs["starting_background_duration"]
             duration = kwargs["source_duration"]
-            new_dst_segments.append(
-                Segment(
-                    dst_segment.start + clip_start,
-                    dst_segment.start + clip_start + duration,
-                )
+            compute_time_crop_segments(
+                src_segment,
+                dst_segment,
+                speed_factor,
+                clip_start,
+                clip_start + duration,
+                new_src_segments,
+                new_dst_segments,
+                end_dst_offset=clip_start,
             )
         elif name == "change_video_speed":
             # speed_factor > 1 if speedup, < 1 if slow down
