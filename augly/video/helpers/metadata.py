@@ -162,12 +162,13 @@ def compute_changed_segments(
                 end_dst_offset=clip_start,
             )
         elif name == "change_video_speed":
-            # speed_factor > 1 if speedup, < 1 if slow down
-            speed_factor *= src_duration / dst_duration
+            crt_factor = kwargs["factor"]
+            global_factor = crt_factor * speed_factor
             new_src_segments.append(src_segment)
             new_dst_segments.append(
                 Segment(
-                    dst_segment.start / speed_factor, dst_segment.end / speed_factor
+                    dst_segment.start / global_factor,
+                    dst_segment.end / global_factor,
                 )
             )
         elif name == "concat":

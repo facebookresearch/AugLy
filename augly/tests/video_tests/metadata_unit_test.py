@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+import unittest
+from typing import List
+
+import augly.video.helpers as helpers
+
+from augly.utils import Segment
+
+
+class MetadataUnitTest(unittest.TestCase):
+    def assert_equal_segments(self, actual: Segment, expected: Segment):
+        self.assertAlmostEqual(actual.start, expected.start)
+        self.assertAlmostEqual(actual.end, expected.end)
+
+    def assert_equal_segment_lists(
+        self, actual: List[Segment], expected: List[Segment]
+    ):
+        self.assertEqual(len(actual), len(expected))
+        for act, exp in zip(actual, expected):
+            self.assert_equal_segments(act, exp)
+
+    def test_change_video_speed(self):
+        md = {
+            "name": "overlay_text",
+            "src_duration": 58.591925,
+            "dst_duration": 58.591925,
+            "src_fps": 29.952932801822325,
+            "dst_fps": 29.95293280069612,
+            "src_width": 640,
+            "src_height": 352,
+            "dst_width": 640,
+            "dst_height": 352,
+            "src_segments": [
+                {"start": 0.0, "end": 14.492321571512164},
+                {"start": 23.479556369432764, "end": 37.97187794094493},
+            ],
+            "dst_segments": [
+                {"start": 8.791720999383276, "end": 23.284042570895444},
+                {"start": 23.284042570895444, "end": 37.7763641424076},
+            ],
+            "text_len": 12,
+            "text_change_nth": None,
+            "fonts": [
+                (
+                    "manifold://ai_red_team/tree/similarity/media_assets/fonts/cac_champagne.ttf",
+                    "manifold://ai_red_team/tree/similarity/media_assets/fonts/cac_champagne.pkl",
+                )
+            ],
+            "fontscales": [0.2973747861954241, 0.5916911269561087],
+            "colors": [(238, 166, 244)],
+            "thickness": None,
+            "random_movement": False,
+            "topleft": [0.09272467655824976, 0.5098042791327592],
+            "bottomright": [0.8126272414865852, 0.7849615824118924],
+            "kwargs": {},
+            "intensity": 0.1980864483894119,
+        }
+
+        new_src_segments, new_dst_segments = helpers.compute_segments(
+            "change_video_speed",
+            src_duration=58.591925,
+            dst_duration=40.563641,
+            src_fps=29.9,
+            dst_fps=29.9,
+            metadata=[
+                md,
+            ],
+            factor=1.44,
+        )
+
+        self.assert_equal_segment_lists(
+            new_src_segments,
+            [
+                Segment(start=0.0, end=14.492321571512164),
+                Segment(start=23.479556369432764, end=37.97187794094493),
+            ],
+        )
+
+        self.assert_equal_segment_lists(
+            new_dst_segments,
+            [
+                Segment(start=6.105361805127275, end=16.169474007566283),
+                Segment(start=16.169474007566283, end=26.233586210005278),
+            ],
+        )
