@@ -93,18 +93,31 @@ def compute_time_decimate_segments(
     dst_segment: Segment,
     src_duration: float,
     speed_factor: float,
+    transition_duration: float,
     new_src_segments: List[Segment],
     new_dst_segments: List[Segment],
     **kwargs,
 ) -> None:
+    start_offset = src_duration * kwargs["start_offset_factor"]
     on_segment = src_duration * kwargs["on_factor"]
     off_segment = on_segment * kwargs["off_factor"]
-    n = int(src_duration / (on_segment + off_segment))
+    n = int((src_duration - start_offset) / (on_segment + off_segment))
 
     dst_offset = 0
     for i in range(n):
-        crop_start = i * on_segment + i * off_segment
-        crop_end = min(src_duration, (i + 1) * on_segment + i * off_segment)
+        crop_start = (
+            start_offset
+            + i * on_segment
+            + i * off_segment
+            + (i > 0) * transition_duration / 2.0
+        )
+        crop_end = (
+            start_offset
+            + (i + 1) * on_segment
+            + i * off_segment
+            - (i < n - 1) * transition_duration / 2
+        )
+        crop_end = min(src_duration, crop_end)
 
         if crop_start > src_duration:
             break
@@ -120,6 +133,14 @@ def compute_time_decimate_segments(
             end_dst_offset=dst_offset,
         )
         dst_offset = new_dst_segments[-1].end
+
+
+def get_transition_duration(kwargs):
+    transition = kwargs.get("transition")
+    if transition:
+        return transition.duration
+
+    return 0.0
 
 
 def compute_changed_segments(
@@ -138,15 +159,29 @@ def compute_changed_segments(
     Returns the lists of new src segments & dst segments, respectively.
     """
     new_src_segments, new_dst_segments = [], []
+    td = get_transition_duration(kwargs)
     for src_segment, dst_segment in zip(src_segments, dst_segments):
         if name == "insert_in_background":
             # Note: When we implement insert_in_background, make sure to pass these kwargs
             offset = kwargs["offset_factor"] * kwargs["background_video_duration"]
+            transition_before = int(kwargs["transition_before"])
+            transition_after = int(kwargs["transition_after"])
             # The matching segments are just offset in the dst audio by the amount
             # of background video inserted before the src video.
-            new_src_segments.append(src_segment)
+            new_src_segments.append(
+                Segment(
+                    src_segment.start + transition_before * td / 2,
+                    src_segment.end - transition_after * td / 2,
+                )
+            )
             new_dst_segments.append(
-                Segment(dst_segment.start + offset, dst_segment.end + offset)
+                Segment(
+                    dst_segment.start + offset - transition_before * td / 2,
+                    dst_segment.end
+                    + offset
+                    - transition_before * td
+                    - transition_after * td / 2,
+                )
             )
         elif name == "replace_with_background":
             clip_start = kwargs["starting_background_duration"]
@@ -172,15 +207,24 @@ def compute_changed_segments(
                 )
             )
         elif name == "concat":
-            new_src_segments.append(src_segment)
+            src_index = kwargs["src_video_path_index"]
+            num_videos = len(kwargs["video_paths"])
+            transition_offset_start = td / 2 if src_index > 0 else 0.0
+            transition_offset_end = td / 2 if src_index < num_videos - 1 else 0.0
+            new_src_segments.append(
+                Segment(
+                    src_segment.start + transition_offset_start,
+                    src_segment.end - transition_offset_end,
+                )
+            )
             offset = sum(
-                float(helpers.get_video_info(vp)["duration"])
+                float(helpers.get_video_info(vp)["duration"]) - td
                 for vp in kwargs["video_paths"][: kwargs["src_video_path_index"]]
             )
             new_dst_segments.append(
                 Segment(
-                    dst_segment.start + offset,
-                    dst_segment.end + offset,
+                    dst_segment.start + offset + transition_offset_start,
+                    dst_segment.end + offset - transition_offset_end,
                 )
             )
         elif name == "loop":
@@ -215,6 +259,7 @@ def compute_changed_segments(
                 dst_segment,
                 src_duration,
                 speed_factor,
+                td,
                 new_src_segments,
                 new_dst_segments,
                 **kwargs,

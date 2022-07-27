@@ -831,9 +831,6 @@ def insert_in_background(
             helpers.create_color_video(resized_bg_path, video_duration, height, width)
         else:
             resize(background_path, resized_bg_path, height, width)
-            silent_bg_path = os.path.join(tmpdir, "silent.mp4")
-            helpers.add_silent_audio(resized_bg_path, silent_bg_path)
-            resized_bg_path = silent_bg_path
 
         bg_video_info = helpers.get_video_info(resized_bg_path)
         bg_video_duration = float(bg_video_info["duration"])
@@ -857,19 +854,24 @@ def insert_in_background(
 
         offset = desired_bg_duration * offset_factor
 
+        transition_before = False
         if offset > 0:
             before_path = os.path.join(tmpdir, "before.mp4")
             trim(resized_bg_path, before_path, start=bg_start, end=bg_start + offset)
             video_paths.append(before_path)
             src_video_path_index = 1
+            transition_before = True
         else:
             src_video_path_index = 0
 
         video_paths.append(tmp_video_path)
 
-        after_path = os.path.join(tmpdir, "after.mp4")
-        trim(resized_bg_path, after_path, start=bg_start + offset, end=bg_end)
-        video_paths.append(after_path)
+        transition_after = False
+        if bg_start + offset < bg_end:
+            after_path = os.path.join(tmpdir, "after.mp4")
+            trim(resized_bg_path, after_path, start=bg_start + offset, end=bg_end)
+            video_paths.append(after_path)
+            transition_after = True
 
         concat(
             video_paths,
@@ -883,6 +885,8 @@ def insert_in_background(
             metadata=metadata,
             function_name="insert_in_background",
             background_video_duration=desired_bg_duration,
+            transition_before=transition_before,
+            transition_after=transition_after,
             **func_kwargs,
         )
 
