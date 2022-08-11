@@ -48,6 +48,8 @@ def combine_frames_and_audio_to_file(
             "yuv420p",
             "-preset",
             "ultrafast",
+            "-vf",
+            "pad=ceil(iw/2)*2:ceil(ih/2)*2",
             temp_video_path,
         ]
         execute_vidgear_command(temp_video_path, ffmpeg_command)
