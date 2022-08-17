@@ -5,11 +5,13 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+import os
 import unittest
 from typing import List
 from unittest.mock import MagicMock, patch
 
 from augly.utils import Segment
+from augly.utils.base_paths import ASSETS_BASE_DIR
 from augly.video import helpers
 
 from augly.video.augmenters import ffmpeg as af
@@ -209,8 +211,14 @@ class MetadataUnitTest(unittest.TestCase):
             "text_change_nth": None,
             "fonts": [
                 (
-                    "manifold://ai_red_team/tree/similarity/media_assets/fonts/cac_champagne.ttf",
-                    "manifold://ai_red_team/tree/similarity/media_assets/fonts/cac_champagne.pkl",
+                    os.path.join(
+                        ASSETS_BASE_DIR,
+                        "similarity/media_assets/fonts/cac_champagne.ttf",
+                    ),
+                    os.path.join(
+                        ASSETS_BASE_DIR,
+                        "similarity/media_assets/fonts/cac_champagne.pkl",
+                    ),
                 )
             ],
             "fontscales": [0.2973747861954241, 0.5916911269561087],
