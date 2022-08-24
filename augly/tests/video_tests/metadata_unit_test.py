@@ -22,6 +22,7 @@ class MetadataUnitTest(unittest.TestCase):
         fail_msg = f"actual={actual}, expected={expected}"
         self.assertAlmostEqual(actual.start, expected.start, msg=fail_msg)
         self.assertAlmostEqual(actual.end, expected.end, msg=fail_msg)
+        self.assertEqual(actual.src_id, expected.src_id, msg=fail_msg)
 
     def assert_equal_segment_lists(
         self, actual: List[Segment], expected: List[Segment]
@@ -124,6 +125,50 @@ class MetadataUnitTest(unittest.TestCase):
         )
         self.assert_equal_segment_lists(
             new_dst_segments, [Segment(start=5.0, end=25.0)]
+        )
+
+    def test_compute_insert_in_background_multiple_segments(self):
+        src_1, dst_1 = helpers.compute_segments(
+            name="insert_in_background_multiple",
+            src_duration=20.0,
+            dst_duration=40.0,
+            src_fps=25,
+            dst_fps=30,
+            metadata=None,
+            src_segment_starts=[2.0, 3.0],
+            src_segment_ends=[12.0, 13.0],
+            bkg_insertion_points=[5.0, 10.0],
+            src_ids=["0", "1"],
+            transition=None,
+        )
+        self.assert_equal_segment_lists(
+            src_1, [Segment(2.0, 12.0, "0"), Segment(3.0, 13.0, "1")]
+        )
+        self.assert_equal_segment_lists(
+            dst_1, [Segment(5.0, 15.0), Segment(20.0, 30.0)]
+        )
+
+        src_2, dst_2 = helpers.compute_segments(
+            name="insert_in_background_multiple",
+            src_duration=20.0,
+            dst_duration=50.0,
+            src_fps=25,
+            dst_fps=30,
+            metadata=None,
+            src_segment_starts=[2.0, 3.0, 7.0],
+            src_segment_ends=[12.0, 13.0, 20.0],
+            bkg_insertion_points=[5.0, 10.0, 20.0],
+            src_ids=["0", "1", "2"],
+            transition=af.TransitionConfig(
+                effect=af.TransitionEffect.CIRCLECLOSE, duration=2.0
+            ),
+        )
+        self.assert_equal_segment_lists(
+            src_2,
+            [Segment(3.0, 11.0, "0"), Segment(4.0, 12.0, "1"), Segment(8.0, 19.0, "2")],
+        )
+        self.assert_equal_segment_lists(
+            dst_2, [Segment(4.0, 12.0), Segment(15.0, 23.0), Segment(31.0, 42.0)]
         )
 
     def test_time_decimate(self):

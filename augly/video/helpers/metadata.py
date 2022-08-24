@@ -88,6 +88,48 @@ def compute_time_crop_segments(
     )
 
 
+def compute_insert_in_background_multiple_segments(
+    src_segment_starts: List[float],
+    src_segment_ends: List[float],
+    bkg_insertion_points: List[float],
+    src_ids: List[str],
+    transition_duration: float,
+    new_src_segments: List[Segment],
+    new_dst_segments: List[Segment],
+    **kwargs,
+):
+    n = len(src_segment_starts)
+    assert n == len(
+        src_segment_ends
+    ), "Source segment starts and ends lists must have equal length."
+    assert n == len(
+        bkg_insertion_points
+    ), "Source segment starts and background insertion points lists must have equal length."
+    assert n == len(
+        src_ids
+    ), "Source segment starts and source ids lists must have equal length."
+
+    if n == 0:  # nothing to do
+        return
+
+    dst_cum_dur = 0.0  # background cumulative duration.
+    offset = transition_duration / 2.0
+    prev_bkg = 0.0
+    for src_start, src_end, src_id, bkg_pt in zip(
+        src_segment_starts, src_segment_ends, src_ids, bkg_insertion_points
+    ):
+        crop_start = src_start + offset
+        crop_end = src_end - offset
+        dst_start = dst_cum_dur + (bkg_pt - prev_bkg) - offset
+        src_segment = Segment(start=crop_start, end=crop_end, src_id=src_id)
+        dst_segment = Segment(start=dst_start, end=dst_start + (crop_end - crop_start))
+
+        new_src_segments.append(src_segment)
+        new_dst_segments.append(dst_segment)
+        dst_cum_dur = dst_segment.end - offset
+        prev_bkg = bkg_pt
+
+
 def compute_time_decimate_segments(
     src_segment: Segment,
     dst_segment: Segment,
@@ -181,6 +223,16 @@ def compute_changed_segments(
                     - transition_before * td
                     - transition_after * td / 2,
                 )
+            )
+        elif name == "insert_in_background_multiple":
+            compute_insert_in_background_multiple_segments(
+                src_segment_starts=kwargs["src_segment_starts"],
+                src_segment_ends=kwargs["src_segment_ends"],
+                bkg_insertion_points=kwargs["bkg_insertion_points"],
+                src_ids=kwargs["src_ids"],
+                transition_duration=td,
+                new_src_segments=new_src_segments,
+                new_dst_segments=new_dst_segments,
             )
         elif name == "replace_with_background":
             clip_start = kwargs["starting_background_duration"]
@@ -332,6 +384,7 @@ def compute_segments(
 
     if name in [
         "insert_in_background",
+        "insert_in_background_multiple",
         "replace_with_background",
         "change_video_speed",
         "loop",
