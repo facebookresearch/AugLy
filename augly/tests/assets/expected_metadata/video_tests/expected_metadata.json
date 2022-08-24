@@ -7,7 +7,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -20,7 +21,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -34,7 +36,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -46,7 +49,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -61,7 +65,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -74,7 +79,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -92,7 +98,8 @@
                     "dst_segments": [
                         {
                             "end": 10.005333333333333,
-                            "start": 0
+                            "start": 0,
+                            "src_id": null
                         }
                     ],
                     "intensity": 1.1904761904761905,
@@ -105,7 +112,8 @@
                     "src_segments": [
                         {
                             "end": 10.005333333333333,
-                            "start": 0
+                            "start": 0,
+                            "src_id": null
                         }
                     ]
                 }
@@ -116,7 +124,8 @@
             "dst_segments": [
                 {
                     "end": 10.027855,
-                    "start": 0
+                    "start": 0,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -128,7 +137,8 @@
             "src_segments": [
                 {
                     "end": 10.027855,
-                    "start": 0
+                    "start": 0,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -142,7 +152,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -157,7 +168,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -174,7 +186,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -187,7 +200,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -201,7 +215,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -214,7 +229,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -228,7 +244,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1440,
@@ -241,7 +258,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -255,7 +273,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 5.0139275
+                    "end": 5.0139275,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -268,7 +287,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -284,7 +304,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -297,7 +318,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -311,7 +333,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -323,7 +346,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -335,7 +359,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -348,7 +373,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -363,8 +389,8 @@
             "src_height": 1080,
             "dst_width": 1920,
             "dst_height": 1080,
-            "src_segments": [{"start": 0.0, "end": 10.027855}],
-            "dst_segments": [{"start": 0.0, "end": 10.027855}],
+            "src_segments": [{"start": 0.0, "end": 10.027855, "src_id": null}],
+            "dst_segments": [{"start": 0.0, "end": 10.027855, "src_id": null}],
             "intensity": 100.0
         }
     ],
@@ -376,7 +402,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -388,7 +415,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_video_path_index": 0,
@@ -408,7 +436,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -421,7 +450,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -436,7 +466,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 960,
@@ -450,7 +481,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -465,7 +497,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -478,7 +511,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -492,7 +526,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -505,7 +540,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -519,7 +555,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -531,7 +568,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -545,7 +583,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -557,7 +596,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -571,7 +611,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 3840,
@@ -584,7 +625,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -601,7 +643,8 @@
             "dst_segments": [
                 {
                     "start": 2.525,
-                    "end": 12.552855000000001
+                    "end": 12.552855000000001,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -617,7 +660,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -631,11 +675,13 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
         },
         {
             "start": 10.027855,
-                    "end": 20.05571
+                    "end": 20.05571,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -648,11 +694,13 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
         },
         {
             "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -667,7 +715,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -682,7 +731,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -698,7 +748,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -712,7 +763,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -730,7 +782,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -745,7 +798,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -759,7 +813,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -774,7 +829,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -791,7 +847,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -804,7 +861,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -822,7 +880,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 2196,
@@ -835,7 +894,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -853,7 +913,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -870,7 +931,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -888,7 +950,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -904,7 +967,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -923,7 +987,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 2880,
@@ -936,7 +1001,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -951,7 +1017,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -966,7 +1033,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -980,7 +1048,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -993,7 +1062,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1007,7 +1077,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1206,
@@ -1020,7 +1091,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1034,7 +1106,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1047,7 +1120,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1061,7 +1135,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1074,7 +1149,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1088,7 +1164,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1101,7 +1178,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1115,7 +1193,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1130,7 +1209,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -1146,7 +1226,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1159,7 +1240,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1173,7 +1255,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1186,7 +1269,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1200,7 +1284,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1213,7 +1298,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1227,7 +1313,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1240,7 +1327,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1255,7 +1343,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1267,7 +1356,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1281,7 +1371,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 13.301907931987063
+                    "end": 13.301907931987063,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1294,7 +1385,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1308,7 +1400,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1320,7 +1413,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1336,7 +1430,8 @@
             "dst_segments": [
                 {
                     "start": 0.30083565000000007,
-                    "end": 7.32033415
+                    "end": 7.32033415,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1352,7 +1447,8 @@
             "src_segments": [
                 {
                     "start": 0.30083565000000007,
-                    "end": 7.32033415
+                    "end": 7.32033415,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -1388,7 +1484,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 300,
@@ -1401,7 +1498,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -1417,7 +1515,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1429,7 +1528,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1443,7 +1543,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 960,
@@ -1456,7 +1557,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1471,7 +1573,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1483,7 +1586,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -1499,7 +1603,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 5.0139275
+                    "end": 5.0139275,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1514,7 +1619,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 5.0139275
+                    "end": 5.0139275,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1528,15 +1634,18 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 2.005571
+                    "end": 2.005571,
+                    "src_id": null
         },
         {
             "start": 2.005571,
-                    "end": 4.0111419999999995
+                    "end": 4.0111419999999995,
+                    "src_id": null
         },
         {
             "start": 4.0111419999999995,
-                    "end": 6.016712999999999
+                    "end": 6.016712999999999,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1551,15 +1660,18 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 2.0055709999999998
+                    "end": 2.0055709999999998,
+                    "src_id": null
                 },
                 {
                     "start": 3.0083565000000005,
-                    "end": 5.0139275
+                    "end": 5.0139275,
+                    "src_id": null
                 },
                 {
                     "start": 6.016713000000001,
-                    "end": 8.022284
+                    "end": 8.022284,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -1574,7 +1686,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 5.0
+                    "end": 5.0,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1587,7 +1700,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 5.0
+                    "end": 5.0,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
@@ -1602,7 +1716,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1614,7 +1729,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920
@@ -1628,7 +1744,8 @@
             "dst_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "dst_width": 1920,
@@ -1641,7 +1758,8 @@
             "src_segments": [
                 {
                     "start": 0.0,
-                    "end": 10.027855
+                    "end": 10.027855,
+                    "src_id": null
                 }
             ],
             "src_width": 1920,
