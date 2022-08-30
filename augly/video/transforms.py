@@ -981,6 +981,61 @@ class InsertInBackground(BaseTransform):
         )
 
 
+class InsertInBackgroundMultiple(BaseTransform):
+    def __init__(
+        self,
+        background_path: str,
+        additional_video_paths: List[str],
+        src_ids: List[str],
+        seed: Optional[int] = None,
+    ):
+        """
+        @param background_path: the path of the video in which to insert
+            the main (and additional) video.
+
+        @param additional_video_paths: list of additional video paths to
+            be inserted alongside the main video; one clip from each of the
+            input videos will be inserted in order.
+
+        @param src_ids: the list of identifiers for the main video and additional videos.
+
+        @param seed: if provided, this will set the random seed to ensure consistency
+            between runs.
+        """
+        super().__init__()
+        self.background_path = background_path
+        self.additional_video_paths = additional_video_paths
+        self.src_ids = src_ids
+        self.seed = seed
+
+    def apply_transform(
+        self,
+        video_path: str,
+        output_path: str,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> str:
+        """
+        Places the video (and the additional videos) in the middle of the background video.
+
+        @param video_path: the path of the main video to be augmented.
+
+        @param output_path: the path in which the output video will be stored.
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest duration, fps, etc. will be appended
+            to the inputted list. If set to None, no metadata will be appended or returned
+        """
+        return F.insert_in_background_multiple(
+            video_path=video_path,
+            output_path=output_path,
+            background_path=self.background_path,
+            src_ids=self.src_ids,
+            additional_video_paths=self.additional_video_paths,
+            seed=self.seed,
+            metadata=metadata,
+        )
+
+
 class Loop(BaseTransform):
     def __init__(self, num_loops: int = 0, p: float = 1.0):
         """
