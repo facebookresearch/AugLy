@@ -70,7 +70,7 @@ def compute_time_crop_segments(
     # correspond to 5 seconds of src audio, if it was previously
     # slowed down by 0.5x).
     new_start = (dst_segment.start - crop_start) * speed_factor
-    src_start, src_end = src_segment
+    src_start, src_end, src_id = src_segment
     if new_start < 0:
         # We're cropping the beginning of the matching segment.
         src_start = src_segment.start - new_start
@@ -82,7 +82,7 @@ def compute_time_crop_segments(
         # account (as above).
         src_end = src_segment.end - (dst_segment.end - crop_end) * speed_factor
 
-    new_src_segments.append(Segment(src_start, src_end))
+    new_src_segments.append(Segment(src_start, src_end, src_id))
     new_dst_segments.append(
         Segment(new_start + end_dst_offset, new_end + end_dst_offset)
     )
@@ -169,9 +169,8 @@ def compute_changed_segments(
             # The matching segments are just offset in the dst audio by the amount
             # of background video inserted before the src video.
             new_src_segments.append(
-                Segment(
-                    src_segment.start + transition_before * td / 2,
-                    src_segment.end - transition_after * td / 2,
+                src_segment.delta(
+                    transition_before * td / 2, -transition_after * td / 2
                 )
             )
             new_dst_segments.append(
@@ -212,10 +211,7 @@ def compute_changed_segments(
             transition_offset_start = td / 2 if src_index > 0 else 0.0
             transition_offset_end = td / 2 if src_index < num_videos - 1 else 0.0
             new_src_segments.append(
-                Segment(
-                    src_segment.start + transition_offset_start,
-                    src_segment.end - transition_offset_end,
-                )
+                src_segment.delta(transition_offset_start, -transition_offset_end)
             )
             offset = sum(
                 float(helpers.get_video_info(vp)["duration"]) - td
@@ -315,12 +311,15 @@ def compute_segments(
     transform, as well as the metadata about previously applied transforms.
     """
     speed_factor = 1.0
+    src_id = kwargs.get("src_id", None)
     if not metadata:
-        src_segments = [Segment(0.0, src_duration)]
+        src_segments = [Segment(0.0, src_duration, src_id)]
         dst_segments = [Segment(0.0, src_duration)]
     else:
         src_segments = [
-            Segment(segment_dict["start"], segment_dict["end"])
+            Segment(
+                segment_dict["start"], segment_dict["end"], segment_dict.get("src_id")
+            )
             for segment_dict in metadata[-1]["src_segments"]
         ]
         dst_segments = [
