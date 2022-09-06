@@ -893,6 +893,177 @@ def insert_in_background(
     return output_path or video_path
 
 
+def insert_in_background_multiple(
+    video_path: str,
+    output_path: str,
+    background_path: str,
+    src_ids: List[str],
+    additional_video_paths: List[str],
+    seed: Optional[int] = None,
+    min_source_segment_duration: float = 5.0,
+    max_source_segment_duration: float = 20.0,
+    min_background_segment_duration: float = 2.0,
+    min_result_video_duration: float = 30.0,
+    max_result_video_duration: float = 60.0,
+    transition: Optional[af.TransitionConfig] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    """
+    Places the video (and the additional videos) in the middle of the background video.
+
+    @param video_path: the path of the main video to be augmented.
+
+    @param output_path: the path in which the output video will be stored.
+
+    @param background_path: the path of the video in which to insert the main
+        (and additional) video.
+
+    @param src_ids: the list of identifiers for the main video and additional videos.
+
+    @param additional_video_paths: list of additional video paths to be
+        inserted alongside the main video; one clip from each of the input
+        videos will be inserted in order.
+
+    @param seed: if provided, this will set the random seed to ensure consistency
+        between runs.
+
+    @param min_source_segment_duration: minimum duration in seconds of the source
+        segments that will be inserted in the background video.
+
+    @param max_source_segment_duration: maximum duration in seconds of the source
+        segments that will be inserted in the background video.
+
+    @param min_background_segment_duration: minimum duration in seconds of a background segment.
+
+    @param min_result_video_duration: minimum duration in seconds of the output video.
+
+    @param max_result_video_duration: maximum duration in seconds of the output video.
+
+    @param transition: optional transition configuration to apply between the clips.
+
+    @param metadata: if set to be a list, metadata about the function execution including
+        its name, the source & dest duration, fps, etc. will be appended to the inputted
+        list. If set to None, no metadata will be appended or returned
+
+    @returns: the path to the augmented video
+    """
+    if additional_video_paths:
+        assert len(additional_video_paths) + 1 == len(
+            src_ids
+        ), "src_ids need to be specified for the main video and all additional videos."
+    func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+    rng = np.random.RandomState(seed) if seed is not None else np.random
+
+    local_path = utils.pathmgr.get_local_path(video_path)
+    additional_local_paths = (
+        [utils.pathmgr.get_local_path(p) for p in additional_video_paths]
+        if additional_video_paths
+        else []
+    )
+    bkg_local_path = utils.pathmgr.get_local_path(background_path)
+    src_paths = [
+        local_path,
+    ] + additional_local_paths
+
+    src_video_durations = np.array(
+        [float(helpers.get_video_info(v)["duration"]) for v in src_paths]
+    )
+    bkg_duration = float(helpers.get_video_info(bkg_local_path)["duration"])
+
+    src_segment_durations = (
+        rng.random_sample(len(src_video_durations))
+        * (max_source_segment_duration - min_source_segment_duration)
+        + min_source_segment_duration
+    )
+    src_segment_durations = np.minimum(src_segment_durations, src_video_durations)
+    src_segment_starts = rng.random(len(src_video_durations)) * (
+        src_video_durations - src_segment_durations
+    )
+    src_segment_ends = src_segment_starts + src_segment_durations
+
+    sum_src_duration = np.sum(src_segment_durations)
+    required_result_duration = (
+        len(src_segment_durations) + 1
+    ) * min_background_segment_duration + sum_src_duration
+    if required_result_duration > max_result_video_duration:
+        raise ValueError(
+            "Failed to generate config for source segments in insert_in_background_multiple."
+        )
+
+    duration_budget = max_result_video_duration - required_result_duration
+    bkg_budget = rng.random() * duration_budget
+    overall_bkg_needed_duration = (
+        len(src_segment_durations) + 1
+    ) * min_background_segment_duration + bkg_budget
+
+    num_loops_needed = 0
+    if overall_bkg_needed_duration > bkg_duration:
+        num_loops_needed = math.ceil(overall_bkg_needed_duration / bkg_duration)
+
+    # Now sample insertion points by picking len(src_segment_durations) points in the interval [0, bkg_budget)
+    # Then sort the segments and add spacing for the minimum background segment duration.
+    bkg_insertion_points = (
+        np.sort(rng.random(len(src_segment_durations)) * bkg_budget)
+        + np.arange(len(src_segment_durations)) * min_background_segment_duration
+    )
+    last_bkg_point = overall_bkg_needed_duration
+    dst_starts = bkg_insertion_points + np.concatenate(
+        (
+            [
+                0.0,
+            ],
+            np.cumsum(src_segment_durations)[:-1],
+        )
+    )
+
+    # Start applying transforms.
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # First, loop through background video if needed.
+        if num_loops_needed > 0:
+            buf = os.path.join(tmpdir, "bkg_loop.mp4")
+            loop(bkg_local_path, buf, num_loops=num_loops_needed)
+            bkg_path = buf
+        else:
+            bkg_path = bkg_local_path
+
+        bkg_videos = []
+        # Sample background segments.
+        prev = 0.0
+        for i, pt in enumerate(bkg_insertion_points):
+            out_path = os.path.join(tmpdir, f"bkg_{i}.mp4")
+            trim(bkg_path, out_path, start=prev, end=pt)
+            prev = pt
+            bkg_videos.append(out_path)
+
+        # last background segment
+        last_bkg_path = os.path.join(tmpdir, "bkg_last.mp4")
+        trim(bkg_path, last_bkg_path, start=prev, end=last_bkg_point)
+
+        src_videos = []
+        # Sample source segments.
+        for i, seg in enumerate(zip(src_segment_starts, src_segment_ends)):
+            out_path = os.path.join(tmpdir, f"src_{i}.mp4")
+            trim(src_paths[i], out_path, start=seg[0], end=seg[1])
+            src_videos.append(out_path)
+
+        all_videos = [v for pair in zip(bkg_videos, src_videos) for v in pair] + [
+            last_bkg_path,
+        ]
+        concat(all_videos, output_path, 1, transition=transition)
+
+    if metadata is not None:
+        helpers.get_metadata(
+            metadata=metadata,
+            function_name="insert_in_background_multiple",
+            src_segment_starts=src_segment_starts,
+            src_segment_ends=src_segment_ends,
+            bkg_insertion_points=bkg_insertion_points,
+            **func_kwargs,
+        )
+
+    return output_path
+
+
 def replace_with_background(
     video_path: str,
     output_path: Optional[str] = None,

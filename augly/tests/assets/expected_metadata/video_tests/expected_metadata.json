@@ -667,6 +667,31 @@
             "src_width": 1920
         }
     ],
+    "insert_in_background_multiple": [
+        {
+            "name": "insert_in_background_multiple",
+            "src_duration": 10.027855,
+            "dst_duration": 22.194986,
+            "src_fps": 29.916666666666668,
+            "dst_fps": 29.916666666666668,
+            "src_width": 1920,
+            "src_height": 1080,
+            "dst_width": 1920,
+            "dst_height": 1080,
+            "src_segments": [{"start": 0.0, "end": 10.027855, "src_id": "0"}],
+            "dst_segments": [{"start": 9.937460909027783, "end": 19.965315909027783, "src_id": null}],
+            "src_segment_starts": [0.0],
+            "src_segment_ends": [10.027855],
+            "bkg_insertion_points": [1.71468235],
+            "background_path": "video/inputs/input_2.mp4",
+            "src_ids": ["0"],
+            "additional_video_paths": [],
+            "seed": 23,
+            "min_source_segment_duration": 5.0, "max_source_segment_duration": 20.0, "min_background_segment_duration": 2.0, "min_result_video_duration": 30.0, "max_result_video_duration": 60.0,
+            "transition": null,
+            "intensity": 0.4518072234873228
+        }
+    ],
     "loop": [
         {
             "dst_duration": 20.05571,

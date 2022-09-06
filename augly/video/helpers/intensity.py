@@ -7,6 +7,7 @@
 
 from typing import Any, Dict, List, Optional, Tuple
 
+import numpy as np
 from augly.image import intensity as imint, utils as imutils
 from augly.video.helpers import get_video_info
 
@@ -285,6 +286,21 @@ def pixelization_intensity(ratio: float, **kwargs) -> float:
 
 def remove_audio_intensity(**kwargs) -> float:
     return 100.0
+
+
+def insert_in_background_multiple_intensity(
+    metadata: Dict[str, Any], **kwargs
+) -> float:
+
+    """
+    The intensity is calculated as the percentage of the result video
+    that contains inserted segments.
+    """
+    dst_duration = metadata["dst_duration"]
+    starts = metadata["src_segment_starts"]
+    ends = metadata["src_segment_ends"]
+    inserted = np.sum(ends - starts)
+    return inserted / dst_duration
 
 
 def replace_with_background_intensity(metadata: Dict[str, Any], **kwargs) -> float:

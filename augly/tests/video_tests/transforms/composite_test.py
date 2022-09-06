@@ -47,6 +47,28 @@ class TransformsVideoUnitTest(BaseVideoUnitTest):
             ],
         )
 
+    def test_InsertInBackgroundMultiple(self):
+        _, bkg_path, _ = self.download_video(1)
+        self.evaluate_class(
+            vidaugs.InsertInBackgroundMultiple(
+                additional_video_paths=[],
+                background_path=bkg_path,
+                src_ids=["0"],
+                seed=23,
+            ),
+            fname="insert_in_background_multiple",
+            metadata_exclude_keys=[
+                "dst_duration",
+                "dst_fps",
+                "intensity",
+                "local_path",
+                "bkg_insertion_points",
+                "background_path",
+                "src_segment_starts",
+                "src_segment_ends",
+            ],
+        )
+
     def test_Compose(self):
         random.seed(1)
         self.evaluate_class(
