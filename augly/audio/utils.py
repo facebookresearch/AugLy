@@ -17,7 +17,7 @@ from augly.utils.libsndfile import install_libsndfile
 
 install_libsndfile()
 import librosa
-import soundfile as sf
+import soundfile as sf  # @manual=fbsource//third-party/pypi/soundfile:soundfile
 import torchaudio
 
 # Use Any because np.random.Generator is not a valid type for pyre
@@ -159,9 +159,7 @@ def compute_changed_segments(
             # The matching segments are just offset in the dst audio by the amount
             # of background video inserted before the src video.
             new_src_segments.append(src_segment)
-            new_dst_segments.append(
-                Segment(dst_segment.start + offset, dst_segment.end + offset)
-            )
+            new_dst_segments.append(dst_segment.delta(offset, offset))
         elif name == "clip":
             crop_start = kwargs["offset_factor"] * src_duration
             crop_end = crop_start + kwargs["duration_factor"] * src_duration

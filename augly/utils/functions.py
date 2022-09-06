@@ -39,7 +39,7 @@ def compute_time_crop_segments(
     # (if negative, then part of the matching segment is getting cut out, so
     # we need to adjust both the src & dst starts).
     new_start = dst_segment.start - crop_start
-    src_start, src_end = src_segment
+    src_start, src_end, src_id = src_segment
     if new_start < 0:
         # We're cropping the beginning of the matching segment.
         # Note: if the video was sped up before, we need to take this into account
