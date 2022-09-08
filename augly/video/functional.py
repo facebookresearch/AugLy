@@ -1346,13 +1346,14 @@ def overlay(
     @returns: the path to the augmented video
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+    local_path = utils.pathmgr.get_local_path(video_path)
 
     overlay_path = utils.pathmgr.get_local_path(overlay_path)
     tmp_overlay_path = None
     if overlay_size is not None:
         assert 0 < overlay_size <= 1, "overlay_size must be a value in the range (0, 1]"
 
-        video_info = helpers.get_video_info(video_path)
+        video_info = helpers.get_video_info(local_path)
         overlay_h = int(video_info["height"] * overlay_size)
         overlay_w = int(video_info["width"] * overlay_size)
 
@@ -1366,7 +1367,7 @@ def overlay(
     overlay_aug = af.VideoAugmenterByOverlay(
         tmp_overlay_path or overlay_path, x_factor, y_factor, use_overlay_audio
     )
-    overlay_aug.add_augmenter(video_path, output_path)
+    overlay_aug.add_augmenter(local_path, output_path)
 
     if tmp_overlay_path:
         os.remove(tmp_overlay_path)
@@ -1457,9 +1458,10 @@ def overlay_emoji(
     @returns: the path to the augmented video
     """
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
+    local_path = utils.pathmgr.get_local_path(video_path)
 
     utils.validate_video_path(video_path)
-    video_info = helpers.get_video_info(video_path)
+    video_info = helpers.get_video_info(local_path)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         local_emoji_path = utils.pathmgr.get_local_path(emoji_path, cache_dir=tmpdir)
