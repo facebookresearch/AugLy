@@ -9,7 +9,7 @@ from typing import List
 
 from augly.utils import is_image_file, is_video_file, pathmgr
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
-from augly.video.helpers import get_video_info
+from augly.video.helpers import get_video_info, has_audio_stream
 
 
 class VideoAugmenterByOverlay(BaseVidgearFFMPEGAugmenter):
@@ -50,13 +50,22 @@ class VideoAugmenterByOverlay(BaseVidgearFFMPEGAugmenter):
         new_width = video_info["width"] * self.x_factor
         new_height = video_info["height"] * self.y_factor
 
-        return [
+        process_audio = has_audio_stream(video_path)
+
+        ret = [
             *self.input_fmt(video_path),
             "-i",
             self.overlay_path,
             "-filter_complex",
             f"[0:v][1:v] overlay={new_width}:{new_height}",
-            "-map",
-            f"{int(self.use_overlay_audio)}:a:0",
-            *self.output_fmt(output_path),
         ]
+
+        if process_audio:
+            ret += [
+                "-map",
+                f"{int(self.use_overlay_audio)}:a:0",
+            ]
+
+        ret += self.output_fmt(output_path)
+
+        return ret
