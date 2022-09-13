@@ -9,7 +9,7 @@ from typing import List
 
 from augly.utils import pathmgr
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
-from augly.video.helpers import get_video_info
+from augly.video.helpers import get_video_info, has_audio_stream
 
 
 class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
@@ -42,7 +42,13 @@ class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
         """
         video_info = get_video_info(video_path)
 
-        return [
+        process_audio = False
+        if self.use_second_audio:
+            process_audio = has_audio_stream(self.second_video_path)
+        else:
+            process_audio = has_audio_stream(video_path)
+
+        ret = [
             *self.input_fmt(video_path),
             "-i",
             self.second_video_path,
@@ -51,9 +57,18 @@ class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
             + f"[0:v][1v]{self.orientation}=inputs=2[v]",
             "-map",
             "[v]",
-            "-map",
-            f"{int(self.use_second_audio)}:a",
+        ]
+
+        if process_audio:
+            ret += [
+                "-map",
+                f"{int(self.use_second_audio)}:a",
+            ]
+
+        ret += [
             "-vsync",
             "2",
             *self.output_fmt(output_path),
         ]
+
+        return ret
