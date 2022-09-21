@@ -5,18 +5,22 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-from typing import List, Optional
+from typing import List, Union
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
 class VideoAugmenterByResize(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, height: Optional[int], width: Optional[int]):
-        assert height is None or height > 0, "Height must be set to None or be positive"
-        assert width is None or width > 0, "Width must be set to None or be positive"
+    def __init__(self, height: Union[int, str] = "ih", width: Union[int, str] = "iw"):
+        """
+        Constructor. See https://trac.ffmpeg.org/wiki/Scaling for height and width options.
 
-        self.new_h = height or "ih"
-        self.new_w = width or "iw"
+        @param height: height specification. Defaults to input if not specified.
+
+        @param width: width specification. Defaults to input width if not specified.
+        """
+        self.new_h = height
+        self.new_w = width
 
     def get_command(self, video_path: str, output_path: str) -> List[str]:
         """

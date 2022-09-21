@@ -2037,8 +2037,8 @@ def replace_with_color_frames(
 def resize(
     video_path: str,
     output_path: Optional[str] = None,
-    height: Optional[int] = None,
-    width: Optional[int] = None,
+    height: Union[int, str] = "ih",
+    width: Union[int, str] = "iw",
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """
@@ -2049,10 +2049,10 @@ def resize(
     @param output_path: the path in which the resulting video will be stored.
         If not passed in, the original video file will be overwritten
 
-    @param height: the height in which the video should be resized to. If None,
+    @param height: the height in which the video should be resized to. If not specified,
         the original video height will be used
 
-    @param width: the width in which the video should be resized to. If None,
+    @param width: the width in which the video should be resized to. If not specified,
         the original video width will be used
 
     @param metadata: if set to be a list, metadata about the function execution
