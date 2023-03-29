@@ -172,7 +172,14 @@ def compute_changed_segments(
                 new_src_segments,
                 new_dst_segments,
             )
-        elif name in ["speed", "tempo", "time_stretch"]:
+        elif name == "fft_convolve":
+            new_src_segments.append(src_segment)
+            new_dst_segments.append(Segment(dst_segment.start, dst_duration))
+        elif name in [
+            "speed",
+            "tempo",
+            "time_stretch",
+        ]:
             # speed_factor > 1 if speedup, < 1 if slow down
             speed_factor = src_duration / dst_duration
             new_src_segments.append(src_segment)
@@ -216,6 +223,7 @@ def compute_segments(
         "speed",
         "tempo",
         "time_stretch",
+        "fft_convolve",
     ]:
         return compute_changed_segments(
             name,

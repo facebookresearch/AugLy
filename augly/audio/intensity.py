@@ -212,3 +212,8 @@ def time_stretch_intensity(rate: float = 1.5, **kwargs) -> float:
 
 def to_mono_intensity(metadata: Dict[str, Any], **kwargs) -> float:
     return 0.0 if metadata["src_num_channels"] == 1 else 100.0
+
+
+def fft_convolve_intensity(**kwargs) -> float:
+    # This is a full convolution, so return 100.0 here.
+    return 100.0
