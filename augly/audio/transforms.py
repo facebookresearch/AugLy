@@ -921,3 +921,55 @@ class ToMono(BaseTransform):
         @returns: the augmented audio array and sample rate
         """
         return F.to_mono(audio, sample_rate, metadata=metadata)
+
+
+class FFTConvolve(BaseTransform):
+    def __init__(
+        self,
+        normalize: bool = True,
+        impulse_audio: Optional[Union[str, np.ndarray]] = None,
+        seed: Optional[RNGSeed] = None,
+        p: float = 1.0,
+    ):
+        """
+        @param normalize: if True, normalize the output to the maximum amplitude
+
+        @param impulse_audio: the path to the audio or a variable of type np.ndarray that
+            will be used as the convolution filter
+
+        @param seed: the seed for the random number generator
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.impulse_audio = impulse_audio
+        self.seed = seed
+        self.normalize = normalize
+
+    def apply_transform(
+        self,
+        audio: np.ndarray,
+        sample_rate: int,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+    ) -> Tuple[np.ndarray, int]:
+        """
+        Applies a convolution to input tensor using given filter using FFT
+
+        @param audio: the audio array to be augmented
+
+        @param sample_rate: the audio sample rate of the inputted audio
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest duration, sample rates, etc. will be
+            appended to the inputted list. If set to None, no metadata will be appended
+
+        @returns: the augmented audio array and sample rate
+        """
+        return F.fft_convolve(
+            audio,
+            sample_rate,
+            self.normalize,
+            self.impulse_audio,
+            self.seed,
+            metadata=metadata,
+        )

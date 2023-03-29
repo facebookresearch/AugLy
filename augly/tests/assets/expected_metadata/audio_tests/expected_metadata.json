@@ -722,5 +722,32 @@
           }
         ]
       }
+    ],
+    "fft_convolve": [
+      {
+        "dst_duration": 1.70671875,
+        "dst_num_channels": 1,
+        "dst_sample_rate": 32000,
+        "dst_segments": [
+          {
+            "end": 1.70671875,
+            "start": 0.0,
+            "src_id": null
+          }
+        ],
+        "intensity": 100.0,
+        "name": "fft_convolve",
+        "output_path": null,
+        "src_duration": 0.853375,
+        "src_num_channels": 1,
+        "src_sample_rate": 32000,
+        "src_segments": [
+          {
+            "end": 0.853375,
+            "start": 0.0,
+            "src_id": null
+          }
+        ]
+      }
     ]
 }

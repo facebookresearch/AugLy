@@ -76,6 +76,9 @@ class FunctionalAudioUnitTest(BaseAudioUnitTest):
     def test_to_mono(self):
         self.evaluate_function(audaugs.to_mono)
 
+    def test_fft_convolve(self):
+        self.evaluate_function(audaugs.fft_convolve)
+
 
 if __name__ == "__main__":
     unittest.main()

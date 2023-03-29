@@ -18,6 +18,7 @@ from augly.utils.libsndfile import install_libsndfile
 install_libsndfile()
 import librosa
 from torchaudio import sox_effects
+from torchaudio.functional import fftconvolve
 
 
 def add_background_noise(
@@ -1285,6 +1286,71 @@ def to_mono(
     audutils.get_metadata(
         metadata=metadata,
         function_name="to_mono",
+        audio=audio,
+        sample_rate=sample_rate,
+        dst_audio=aug_audio,
+        dst_sample_rate=sample_rate,
+        output_path=output_path,
+    )
+
+    return audutils.ret_and_save_audio(aug_audio, output_path, sample_rate)
+
+
+def fft_convolve(
+    audio: Union[str, np.ndarray],
+    sample_rate: int = DEFAULT_SAMPLE_RATE,
+    normalize: bool = True,
+    impulse_audio: Optional[Union[str, np.ndarray]] = None,
+    seed: Optional[audutils.RNGSeed] = None,
+    output_path: Optional[str] = None,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Tuple[np.ndarray, int]:
+    """
+    Applies a convolution operation to audio using an impulse response as the convolution filter
+
+    @param audio: the path to the audio or a variable of type np.ndarray that
+        will be augmented
+
+    @param sample_rate: the audio sample rate of the inputted audio
+
+    @param normalize: if True, normalize the output to the maximum amplitude
+
+    @param impulse_audio: the path to the audio or a variable of type np.ndarray that
+        will be used as the convolution filter
+
+    @param seed: the seed for the random number generator
+
+    @param output_path: the path in which the resulting audio will be stored. If None,
+        the resulting np.ndarray will still be returned
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest duration, sample rates, etc. will be
+        appended to the inputted list. If set to None, no metadata will be appended
+
+    @returns: the augmented audio array and sample rate
+    """
+    audio, sample_rate = audutils.validate_and_load_audio(audio, sample_rate)
+    num_channels = 1 if audio.ndim == 1 else audio.shape[0]
+
+    if impulse_audio is None:
+        random_generator = audutils.check_random_state(seed)
+        impulse_audio = random_generator.standard_normal(audio.shape)
+    else:
+        impulse_audio, sample_rate = audutils.validate_and_load_audio(
+            impulse_audio, sample_rate
+        )
+
+    aug_audio = fftconvolve(torch.Tensor(audio), torch.Tensor(impulse_audio))
+    if normalize:
+        aug_audio = aug_audio / aug_audio.abs().max()
+
+    aug_audio = aug_audio.numpy()
+    if num_channels == 1:
+        aug_audio = aug_audio.reshape((aug_audio.shape[-1],))
+
+    audutils.get_metadata(
+        metadata=metadata,
+        function_name="fft_convolve",
         audio=audio,
         sample_rate=sample_rate,
         dst_audio=aug_audio,

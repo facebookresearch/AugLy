@@ -140,6 +140,10 @@ class TransformsAudioUnitTest(BaseAudioUnitTest):
     def test_ToMono(self):
         self.evaluate_class(audaugs.ToMono(), fname="to_mono")
 
+    def test_FFTConvolve(self):
+        np.random.seed(1)
+        self.evaluate_class(audaugs.FFTConvolve(normalize=True), fname="fft_convolve")
+
 
 if __name__ == "__main__":
     unittest.main()
