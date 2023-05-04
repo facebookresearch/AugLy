@@ -18,7 +18,7 @@ from augly.utils.libsndfile import install_libsndfile
 install_libsndfile()
 import librosa
 from torchaudio import sox_effects
-from torchaudio.functional import fftconvolve
+from torchaudio.functional import fftconvolve, resample
 
 
 def add_background_noise(
@@ -71,7 +71,13 @@ def add_background_noise(
     if background_audio is None:
         background_audio = random_generator.standard_normal(audio.shape)
     else:
-        background_audio, _ = audutils.validate_and_load_audio(background_audio, 1)
+        background_audio, background_sr = audutils.validate_and_load_audio(
+            background_audio, sample_rate
+        )
+        if background_sr != sample_rate:
+            background_audio = resample(
+                torch.tensor(background_audio), background_sr, sample_rate
+            ).numpy()
 
     if metadata is not None:
         func_kwargs["background_duration"] = background_audio.shape[-1] / sample_rate
