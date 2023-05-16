@@ -1342,9 +1342,13 @@ def fft_convolve(
         random_generator = audutils.check_random_state(seed)
         impulse_audio = random_generator.standard_normal(audio.shape)
     else:
-        impulse_audio, sample_rate = audutils.validate_and_load_audio(
+        impulse_audio, impulse_sample_rate = audutils.validate_and_load_audio(
             impulse_audio, sample_rate
         )
+        if impulse_sample_rate != sample_rate:
+            impulse_audio = resample(
+                torch.tensor(impulse_audio), impulse_sample_rate, sample_rate
+            ).numpy()
 
     aug_audio = fftconvolve(torch.Tensor(audio), torch.Tensor(impulse_audio))
     if normalize:
