@@ -203,7 +203,6 @@ def rejoin_words_and_whitespace(words: List[str], whitespace: List[str]) -> str:
     # The split regex returns one whitespace element than word
     assert len(whitespace) == len(words) + 1, "Input lengths do not match!"
     # Add a dummy entry to 'words' so we can zip it easily, then drop it
-    # pyre-fixme[16]: `int` has no attribute `__getitem__`.
     # pyre-fixme[6]: For 2nd param expected `int` but got `Tuple[]`.
     ordered_elements = sum(zip(whitespace, words + [""]), ())[:-1]
     return "".join(ordered_elements)
