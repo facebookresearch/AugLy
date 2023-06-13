@@ -202,7 +202,7 @@ def compute_transform_coeffs(
     for sc, dc in zip(src_coords, dst_coords):
         matrix.append([dc[0], dc[1], 1, 0, 0, 0, -sc[0] * dc[0], -sc[0] * dc[1]])
         matrix.append([0, 0, 0, dc[0], dc[1], 1, -sc[1] * dc[0], -sc[1] * dc[1]])
-    A = np.matrix(matrix, dtype=np.float)
+    A = np.matrix(matrix, dtype=float)
     B = np.array(src_coords).reshape(8)
     res = np.dot(np.linalg.inv(A.T * A) * A.T, B)
     return np.array(res).reshape(8)

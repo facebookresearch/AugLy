@@ -285,7 +285,7 @@ def perspective_transform_bboxes_helper(
         the given src & dst corner coordinates. Based on OpenCV source code:
         https://github.com/opencv/opencv/blob/master/modules/imgproc/src/imgwarp.cpp#L3277-L3304
         """
-        a = np.zeros((8, 8), dtype=np.float)
+        a = np.zeros((8, 8), dtype=float)
         dst_x, dst_y = zip(*dst_coords)
         b = np.asarray(list(dst_x) + list(dst_y))
 
@@ -298,7 +298,7 @@ def perspective_transform_bboxes_helper(
             a[i + 4][6] = -sc[0] * dc[1]
             a[i + 4][7] = -sc[1] * dc[1]
 
-        A = np.matrix(a, dtype=np.float)
+        A = np.matrix(a, dtype=float)
         B = np.array(b).reshape(8)
         res = np.linalg.solve(A, B)
         return np.array(res).reshape(8).tolist() + [1.0]
