@@ -92,9 +92,6 @@ class VideoDistractorByText(BaseCV2Augmenter):
             font, chars_path = fonts_and_chars[font_idx]
             if chars_path is not None:
                 with pathmgr.open(chars_path, "rb") as f:
-                    # pyre-ignore[6]: Expected `typing.IO[bytes]` for 1st positional
-                    # only parameter to call `pickle.load` but got
-                    # `typing.Union[typing.IO[bytes], typing.IO[str]]`
                     chars = [chr(c) for c in pickle.load(f)]
             else:
                 chars = list(string.ascii_letters + string.punctuation)
@@ -139,9 +136,6 @@ class VideoDistractorByText(BaseCV2Augmenter):
         distract_frame = raw_frame.copy()
         if isinstance(font, str):
             with pathmgr.open(font, "rb") as f:
-                # pyre-fixme[6]: Expected `Union[None,
-                #  _typeshed.SupportsRead[bytes], bytes, str]` for 1st param but got
-                #  `Union[typing.IO[bytes], typing.IO[str]]`.
                 font = ImageFont.truetype(f, int(fontscale * 100))
         if isinstance(
             font,
