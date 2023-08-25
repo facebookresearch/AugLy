@@ -15,7 +15,7 @@ from augly.text.augmenters.utils import (
 )
 
 
-class CaseChanger(object):
+class CaseChanger:
     def __init__(self, case: str, seed: Optional[int]):
         self.rng = np.random.RandomState(seed) if seed is not None else np.random
         self.case = case
@@ -32,7 +32,7 @@ class CaseChanger(object):
         return self.change(text, self.rng.choice(["lower", "upper", "title"]))
 
 
-class CaseAugmenter(object):
+class CaseAugmenter:
     """
     Augmenter that changes the case characters, words, or entire texts depending on the
     given 'granularity'.

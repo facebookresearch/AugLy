@@ -38,7 +38,7 @@ Example:
 """
 
 
-class BaseComposition(object):
+class BaseComposition:
     def __init__(self, transforms: List[BaseTransform], p: float = 1.0):
         """
         @param transforms: a list of transforms

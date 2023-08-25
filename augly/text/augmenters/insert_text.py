@@ -9,7 +9,7 @@ from random import Random
 from typing import List, Optional, Union
 
 
-class InsertTextAugmenter(object):
+class InsertTextAugmenter:
     """
     Inserts some specified text into the input text a given number of times at a given
     location

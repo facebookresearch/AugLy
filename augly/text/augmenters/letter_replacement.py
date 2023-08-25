@@ -23,7 +23,7 @@ from nlpaug.augmenter.char import CharAugmenter  # @manual
 from nlpaug.util import Action, Method  # @manual
 
 
-class CharReplacement(object):
+class CharReplacement:
     def __init__(self, mapping_path: Optional[str]):
         if mapping_path:
             local_mapping_path = pathmgr.get_local_path(mapping_path)

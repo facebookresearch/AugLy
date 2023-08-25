@@ -18,7 +18,7 @@ from nlpaug.augmenter.word import WordAugmenter  # @manual
 from nlpaug.util import Action, Method  # @manual
 
 
-class WordReplacement(object):
+class WordReplacement:
     def __init__(self, mapping: Optional[Union[str, Dict[str, Any]]]):
         if isinstance(mapping, str):
             local_mapping_path = pathmgr.get_local_path(mapping)

@@ -13,7 +13,7 @@ from augly.text.augmenters.utils import detokenize, tokenize
 from augly.utils import pathmgr
 
 
-class ContractionMapping(object):
+class ContractionMapping:
     def __init__(self, mapping: Optional[Union[str, Dict[str, Any]]]):
         if isinstance(mapping, str):
             local_mapping_path = pathmgr.get_local_path(mapping)
@@ -31,7 +31,7 @@ class ContractionMapping(object):
         return new_text
 
 
-class ContractionAugmenter(object):
+class ContractionAugmenter:
     """Augmenter that replaces words based on a given mapping"""
 
     def __init__(

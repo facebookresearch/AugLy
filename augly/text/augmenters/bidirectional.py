@@ -18,7 +18,7 @@ RTL_OVERRIDE = "\u202E"
 LTR_OVERRIDE = "\u202D"
 
 
-class BidirectionalAugmenter(object):
+class BidirectionalAugmenter:
     """
     Reverses words in a string (or the whole string), using bidirectional
     override marks so the rendered string is visually identical to the original.

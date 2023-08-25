@@ -24,7 +24,7 @@ from nlpaug.augmenter.word import WordAugmenter  # @manual
 from nlpaug.util import Action, Method  # @manual
 
 
-class MisspellingReplacement(object):
+class MisspellingReplacement:
     def __init__(self, misspelling_dict_path: str):
         local_misspelling_dict_path = pathmgr.get_local_path(misspelling_dict_path)
         with open(local_misspelling_dict_path) as json_file:
