@@ -71,7 +71,7 @@ class VideoDistractorByDots(BaseCV2Augmenter):
 
         @param raw_frame: raw, single RGB/Gray frame
 
-        @returns: the augumented frame
+        @returns: the augmented frame
         """
         assert (raw_frame.ndim == 3) and (
             raw_frame.shape[2] == 3
