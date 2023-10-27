@@ -68,11 +68,9 @@ def create_video_from_image(output_path: str, image_path: str, duration: float) 
     utils.validate_image_path(image_path)
     assert duration > 0, "Duration of the video must be a positive value"
 
-    im_stream = ffmpeg.input(image_path)
-    video = (
-        im_stream.filter("loop", 1)
-        .filter("framerate", utils.DEFAULT_FRAME_RATE)
-        .filter("pad", **{"width": "ceil(iw/2)*2", "height": "ceil(ih/2)*2"})
+    im_stream = ffmpeg.input(image_path, stream_loop=-1)
+    video = im_stream.filter("framerate", utils.DEFAULT_FRAME_RATE).filter(
+        "pad", **{"width": "ceil(iw/2)*2", "height": "ceil(ih/2)*2"}
     )
 
     silent_audio_path = utils.pathmgr.get_local_path(utils.SILENT_AUDIO_PATH)
