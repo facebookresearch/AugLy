@@ -79,6 +79,13 @@ class BaseVideoUnitTest(unittest.TestCase):
                         )
                         if not condition(actual_path, expected_path):
                             return False
+                elif isinstance(act_v, float) and isinstance(act_v, float):
+                    self.assertAlmostEqual(
+                        act_v,
+                        exp_v,
+                        places=3,
+                        msg=f"Error comparing values: actual={act_v}, expected={exp_v}, actual_metadata={actual_meta}.",
+                    )
                 else:
                     self.assertTrue(
                         condition(act_v, exp_v),

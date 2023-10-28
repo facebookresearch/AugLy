@@ -46,7 +46,7 @@ class BaseVidgearFFMPEGAugmenter(ABC):
             if video_path == output_path:
                 shutil.copyfile(video_path, tmpfile.name)
                 video_path = tmpfile.name
-            writer = WriteGear(output_filename=output_path, logging=True)
+            writer = WriteGear(output=output_path, logging=True)
             writer.execute_ffmpeg_cmd(self.get_command(video_path, output_path))
             writer.close()
 

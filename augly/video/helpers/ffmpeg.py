@@ -69,7 +69,7 @@ def combine_frames_and_audio_to_file(
 
 
 def execute_vidgear_command(output_path: str, ffmpeg_command: List[str]) -> None:
-    writer = WriteGear(output_filename=output_path, logging=True)
+    writer = WriteGear(output=output_path, logging=True)
     writer.execute_ffmpeg_cmd(ffmpeg_command)
     writer.close()
 

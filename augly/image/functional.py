@@ -937,28 +937,44 @@ def meme_format(
     local_font_path = utils.pathmgr.get_local_path(font_file)
     font_size = caption_height - 10
 
+    meme = Image.new("RGB", (width, height + caption_height), meme_bg_color)
+    meme.paste(image, (0, caption_height))
+    draw = ImageDraw.Draw(meme)
+
+    x_pos, y_pos = 5, 5
+    ascender_adjustment = 40
     while True:
         font = ImageFont.truetype(local_font_path, font_size)
-        text_width, text_height = font.getsize_multiline(text)
+        text_bbox = draw.multiline_textbbox(
+            (x_pos, y_pos),
+            text,
+            # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 3rd param but got
+            #  `FreeTypeFont`.
+            font=font,
+            anchor="la",
+            align="center",
+        )
+
+        text_width, text_height = (
+            text_bbox[2] - text_bbox[0],
+            text_bbox[3] - text_bbox[1],
+        )
+
+        x_pos = round((width - text_width) / 2)
+        y_pos = round((caption_height - text_height) / 2) - ascender_adjustment
 
         if text_width <= (width - 10) and text_height <= (caption_height - 10):
             break
 
         font_size -= 5
 
-    meme = Image.new("RGB", (width, height + caption_height), meme_bg_color)
-    meme.paste(image, (0, caption_height))
-
-    x_pos = round((width - text_width) / 2)
-    y_pos = round((caption_height - text_height) / 2)
-
-    draw = ImageDraw.Draw(meme)
     draw.multiline_text(
         (x_pos, y_pos),
         text,
         # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 3rd param but got
         #  `FreeTypeFont`.
         font=font,
+        anchor="la",
         fill=(text_color[0], text_color[1], text_color[2], round(opacity * 255)),
         align="center",
     )
