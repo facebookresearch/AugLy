@@ -11,7 +11,7 @@ Implementation of base class for video distractors
 - Interface:
     - `augment(self, video_temp_path: str, fps: float, **kwargs)`:
     extracts frames from the video, and turns original set of frames into
-    augumented frames by mapping each of them using `apply_augmentation` operators.
+    augmented frames by mapping each of them using `apply_augmentation` operators.
     the path to the temporary directory containing the augmented frames is returned
 
 - Methods to override
@@ -99,7 +99,7 @@ class BaseCV2Augmenter(ABC):
 
         @param raw_frame: raw, single RGB/Gray frame
 
-        @returns: the augumented frame
+        @returns: the augmented frame
         """
         raise NotImplementedError("Implement apply_augmentation method")
 
