@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-import hashlib
+import filecmp
 import os
 import tempfile
 import unittest
@@ -16,19 +16,7 @@ from augly.utils import pathmgr, TEST_URI
 
 
 def are_equal_videos(a_path: str, b_path: str) -> bool:
-    hasher = hashlib.md5()
-    with open(a_path, "rb") as a_file:
-        buf = a_file.read()
-        hasher.update(buf)
-        a_md5_hash = hasher.hexdigest()
-
-    hasher = hashlib.md5()
-    with open(b_path, "rb") as b_file:
-        buf = b_file.read()
-        hasher.update(buf)
-        b_md5_hash = hasher.hexdigest()
-
-    return a_md5_hash == b_md5_hash
+    return filecmp.cmp(a_path, b_path, shallow=False)
 
 
 class BaseVideoUnitTest(unittest.TestCase):
