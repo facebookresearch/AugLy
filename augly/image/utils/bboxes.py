@@ -395,20 +395,18 @@ def rotate_bboxes_helper(
 
     # Get rotated bbox corner coefficients
     rotation_center = (src_w // 2, src_h // 2)
-    angle_rad = -math.radians(degrees)
+    angle_rad = math.radians(degrees)
     rotation_matrix = [
         round(math.cos(angle_rad), 15),
         round(math.sin(angle_rad), 15),
         0.0,
-        round(math.sin(angle_rad), 15),
-        round(-math.cos(angle_rad), 15),
+        round(-math.sin(angle_rad), 15),
+        round(math.cos(angle_rad), 15),
         0.0,
     ]
     rotation_matrix[2], rotation_matrix[5] = transform(
         -rotation_center[0], -rotation_center[1], rotation_matrix
     )
-    rotation_matrix[2] += rotation_center[0]
-    rotation_matrix[5] += rotation_center[1]
 
     # Get rotated image dimensions
     src_img_corners = [(0, 0), (src_w, 0), (src_w, src_h), (0, src_h)]
@@ -418,6 +416,10 @@ def rotate_bboxes_helper(
         rotated_img_max_x,
         rotated_img_max_y,
     ) = get_enclosing_bbox(src_img_corners, rotation_matrix)
+
+    rotation_matrix[2] += rotated_img_max_x
+    rotation_matrix[5] += rotated_img_max_y
+    
     rotated_img_w = rotated_img_max_x - rotated_img_min_x
     rotated_img_h = rotated_img_max_y - rotated_img_min_y
 
