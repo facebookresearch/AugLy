@@ -437,10 +437,10 @@ def rotate_bboxes_helper(
     # Crop bbox as src image is cropped inside `rotate`
     cropped_w, cropped_h = imutils.rotated_rect_with_max_area(src_w, src_h, degrees)
     cropped_img_left, cropped_img_upper, cropped_img_right, cropped_img_lower = (
-        (rotated_img_w - cropped_w) // 2 + rotated_img_min_x,
-        (rotated_img_h - cropped_h) // 2 + rotated_img_min_y,
-        (rotated_img_w + cropped_w) // 2 + rotated_img_min_x,
-        (rotated_img_h + cropped_h) // 2 + rotated_img_min_y,
+        (rotated_img_w - cropped_w) // 2 + rotated_img_min_x + rotated_img_max_x,
+        (rotated_img_h - cropped_h) // 2 + rotated_img_min_y + rotated_img_max_y,
+        (rotated_img_w + cropped_w) // 2 + rotated_img_min_x + rotated_img_max_x,
+        (rotated_img_h + cropped_h) // 2 + rotated_img_min_y + rotated_img_max_y,
     )
     return crop_bboxes_helper(
         bbox_enclosing_bbox,
