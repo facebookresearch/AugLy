@@ -100,6 +100,7 @@ class FunFontsAugmenter(Augmenter):
 
     def substitute(self, data: str) -> str:
         tokens = tokenize(data)
+        # pyre-fixme[20]: Argument `k` expected.
         font = random.sample(self.fonts, 1)[0]
         results = []
 
@@ -119,6 +120,7 @@ class FunFontsAugmenter(Augmenter):
                     continue
 
                 if self.vary_fonts:
+                    # pyre-fixme[20]: Argument `k` expected.
                     font = random.sample(self.fonts, 1)[0]
 
                 results.append(self.apply_font(token, font, Method.WORD))
@@ -134,6 +136,7 @@ class FunFontsAugmenter(Augmenter):
 
                 for char in chars:
                     if self.vary_fonts:
+                        # pyre-fixme[20]: Argument `k` expected.
                         font = random.sample(self.fonts, 1)[0]
                     if char_idx not in aug_char_idxes:
                         result += char
