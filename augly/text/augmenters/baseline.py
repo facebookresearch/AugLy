@@ -5,6 +5,8 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+# pyre-unsafe
+
 from augly.text.augmenters.utils import detokenize, tokenize
 from augly.utils.libsndfile import install_libsndfile
 

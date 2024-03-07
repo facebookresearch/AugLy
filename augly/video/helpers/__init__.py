@@ -5,6 +5,8 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+# pyre-unsafe
+
 from augly.video.helpers.ffmpeg import (
     add_silent_audio,
     combine_frames_and_audio_to_file,

@@ -5,6 +5,8 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+# pyre-unsafe
+
 from typing import Any, Dict, Optional, Union
 
 import numpy as np
