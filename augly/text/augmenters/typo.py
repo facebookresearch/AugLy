@@ -22,6 +22,8 @@ from augly.utils.libsndfile import install_libsndfile
 
 install_libsndfile()
 from nlpaug.augmenter.char import KeyboardAug, RandomCharAug  # @manual
+
+# pyre-fixme[21]: Could not find name `WordAugmenter` in `nlpaug.augmenter.word`.
 from nlpaug.augmenter.word import WordAugmenter  # @manual
 from nlpaug.util import Action, Method  # @manual
 

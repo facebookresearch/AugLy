@@ -21,6 +21,7 @@ from augly.utils import pathmgr
 from augly.utils.libsndfile import install_libsndfile
 
 install_libsndfile()
+# pyre-fixme[21]: Could not find name `CharAugmenter` in `nlpaug.augmenter.char`.
 from nlpaug.augmenter.char import CharAugmenter  # @manual
 from nlpaug.util import Action, Method  # @manual
 
