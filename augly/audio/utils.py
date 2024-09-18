@@ -88,6 +88,7 @@ def check_random_state(seed: Optional[RNGSeed]) -> RNG:
     if seed is None or seed is np.random:
         return np.random.mtrand._rand
     if isinstance(seed, numbers.Integral):
+        # pyre-fixme[6]: For 1st argument expected `Union[None, _SupportsArray[dtype[...
         return np.random.RandomState(seed)
     if isinstance(seed, (np.random.RandomState, np.random.Generator)):
         return seed

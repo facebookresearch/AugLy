@@ -82,6 +82,7 @@ def add_background_noise(
             ).numpy()
 
     if metadata is not None:
+        # pyre-fixme[61]: `func_kwargs` is undefined, or not always defined.
         func_kwargs["background_duration"] = background_audio.shape[-1] / sample_rate
 
     audio_rms = np.sqrt(np.mean(np.square(audio), axis=-1))
