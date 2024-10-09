@@ -15,9 +15,9 @@ from augly.text.augmenters.utils import (
 )
 
 
-POP_DIRECTIONAL = "\u202C"
-RTL_OVERRIDE = "\u202E"
-LTR_OVERRIDE = "\u202D"
+POP_DIRECTIONAL = "\u202c"
+RTL_OVERRIDE = "\u202e"
+LTR_OVERRIDE = "\u202d"
 
 
 class BidirectionalAugmenter:

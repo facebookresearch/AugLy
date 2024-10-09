@@ -133,7 +133,7 @@ class BaseCV2Augmenter(ABC):
 
     @staticmethod
     def random_colors(
-        colors: Optional[List[Tuple[int, int, int]]]
+        colors: Optional[List[Tuple[int, int, int]]],
     ) -> Iterator[Tuple[int, int, int]]:
         if colors is not None:
             assert type(colors) == list, "Expected type 'List' for colors variable"

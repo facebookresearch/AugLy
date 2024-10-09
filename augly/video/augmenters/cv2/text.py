@@ -49,16 +49,19 @@ class VideoDistractorByText(BaseCV2Augmenter):
         assert (
             text_change_nth is None or text_change_nth > 0
         ), "`text_change_nth` must be greater than zero"
-        assert fonts is None or all(
-            (isinstance(font, (str, ImageFont.ImageFont)) or (font in CV2_FONTS))
-            and (chars is None or isinstance(chars, str))
-            for font, chars in fonts
+        assert (
+            fonts is None
+            or all(
+                (isinstance(font, (str, ImageFont.ImageFont)) or (font in CV2_FONTS))
+                and (chars is None or isinstance(chars, str))
+                for font, chars in fonts
+            )
         ), "Fonts must be either None or a list of tuples of font (cv2 font, PIL ImageFont, or str path to a .ttf file) & chars file (str path or None)"
-        assert fontscales is None or (
-            fontscales[0] > 0 and fontscales[1] > fontscales[0]
+        assert (
+            fontscales is None or (fontscales[0] > 0 and fontscales[1] > fontscales[0])
         ), "Fontscale ranges must be greater than zero and the second value must be greater than the first"  # noqa: B950
-        assert thickness is None or (
-            type(thickness) == int and thickness > 0
+        assert (
+            thickness is None or (type(thickness) == int and thickness > 0)
         ), "Invalid thickness provided: must be set to None or be an integer greater than zero"  # noqa: B950
 
         super().__init__(1, random_movement, topleft, bottomright, **kwargs)

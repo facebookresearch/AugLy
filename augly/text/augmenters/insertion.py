@@ -20,9 +20,9 @@ from augly.text.augmenters.utils import (
 # Not meant to be an exhaustive list
 CHARACTER_TYPES = {
     "zero_width": [
-        "\u200B",  # Zero-Width Space
-        "\u200C",  # Zero-Width Non-Joiner
-        "\u200D",  # Zero-Width Joiner
+        "\u200b",  # Zero-Width Space
+        "\u200c",  # Zero-Width Non-Joiner
+        "\u200d",  # Zero-Width Joiner
         "\u2060",  # Word Joiner
         "\u2061",  # Function Application
         "\u2062",  # Invisible Times
