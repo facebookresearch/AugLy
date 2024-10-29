@@ -1493,6 +1493,88 @@ class OverlayText(BaseTransform):
         )
 
 
+class OverlayWrapText(BaseTransform):
+    def __init__(
+        self,
+        text: str,
+        min_font_size_ratio: float = 0.02,
+        max_font_size_ratio: float = 0.2,
+        font_file: str = utils.DEFAULT_TEXT_OVERLAY_FONT_PATH,
+        font_size: Optional[float] = None,
+        color: Optional[tuple[int, int, int]] = None,
+        random_seed: Optional[int] = None,
+        p: float = 1.0,
+    ):
+        """Randomly overlay a pre-defined text on an image
+
+        @param img: Image to overlay text on
+
+        @param text: Text to overlay on image
+
+        @param output_path Path to save resulting image
+
+        @param min_font_size_ratio: Minimum font size ratio w.r.t. the image to use for text
+
+        @param max_font_size_ratio: Maximum font size ratio w.r.t. the image to use for text
+
+        @param font_size: Font size to use for text
+
+        @param color: Color to use for text
+
+        @param metadata : List to store metadata about the function execution
+
+        @param p: the probability of the transform being applied; default value is 1.0
+
+        @returns: Image with text overlayed
+        """
+        super().__init__(p)
+        self.text, self.color = text, color
+        self.min_font_size_ratio, self.max_font_size_ratio = (
+            min_font_size_ratio,
+            max_font_size_ratio,
+        )
+        self.font_file, self.font_size = font_file, font_size
+        self.random_seed = random_seed
+
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        bboxes: Optional[List[Tuple]] = None,
+        bbox_format: Optional[str] = None,
+    ) -> Image.Image:
+        """
+        Randomly overlay a pre-defined text on an image
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.overlay_wrap_text(
+            image,
+            text=self.text,
+            min_font_size_ratio=self.min_font_size_ratio,
+            max_font_size_ratio=self.max_font_size_ratio,
+            font_file=self.font_file,
+            font_size=self.font_size,
+            color=self.color,
+            metadata=metadata,
+            random_seed=self.random_seed,
+        )
+
+
 class Pad(BaseTransform):
     def __init__(
         self,

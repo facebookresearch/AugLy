@@ -428,6 +428,25 @@
             "y_pos": 0.5
         }
     ],
+    "overlay_wrap_text": [
+        {
+            "text": "Testing if the function can wrap this awesome text and not go out of bounds",
+            "output_path": null,
+            "max_font_size_ratio": 0.2,
+            "min_font_size_ratio": 0.02,
+            "font_file": "fonts/Allura-Regular.ttf",
+            "font_size": 0.2,
+            "color": null,
+            "intensity": 0,
+            "name": "overlay_wrap_text",
+            "random_seed": 42,
+            "rand": null,
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
     "pad": [
         {
             "bbox_format": "yolo",

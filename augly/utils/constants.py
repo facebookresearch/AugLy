@@ -58,6 +58,7 @@ All Noto fonts are published under the SIL Open Font License, Version 1.1
 """
 FONT_LIST_PATH = os.path.join(FONTS_DIR, "list")
 FONT_PATH = os.path.join(FONTS_DIR, "NotoNaskhArabic-Regular.ttf")
+DEFAULT_TEXT_OVERLAY_FONT_PATH = os.path.join(FONTS_DIR, "Allura-Regular.ttf")
 MEME_DEFAULT_FONT = os.path.join(FONTS_DIR, "Raleway-ExtraBold.ttf")
 
 # text augmentation assets

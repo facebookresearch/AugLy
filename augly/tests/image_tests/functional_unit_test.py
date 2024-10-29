@@ -96,6 +96,12 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
         text_indices = [5, 3, 1, 2, 1000, 221]
         self.evaluate_function(imaugs.overlay_text, text=text_indices)
 
+    def test_overlay_wrap_text(self):
+        text = "Testing if the function can wrap this awesome text and not go out of bounds"
+        self.evaluate_function(
+            imaugs.overlay_wrap_text, text=text, font_size=0.2, random_seed=42
+        )
+
     def test_pad(self):
         self.evaluate_function(imaugs.pad)
 
