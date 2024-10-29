@@ -142,6 +142,18 @@ class TransformsImageUnitTest(BaseImageUnitTest):
         text_indices = [5, 3, 1, 2, 1000, 221]
         self.evaluate_class(imaugs.OverlayText(text=text_indices), fname="overlay_text")
 
+    def test_OverlayWrapText(self):
+        text = "Testing if the function can wrap this awesome text and not go out of bounds"
+        self.evaluate_class(
+            imaugs.OverlayWrapText(text=text, font_size=0.2, random_seed=42),
+            fname="overlay_wrap_text",
+            metadata_exclude_keys=[
+                "bboxes",
+                "bbox_format",
+                "rand",
+            ],
+        )
+
     def test_Pad(self):
         self.evaluate_class(imaugs.Pad(), fname="pad")
 

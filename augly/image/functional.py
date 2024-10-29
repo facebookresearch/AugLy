@@ -11,12 +11,14 @@ import io
 import math
 import os
 import pickle
+import random
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from augly import utils
 from augly.image import utils as imutils
+from augly.image.helpers import fit_text_in_bbox
 from augly.image.utils.bboxes import spatial_bbox_helper
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
@@ -1623,6 +1625,114 @@ def overlay_text(
     imutils.get_metadata(
         metadata=metadata,
         function_name="overlay_text",
+        aug_image=image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(image, output_path, src_mode)
+
+
+def overlay_wrap_text(
+    image: Image.Image,
+    text: str,
+    output_path: Optional[str] = None,
+    min_font_size_ratio: float = 0.02,
+    max_font_size_ratio: float = 0.2,
+    font_file: str = utils.DEFAULT_TEXT_OVERLAY_FONT_PATH,
+    font_size: Optional[float] = None,
+    color: Optional[tuple[int, int, int]] = None,
+    metadata: Optional[list[dict[str, object]]] = None,
+    random_seed: Optional[int] = None,
+) -> Image.Image:
+    """Randomly overlay a pre-defined text on an image
+
+    @param img: Image to overlay text on
+
+    @param text: Text to overlay on image
+
+    @param output_path Path to save resulting image
+
+    @param min_font_size_ratio: Minimum font size ratio w.r.t. the image to use for text
+
+    @param max_font_size_ratio: Maximum font size ratio w.r.t. the image to use for text
+
+    @param font_size: Font size to use for text
+
+    @param color: Color to use for text
+
+    @param metadata : List to store metadata about the function execution
+
+    @returns: Image with text overlayed
+    """
+    rand = random.Random(random_seed)
+
+    assert (
+        0.0 <= min_font_size_ratio <= 1.0
+    ), "Font size must be a value in the range [0.0, 1.0]"
+
+    assert (
+        0.0 <= max_font_size_ratio <= 1.0
+    ), "Font size must be a value in the range [0.0, 1.0]"
+
+    if font_size:
+        assert (
+            0.0 <= font_size <= 1.0
+        ), "Font size must be a value in the range [0.0, 1.0]"
+
+    if color:
+        utils.validate_rgb_color(color)
+
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+
+    width, height = image.size
+
+    min_font_size = int(min(width, height) * min_font_size_ratio)
+    max_font_size = int(min(width, height) * max_font_size_ratio)
+
+    if not font_size:
+        # get a random font size between min_font_size_ratio and max_font_size_ratio of the image size
+        font_size = rand.uniform(min_font_size_ratio, max_font_size_ratio)
+
+    font_size = int(min(width, height) * font_size)
+    # if font size is too small, increase it to min_font_size of the image size
+    font_size = max(font_size, min_font_size)
+    # if font size is too large, decrease it to max_font_size of the image size
+    font_size = min(font_size, max_font_size)
+
+    local_font_path = utils.pathmgr.get_local_path(font_file)
+
+    random_x, random_y, lines, line_height, font = fit_text_in_bbox(
+        text,
+        height,
+        width,
+        local_font_path,
+        font_size,
+        min_font_size,
+        rand,
+    )
+
+    if not color:
+        # get a random color
+        color = (rand.randrange(255), rand.randrange(255), rand.randrange(255))
+
+    red, green, blue = color
+    draw = ImageDraw.Draw(image)
+    for line in lines:
+        # draw text on the image
+        draw.text(
+            (random_x, random_y),
+            line,
+            fill=(red, green, blue),
+            font=font,  # pyre-ignore [6]
+        )
+        random_y = random_y + line_height
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="overlay_wrap_text",
         aug_image=image,
         **func_kwargs,
     )
