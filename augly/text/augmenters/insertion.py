@@ -84,7 +84,6 @@ class InsertionAugmenter:
             return random.choice(self.char_set).join(split_text)
 
         separators = random.choices(self.char_set, k=len(split_text))
-        # pyre-fixme[6]: For 2nd param expected `int` but got `Tuple[]`.
         return "".join(sum(zip(split_text, separators), ())[:-1])
 
     def insert_chars_per_word(self, text: str) -> str:

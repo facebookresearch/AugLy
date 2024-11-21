@@ -555,8 +555,6 @@ def convert_color(
     @returns: Image.Image - Augmented PIL Image
     """
     image = imutils.validate_and_load_image(image)
-    # pyre-fixme[6]: Expected `Union[typing_extensions.Literal[0],
-    #  typing_extensions.Literal[1]]` for 4th param but got `int`.
     aug_image = image.convert(mode, matrix, dither, palette, colors)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
@@ -952,8 +950,6 @@ def meme_format(
         text_bbox = draw.multiline_textbbox(
             (x_pos, y_pos),
             text,
-            # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 3rd param but got
-            #  `FreeTypeFont`.
             font=font,
             anchor="la",
             align="center",
@@ -975,8 +971,6 @@ def meme_format(
     draw.multiline_text(
         (x_pos, y_pos),
         text,
-        # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 3rd param but got
-        #  `FreeTypeFont`.
         font=font,
         anchor="la",
         fill=(text_color[0], text_color[1], text_color[2], round(opacity * 255)),
@@ -1617,8 +1611,6 @@ def overlay_text(
             xy=(x_pos * width, y_pos * height + i * (font_size + 5)),
             text=text_str,
             fill=(color[0], color[1], color[2], round(opacity * 255)),
-            # pyre-fixme[6]: Expected `Optional[ImageFont._Font]` for 4th param but got
-            #  `FreeTypeFont`.
             font=font,
         )
 
@@ -1726,7 +1718,7 @@ def overlay_wrap_text(
             (random_x, random_y),
             line,
             fill=(red, green, blue),
-            font=font,  # pyre-ignore [6]
+            font=font,
         )
         random_y = random_y + line_height
 
@@ -2353,10 +2345,6 @@ def scale(
     scaled_width = int(width * factor)
     scaled_height = int(height * factor)
 
-    # pyre-fixme[6]: Expected `Union[typing_extensions.Literal[0],
-    #  typing_extensions.Literal[1], typing_extensions.Literal[2],
-    #  typing_extensions.Literal[3], typing_extensions.Literal[4],
-    #  typing_extensions.Literal[5], None]` for 2nd param but got `int`.
     aug_image = image.resize((scaled_width, scaled_height), resample=interpolation)
 
     imutils.get_metadata(

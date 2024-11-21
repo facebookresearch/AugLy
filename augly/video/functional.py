@@ -1010,7 +1010,6 @@ def insert_in_background_multiple(
     )
     last_bkg_point = overall_bkg_needed_duration
     dst_starts = bkg_insertion_points + np.concatenate(
-        # pyre-fixme[6]: For 1st argument expected `Union[_SupportsArray[dtype[typing...
         (
             [
                 0.0,
