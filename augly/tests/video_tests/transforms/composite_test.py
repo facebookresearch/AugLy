@@ -9,10 +9,9 @@ import json
 import random
 import unittest
 
-from aml.augly.tests.video_tests.base_unit_test import BaseVideoUnitTest
-
 from augly import audio as audaugs, video as vidaugs
 from augly.tests.base_configs import VideoAugConfig
+from augly.tests.video_tests.base_unit_test import BaseVideoUnitTest
 from augly.utils import VIDEO_METADATA_PATH
 from augly.utils.ffmpeg import get_conditional_for_skipping_video_tests
 

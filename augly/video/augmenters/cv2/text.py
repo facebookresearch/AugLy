@@ -58,7 +58,7 @@ class VideoDistractorByText(BaseCV2Augmenter):
             fontscales[0] > 0 and fontscales[1] > fontscales[0]
         ), "Fontscale ranges must be greater than zero and the second value must be greater than the first"  # noqa: B950
         assert thickness is None or (
-            type(thickness) == int and thickness > 0
+            type(thickness) is int and thickness > 0
         ), "Invalid thickness provided: must be set to None or be an integer greater than zero"  # noqa: B950
 
         super().__init__(1, random_movement, topleft, bottomright, **kwargs)
