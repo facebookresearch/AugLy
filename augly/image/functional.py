@@ -13,6 +13,7 @@ import os
 import pickle
 import random
 from copy import deepcopy
+from itertools import product
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -2543,6 +2544,92 @@ def skew(
         aug_image=aug_image,
         bboxes_helper_func=spatial_bbox_helper,
         aug_function=skew,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+
+
+def split_and_shuffle(
+    image: Union[str, Image.Image],
+    output_path: Optional[str] = None,
+    n_columns: int = 3,
+    n_rows: int = 3,
+    seed: int = 10,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
+) -> Image.Image:
+    """
+    Splits the image into a grid of tiles (determined by n_columns and n_rows) and
+    shuffles the tiles randomly. The resulting image is the concatenation of the
+    shuffled tiles into the same grid format (resulting in an image of the same size)
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param n_columns: number of columns to split the image into
+
+    @param n_rows: number of rows to split the image into
+
+    @param seed: seed for numpy random generator to select random order for shuffling
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    np.random.seed(seed)
+
+    image = imutils.validate_and_load_image(image)
+
+    assert n_columns > 0, "Expected 'n_columns' to be a positive integer"
+    assert n_rows > 0, "Expected 'n_rows' to be a positive integer"
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+
+    width, height = image.size
+    width_per_tile = width // n_columns
+    height_per_tile = height // n_rows
+
+    grid = product(
+        range(0, height - height % height_per_tile, height_per_tile),
+        range(0, width - width % width_per_tile, width_per_tile),
+    )
+
+    sub_images = []
+    for y0, x0 in grid:
+        bbox = (x0, y0, x0 + width_per_tile, y0 + height_per_tile)
+        sub_images.append(image.crop(bbox))
+
+    if len(sub_images) == 2:
+        sub_images[0], sub_images[1] = sub_images[1], sub_images[0]
+    else:
+        np.random.shuffle(sub_images)
+
+    aug_image = Image.new("RGB", (width_per_tile * n_columns, height_per_tile * n_rows))
+    for i, sub_image in enumerate(sub_images):
+        x = i % n_columns
+        y = i // n_columns
+        aug_image.paste(sub_image, (x * width_per_tile, y * height_per_tile))
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="split_and_shuffle",
+        aug_image=aug_image,
         **func_kwargs,
     )
 

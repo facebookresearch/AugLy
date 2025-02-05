@@ -741,6 +741,23 @@
             "src_width": 1920
         }
     ],
+    "split_and_shuffle": [
+        {
+            "bbox_format": "yolo",
+            "dst_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "dst_height": 1080,
+            "dst_width": 1920,
+            "intensity": 91.66666666666666,
+            "name": "split_and_shuffle",
+            "n_columns": 3,
+            "n_rows": 4,
+            "output_path": null,
+            "seed": 10,
+            "src_bboxes": [[0.5, 0.5, 0.25, 0.75]],
+            "src_height": 1080,
+            "src_width": 1920
+        }
+    ],
     "vflip": [
         {
             "bbox_format": "yolo",

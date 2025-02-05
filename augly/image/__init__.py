@@ -44,6 +44,7 @@ from augly.image.functional import (
     sharpen,
     shuffle_pixels,
     skew,
+    split_and_shuffle,
     vflip,
 )
 from augly.image.helpers import aug_np_wrapper
@@ -126,6 +127,7 @@ from augly.image.transforms import (
     Sharpen,
     ShufflePixels,
     Skew,
+    SplitAndShuffle,
     VFlip,
 )
 
@@ -174,6 +176,7 @@ __all__ = [
     "Sharpen",
     "ShufflePixels",
     "Skew",
+    "SplitAndShuffle",
     "VFlip",
     "apply_lambda",
     "apply_pil_filter",
@@ -211,6 +214,7 @@ __all__ = [
     "sharpen",
     "shuffle_pixels",
     "skew",
+    "split_and_shuffle",
     "vflip",
     "apply_lambda_intensity",
     "apply_pil_filter_intensity",
