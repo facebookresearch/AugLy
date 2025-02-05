@@ -58,7 +58,7 @@ class BaseTransform:
         @returns: Augmented PIL Image
         """
         assert isinstance(image, Image.Image), "Image passed in must be a PIL Image"
-        assert type(force) == bool, "Expected type bool for variable `force`"
+        assert type(force) is bool, "Expected type bool for variable `force`"
 
         if not force and random.random() > self.p:
             return image
@@ -1525,7 +1525,7 @@ class OverlayWrapText(BaseTransform):
 
         @param p: the probability of the transform being applied; default value is 1.0
 
-        @returns: Image with text overlayed
+        @returns: Image with text overlaid
         """
         super().__init__(p)
         self.text, self.color = text, color

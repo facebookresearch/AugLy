@@ -14,7 +14,7 @@ jobs:
           python-version: '3.9'
       - run: sudo apt-get update
       - run: sudo apt-get install --fix-missing ffmpeg python3-soundfile
-      - run: pip install pyre-check pytest torchvision
+      - run: pip install pyre-check pytest
       - run: pip install -e .[all]
       - run: pyre --source-directory "." --noninteractive check || true
       - run: pytest --durations=10 .
