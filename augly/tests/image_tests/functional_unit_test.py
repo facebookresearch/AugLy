@@ -138,6 +138,9 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
     def test_skew(self):
         self.evaluate_function(imaugs.skew)
 
+    def test_split_and_shuffle(self):
+        self.evaluate_function(imaugs.split_and_shuffle, n_columns=3, n_rows=4)
+
     def test_vflip(self):
         self.evaluate_function(imaugs.vflip)
 

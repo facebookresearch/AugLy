@@ -315,6 +315,13 @@ def skew_intensity(skew_factor: float, **kwargs) -> float:
     return min((abs(skew_factor) / max_skew_factor) * 100.0, 100.0)
 
 
+def split_and_shuffle_intensity(n_columns: int, n_rows: int, **kwargs) -> float:
+    assert n_columns > 0, "Expected 'n_columns' to be a positive integer"
+    assert n_rows > 0, "Expected 'n_rows' to be a positive integer"
+
+    return min((1 - (1 / (n_columns * n_rows))) * 100.0, 100.0)
+
+
 def vflip_intensity(**kwargs) -> float:
     return 100.0
 
