@@ -104,8 +104,8 @@ def compute_insert_in_background_multiple_segments(
     assert n == len(
         src_segment_ends
     ), "Source segment starts and ends lists must have equal length."
-    assert (
-        n == len(bkg_insertion_points)
+    assert n == len(
+        bkg_insertion_points
     ), "Source segment starts and background insertion points lists must have equal length."
     assert n == len(
         src_ids
