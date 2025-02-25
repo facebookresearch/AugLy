@@ -118,16 +118,12 @@ def transform_bboxes(
     if dst_bboxes is None:
         return
 
-    assert (
-        bbox_format is not None
-        and bbox_format
-        in [
-            "pascal_voc",
-            "pascal_voc_norm",
-            "coco",
-            "yolo",
-        ]
-    ), "bbox_format must be specified if bboxes are passed in and must be a supported format"
+    assert bbox_format is not None and bbox_format in [
+        "pascal_voc",
+        "pascal_voc_norm",
+        "coco",
+        "yolo",
+    ], "bbox_format must be specified if bboxes are passed in and must be a supported format"
 
     src_w, src_h = image.size
     aug_w, aug_h = aug_image.size
