@@ -58,7 +58,7 @@ def fit_text_in_bbox(
 
     @param rand: Random number generator
 
-    @returns: x and y coordinates to start writing, text split into lines, line heigh, and font style
+    @returns: x and y coordinates to start writing, text split into lines, line height, and font style
     """
     x_min = int(img_width * 0.05)  # reserves 5% on the left
     x_max = int(img_width * 0.5)  # starts writing at the center of the image
@@ -77,7 +77,7 @@ def fit_text_in_bbox(
         _, _, _, line_height = font.getbbox("hg")
 
         y_min = int(img_height * 0.05)  # reserves 5% on the top
-        y_max = int(img_height * 0.9)  # reseves 10% to the bottom
+        y_max = int(img_height * 0.9)  # reserves 10% to the bottom
         y_max -= (
             len(lines) * line_height
         )  # adjust max y-coordinate for text height and number of lines
