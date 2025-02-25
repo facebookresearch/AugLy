@@ -1655,7 +1655,7 @@ def overlay_wrap_text(
 
     @param metadata : List to store metadata about the function execution
 
-    @returns: Image with text overlayed
+    @returns: Image with text overlaid
     """
     rand = random.Random(random_seed)
 
@@ -2067,7 +2067,7 @@ def random_noise(
     """
     assert type(mean) in [float, int], "Mean must be an integer or a float"
     assert type(var) in [float, int], "Variance must be an integer or a float"
-    assert type(seed) == int, "Seed must be an integer"
+    assert type(seed) is int, "Seed must be an integer"
 
     image = imutils.validate_and_load_image(image)
 
@@ -2147,8 +2147,8 @@ def resize(
 
     @returns: the augmented PIL Image
     """
-    assert width is None or type(width) == int, "Width must be an integer"
-    assert height is None or type(height) == int, "Height must be an integer"
+    assert width is None or type(width) is int, "Width must be an integer"
+    assert height is None or type(height) is int, "Height must be an integer"
 
     image = imutils.validate_and_load_image(image)
 
