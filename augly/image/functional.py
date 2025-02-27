@@ -1712,7 +1712,9 @@ def overlay_wrap_text(
         color = (rand.randrange(255), rand.randrange(255), rand.randrange(255))
 
     red, green, blue = color
-    draw = ImageDraw.Draw(image)
+    aug_image = image.copy()
+
+    draw = ImageDraw.Draw(aug_image)
     for line in lines:
         # draw text on the image
         draw.text(
@@ -1726,11 +1728,11 @@ def overlay_wrap_text(
     imutils.get_metadata(
         metadata=metadata,
         function_name="overlay_wrap_text",
-        aug_image=image,
+        aug_image=aug_image,
         **func_kwargs,
     )
 
-    return imutils.ret_and_save_image(image, output_path, src_mode)
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
 def pad(
