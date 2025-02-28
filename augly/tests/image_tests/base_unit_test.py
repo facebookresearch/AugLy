@@ -10,14 +10,17 @@ import tempfile
 import unittest
 from typing import Any, Callable, Dict, List, Optional
 
-import numpy as np
+import imagehash
 from augly.tests import ImageAugConfig
 from augly.utils import pathmgr, TEST_URI
 from PIL import Image
 
 
 def are_equal_images(a: Image.Image, b: Image.Image) -> bool:
-    return a.size == b.size and np.allclose(np.array(a), np.array(b))
+    threshold = 0  # hamming distance of 0 is forgiving enough for phash
+    a_hash = imagehash.phash(a)
+    b_hash = imagehash.phash(b)
+    return a.size == b.size and a_hash - b_hash == threshold
 
 
 def are_equal_metadata(
