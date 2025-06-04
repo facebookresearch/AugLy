@@ -10,6 +10,7 @@ import json
 import os
 import random
 import unittest
+from copy import deepcopy
 from typing import Any, Dict, List
 
 from augly import text as txtaugs
@@ -135,6 +136,59 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(self.metadata, self.expected_metadata["compose"]),
         )
 
+    def test_EncodeBase64(self) -> None:
+        augmented_text = txtaugs.EncodeBase64(
+            granularity="all", aug_min=1, aug_max=10, aug_p=0.3, n=1, p=1.0
+        )(
+            ["Hello, world!"],
+            metadata=self.metadata,
+        )
+
+        self.assertTrue(augmented_text[0] == "SGVsbG8sIHdvcmxkIQ==")
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["encode_base64"])
+        )
+
+    def test_EncodeBase64_Word(self) -> None:
+        self.metadata = []
+
+        random.seed(42)
+        augmented_text = txtaugs.EncodeBase64(
+            granularity="word", aug_min=1, aug_max=1, aug_p=1.0, n=1, p=1.0
+        )(
+            ["Hello, world!"],
+            metadata=self.metadata,
+        )
+        self.assertEqual(augmented_text[0], "SGVsbG8=, world!")
+
+        expected_metadata = deepcopy(self.expected_metadata["encode_base64"])
+        expected_metadata[0]["granularity"] = "word"
+        expected_metadata[0]["aug_p"] = 1.0
+        expected_metadata[0]["aug_max"] = 1
+        expected_metadata[0]["intensity"] = 100.0
+
+        self.assertTrue(are_equal_metadata(self.metadata, expected_metadata))
+
+    def test_EncodeBase64_Char(self) -> None:
+        self.metadata = []
+
+        random.seed(42)
+        augmented_text = txtaugs.EncodeBase64(
+            granularity="char", aug_min=1, aug_max=2, aug_p=1.0, n=1, p=1.0
+        )(
+            ["Hello, world!"],
+            metadata=self.metadata,
+        )
+        self.assertEqual(augmented_text[0], "SA==ebA==lo LA== wbw==rlZA== IQ==")
+
+        expected_metadata = deepcopy(self.expected_metadata["encode_base64"])
+        expected_metadata[0]["granularity"] = "char"
+        expected_metadata[0]["aug_p"] = 1.0
+        expected_metadata[0]["aug_max"] = 2
+        expected_metadata[0]["intensity"] = 100.0
+
+        self.assertTrue(are_equal_metadata(self.metadata, expected_metadata))
+
     def test_GetBaseline(self) -> None:
         augmented_baseline = txtaugs.GetBaseline()(self.texts, metadata=self.metadata)
 
@@ -142,6 +196,7 @@ class TransformsTextUnitTest(unittest.TestCase):
             augmented_baseline[0]
             == "The quick brown 'fox' couldn't jump over the green, grassy hill."
         )
+
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["get_baseline"]),
         )

@@ -82,6 +82,20 @@
             "src_length": 1
         }
     ],
+    "encode_base64": [
+        {
+            "dst_length": 1,
+            "input_type": "list",
+            "intensity": 100.0,
+            "name": "encode_base64",
+            "src_length": 1,
+            "granularity": "all",
+            "aug_min": 1,
+            "aug_max": 10,
+            "aug_p": 0.3,
+            "n": 1
+        }
+    ],
     "get_baseline": [
         {
             "dst_length": 1,

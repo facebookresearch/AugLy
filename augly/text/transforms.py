@@ -270,6 +270,62 @@ class Contractions(BaseTransform):
         return F.contractions(texts, metadata=metadata, **aug_kwargs)
 
 
+class EncodeBase64(BaseTransform):
+    def __init__(
+        self,
+        granularity: str = "all",
+        aug_min: int = 1,
+        aug_max: int = 10,
+        aug_p: float = 0.3,
+        n: int = 1,
+        p: float = 1.0,
+    ):
+        """
+        @param granularity: Level at which to apply base64 encoding.
+            Options: 'char', 'word', or 'all' (entire text).
+
+        @param aug_min: Minimum number of units (words/chars) to augment.
+
+        @param aug_max: Maximum number of units (words/chars) to augment.
+
+        @param aug_p: Probability of augmenting each unit.
+
+        @param n: number of augmentations to be performed for each text
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.granularity = granularity
+        self.aug_min = aug_min
+        self.aug_max = aug_max
+        self.aug_p = aug_p
+        self.n = n
+
+    def apply_transform(
+        self,
+        texts: Union[str, List[str]],
+        metadata: Optional[List[Dict[str, Any]]] = None,
+        **aug_kwargs,
+    ) -> Union[str, List]:
+        """
+        Encodes the text in base64
+
+        @param texts: a string or a list of text documents to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest length, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param aug_kwargs: kwargs to pass into the augmentation that will override
+
+        @returns: the list of augmented(now in base 64) text documents
+        """
+        if not texts:
+            return texts
+
+        return F.encode_base64(texts, metadata=metadata, **aug_kwargs)
+
+
 class GetBaseline(BaseTransform):
     def apply_transform(
         self,

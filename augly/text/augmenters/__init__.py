@@ -11,6 +11,7 @@ from augly.text.augmenters.baseline import BaselineAugmenter
 from augly.text.augmenters.bidirectional import BidirectionalAugmenter
 from augly.text.augmenters.case import CaseAugmenter
 from augly.text.augmenters.contraction import ContractionAugmenter
+from augly.text.augmenters.encode_base64 import EncodeBase64
 from augly.text.augmenters.fun_fonts import FunFontsAugmenter
 from augly.text.augmenters.insert_text import InsertTextAugmenter
 from augly.text.augmenters.insertion import InsertionAugmenter
@@ -27,6 +28,7 @@ __all__ = [
     "BidirectionalAugmenter",
     "CaseAugmenter",
     "ContractionAugmenter",
+    "EncodeBase64",
     "FunFontsAugmenter",
     "InsertTextAugmenter",
     "InsertionAugmenter",
