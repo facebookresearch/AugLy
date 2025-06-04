@@ -23,6 +23,12 @@ def contractions_intensity(aug_p: float, **kwargs) -> float:
     return aug_p * 100.0
 
 
+def encode_base64_intensity(
+    granularity: str = "all", aug_p: float = 0.3, aug_max: int = 10, **kwargs
+) -> float:
+    return 100.0 if granularity == "all" else replace_intensity_helper(aug_p, aug_max)
+
+
 def get_baseline_intensity(**kwargs) -> float:
     # get_baseline simply tokenizes and detokenizes text and at most adds extra spaces
     return 0.0

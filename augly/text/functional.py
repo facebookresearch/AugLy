@@ -167,6 +167,54 @@ def contractions(
     return aug_texts
 
 
+def encode_base64(
+    texts: Union[str, List[str]],
+    granularity: str = "all",
+    aug_min: int = 1,
+    aug_max: int = 10,
+    aug_p: float = 0.3,
+    n: int = 1,
+    metadata: Optional[List[Dict[str, Any]]] = None,
+) -> Union[str, List[str]]:
+    """
+    Encodes text into base64, with options for different granularity levels
+
+    @param texts: a string or a list of text documents to be augmented
+
+    @param granularity: Level at which to apply base64 encoding.
+        Options: 'char', 'word', or 'all' (entire text).
+
+    @param aug_min: Minimum number of units (words/chars) to augment.
+
+    @param aug_max: Maximum number of units (words/chars) to augment.
+
+    @param aug_p: Probability of augmenting each unit.
+
+    @param n: Number of augmentations to be performed.
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest length, etc. will be appended to
+        the inputted list. If set to None, no metadata will be appended or returned
+
+    @returns: the list of augmented(now in base 64) text documents
+    """
+    func_kwargs = txtutils.get_func_kwargs(metadata, locals())
+
+    base64_aug = a.EncodeBase64(granularity, aug_min, aug_max, aug_p)
+
+    if not isinstance(texts, list):
+        texts = [texts]
+    aug_texts = base64_aug.augment(texts)
+
+    txtutils.get_metadata(
+        metadata=metadata,
+        function_name="encode_base64",
+        aug_texts=aug_texts,
+        **func_kwargs,
+    )
+    return aug_texts
+
+
 def get_baseline(
     texts: Union[str, List[str]],
     metadata: Optional[List[Dict[str, Any]]] = None,
@@ -193,7 +241,6 @@ def get_baseline(
         aug_texts=aug_texts,
         **func_kwargs,
     )
-
     return aug_texts
 
 
