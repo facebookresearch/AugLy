@@ -202,7 +202,7 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         for i in range(len(self.video_paths)):
             filters.append(
                 f"[{i}:v]scale={self.width}:{self.height}[{i}v],[{i}v]"
-                f"setsar=ratio={self.sample_aspect_ratio}[{i}vf]"
+                f"setsar={self.sample_aspect_ratio.replace(':', '/')}[{i}vf]"
             )
             video_streams.append(f"[{i}vf]")
             audio_streams.append(f"[{i}:a]")
