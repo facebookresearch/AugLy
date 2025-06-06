@@ -38,6 +38,8 @@ def encode_text_intensity(
 ) -> float:
     if encoder == Encoding.BASE64:
         return base64_intensity(method, aug_p, aug_max)
+    elif encoder == Encoding.LEETSPEAK:
+        return leetspeak_intensity(method, aug_p, aug_max)
     else:
         raise NotImplementedError(
             f"Intensity function for encoder {encoder} is not implemented"
@@ -74,6 +76,12 @@ def insert_zero_width_chars_intensity(
     granularity: str, cadence: float, **kwargs
 ) -> float:
     return char_insertion_intensity_helper(granularity, cadence)
+
+
+def leetspeak_intensity(method: Method, aug_p: float, aug_max: int, **kwargs) -> float:
+    return (
+        100.0 if method == Method.SENTENCE else replace_intensity_helper(aug_p, aug_max)
+    )
 
 
 def merge_words_intensity(aug_word_p: float, aug_word_max: int, **kwargs) -> float:

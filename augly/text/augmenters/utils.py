@@ -274,3 +274,4 @@ def get_aug_idxes(
 
 class Encoding(Enum):
     BASE64 = "base64"
+    LEETSPEAK = "leetspeak"

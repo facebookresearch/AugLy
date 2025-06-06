@@ -138,7 +138,7 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(self.metadata, self.expected_metadata["compose"]),
         )
 
-    def test_EncodeText_Base64_Sentence(self) -> None:
+    def test_Base64_Sentence(self) -> None:
         augmented_text = txtaugs.EncodeTextTransform(
             aug_min=1,
             aug_max=1,
@@ -158,7 +158,7 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(self.metadata, self.expected_metadata["encode_text"])
         )
 
-    def test_EncodeText_Base64_Word(self) -> None:
+    def test_Base64_Word(self) -> None:
         self.metadata = []
 
         augmented_text = txtaugs.EncodeTextTransform(
@@ -180,7 +180,7 @@ class TransformsTextUnitTest(unittest.TestCase):
         metadata_expected[0]["encoder"] = Encoding.BASE64
         self.assertTrue(are_equal_metadata(self.metadata, metadata_expected))
 
-    def test_EncodeText_Base64_Char(self) -> None:
+    def test_Base64_Char(self) -> None:
         self.metadata = []
 
         augmented_text = txtaugs.EncodeTextTransform(
@@ -290,6 +290,48 @@ class TransformsTextUnitTest(unittest.TestCase):
                 self.metadata, self.expected_metadata["insert_zero_width_chars"]
             ),
         )
+
+    def test_LeetSpeak_Sentence(self) -> None:
+        augmented_text = txtaugs.EncodeTextTransform(
+            aug_min=1,
+            aug_max=1,
+            aug_p=1.0,
+            method=Method.SENTENCE,
+            encoder=Encoding.LEETSPEAK,
+            n=1,
+            p=1.0,
+        )(
+            ["Hello, world!"],
+            metadata=self.metadata,
+        )
+
+        self.assertTrue(augmented_text[0] == "h3110, w0r1d!")
+        self.expected_metadata["encode_text"][0]["encoder"] = Encoding.LEETSPEAK
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["encode_text"])
+        )
+
+    def test_Leetspeak_Word(self) -> None:
+        self.metadata = []
+
+        augmented_text = txtaugs.EncodeTextTransform(
+            aug_min=1,
+            aug_max=1,
+            aug_p=1.0,
+            method=Method.WORD,
+            encoder=Encoding.LEETSPEAK,
+            n=1,
+            p=1.0,
+        )(
+            ["Hello, world!"],
+            metadata=self.metadata,
+        )
+        self.assertEqual(augmented_text[0], "h3110, world!")
+
+        metadata_expected = deepcopy(self.expected_metadata["encode_text"])
+        metadata_expected[0]["method"] = "word"
+        metadata_expected[0]["encoder"] = Encoding.LEETSPEAK
+        self.assertTrue(are_equal_metadata(self.metadata, metadata_expected))
 
     def test_MergeWords(self) -> None:
         aug_merge_words = txtaugs.MergeWords(aug_word_p=0.3)(

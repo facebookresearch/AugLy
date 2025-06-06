@@ -212,7 +212,8 @@ def encode_text(
         texts = [texts]
     if encoder == Encoding.BASE64:
         encoder_strategy = a.Base64(aug_min, aug_max, aug_p, method)
-    # pyre-ignore
+    else:
+        encoder_strategy = a.LeetSpeak(aug_min, aug_max, aug_p, method)
     encoder_context = a.EncodeText(encoder_strategy)
     aug_texts = encoder_context.augmenter(texts)
 

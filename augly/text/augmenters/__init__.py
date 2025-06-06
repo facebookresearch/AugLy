@@ -17,6 +17,7 @@ from augly.text.augmenters.encode_text_strategy import EncodeTextAugmentation
 from augly.text.augmenters.fun_fonts import FunFontsAugmenter
 from augly.text.augmenters.insert_text import InsertTextAugmenter
 from augly.text.augmenters.insertion import InsertionAugmenter
+from augly.text.augmenters.leetspeak import LeetSpeak
 from augly.text.augmenters.letter_replacement import LetterReplacementAugmenter
 from augly.text.augmenters.text_replacement import TextReplacementAugmenter
 from augly.text.augmenters.typo import TypoAugmenter
@@ -35,6 +36,7 @@ __all__ = [
     "FunFontsAugmenter",
     "InsertTextAugmenter",
     "InsertionAugmenter",
+    "LeetSpeak",
     "LetterReplacementAugmenter",
     "WordsAugmenter",
     "TextReplacementAugmenter",
