@@ -14,7 +14,9 @@ from copy import deepcopy
 from typing import Any, Dict, List
 
 from augly import text as txtaugs
+from augly.text.augmenters.utils import Encoding
 from augly.utils import TEXT_METADATA_PATH
+from nlpaug.util import Method
 
 
 def are_equal_metadata(
@@ -136,57 +138,68 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(self.metadata, self.expected_metadata["compose"]),
         )
 
-    def test_EncodeBase64(self) -> None:
-        augmented_text = txtaugs.EncodeBase64(
-            granularity="all", aug_min=1, aug_max=10, aug_p=0.3, n=1, p=1.0
+    def test_EncodeText_Base64_Sentence(self) -> None:
+        augmented_text = txtaugs.EncodeTextTransform(
+            aug_min=1,
+            aug_max=1,
+            aug_p=1.0,
+            method=Method.SENTENCE,
+            encoder=Encoding.BASE64,
+            n=1,
+            p=1.0,
         )(
             ["Hello, world!"],
             metadata=self.metadata,
         )
 
         self.assertTrue(augmented_text[0] == "SGVsbG8sIHdvcmxkIQ==")
+        self.expected_metadata["encode_text"][0]["encoder"] = Encoding.BASE64
         self.assertTrue(
-            are_equal_metadata(self.metadata, self.expected_metadata["encode_base64"])
+            are_equal_metadata(self.metadata, self.expected_metadata["encode_text"])
         )
 
-    def test_EncodeBase64_Word(self) -> None:
+    def test_EncodeText_Base64_Word(self) -> None:
         self.metadata = []
 
-        random.seed(42)
-        augmented_text = txtaugs.EncodeBase64(
-            granularity="word", aug_min=1, aug_max=1, aug_p=1.0, n=1, p=1.0
+        augmented_text = txtaugs.EncodeTextTransform(
+            aug_min=1,
+            aug_max=1,
+            aug_p=1.0,
+            method=Method.WORD,
+            encoder=Encoding.BASE64,
+            n=1,
+            p=1.0,
         )(
             ["Hello, world!"],
             metadata=self.metadata,
         )
         self.assertEqual(augmented_text[0], "SGVsbG8=, world!")
 
-        expected_metadata = deepcopy(self.expected_metadata["encode_base64"])
-        expected_metadata[0]["granularity"] = "word"
-        expected_metadata[0]["aug_p"] = 1.0
-        expected_metadata[0]["aug_max"] = 1
-        expected_metadata[0]["intensity"] = 100.0
+        metadata_expected = deepcopy(self.expected_metadata["encode_text"])
+        metadata_expected[0]["method"] = "word"
+        metadata_expected[0]["encoder"] = Encoding.BASE64
+        self.assertTrue(are_equal_metadata(self.metadata, metadata_expected))
 
-        self.assertTrue(are_equal_metadata(self.metadata, expected_metadata))
-
-    def test_EncodeBase64_Char(self) -> None:
+    def test_EncodeText_Base64_Char(self) -> None:
         self.metadata = []
 
-        random.seed(42)
-        augmented_text = txtaugs.EncodeBase64(
-            granularity="char", aug_min=1, aug_max=2, aug_p=1.0, n=1, p=1.0
+        augmented_text = txtaugs.EncodeTextTransform(
+            aug_min=1,
+            aug_max=1,
+            aug_p=1.0,
+            method=Method.CHAR,
+            encoder=Encoding.BASE64,
+            n=1,
+            p=1.0,
         )(
             ["Hello, world!"],
             metadata=self.metadata,
         )
-        self.assertEqual(augmented_text[0], "SA==ebA==lo LA== wbw==rlZA== IQ==")
+        self.assertEqual(augmented_text[0], "SA==ello LA== wocg==ld IQ==")
 
-        expected_metadata = deepcopy(self.expected_metadata["encode_base64"])
-        expected_metadata[0]["granularity"] = "char"
-        expected_metadata[0]["aug_p"] = 1.0
-        expected_metadata[0]["aug_max"] = 2
-        expected_metadata[0]["intensity"] = 100.0
-
+        expected_metadata = deepcopy(self.expected_metadata["encode_text"])
+        expected_metadata[0]["method"] = "char"
+        expected_metadata[0]["encoder"] = Encoding.BASE64
         self.assertTrue(are_equal_metadata(self.metadata, expected_metadata))
 
     def test_GetBaseline(self) -> None:
