@@ -9,10 +9,20 @@
 
 from typing import Any, Dict, List, Optional, Union
 
+from augly.text.augmenters.utils import Encoding
+
+from nlpaug import Method
+
 
 def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
     intensity_func = globals().get(f"{aug_function}_intensity")
     return intensity_func(**kwargs) if intensity_func else 100.0
+
+
+def base64_intensity(method: Method, aug_p: float, aug_max: int, **kwargs) -> float:
+    return (
+        100.0 if method == Method.SENTENCE else replace_intensity_helper(aug_p, aug_max)
+    )
 
 
 def change_case_intensity(granularity: str, cadence: float, **kwargs) -> float:
@@ -23,10 +33,15 @@ def contractions_intensity(aug_p: float, **kwargs) -> float:
     return aug_p * 100.0
 
 
-def encode_base64_intensity(
-    granularity: str = "all", aug_p: float = 0.3, aug_max: int = 10, **kwargs
+def encode_text_intensity(
+    encoder: Encoding, method: Method, aug_p: float, aug_max: int, **kwargs
 ) -> float:
-    return 100.0 if granularity == "all" else replace_intensity_helper(aug_p, aug_max)
+    if encoder == Encoding.BASE64:
+        return base64_intensity(method, aug_p, aug_max)
+    else:
+        raise NotImplementedError(
+            f"Intensity function for encoder {encoder} is not implemented"
+        )
 
 
 def get_baseline_intensity(**kwargs) -> float:

@@ -11,6 +11,7 @@ from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Union
 
 from augly.text import augmenters as a, utils as txtutils
+from augly.text.augmenters.utils import Encoding
 from augly.utils import (
     CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
@@ -18,6 +19,7 @@ from augly.utils import (
     MISSPELLING_DICTIONARY_PATH,
     UNICODE_MAPPING_PATH,
 )
+from nlpaug.util import Method
 
 
 def apply_lambda(
@@ -167,22 +169,21 @@ def contractions(
     return aug_texts
 
 
-def encode_base64(
+def encode_text(
     texts: Union[str, List[str]],
-    granularity: str = "all",
-    aug_min: int = 1,
-    aug_max: int = 10,
-    aug_p: float = 0.3,
+    aug_min: int,
+    aug_max: int,
+    aug_p: float,
+    method: Method,
+    encoder: Encoding,
     n: int = 1,
+    p: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
 ) -> Union[str, List[str]]:
-    """
-    Encodes text into base64, with options for different granularity levels
+    """Alters text based on encoding function and based on different granularity levels
+    such as the entire text, specific words or characters.
 
-    @param texts: a string or a list of text documents to be augmented
-
-    @param granularity: Level at which to apply base64 encoding.
-        Options: 'char', 'word', or 'all' (entire text).
+    @param texts: A string or a list of text documents to be augmented
 
     @param aug_min: Minimum number of units (words/chars) to augment.
 
@@ -190,7 +191,14 @@ def encode_base64(
 
     @param aug_p: Probability of augmenting each unit.
 
+    param method: Level at which to apply base64 encoding.
+        Options: 'char', 'word', or 'sentence' (entire text).
+
+    param encoder: Specific function that determines type of encoding performed
+
     @param n: Number of augmentations to be performed.
+
+    @param p:
 
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest length, etc. will be appended to
@@ -200,15 +208,17 @@ def encode_base64(
     """
     func_kwargs = txtutils.get_func_kwargs(metadata, locals())
 
-    base64_aug = a.EncodeBase64(granularity, aug_min, aug_max, aug_p)
-
     if not isinstance(texts, list):
         texts = [texts]
-    aug_texts = base64_aug.augment(texts)
+    if encoder == Encoding.BASE64:
+        encoder_strategy = a.Base64(aug_min, aug_max, aug_p, method)
+    # pyre-ignore
+    encoder_context = a.EncodeText(encoder_strategy)
+    aug_texts = encoder_context.augmenter(texts)
 
     txtutils.get_metadata(
         metadata=metadata,
-        function_name="encode_base64",
+        function_name="encode_text",
         aug_texts=aug_texts,
         **func_kwargs,
     )
