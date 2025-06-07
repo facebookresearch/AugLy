@@ -10,7 +10,9 @@ import random
 import unittest
 
 from augly import text as txtaugs
+from augly.text.augmenters.utils import Encoding
 from augly.utils import FUN_FONTS_GREEK_PATH
+from nlpaug.util import Method
 
 
 class FunctionalTextUnitTest(unittest.TestCase):
@@ -51,34 +53,23 @@ class FunctionalTextUnitTest(unittest.TestCase):
             augmented_words[0] == "I would call him but I don't know where he's gone"
         )
 
-    def test_encode_base64_all(self) -> None:
-        augmented_words = txtaugs.encode_base64("Hello, world!")
-        self.assertTrue(augmented_words[0] == "SGVsbG8sIHdvcmxkIQ==")
+    def test_encode_text_base64_sentence(self) -> None:
+        augmented_words = txtaugs.encode_text(
+            "Hello, world!", 1, 1, 1.0, Method.SENTENCE, Encoding.BASE64
+        )
+        self.assertEqual(augmented_words[0], "SGVsbG8sIHdvcmxkIQ==")
 
-    def test_encode_base64_word(self) -> None:
-        random.seed(42)  # Set seed for reproducibility
-        augmented_words_word = txtaugs.encode_base64(
-            "Hello, world!", granularity="word", aug_min=1, aug_max=1, aug_p=1.0
+    def test_encode_text_base64_word(self) -> None:
+        augmented_words_word = txtaugs.encode_text(
+            "Hello, world!", 1, 1, 1.0, Method.WORD, Encoding.BASE64
         )
         self.assertEqual(augmented_words_word[0], "SGVsbG8=, world!")
 
-    def test_encode_base64_char(self) -> None:
-        random.seed(42)
-        augmented_words_char = txtaugs.encode_base64(
-            "Hello, world!", granularity="char", aug_min=1, aug_max=2, aug_p=1.0
+    def test_encode_text_base64_char(self) -> None:
+        augmented_words_char = txtaugs.encode_text(
+            "Hello, world!", 1, 1, 1.0, Method.CHAR, Encoding.BASE64
         )
-        self.assertEqual(augmented_words_char[0], "SA==ellbw== LA== wbw==rlZA== IQ==")
-
-    def test_encode_base64_general(self) -> None:
-        random.seed(42)
-        augmented_words_low_p = txtaugs.encode_base64(
-            "Hello, world!", granularity="word", aug_min=1, aug_max=2, aug_p=0.1
-        )
-        random.seed(42)
-        augmented_words_high_p = txtaugs.encode_base64(
-            "Hello, world!", granularity="word", aug_min=1, aug_max=2, aug_p=0.9
-        )
-        self.assertTrue(len(augmented_words_high_p[0]) > len(augmented_words_low_p[0]))
+        self.assertEqual(augmented_words_char[0], "SA==ello LA== dw==orld IQ==")
 
     def test_get_baseline(self) -> None:
         augmented_baseline = txtaugs.get_baseline(self.texts)
