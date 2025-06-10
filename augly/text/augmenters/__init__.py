@@ -7,11 +7,13 @@
 
 # pyre-unsafe
 
+from augly.text.augmenters.base64 import Base64
 from augly.text.augmenters.baseline import BaselineAugmenter
 from augly.text.augmenters.bidirectional import BidirectionalAugmenter
 from augly.text.augmenters.case import CaseAugmenter
 from augly.text.augmenters.contraction import ContractionAugmenter
-from augly.text.augmenters.encode_base64 import EncodeBase64
+from augly.text.augmenters.encode_text_context import EncodeText
+from augly.text.augmenters.encode_text_strategy import EncodeTextAugmentation
 from augly.text.augmenters.fun_fonts import FunFontsAugmenter
 from augly.text.augmenters.insert_text import InsertTextAugmenter
 from augly.text.augmenters.insertion import InsertionAugmenter
@@ -22,13 +24,14 @@ from augly.text.augmenters.upside_down import UpsideDownAugmenter
 from augly.text.augmenters.word_replacement import WordReplacementAugmenter
 from augly.text.augmenters.words_augmenter import WordsAugmenter
 
-
 __all__ = [
+    "Base64",
     "BaselineAugmenter",
     "BidirectionalAugmenter",
     "CaseAugmenter",
     "ContractionAugmenter",
-    "EncodeBase64",
+    "EncodeText",
+    "EncodeTextAugmentation",
     "FunFontsAugmenter",
     "InsertTextAugmenter",
     "InsertionAugmenter",

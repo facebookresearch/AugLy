@@ -82,18 +82,20 @@
             "src_length": 1
         }
     ],
-    "encode_base64": [
+    "encode_text": [
         {
             "dst_length": 1,
             "input_type": "list",
             "intensity": 100.0,
-            "name": "encode_base64",
+            "name": "encode_text",
             "src_length": 1,
-            "granularity": "all",
             "aug_min": 1,
-            "aug_max": 10,
-            "aug_p": 0.3,
-            "n": 1
+            "aug_max": 1,
+            "aug_p": 1.0,
+            "n": 1,
+            "p": 1.0,
+            "encoder": "base64",
+            "method": "sentence"
         }
     ],
     "get_baseline": [
