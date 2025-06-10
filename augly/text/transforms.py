@@ -12,6 +12,7 @@ import random
 from typing import Any, Callable, Dict, List, Optional, Union
 
 from augly.text import functional as F
+from augly.text.augmenters.utils import Encoding
 from augly.utils import (
     CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
@@ -19,6 +20,7 @@ from augly.utils import (
     MISSPELLING_DICTIONARY_PATH,
     UNICODE_MAPPING_PATH,
 )
+from nlpaug.util import Method
 
 
 """
@@ -270,13 +272,14 @@ class Contractions(BaseTransform):
         return F.contractions(texts, metadata=metadata, **aug_kwargs)
 
 
-class EncodeBase64(BaseTransform):
+class EncodeTextTransform(BaseTransform):
     def __init__(
         self,
-        granularity: str = "all",
-        aug_min: int = 1,
-        aug_max: int = 10,
-        aug_p: float = 0.3,
+        aug_min: int,
+        aug_max: int,
+        aug_p: float,
+        method: Method,
+        encoder: Encoding,
         n: int = 1,
         p: float = 1.0,
     ):
@@ -292,13 +295,15 @@ class EncodeBase64(BaseTransform):
 
         @param n: number of augmentations to be performed for each text
 
-        @param p: the probability of the transform being applied; default value is 1.0
+        @param p: the probability of the overall being applied to each unit (word/char).
+            default value is 1.0
         """
         super().__init__(p)
-        self.granularity = granularity
         self.aug_min = aug_min
         self.aug_max = aug_max
         self.aug_p = aug_p
+        self.method = method
+        self.encoder = encoder
         self.n = n
 
     def apply_transform(
@@ -323,7 +328,7 @@ class EncodeBase64(BaseTransform):
         if not texts:
             return texts
 
-        return F.encode_base64(texts, metadata=metadata, **aug_kwargs)
+        return F.encode_text(texts, metadata=metadata, **aug_kwargs)
 
 
 class GetBaseline(BaseTransform):
