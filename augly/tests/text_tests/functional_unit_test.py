@@ -38,6 +38,24 @@ class FunctionalTextUnitTest(unittest.TestCase):
         augmented_apply_lambda = txtaugs.apply_lambda(self.texts)
         self.assertTrue(augmented_apply_lambda[0] == self.texts[0])
 
+    def test_base64_sentence(self) -> None:
+        augmented_words = txtaugs.encode_text(
+            "Hello, world!", 1, 1, 1.0, Method.SENTENCE, Encoding.BASE64
+        )
+        self.assertEqual(augmented_words[0], "SGVsbG8sIHdvcmxkIQ==")
+
+    def test_base64_word(self) -> None:
+        augmented_words_word = txtaugs.encode_text(
+            "Hello, world!", 1, 1, 1.0, Method.WORD, Encoding.BASE64
+        )
+        self.assertEqual(augmented_words_word[0], "SGVsbG8=, world!")
+
+    def test_base64_char(self) -> None:
+        augmented_words_char = txtaugs.encode_text(
+            "Hello, world!", 1, 1, 1.0, Method.CHAR, Encoding.BASE64
+        )
+        self.assertEqual(augmented_words_char[0], "SA==ello LA== dw==orld IQ==")
+
     def test_change_case(self) -> None:
         augmented_words = txtaugs.change_case(self.texts[0], cadence=3.0, case="upper")
         self.assertTrue(
@@ -52,24 +70,6 @@ class FunctionalTextUnitTest(unittest.TestCase):
         self.assertTrue(
             augmented_words[0] == "I would call him but I don't know where he's gone"
         )
-
-    def test_encode_text_base64_sentence(self) -> None:
-        augmented_words = txtaugs.encode_text(
-            "Hello, world!", 1, 1, 1.0, Method.SENTENCE, Encoding.BASE64
-        )
-        self.assertEqual(augmented_words[0], "SGVsbG8sIHdvcmxkIQ==")
-
-    def test_encode_text_base64_word(self) -> None:
-        augmented_words_word = txtaugs.encode_text(
-            "Hello, world!", 1, 1, 1.0, Method.WORD, Encoding.BASE64
-        )
-        self.assertEqual(augmented_words_word[0], "SGVsbG8=, world!")
-
-    def test_encode_text_base64_char(self) -> None:
-        augmented_words_char = txtaugs.encode_text(
-            "Hello, world!", 1, 1, 1.0, Method.CHAR, Encoding.BASE64
-        )
-        self.assertEqual(augmented_words_char[0], "SA==ello LA== dw==orld IQ==")
 
     def test_get_baseline(self) -> None:
         augmented_baseline = txtaugs.get_baseline(self.texts)
@@ -271,6 +271,18 @@ class FunctionalTextUnitTest(unittest.TestCase):
                 "n\u2061, \u2063gr\u200das\u2060sy\u2063 h\u2061il\u2062l."
             ],
         )
+
+    def test_leetspeak_sentence(self) -> None:
+        augmented_words = txtaugs.encode_text(
+            "Hello, world!", 1, 1, 1.0, Method.SENTENCE, Encoding.LEETSPEAK
+        )
+        self.assertEqual(augmented_words[0], "h3110, w0r1d!")
+
+    def test_leetspeak_word(self) -> None:
+        augmented_words = txtaugs.encode_text(
+            "Hello, world!", 1, 1, 1.0, Method.WORD, Encoding.LEETSPEAK
+        )
+        self.assertEqual(augmented_words[0], "h3110, world!")
 
     def test_merge_words(self) -> None:
         augmented_split_words = txtaugs.merge_words(self.texts, aug_word_p=0.3, n=1)
