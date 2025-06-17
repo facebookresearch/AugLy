@@ -9,20 +9,14 @@
 
 from typing import Any, Dict, List, Optional, Union
 
-from augly.text.augmenters.utils import Encoding
-
-from nlpaug import Method
-
 
 def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
     intensity_func = globals().get(f"{aug_function}_intensity")
     return intensity_func(**kwargs) if intensity_func else 100.0
 
 
-def base64_intensity(method: Method, aug_p: float, aug_max: int, **kwargs) -> float:
-    return (
-        100.0 if method == Method.SENTENCE else replace_intensity_helper(aug_p, aug_max)
-    )
+def base64_intensity(granularity: str, aug_p: float, aug_max: int, **kwargs) -> float:
+    return 100.0 if granularity == "all" else replace_intensity_helper(aug_p, aug_max)
 
 
 def change_case_intensity(granularity: str, cadence: float, **kwargs) -> float:
@@ -34,12 +28,12 @@ def contractions_intensity(aug_p: float, **kwargs) -> float:
 
 
 def encode_text_intensity(
-    encoder: Encoding, method: Method, aug_p: float, aug_max: int, **kwargs
+    encoder: str, granularity: str, aug_p: float, aug_max: int, **kwargs
 ) -> float:
-    if encoder == Encoding.BASE64:
-        return base64_intensity(method, aug_p, aug_max)
-    elif encoder == Encoding.LEETSPEAK:
-        return leetspeak_intensity(method, aug_p, aug_max)
+    if encoder == "base64":
+        return base64_intensity(granularity, aug_p, aug_max)
+    elif encoder == "leetspeak":
+        return leetspeak_intensity(granularity, aug_p, aug_max)
     else:
         raise NotImplementedError(
             f"Intensity function for encoder {encoder} is not implemented"
@@ -78,10 +72,10 @@ def insert_zero_width_chars_intensity(
     return char_insertion_intensity_helper(granularity, cadence)
 
 
-def leetspeak_intensity(method: Method, aug_p: float, aug_max: int, **kwargs) -> float:
-    return (
-        100.0 if method == Method.SENTENCE else replace_intensity_helper(aug_p, aug_max)
-    )
+def leetspeak_intensity(
+    granularity: str, aug_p: float, aug_max: int, **kwargs
+) -> float:
+    return 100.0 if granularity == "all" else replace_intensity_helper(aug_p, aug_max)
 
 
 def merge_words_intensity(aug_word_p: float, aug_word_max: int, **kwargs) -> float:

@@ -8,9 +8,9 @@
 # pyre-unsafe
 
 from abc import abstractmethod
-from typing import List, Union
+from typing import List, Literal, Union
 
-from augly.text.augmenters.utils import detokenize, Encoding, get_aug_idxes, tokenize
+from augly.text.augmenters.utils import detokenize, get_aug_idxes, tokenize
 from nlpaug.augmenter.word import Augmenter
 from nlpaug.util import Action, Method
 
@@ -22,20 +22,25 @@ class EncodeTextAugmentation(Augmenter):
         aug_min: int,
         aug_max: int,
         aug_p: float,
-        encoder: Encoding = Encoding.BASE64,
-        method: str = Method.SENTENCE,
+        granularity: Literal["all", "word", "char"],
+        encoder: Literal["base64", "leetspeak"],
     ):
+        assert granularity in {
+            "all",
+            "word",
+            "char",
+        }, f"Granularity type must be either 'all', 'word', 'char', found type {granularity}"
         super().__init__(
             name=name,
             aug_min=aug_min,
             aug_max=aug_max,
             aug_p=aug_p,
             action=Action.SUBSTITUTE,
-            method=method,
+            method=Method.SENTENCE,
         )
 
         self.encoder = encoder
-        self.method = method
+        self.granularity = granularity
 
     @classmethod
     def clean(cls, data: Union[str, List[str], None]) -> Union[str, List[str]]:
@@ -61,27 +66,27 @@ class EncodeTextAugmentation(Augmenter):
         raise NotImplementedError
 
     def substitute(self, data: str) -> str:
-        if self.method == Method.SENTENCE:
+        if self.granularity == "all":
             return self.encode(data)
 
         tokens = tokenize(data)
         if not tokens:
             return ""
 
-        if self.method == Method.WORD:
+        if self.granularity == "word":
             augment_count = self._generate_aug_cnt(
                 len(tokens), self.aug_min, self.aug_max, self.aug_p
             )
             to_augment = set(
                 get_aug_idxes(
-                    self, tokens, list(range(len(tokens))), augment_count, Method.WORD
+                    self, tokens, list(range(len(tokens))), augment_count, "word"
                 )
             )
             for i, token in enumerate(tokens):
                 if i in to_augment:
                     tokens[i] = self.encode(token)
 
-        elif self.method == Method.CHAR:
+        elif self.granularity == "char":
             for token_idx, token in enumerate(tokens):
                 chars = list(token)
                 augment_count = self._generate_aug_cnt(
@@ -89,7 +94,7 @@ class EncodeTextAugmentation(Augmenter):
                 )
                 to_augment = set(
                     get_aug_idxes(
-                        self, chars, list(range(len(chars))), augment_count, Method.CHAR
+                        self, chars, list(range(len(chars))), augment_count, "char"
                     )
                 )
                 for char_idx, char in enumerate(chars):

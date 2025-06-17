@@ -6,10 +6,9 @@
 # LICENSE file in the root directory of this source tree.
 
 import random
+from typing import Literal
 
 from augly.text.augmenters.encode_text_strategy import EncodeTextAugmentation
-from augly.text.augmenters.utils import Encoding
-from nlpaug.util import Method
 
 
 class LeetSpeak(EncodeTextAugmentation):
@@ -18,15 +17,15 @@ class LeetSpeak(EncodeTextAugmentation):
         aug_min: int,
         aug_max: int,
         aug_p: float,
-        method: Method,
+        granularity: Literal["all", "word", "char"],
     ):
         super().__init__(
             name="LeetSpeak",
             aug_min=aug_min,
             aug_max=aug_max,
             aug_p=aug_p,
-            encoder=Encoding.LEETSPEAK,
-            method=str(method),
+            encoder="leetspeak",
+            granularity=granularity,
         )
         assert 0 <= aug_min <= aug_max
         assert 0 <= aug_p <= 1

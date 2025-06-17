@@ -14,9 +14,7 @@ from copy import deepcopy
 from typing import Any, Dict, List
 
 from augly import text as txtaugs
-from augly.text.augmenters.utils import Encoding
 from augly.utils import TEXT_METADATA_PATH
-from nlpaug.util import Method
 
 
 def are_equal_metadata(
@@ -143,17 +141,15 @@ class TransformsTextUnitTest(unittest.TestCase):
             aug_min=1,
             aug_max=1,
             aug_p=1.0,
-            method=Method.SENTENCE,
-            encoder=Encoding.BASE64,
+            granularity="all",
+            encoder="base64",
             n=1,
             p=1.0,
         )(
             ["Hello, world!"],
             metadata=self.metadata,
         )
-
         self.assertTrue(augmented_text[0] == "SGVsbG8sIHdvcmxkIQ==")
-        self.expected_metadata["encode_text"][0]["encoder"] = Encoding.BASE64
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["encode_text"])
         )
@@ -165,8 +161,8 @@ class TransformsTextUnitTest(unittest.TestCase):
             aug_min=1,
             aug_max=1,
             aug_p=1.0,
-            method=Method.WORD,
-            encoder=Encoding.BASE64,
+            granularity="word",
+            encoder="base64",
             n=1,
             p=1.0,
         )(
@@ -176,31 +172,8 @@ class TransformsTextUnitTest(unittest.TestCase):
         self.assertEqual(augmented_text[0], "SGVsbG8=, world!")
 
         metadata_expected = deepcopy(self.expected_metadata["encode_text"])
-        metadata_expected[0]["method"] = "word"
-        metadata_expected[0]["encoder"] = Encoding.BASE64
+        metadata_expected[0]["granularity"] = "word"
         self.assertTrue(are_equal_metadata(self.metadata, metadata_expected))
-
-    def test_Base64_Char(self) -> None:
-        self.metadata = []
-
-        augmented_text = txtaugs.EncodeTextTransform(
-            aug_min=1,
-            aug_max=1,
-            aug_p=1.0,
-            method=Method.CHAR,
-            encoder=Encoding.BASE64,
-            n=1,
-            p=1.0,
-        )(
-            ["Hello, world!"],
-            metadata=self.metadata,
-        )
-        self.assertEqual(augmented_text[0], "SA==ello LA== wocg==ld IQ==")
-
-        expected_metadata = deepcopy(self.expected_metadata["encode_text"])
-        expected_metadata[0]["method"] = "char"
-        expected_metadata[0]["encoder"] = Encoding.BASE64
-        self.assertTrue(are_equal_metadata(self.metadata, expected_metadata))
 
     def test_GetBaseline(self) -> None:
         augmented_baseline = txtaugs.GetBaseline()(self.texts, metadata=self.metadata)
@@ -296,8 +269,8 @@ class TransformsTextUnitTest(unittest.TestCase):
             aug_min=1,
             aug_max=1,
             aug_p=1.0,
-            method=Method.SENTENCE,
-            encoder=Encoding.LEETSPEAK,
+            granularity="all",
+            encoder="leetspeak",
             n=1,
             p=1.0,
         )(
@@ -306,7 +279,7 @@ class TransformsTextUnitTest(unittest.TestCase):
         )
 
         self.assertTrue(augmented_text[0] == "h3110, w0r1d!")
-        self.expected_metadata["encode_text"][0]["encoder"] = Encoding.LEETSPEAK
+        self.expected_metadata["encode_text"][0]["encoder"] = "leetspeak"
         self.assertTrue(
             are_equal_metadata(self.metadata, self.expected_metadata["encode_text"])
         )
@@ -318,8 +291,8 @@ class TransformsTextUnitTest(unittest.TestCase):
             aug_min=1,
             aug_max=1,
             aug_p=1.0,
-            method=Method.WORD,
-            encoder=Encoding.LEETSPEAK,
+            granularity="word",
+            encoder="leetspeak",
             n=1,
             p=1.0,
         )(
@@ -329,8 +302,8 @@ class TransformsTextUnitTest(unittest.TestCase):
         self.assertEqual(augmented_text[0], "h3110, world!")
 
         metadata_expected = deepcopy(self.expected_metadata["encode_text"])
-        metadata_expected[0]["method"] = "word"
-        metadata_expected[0]["encoder"] = Encoding.LEETSPEAK
+        metadata_expected[0]["granularity"] = "word"
+        metadata_expected[0]["encoder"] = "leetspeak"
         self.assertTrue(are_equal_metadata(self.metadata, metadata_expected))
 
     def test_MergeWords(self) -> None:

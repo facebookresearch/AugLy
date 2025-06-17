@@ -8,10 +8,9 @@
 # pyre-unsafe
 
 from copy import deepcopy
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Literal, Optional, Union
 
 from augly.text import augmenters as a, utils as txtutils
-from augly.text.augmenters.utils import Encoding
 from augly.utils import (
     CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
@@ -19,7 +18,6 @@ from augly.utils import (
     MISSPELLING_DICTIONARY_PATH,
     UNICODE_MAPPING_PATH,
 )
-from nlpaug.util import Method
 
 
 def apply_lambda(
@@ -174,8 +172,8 @@ def encode_text(
     aug_min: int,
     aug_max: int,
     aug_p: float,
-    method: Method,
-    encoder: Encoding,
+    granularity: Literal["all", "word", "char"],
+    encoder: Literal["base64", "leetspeak"],
     n: int = 1,
     p: float = 1.0,
     metadata: Optional[List[Dict[str, Any]]] = None,
@@ -206,14 +204,19 @@ def encode_text(
 
     @returns: the list of augmented(now in base 64) text documents
     """
+    assert encoder in {
+        "base64",
+        "leetspeak",
+    }, f"Encode text only supports encoder type 'base64' or 'leetspeak', found type {encoder}"
+
     func_kwargs = txtutils.get_func_kwargs(metadata, locals())
 
     if not isinstance(texts, list):
         texts = [texts]
-    if encoder == Encoding.BASE64:
-        encoder_strategy = a.Base64(aug_min, aug_max, aug_p, method)
+    if encoder == "base64":
+        encoder_strategy = a.Base64(aug_min, aug_max, aug_p, granularity)
     else:
-        encoder_strategy = a.LeetSpeak(aug_min, aug_max, aug_p, method)
+        encoder_strategy = a.LeetSpeak(aug_min, aug_max, aug_p, granularity)
     encoder_context = a.EncodeText(encoder_strategy)
     aug_texts = encoder_context.augmenter(texts)
 

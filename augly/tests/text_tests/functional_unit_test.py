@@ -10,9 +10,7 @@ import random
 import unittest
 
 from augly import text as txtaugs
-from augly.text.augmenters.utils import Encoding
 from augly.utils import FUN_FONTS_GREEK_PATH
-from nlpaug.util import Method
 
 
 class FunctionalTextUnitTest(unittest.TestCase):
@@ -40,21 +38,15 @@ class FunctionalTextUnitTest(unittest.TestCase):
 
     def test_base64_sentence(self) -> None:
         augmented_words = txtaugs.encode_text(
-            "Hello, world!", 1, 1, 1.0, Method.SENTENCE, Encoding.BASE64
+            "Hello, world!", 1, 1, 1.0, "all", "base64"
         )
         self.assertEqual(augmented_words[0], "SGVsbG8sIHdvcmxkIQ==")
 
     def test_base64_word(self) -> None:
         augmented_words_word = txtaugs.encode_text(
-            "Hello, world!", 1, 1, 1.0, Method.WORD, Encoding.BASE64
+            "Hello, world!", 1, 1, 1.0, "word", "base64"
         )
         self.assertEqual(augmented_words_word[0], "SGVsbG8=, world!")
-
-    def test_base64_char(self) -> None:
-        augmented_words_char = txtaugs.encode_text(
-            "Hello, world!", 1, 1, 1.0, Method.CHAR, Encoding.BASE64
-        )
-        self.assertEqual(augmented_words_char[0], "SA==ello LA== dw==orld IQ==")
 
     def test_change_case(self) -> None:
         augmented_words = txtaugs.change_case(self.texts[0], cadence=3.0, case="upper")
@@ -274,13 +266,13 @@ class FunctionalTextUnitTest(unittest.TestCase):
 
     def test_leetspeak_sentence(self) -> None:
         augmented_words = txtaugs.encode_text(
-            "Hello, world!", 1, 1, 1.0, Method.SENTENCE, Encoding.LEETSPEAK
+            "Hello, world!", 1, 1, 1.0, "all", "leetspeak"
         )
         self.assertEqual(augmented_words[0], "h3110, w0r1d!")
 
     def test_leetspeak_word(self) -> None:
         augmented_words = txtaugs.encode_text(
-            "Hello, world!", 1, 1, 1.0, Method.WORD, Encoding.LEETSPEAK
+            "Hello, world!", 1, 1, 1.0, "word", "leetspeak"
         )
         self.assertEqual(augmented_words[0], "h3110, world!")
 

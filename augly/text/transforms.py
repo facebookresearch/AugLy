@@ -9,10 +9,9 @@
 
 import inspect
 import random
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Literal, Optional, Union
 
 from augly.text import functional as F
-from augly.text.augmenters.utils import Encoding
 from augly.utils import (
     CONTRACTIONS_MAPPING,
     FUN_FONTS_PATH,
@@ -20,8 +19,6 @@ from augly.utils import (
     MISSPELLING_DICTIONARY_PATH,
     UNICODE_MAPPING_PATH,
 )
-from nlpaug.util import Method
-
 
 """
 Base Classes for Transforms
@@ -278,8 +275,8 @@ class EncodeTextTransform(BaseTransform):
         aug_min: int,
         aug_max: int,
         aug_p: float,
-        method: Method,
-        encoder: Encoding,
+        granularity: Literal["sentence", "word", "char"],
+        encoder: Literal["base64", "leetspeak"],
         n: int = 1,
         p: float = 1.0,
     ):
@@ -302,7 +299,7 @@ class EncodeTextTransform(BaseTransform):
         self.aug_min = aug_min
         self.aug_max = aug_max
         self.aug_p = aug_p
-        self.method = method
+        self.granularity = granularity
         self.encoder = encoder
         self.n = n
 

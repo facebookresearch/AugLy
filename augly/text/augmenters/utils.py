@@ -8,7 +8,6 @@
 # pyre-unsafe
 
 import re
-from enum import Enum
 from typing import List, Optional, Tuple
 
 import regex
@@ -270,8 +269,3 @@ def get_aug_idxes(
         aug_idxes = augmenter.sample(priority_idxes, aug_cnt)
 
     return aug_idxes
-
-
-class Encoding(Enum):
-    BASE64 = "base64"
-    LEETSPEAK = "leetspeak"

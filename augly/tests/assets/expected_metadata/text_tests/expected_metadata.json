@@ -95,7 +95,7 @@
             "n": 1,
             "p": 1.0,
             "encoder": "base64",
-            "method": "sentence"
+            "granularity": "all"
         }
     ],
     "get_baseline": [
