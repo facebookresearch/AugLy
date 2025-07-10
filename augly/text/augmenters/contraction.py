@@ -62,22 +62,29 @@ class ContractionAugmenter:
         """
         results = []
         tokens = tokenize(text)
+        i = 0
 
-        for c_len in range(2, self.max_contraction_length + 1):
-            i = 0
-            while i <= len(tokens) - c_len:
-                result = tokens[i]
-                if self.rng.rand() <= self.aug_p:
-                    contraction = self.contraction_mapping.replace(
-                        " ".join(tokens[i : i + c_len])
-                    )
-                    if contraction is not None:
-                        result = contraction
-                        i += c_len - 1
-                results.append(result)
+        while i < len(tokens):
+            if self.rng.rand() <= self.aug_p:
+                contraction_found = False
+
+                for c_len in range(self.max_contraction_length, 1, -1):
+                    if i + c_len <= len(tokens):
+                        contraction = self.contraction_mapping.replace(
+                            " ".join(tokens[i : i + c_len])
+                        )
+                        if contraction is not None:
+                            results.append(contraction)
+                            i += c_len
+                            contraction_found = True
+                            break
+
+                if not contraction_found:
+                    results.append(tokens[i])
+                    i += 1
+            else:
+                results.append(tokens[i])
                 i += 1
-
-            results.extend(tokens[-c_len + 1 :])
 
         return detokenize(results)
 

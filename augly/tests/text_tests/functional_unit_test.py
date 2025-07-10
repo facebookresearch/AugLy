@@ -63,6 +63,15 @@ class FunctionalTextUnitTest(unittest.TestCase):
             augmented_words[0] == "I would call him but I don't know where he's gone"
         )
 
+    def test_new_contractions(self) -> None:
+        augmented_words = txtaugs.contractions(
+            "he is mine", aug_p=1.0, max_contraction_length=5
+        )
+        self.assertFalse(
+            augmented_words[0] == "he's mine he is mine he is mine he is mine"
+        )
+        self.assertTrue(augmented_words[0] == "he's mine")
+
     def test_get_baseline(self) -> None:
         augmented_baseline = txtaugs.get_baseline(self.texts)
         self.assertTrue(

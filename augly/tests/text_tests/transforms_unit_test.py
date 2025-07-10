@@ -112,6 +112,19 @@ class TransformsTextUnitTest(unittest.TestCase):
             are_equal_metadata(self.metadata, self.expected_metadata["contractions"])
         )
 
+    def test_NewContractions(self) -> None:
+        augmented_words = txtaugs.Contractions(aug_p=1.0)(
+            ["he is mine"],
+            metadata=self.metadata,
+        )
+        self.assertFalse(
+            augmented_words[0] == "he's mine he is mine he is mine he is mine"
+        )
+        self.assertTrue(augmented_words[0] == "he's mine")
+        self.assertTrue(
+            are_equal_metadata(self.metadata, self.expected_metadata["contractions"])
+        )
+
     def test_Compose(self) -> None:
         random.seed(1)
         augmented_compose = txtaugs.Compose(
