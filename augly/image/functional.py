@@ -2106,6 +2106,153 @@ def random_noise(
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
+def ranking_numbers(
+    image: Union[str, Image.Image],
+    ranking_dict: Dict[Union[int, str], str],
+    output_path: Optional[str] = None,
+    positions: Optional[List[Tuple[int, int]]] = None,
+    font_file: str = utils.MEME_DEFAULT_FONT,
+    font_size: float = 0.15,
+    number_color: Union[str, Tuple[int, int, int]] = "white",
+    ranking_color: Union[str, Tuple[int, int, int]] = "yellow",
+    left_dist: int = 50,
+    stroke_width: int = 3,
+    stroke_fill: Tuple[int, int, int] = (0, 0, 0),
+    metadata: Optional[List[Dict[str, Any]]] = None,
+    bboxes: Optional[List[Tuple]] = None,
+    bbox_format: Optional[str] = None,
+) -> Image.Image:
+    """
+    Add ranking numbers to image.
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param ranking_dict: dictionary mapping from number/rank to text description
+        e.g., {1: "First place", 2: "Second place", 3: "Third place"}
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param positions: List of (x, y) positions for each number. If None, positions
+        will be automatically generated on the left side of the image
+
+    @param font_file: iopath uri to the .ttf font file
+
+    @param font_size: size of the font relative to the image size, calculated as
+        font_size * min(height, width) of the original image
+
+    @param number_color: color of the ranking numbers (e.g., "white", "black", or RGB tuple)
+
+    @param ranking_color: color of the ranking text (e.g., "yellow", "blue", or RGB tuple)
+
+    @param left_dist: distance from the left edge when auto-generating positions
+
+    @param stroke_width: width of the text outline
+
+    @param stroke_fill: color of the text outline in RGB values
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    # Validate inputs
+    assert ranking_dict, "ranking_dict cannot be empty"
+    assert font_size > 0, "font_size must be positive"
+    assert left_dist >= 0, "left_dist must be non-negative"
+    assert stroke_width >= 0, "stroke_width must be non-negative"
+
+    # Load and validate image
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+
+    # Create a copy to avoid modifying the original
+    img = image.copy()
+    draw = ImageDraw.Draw(img)
+    width, height = img.size
+
+    try:
+        # Load font
+        local_font_path = utils.pathmgr.get_local_path(font_file)
+        font_size_px = int(min(width, height) * font_size)
+        font = ImageFont.truetype(local_font_path, font_size_px)
+
+        # Generate positions if not provided
+        if positions is None:
+            positions = []
+            # Handle edge case where ranking_dict is very large
+            max_items = min(
+                len(ranking_dict), 20
+            )  # Limit to 20 items to prevent overcrowding
+            spacing = img.height // (max_items + 1)
+            for i in range(max_items):
+                positions.append((left_dist, spacing * (i + 1)))
+
+        # Ensure we have enough positions
+        if len(positions) < len(ranking_dict):
+            # Add more positions if needed
+            last_pos = positions[-1] if positions else (left_dist, height // 2)
+            spacing = height // (len(ranking_dict) + 1)
+            for i in range(len(positions), len(ranking_dict)):
+                positions.append((left_dist, spacing * (i + 1)))
+
+        # Draw rankings
+        for (number, text), pos in zip(ranking_dict.items(), positions):
+            # Convert number and text to strings
+            number_text = str(number) + "."
+            ranking_text = str(text)
+
+            # Draw number with outline
+            draw.text(
+                pos,
+                number_text,
+                font=font,
+                fill=number_color,
+                stroke_width=stroke_width,
+                stroke_fill=stroke_fill,
+            )
+
+            # Calculate text width for proper positioning
+            bbox = draw.textbbox((0, 0), number_text, font=font)
+            text_width = bbox[2] - bbox[0]
+
+            # Draw ranking text with outline
+            draw.text(
+                (pos[0] + text_width, pos[1]),
+                " " + ranking_text,
+                font=font,
+                fill=ranking_color,
+                stroke_width=stroke_width,
+                stroke_fill=stroke_fill,
+            )
+
+    except Exception as e:
+        # Log the error but return the original image instead of failing
+        print(f"Error in ranking_numbers: {str(e)}")
+        return image
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="ranking_numbers",
+        aug_image=img,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(img, output_path, src_mode)
+
+
 def resize(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,

@@ -117,6 +117,10 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
     def test_random_noise(self):
         self.evaluate_function(imaugs.random_noise)
 
+    def test_ranking_numbers(self):
+        ranking_dict = {1: "First place", 2: "Second place", 3: "Third place"}
+        self.evaluate_function(imaugs.ranking_numbers, ranking_dict=ranking_dict)
+
     def test_resize(self):
         self.evaluate_function(imaugs.resize, resample=Image.BICUBIC)
 
