@@ -878,6 +878,7 @@ def meme_format(
     image: Union[str, Image.Image],
     output_path: Optional[str] = None,
     text: str = "LOL",
+    text_position: str = "top",
     font_file: str = utils.MEME_DEFAULT_FONT,
     opacity: float = 1.0,
     text_color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
@@ -899,6 +900,9 @@ def meme_format(
     @param text: the text to be overlaid/used in the meme. note: if using a very
         long string, please add in newline characters such that the text remains
         in a readable font size.
+
+    @param text_position: the position of the text relative to the image. Must be
+        one of "top" or "bottom"
 
     @param font_file: iopath uri to a .ttf font file
 
@@ -927,6 +931,10 @@ def meme_format(
     assert isinstance(text, str), "Expected variable `text` to be a string"
     assert 0.0 <= opacity <= 1.0, "Opacity must be a value in the range [0.0, 1.0]"
     assert caption_height > 10, "Caption height must be greater than 10"
+    assert text_position in [
+        "top",
+        "bottom",
+    ], "text_position must be either 'top' or 'bottom'"
 
     utils.validate_rgb_color(text_color)
     utils.validate_rgb_color(meme_bg_color)
@@ -941,7 +949,12 @@ def meme_format(
     font_size = caption_height - 10
 
     meme = Image.new("RGB", (width, height + caption_height), meme_bg_color)
-    meme.paste(image, (0, caption_height))
+
+    if text_position == "top":
+        meme.paste(image, (0, caption_height))
+    else:
+        meme.paste(image, (0, 0))
+
     draw = ImageDraw.Draw(meme)
 
     x_pos, y_pos = 5, 5
@@ -962,7 +975,13 @@ def meme_format(
         )
 
         x_pos = round((width - text_width) / 2)
-        y_pos = round((caption_height - text_height) / 2) - ascender_adjustment
+        y_pos = round((caption_height - text_height) / 2)
+
+        # Adjust y_pos based on text position
+        if text_position == "top":
+            y_pos = y_pos - ascender_adjustment
+        else:
+            y_pos = height + y_pos - ascender_adjustment
 
         if text_width <= (width - 10) and text_height <= (caption_height - 10):
             break
