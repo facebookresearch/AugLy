@@ -26,11 +26,30 @@ def is_image_file(filename: str) -> bool:
 
 
 def is_video_file(filename: str) -> bool:
-    return is_content_type(filename, "video")
+    if is_content_type(filename, "video"):
+        return True
+
+    try:
+        file_type = magic.from_file(filename, mime=True).lower()
+        if file_type == "application/octet-stream":
+            file_description = magic.from_file(filename).lower()
+            video_indicators = [
+                "iso media",  # MP4 files
+                "matroska",  # MKV files
+                "webm",  # WebM files
+                "avi",  # AVI files
+                "quicktime",  # MOV files
+                "mpeg",  # MPEG files
+            ]
+            return any(indicator in file_description for indicator in video_indicators)
+    except (magic.MagicException, OSError):
+        pass
+
+    return False
 
 
 def validate_path(file_path: str) -> None:
-    correct_type = type(file_path) == str
+    correct_type = isinstance(file_path, str)
     path_exists = pathmgr.exists(file_path)
     assert correct_type and path_exists, f"Path is invalid: {file_path}"
 
@@ -56,7 +75,7 @@ def validate_video_path(video_path: str) -> None:
 
 
 def validate_output_path(output_path: str) -> None:
-    correct_type = type(output_path) == str
+    correct_type = isinstance(output_path, str)
     dir_exists = pathmgr.exists(os.path.dirname(output_path))
     assert correct_type and dir_exists, f"Output path invalid: {output_path}"
 
