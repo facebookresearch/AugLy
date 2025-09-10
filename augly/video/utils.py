@@ -11,7 +11,7 @@ import functools
 import os
 import shutil
 import tempfile
-from typing import Callable, Dict, List, Optional, Union
+from collections.abc import Callable
 
 from augly import utils
 from augly.video import helpers as helpers
@@ -29,8 +29,8 @@ Utility Functions: Augmentation Application Functions
 def apply_to_each_frame(
     img_aug_function: functools.partial,
     video_path: str,
-    output_path: Optional[str],
-    frame_func: Optional[Callable[[int], Dict]] = None,
+    output_path: str | None,
+    frame_func: Callable[[int], dict] | None = None,
 ) -> None:
     video_path, output_path = helpers.validate_input_and_output_paths(
         video_path, output_path
@@ -63,7 +63,7 @@ def apply_to_frames(
     img_aug_function: functools.partial,
     video_path: str,
     second_video_path: str,
-    output_path: Optional[str],
+    output_path: str | None,
     use_second_audio: bool = False,
 ) -> None:
     video_path, output_path = helpers.validate_input_and_output_paths(
@@ -108,7 +108,7 @@ def apply_to_frames(
 def apply_cv2_augmenter(
     distractor: ac.BaseCV2Augmenter,
     video_path: str,
-    output_path: Optional[str],
+    output_path: str | None,
     **kwargs,
 ) -> None:
     video_path, output_path = helpers.validate_input_and_output_paths(
@@ -137,5 +137,5 @@ def apply_cv2_augmenter(
         shutil.rmtree(aug_frame_temp_dir)
 
 
-def get_image_kwargs(imgs_dir: str) -> Dict[str, Optional[Union[List[str], str]]]:
+def get_image_kwargs(imgs_dir: str) -> dict[str, list[str] | str | None]:
     return {"imgs_dir": imgs_dir, "imgs_files": utils.pathmgr.ls(imgs_dir)}

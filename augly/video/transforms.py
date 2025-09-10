@@ -9,7 +9,8 @@
 
 import os
 import random
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 from augly import audio as audaugs, utils
@@ -43,10 +44,10 @@ class BaseTransform(VidAugBaseClass):
     def __call__(
         self,
         video_path: str,
-        output_path: Optional[str] = None,
+        output_path: str | None = None,
         force: bool = False,
-        seed: Optional[int] = None,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        seed: int | None = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         @param video_path: the path to the video to be augmented
@@ -80,7 +81,7 @@ class BaseTransform(VidAugBaseClass):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         This function is to be implemented in the child classes.
@@ -108,7 +109,7 @@ class BaseRandomRangeTransform(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         @param video_path: the path to the video to be augmented
@@ -131,7 +132,7 @@ class BaseRandomRangeTransform(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         This function is to be implemented in the child classes. It has
@@ -171,7 +172,7 @@ class AddNoise(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Adds noise to a video
@@ -217,7 +218,7 @@ class ApplyLambda(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Apply a user-defined lambda on a video
@@ -257,7 +258,7 @@ class AudioSwap(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Swaps the video audio for the audio passed in provided an offset
@@ -282,7 +283,7 @@ class AugmentAudio(BaseTransform):
     def __init__(
         self,
         audio_aug_function: Callable[
-            ..., Tuple[np.ndarray, int]
+            ..., tuple[np.ndarray, int]
         ] = audaugs.apply_lambda,
         p: float = 1.0,
         **audio_aug_kwargs,
@@ -305,7 +306,7 @@ class AugmentAudio(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Augments the audio track of the input video using a given AugLy audio
@@ -373,7 +374,7 @@ class BlendVideos(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Overlays a video onto another video at position (width * x_pos, height * y_pos)
@@ -417,7 +418,7 @@ class Blur(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Blurs a video
@@ -451,7 +452,7 @@ class Brightness(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Brightens or darkens a video
@@ -489,7 +490,7 @@ class ChangeAspectRatio(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Changes the aspect ratio of the video
@@ -526,7 +527,7 @@ class ChangeVideoSpeed(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Changes the speed of the video
@@ -576,7 +577,7 @@ class ColorJitter(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Color jitters the video
@@ -605,9 +606,9 @@ class ColorJitter(BaseTransform):
 class Concat(BaseTransform):
     def __init__(
         self,
-        other_video_paths: List[str],
+        other_video_paths: list[str],
         src_video_path_index: int = 0,
-        transition: Optional[af.TransitionConfig] = None,
+        transition: af.TransitionConfig | None = None,
         p: float = 1.0,
     ):
         """
@@ -631,7 +632,7 @@ class Concat(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Concatenates videos together. Resizes all other videos to the size of the
@@ -678,7 +679,7 @@ class Contrast(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Alters the contrast of a video
@@ -728,7 +729,7 @@ class Crop(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Crops the video
@@ -771,7 +772,7 @@ class EncodingQuality(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Alters the encoding quality of a video
@@ -810,7 +811,7 @@ class FPS(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Alters the FPS of a video
@@ -834,7 +835,7 @@ class Grayscale(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Changes a video to be grayscale
@@ -858,7 +859,7 @@ class HFlip(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Horizontally flips a video
@@ -901,7 +902,7 @@ class HStack(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Horizontally stacks two videos
@@ -929,9 +930,9 @@ class HStack(BaseTransform):
 class InsertInBackground(BaseTransform):
     def __init__(
         self,
-        background_path: Optional[str] = None,
+        background_path: str | None = None,
         offset_factor: float = 0.0,
-        transition: Optional[af.TransitionConfig] = None,
+        transition: af.TransitionConfig | None = None,
         p: float = 1.0,
     ):
         """
@@ -956,7 +957,7 @@ class InsertInBackground(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Puts the video in the middle of the background video
@@ -987,9 +988,9 @@ class InsertInBackgroundMultiple(BaseTransform):
     def __init__(
         self,
         background_path: str,
-        additional_video_paths: List[str],
-        src_ids: List[str],
-        seed: Optional[int] = None,
+        additional_video_paths: list[str],
+        src_ids: list[str],
+        seed: int | None = None,
     ):
         """
         @param background_path: the path of the video in which to insert
@@ -1014,7 +1015,7 @@ class InsertInBackgroundMultiple(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Places the video (and the additional videos) in the middle of the background video.
@@ -1053,7 +1054,7 @@ class Loop(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Loops a video `num_loops` times
@@ -1078,9 +1079,9 @@ class MemeFormat(BaseTransform):
         text: str = "LOL",
         font_file: str = utils.MEME_DEFAULT_FONT,
         opacity: float = 1.0,
-        text_color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+        text_color: tuple[int, int, int] = utils.DEFAULT_COLOR,
         caption_height: int = 250,
-        meme_bg_color: Tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+        meme_bg_color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
         p: float = 1.0,
     ):
         """
@@ -1109,7 +1110,7 @@ class MemeFormat(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Creates a new video that looks like a meme, given text and video
@@ -1142,11 +1143,11 @@ class Overlay(BaseTransform):
     def __init__(
         self,
         overlay_path: str,
-        overlay_size: Optional[float] = None,
+        overlay_size: float | None = None,
         x_factor: float = 0.0,
         y_factor: float = 0.0,
         use_overlay_audio: bool = False,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
         p: float = 1.0,
     ):
         """
@@ -1179,7 +1180,7 @@ class Overlay(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Overlays media onto the video at position (width * x_factor, height * y_factor)
@@ -1213,7 +1214,7 @@ class OverlayDots(BaseTransform):
         num_dots: int = 100,
         dot_type: str = "colored",
         random_movement: bool = True,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
         p: float = 1.0,
     ):
         """
@@ -1235,7 +1236,7 @@ class OverlayDots(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Overlays dots onto a video
@@ -1297,7 +1298,7 @@ class OverlayEmoji(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Overlays an emoji onto each frame of a video
@@ -1329,7 +1330,7 @@ class OverlayOntoBackgroundVideo(BaseTransform):
     def __init__(
         self,
         background_path: str,
-        overlay_size: Optional[float] = 0.7,
+        overlay_size: float | None = 0.7,
         x_factor: float = 0.0,
         y_factor: float = 0.0,
         use_background_audio: bool = False,
@@ -1363,7 +1364,7 @@ class OverlayOntoBackgroundVideo(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Overlays the video onto a background video, pointed to by background_path
@@ -1396,7 +1397,7 @@ class OverlayOntoScreenshot(BaseTransform):
         self,
         template_filepath: str = utils.TEMPLATE_PATH,
         template_bboxes_filepath: str = utils.BBOXES_PATH,
-        max_image_size_pixels: Optional[int] = None,
+        max_image_size_pixels: int | None = None,
         crop_src_to_fit: bool = False,
         p: float = 1.0,
     ):
@@ -1426,7 +1427,7 @@ class OverlayOntoScreenshot(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Overlays the video onto a screenshot template so it looks like it was
@@ -1458,14 +1459,14 @@ class OverlayShapes(BaseTransform):
     def __init__(
         self,
         num_shapes: int = 1,
-        shape_type: Optional[str] = None,
-        colors: Optional[List[Tuple[int, int, int]]] = None,
-        thickness: Optional[int] = None,
-        radius: Optional[float] = None,
+        shape_type: str | None = None,
+        colors: list[tuple[int, int, int]] | None = None,
+        thickness: int | None = None,
+        radius: float | None = None,
         random_movement: bool = True,
-        topleft: Optional[Tuple[float, float]] = None,
-        bottomright: Optional[Tuple[float, float]] = None,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        topleft: tuple[float, float] | None = None,
+        bottomright: tuple[float, float] | None = None,
+        metadata: list[dict[str, Any]] | None = None,
         p: float = 1.0,
     ):
         """
@@ -1502,7 +1503,7 @@ class OverlayShapes(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Overlays random shapes onto a video
@@ -1537,15 +1538,15 @@ class OverlayText(BaseTransform):
     def __init__(
         self,
         text_len: int = 10,
-        text_change_nth: Optional[int] = None,
-        fonts: Optional[List[Tuple[Any, Optional[str]]]] = None,
-        fontscales: Optional[Tuple[float, float]] = None,
-        colors: Optional[List[Tuple[int, int, int]]] = None,
-        thickness: Optional[int] = None,
+        text_change_nth: int | None = None,
+        fonts: list[tuple[Any, str | None]] | None = None,
+        fontscales: tuple[float, float] | None = None,
+        colors: list[tuple[int, int, int]] | None = None,
+        thickness: int | None = None,
         random_movement: bool = False,
-        topleft: Optional[Tuple[float, float]] = None,
-        bottomright: Optional[Tuple[float, float]] = None,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        topleft: tuple[float, float] | None = None,
+        bottomright: tuple[float, float] | None = None,
+        metadata: list[dict[str, Any]] | None = None,
         p: float = 1.0,
     ):
         """
@@ -1594,7 +1595,7 @@ class OverlayText(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Overlays random text onto a video
@@ -1631,7 +1632,7 @@ class Pad(BaseTransform):
         self,
         w_factor: float = 0.25,
         h_factor: float = 0.25,
-        color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+        color: tuple[int, int, int] = utils.DEFAULT_COLOR,
         p: float = 1.0,
     ):
         """
@@ -1651,7 +1652,7 @@ class Pad(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Pads the video
@@ -1682,7 +1683,7 @@ class PerspectiveTransformAndShake(BaseTransform):
         self,
         sigma: float = 50.0,
         shake_radius: float = 0.0,
-        seed: Optional[int] = None,
+        seed: int | None = None,
         p: float = 1.0,
     ):
         """
@@ -1705,7 +1706,7 @@ class PerspectiveTransformAndShake(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Apply a perspective transform to the video so it looks like it was taken
@@ -1744,7 +1745,7 @@ class Pixelization(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Pixelizes the video
@@ -1773,7 +1774,7 @@ class RemoveAudio(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Removes the audio stream from a video
@@ -1795,11 +1796,11 @@ class RemoveAudio(BaseTransform):
 class ReplaceWithBackground(BaseTransform):
     def __init__(
         self,
-        background_path: Optional[str] = None,
+        background_path: str | None = None,
         source_offset: float = 0.0,
         background_offset: float = 0.0,
         source_percentage: float = 0.5,
-        transition: Optional[af.TransitionConfig] = None,
+        transition: af.TransitionConfig | None = None,
         p: float = 1.0,
     ):
         """
@@ -1826,7 +1827,7 @@ class ReplaceWithBackground(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Puts the video in the middle of the background video
@@ -1860,8 +1861,8 @@ class ReplaceWithColorFrames(BaseTransform):
         self,
         offset_factor: float = 0.0,
         duration_factor: float = 1.0,
-        color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
-        transition: Optional[af.TransitionConfig] = None,
+        color: tuple[int, int, int] = utils.DEFAULT_COLOR,
+        transition: af.TransitionConfig | None = None,
         p: float = 1.0,
     ):
         """
@@ -1886,7 +1887,7 @@ class ReplaceWithColorFrames(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Replaces part of the video with frames of the specified color
@@ -1915,7 +1916,7 @@ class ReplaceWithColorFrames(BaseTransform):
 
 class Resize(BaseTransform):
     def __init__(
-        self, height: Optional[int] = None, width: Optional[int] = None, p: float = 1.0
+        self, height: int | None = None, width: int | None = None, p: float = 1.0
     ):
         """
         @param height: the height in which the video should be resized to. If None,
@@ -1933,7 +1934,7 @@ class Resize(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Resizes a video
@@ -1969,7 +1970,7 @@ class Rotate(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Rotates a video
@@ -2002,7 +2003,7 @@ class Scale(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Alters the resolution of a video
@@ -2026,7 +2027,7 @@ class Shift(BaseTransform):
         self,
         x_factor: float = 0.0,
         y_factor: float = 0.0,
-        color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+        color: tuple[int, int, int] = utils.DEFAULT_COLOR,
         p: float = 1.0,
     ):
         """
@@ -2049,7 +2050,7 @@ class Shift(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Shifts the original frame position from the center by a vector
@@ -2097,7 +2098,7 @@ class TimeCrop(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Crops the video using the specified offset and duration factors
@@ -2128,7 +2129,7 @@ class TimeDecimate(BaseTransform):
         start_offset_factor: float = 0.0,
         on_factor: float = 0.2,
         off_factor: float = 0.5,
-        transition: Optional[af.TransitionConfig] = None,
+        transition: af.TransitionConfig | None = None,
         p: float = 1.0,
     ):
         """
@@ -2154,7 +2155,7 @@ class TimeDecimate(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Removes evenly sized (off) chunks, and concatenates evenly spaced (on)
@@ -2184,7 +2185,7 @@ class TimeDecimate(BaseTransform):
 
 class Trim(BaseTransform):
     def __init__(
-        self, start: Optional[float] = None, end: Optional[float] = None, p: float = 1.0
+        self, start: float | None = None, end: float | None = None, p: float = 1.0
     ):
         """
         @param start: starting point in seconds of when the trimmed video should start.
@@ -2202,7 +2203,7 @@ class Trim(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Trims the video using the specified start and end parameters
@@ -2226,7 +2227,7 @@ class VFlip(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Vertically flips a video
@@ -2269,7 +2270,7 @@ class VStack(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Vertically stacks two videos
@@ -2325,7 +2326,7 @@ class RandomAspectRatio(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly changes the aspect ratio of a video
@@ -2363,7 +2364,7 @@ class RandomBlur(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly blurs a video
@@ -2401,7 +2402,7 @@ class RandomBrightness(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly changes the brightness of a video
@@ -2444,7 +2445,7 @@ class RandomContrast(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly changes the contrast of a video
@@ -2501,7 +2502,7 @@ class RandomEmojiOverlay(BaseTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that overlays a random emoji onto a video
@@ -2551,7 +2552,7 @@ class RandomEncodingQuality(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly changes the encoding quality of a video
@@ -2592,7 +2593,7 @@ class RandomFPS(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly changes the FPS of a video
@@ -2628,7 +2629,7 @@ class RandomNoise(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly adds noise to a video
@@ -2668,7 +2669,7 @@ class RandomPixelization(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly pixelizes a video
@@ -2709,7 +2710,7 @@ class RandomRotation(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly rotates a video
@@ -2753,7 +2754,7 @@ class RandomVideoSpeed(BaseRandomRangeTransform):
         self,
         video_path: str,
         output_path: str,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Transform that randomly changes the video speed

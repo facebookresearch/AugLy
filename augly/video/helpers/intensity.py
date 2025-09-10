@@ -7,7 +7,7 @@
 
 # pyre-unsafe
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 from augly.image import intensity as imint, utils as imutils
@@ -48,7 +48,7 @@ def audio_swap_intensity(offset: float, **kwargs) -> float:
     return (1.0 - offset) * 100.0
 
 
-def augment_audio_intensity(audio_metadata: List[Dict[str, Any]], **kwargs) -> float:
+def augment_audio_intensity(audio_metadata: list[dict[str, Any]], **kwargs) -> float:
     return audio_metadata[0]["intensity"]
 
 
@@ -74,7 +74,7 @@ def brightness_intensity(level: float, **kwargs) -> float:
 
 
 def change_aspect_ratio_intensity(
-    ratio: float, metadata: Dict[str, Any], **kwargs
+    ratio: float, metadata: dict[str, Any], **kwargs
 ) -> float:
     assert (
         isinstance(ratio, (float, int)) and ratio > 0
@@ -117,7 +117,7 @@ def color_jitter_intensity(
     return (brightness_intensity * contrast_intensity * saturation_intensity) * 100.0
 
 
-def concat_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def concat_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
@@ -129,7 +129,7 @@ def contrast_intensity(level: float, **kwargs) -> float:
     return (abs(level) / 1000) * 100.0
 
 
-def crop_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def crop_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
@@ -140,7 +140,7 @@ def encoding_quality_intensity(quality: int, **kwargs) -> float:
     return (quality / 51) * 100.0
 
 
-def fps_intensity(fps: int, metadata: Dict[str, Any], **kwargs) -> float:
+def fps_intensity(fps: int, metadata: dict[str, Any], **kwargs) -> float:
     assert isinstance(fps, (float, int)), "fps must be a number"
 
     src_fps = metadata["src_fps"]
@@ -155,7 +155,7 @@ def hflip_intensity(**kwargs) -> float:
     return 100.0
 
 
-def hstack_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def hstack_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
@@ -163,7 +163,7 @@ def identity_function_intensity(**kwargs) -> float:
     return 0.0
 
 
-def insert_in_background_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def insert_in_background_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
@@ -172,12 +172,12 @@ def loop_intensity(num_loops: int, **kwargs) -> float:
     return min((num_loops / max_num_loops) * 100.0, 100.0)
 
 
-def meme_format_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def meme_format_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
 def overlay_intensity(
-    overlay_size: Optional[float], overlay_path: str, metadata: Dict[str, Any], **kwargs
+    overlay_size: float | None, overlay_path: str, metadata: dict[str, Any], **kwargs
 ) -> float:
     assert overlay_size is None or (
         isinstance(overlay_size, (float, int)) and 0 < overlay_size <= 1
@@ -201,7 +201,7 @@ def overlay_dots_intensity(num_dots: int, **kwargs) -> float:
 
 
 def overlay_emoji_intensity(
-    emoji_size: float, opacity: float, metadata: Dict[str, Any], **kwargs
+    emoji_size: float, opacity: float, metadata: dict[str, Any], **kwargs
 ) -> float:
     assert (
         isinstance(emoji_size, (float, int)) and 0 <= emoji_size <= 1
@@ -219,7 +219,7 @@ def overlay_emoji_intensity(
 
 
 def overlay_onto_background_video_intensity(
-    overlay_size: Optional[float], metadata: Dict[str, Any], **kwargs
+    overlay_size: float | None, metadata: dict[str, Any], **kwargs
 ) -> float:
     if overlay_size is not None:
         return (1 - overlay_size**2) * 100.0
@@ -232,7 +232,7 @@ def overlay_onto_background_video_intensity(
 def overlay_onto_screenshot_intensity(
     template_filepath: str,
     template_bboxes_filepath: str,
-    metadata: Dict[str, Any],
+    metadata: dict[str, Any],
     **kwargs,
 ) -> float:
     _, bbox = imutils.get_template_and_bbox(template_filepath, template_bboxes_filepath)
@@ -242,8 +242,8 @@ def overlay_onto_screenshot_intensity(
 
 
 def overlay_shapes_intensity(
-    topleft: Optional[Tuple[float, float]],
-    bottomright: Optional[Tuple[float, float]],
+    topleft: tuple[float, float] | None,
+    bottomright: tuple[float, float] | None,
     num_shapes: int,
     **kwargs,
 ) -> float:
@@ -251,14 +251,14 @@ def overlay_shapes_intensity(
 
 
 def overlay_text_intensity(
-    topleft: Optional[Tuple[float, float]],
-    bottomright: Optional[Tuple[float, float]],
+    topleft: tuple[float, float] | None,
+    bottomright: tuple[float, float] | None,
     **kwargs,
 ) -> float:
     return distractor_overlay_intensity_helper(topleft, bottomright, 1)
 
 
-def pad_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def pad_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
@@ -291,7 +291,7 @@ def remove_audio_intensity(**kwargs) -> float:
 
 
 def insert_in_background_multiple_intensity(
-    metadata: Dict[str, Any], **kwargs
+    metadata: dict[str, Any], **kwargs
 ) -> float:
     """
     The intensity is calculated as the percentage of the result video
@@ -304,7 +304,7 @@ def insert_in_background_multiple_intensity(
     return inserted / dst_duration
 
 
-def replace_with_background_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def replace_with_background_intensity(metadata: dict[str, Any], **kwargs) -> float:
     """
     The intensity of replace_with_background is the fraction of the source video duration
     that was replaced with background. Because the overall duration of the video is preserved,
@@ -334,7 +334,7 @@ def replace_with_color_frames_intensity(
     return min(duration_factor, 1 - offset_factor) * 100.0
 
 
-def resize_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def resize_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
@@ -369,15 +369,15 @@ def shift_intensity(x_factor: float, y_factor: float, **kwargs) -> float:
     return (1 - x_factor) * (1 - y_factor) * 100.0
 
 
-def time_crop_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def time_crop_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
-def time_decimate_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def time_decimate_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
-def trim_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def trim_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
@@ -385,13 +385,13 @@ def vflip_intensity(**kwargs) -> float:
     return 100.0
 
 
-def vstack_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def vstack_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
 def distractor_overlay_intensity_helper(
-    topleft: Optional[Tuple[float, float]],
-    bottomright: Optional[Tuple[float, float]],
+    topleft: tuple[float, float] | None,
+    bottomright: tuple[float, float] | None,
     num_overlay_content: int,
     **kwargs,
 ) -> float:
@@ -422,7 +422,7 @@ def distractor_overlay_intensity_helper(
     return min((distractor_area * num_overlay_content_intensity) * 100.0, 100.0)
 
 
-def time_crop_or_pad_intensity_helper(metadata: Dict[str, Any]) -> float:
+def time_crop_or_pad_intensity_helper(metadata: dict[str, Any]) -> float:
     """
     Computes intensity of a transform that consists of temporal cropping or
     padding. For these types of transforms the intensity is defined as the

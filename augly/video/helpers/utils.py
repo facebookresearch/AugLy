@@ -11,7 +11,7 @@ import math
 import os
 import shutil
 import tempfile
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import cv2
 import ffmpeg
@@ -29,7 +29,7 @@ def create_color_video(
     duration: float,
     height: int,
     width: int,
-    color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+    color: tuple[int, int, int] = utils.DEFAULT_COLOR,
 ) -> None:
     """
     Creates a video with frames of the specified color
@@ -87,8 +87,8 @@ def get_local_path(video_path: str) -> str:
 
 def identity_function(
     video_path: str,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     video_path, output_path = validate_input_and_output_paths(video_path, output_path)
 
@@ -103,8 +103,8 @@ def identity_function(
 
 
 def validate_input_and_output_paths(
-    video_path: str, output_path: Optional[str]
-) -> Tuple[str, str]:
+    video_path: str, output_path: str | None
+) -> tuple[str, str]:
     local_video_path = get_local_path(video_path)
     utils.validate_video_path(local_video_path)
 

@@ -11,7 +11,7 @@ import math
 import os
 import shutil
 import tempfile
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import ffmpeg
 import numpy as np
@@ -23,7 +23,7 @@ from vidgear.gears import WriteGear
 
 def combine_frames_and_audio_to_file(
     raw_frames: str,
-    audio: Optional[str],
+    audio: str | None,
     output_path: str,
     framerate: float,
 ) -> None:
@@ -70,7 +70,7 @@ def combine_frames_and_audio_to_file(
         merge_video_and_audio(temp_padded_video_path, audio, output_path)
 
 
-def execute_vidgear_command(output_path: str, ffmpeg_command: List[str]) -> None:
+def execute_vidgear_command(output_path: str, ffmpeg_command: list[str]) -> None:
     writer = WriteGear(output=output_path, logging=True)
     writer.execute_ffmpeg_cmd(ffmpeg_command)
     writer.close()
@@ -124,7 +124,7 @@ def extract_frames_to_dir(
     execute_vidgear_command(os.path.join(output_dir, output_pattern), ffmpeg_command)
 
 
-def get_audio_info(media_path: str) -> Dict[str, Any]:
+def get_audio_info(media_path: str) -> dict[str, Any]:
     """
     Returns whatever ffprobe returns. Of particular use are things such as the
     encoder ("codec_name") used for audio encoding, the sample rate ("sample_rate"),
@@ -150,7 +150,7 @@ def get_audio_info(media_path: str) -> Dict[str, Any]:
     return audio_info
 
 
-def get_video_fps(video_path: str) -> Optional[float]:
+def get_video_fps(video_path: str) -> float | None:
     video_info = get_video_info(video_path)
 
     try:
@@ -165,7 +165,7 @@ def get_video_fps(video_path: str) -> Optional[float]:
         return None
 
 
-def get_video_info(video_path: str) -> Dict[str, Any]:
+def get_video_info(video_path: str) -> dict[str, Any]:
     """
     Returns whatever ffprobe returns. Of particular use are things such as the FPS
     ("avg_frame_rate"), number of raw frames ("nb_frames"), height and width of each
@@ -199,8 +199,8 @@ def has_audio_stream(video_path: str) -> bool:
 
 def add_silent_audio(
     video_path: str,
-    output_path: Optional[str] = None,
-    duration: Optional[float] = None,
+    output_path: str | None = None,
+    duration: float | None = None,
 ) -> None:
     local_video_path = pathmgr.get_local_path(video_path)
     if local_video_path != video_path:
@@ -225,7 +225,7 @@ def add_silent_audio(
 
 def merge_video_and_audio(
     video_path: str,
-    audio_path: Optional[str],
+    audio_path: str | None,
     output_path: str,
 ) -> None:
     ffmpeg_command = []

@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 from copy import deepcopy
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from augly import utils
 from augly.video import helpers
@@ -19,11 +19,11 @@ Segment = utils.Segment
 
 
 def get_func_kwargs(
-    metadata: Optional[List[Dict[str, Any]]],
-    local_kwargs: Dict[str, Any],
+    metadata: list[dict[str, Any]] | None,
+    local_kwargs: dict[str, Any],
     video_path: str,
     **kwargs,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     if metadata is None:
         return {}
     func_kwargs = deepcopy(local_kwargs)
@@ -44,8 +44,8 @@ def compute_time_crop_segments(
     speed_factor: float,
     crop_start: float,
     crop_end: float,
-    new_src_segments: List[Segment],
-    new_dst_segments: List[Segment],
+    new_src_segments: list[Segment],
+    new_dst_segments: list[Segment],
     end_dst_offset: float = 0.0,
 ) -> None:
     """
@@ -91,13 +91,13 @@ def compute_time_crop_segments(
 
 
 def compute_insert_in_background_multiple_segments(
-    src_segment_starts: List[float],
-    src_segment_ends: List[float],
-    bkg_insertion_points: List[float],
-    src_ids: List[str],
+    src_segment_starts: list[float],
+    src_segment_ends: list[float],
+    bkg_insertion_points: list[float],
+    src_ids: list[str],
     transition_duration: float,
-    new_src_segments: List[Segment],
-    new_dst_segments: List[Segment],
+    new_src_segments: list[Segment],
+    new_dst_segments: list[Segment],
     **kwargs,
 ) -> None:
     n = len(src_segment_starts)
@@ -138,8 +138,8 @@ def compute_time_decimate_segments(
     src_duration: float,
     speed_factor: float,
     transition_duration: float,
-    new_src_segments: List[Segment],
-    new_dst_segments: List[Segment],
+    new_src_segments: list[Segment],
+    new_dst_segments: list[Segment],
     **kwargs,
 ) -> None:
     start_offset = src_duration * kwargs["start_offset_factor"]
@@ -189,13 +189,13 @@ def get_transition_duration(kwargs):
 
 def compute_changed_segments(
     name: str,
-    src_segments: List[Segment],
-    dst_segments: List[Segment],
+    src_segments: list[Segment],
+    dst_segments: list[Segment],
     src_duration: float,
     dst_duration: float,
     speed_factor: float,
     **kwargs,
-) -> Tuple[List[Segment], List[Segment]]:
+) -> tuple[list[Segment], list[Segment]]:
     """
     This function performs the logic of computing the new matching segments based
     on the old ones, for the set of transforms that temporally change the video.
@@ -357,9 +357,9 @@ def compute_segments(
     name: str,
     src_duration: float,
     dst_duration: float,
-    metadata: List[Dict[str, Any]],
+    metadata: list[dict[str, Any]],
     **kwargs,
-) -> Tuple[List[Segment], List[Segment]]:
+) -> tuple[list[Segment], list[Segment]]:
     """
     Compute matching pairs of src_segment -> dst_segment, given the kwargs of the
     transform, as well as the metadata about previously applied transforms.
@@ -410,12 +410,12 @@ def compute_segments(
 
 
 def get_metadata(
-    metadata: Optional[List[Dict[str, Any]]],
+    metadata: list[dict[str, Any]] | None,
     function_name: str,
     video_path: str,
-    output_path: Optional[str],
-    src_video_info: Dict[str, Any],
-    src_fps: Optional[float],
+    output_path: str | None,
+    src_video_info: dict[str, Any],
+    src_fps: float | None,
     **kwargs,
 ) -> None:
     if metadata is None:
