@@ -9,7 +9,8 @@ import filecmp
 import os
 import tempfile
 import unittest
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from collections.abc import Callable
+from typing import Any
 
 from augly.tests import VideoAugConfig
 from augly.utils import pathmgr, TEST_URI
@@ -24,9 +25,9 @@ class BaseVideoUnitTest(unittest.TestCase):
 
     def check_equal_metadata(
         self,
-        actual_meta: List[Dict[str, Any]],
-        expected_meta: List[Dict[str, Any]],
-        exclude_keys: Optional[List[str]],
+        actual_meta: list[dict[str, Any]],
+        expected_meta: list[dict[str, Any]],
+        exclude_keys: list[str] | None,
     ):
         if actual_meta == expected_meta:
             return
@@ -95,7 +96,7 @@ class BaseVideoUnitTest(unittest.TestCase):
     def evaluate_function(
         self,
         aug_function: Callable[..., None],
-        ref_filename: Optional[str] = None,
+        ref_filename: str | None = None,
         **kwargs,
     ) -> None:
         ref_filename = ref_filename or aug_function.__name__
@@ -115,8 +116,8 @@ class BaseVideoUnitTest(unittest.TestCase):
         self,
         transform_class: Callable[..., None],
         fname: str,
-        seed: Optional[int] = None,
-        metadata_exclude_keys: Optional[List[str]] = None,
+        seed: int | None = None,
+        metadata_exclude_keys: list[str] | None = None,
         **kwargs,
     ) -> None:
         metadata = []
@@ -139,7 +140,7 @@ class BaseVideoUnitTest(unittest.TestCase):
         return pathmgr.get_local_path(os.path.join(self.ref_vid_dir, ref_vid_name))
 
     @staticmethod
-    def download_video(input_file_index: int) -> Tuple[VideoAugConfig, str, str]:
+    def download_video(input_file_index: int) -> tuple[VideoAugConfig, str, str]:
         config = VideoAugConfig(input_file_index=input_file_index)
         vid_path, vid_file = config.get_input_path()
 

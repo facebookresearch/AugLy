@@ -10,7 +10,8 @@
 import pickle
 import random
 import string
-from typing import Any, Iterator, List, Optional, Tuple
+from collections.abc import Iterator
+from typing import Any
 
 import cv2
 import numpy as np
@@ -35,14 +36,14 @@ class VideoDistractorByText(BaseCV2Augmenter):
     def __init__(
         self,
         text_len: int,
-        text_change_nth: Optional[int] = None,
-        fonts: Optional[List[Tuple[Any, Optional[str]]]] = None,
-        fontscales: Optional[Tuple[float, float]] = None,
-        colors: Optional[List[Tuple[int, int, int]]] = None,
-        thickness: Optional[int] = None,
+        text_change_nth: int | None = None,
+        fonts: list[tuple[Any, str | None]] | None = None,
+        fontscales: tuple[float, float] | None = None,
+        colors: list[tuple[int, int, int]] | None = None,
+        thickness: int | None = None,
         random_movement: bool = False,
-        topleft: Optional[Tuple[float, float]] = None,
-        bottomright: Optional[Tuple[float, float]] = None,
+        topleft: tuple[float, float] | None = None,
+        bottomright: tuple[float, float] | None = None,
         **kwargs,
     ) -> None:
         assert text_len > 0, "Text length must be greater than zero"
@@ -70,8 +71,8 @@ class VideoDistractorByText(BaseCV2Augmenter):
         self.thickness = self.random_thickness(thickness)
 
     def random_texts(
-        self, text_len: int, text_change_nth: Optional[int]
-    ) -> Iterator[List[float]]:
+        self, text_len: int, text_change_nth: int | None
+    ) -> Iterator[list[float]]:
         def random_text(n):
             return [random.random() for _ in range(n)]
 
@@ -86,8 +87,8 @@ class VideoDistractorByText(BaseCV2Augmenter):
             iframe += 1
 
     def random_fonts(
-        self, fonts: Optional[List[Tuple[Any, Optional[str]]]]
-    ) -> Iterator[Tuple[Any, List[str]]]:
+        self, fonts: list[tuple[Any, str | None]] | None
+    ) -> Iterator[tuple[Any, list[str]]]:
         fonts_and_chars = fonts or [(font, None) for font in CV2_FONTS]
         while True:
             font_idx = random.randint(0, len(fonts_and_chars) - 1)
@@ -100,13 +101,13 @@ class VideoDistractorByText(BaseCV2Augmenter):
             yield font, chars
 
     def random_fontscales(
-        self, fontscales: Optional[Tuple[float, float]]
+        self, fontscales: tuple[float, float] | None
     ) -> Iterator[float]:
         fontscales = fontscales or (2.5, 5)
         while True:
             yield random.uniform(*fontscales)
 
-    def random_thickness(self, thickness: Optional[int]) -> Iterator[int]:
+    def random_thickness(self, thickness: int | None) -> Iterator[int]:
         while True:
             yield thickness or random.randint(2, 5)
 

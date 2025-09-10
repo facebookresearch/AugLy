@@ -7,15 +7,16 @@
 
 # pyre-unsafe
 
+from collections.abc import Callable
 from copy import deepcopy
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any
 
 from augly.image import intensity as imintensity
 from augly.image.utils import bboxes as imbboxes
 from PIL import Image
 
 
-def normalize_bbox(bbox: Tuple, bbox_format: str, src_w: int, src_h: int) -> Tuple:
+def normalize_bbox(bbox: tuple, bbox_format: str, src_w: int, src_h: int) -> tuple:
     if bbox_format == "pascal_voc_norm":
         return bbox
     elif bbox_format == "pascal_voc":
@@ -35,8 +36,8 @@ def normalize_bbox(bbox: Tuple, bbox_format: str, src_w: int, src_h: int) -> Tup
 
 
 def validate_and_normalize_bboxes(
-    bboxes: List[Tuple], bbox_format: str, src_w: int, src_h: int
-) -> List[Tuple]:
+    bboxes: list[tuple], bbox_format: str, src_w: int, src_h: int
+) -> list[tuple]:
     norm_bboxes = []
     for bbox in bboxes:
         assert len(bbox) == 4 and all(
@@ -54,8 +55,8 @@ def validate_and_normalize_bboxes(
 
 
 def convert_bboxes(
-    transformed_norm_bboxes: List[Optional[Tuple]],
-    bboxes: List[Tuple],
+    transformed_norm_bboxes: list[tuple | None],
+    bboxes: list[tuple],
     bbox_format: str,
     aug_w: int,
     aug_h: int,
@@ -89,7 +90,7 @@ def convert_bboxes(
             bboxes[i] = (x_center_norm, y_center_norm, w_norm, h_norm)
 
 
-def check_for_gone_bboxes(transformed_bboxes: List[Tuple]) -> List[Optional[Tuple]]:
+def check_for_gone_bboxes(transformed_bboxes: list[tuple]) -> list[tuple | None]:
     """
     When a bounding box is cropped out of the image or something is overlaid
     which obfuscates it, we consider the bbox to no longer be visible/valid, so
@@ -110,9 +111,9 @@ def transform_bboxes(
     function_name: str,
     image: Image.Image,
     aug_image: Image.Image,
-    dst_bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
-    bboxes_helper_func: Optional[Callable] = None,
+    dst_bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
+    bboxes_helper_func: Callable | None = None,
     **kwargs,
 ) -> None:
     if dst_bboxes is None:
@@ -146,10 +147,10 @@ def transform_bboxes(
 
 
 def get_func_kwargs(
-    metadata: Optional[List[Dict[str, Any]]],
-    local_kwargs: Dict[str, Any],
+    metadata: list[dict[str, Any]] | None,
+    local_kwargs: dict[str, Any],
     **kwargs,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     if metadata is None:
         return {}
 
@@ -168,12 +169,12 @@ def get_func_kwargs(
 
 
 def get_metadata(
-    metadata: Optional[List[Dict[str, Any]]],
+    metadata: list[dict[str, Any]] | None,
     function_name: str,
-    image: Optional[Image.Image] = None,
-    aug_image: Optional[Image.Image] = None,
-    bboxes: Optional[Tuple] = None,
-    bboxes_helper_func: Optional[Callable] = None,
+    image: Image.Image | None = None,
+    aug_image: Image.Image | None = None,
+    bboxes: tuple | None = None,
+    bboxes_helper_func: Callable | None = None,
     **kwargs,
 ) -> None:
     if metadata is None:

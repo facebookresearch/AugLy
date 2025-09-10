@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 import json
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 from augly.text.augmenters.utils import detokenize, get_aug_idxes, tokenize
 from augly.utils import pathmgr
@@ -22,17 +22,17 @@ from nlpaug.util import Action, Method  # @manual
 
 
 class WordReplacement:
-    def __init__(self, mapping: Optional[Union[str, Dict[str, Any]]]):
+    def __init__(self, mapping: str | dict[str, Any] | None):
         if isinstance(mapping, str):
             local_mapping_path = pathmgr.get_local_path(mapping)
             with open(local_mapping_path) as json_file:
                 self.mapping = {k.lower(): v for k, v in json.load(json_file).items()}
-        elif isinstance(mapping, Dict):
+        elif isinstance(mapping, dict):
             self.mapping = mapping
         else:
             self.mapping = {}
 
-    def replace(self, word: str) -> Tuple[str, bool]:
+    def replace(self, word: str) -> tuple[str, bool]:
         new_word = self.mapping.get(word, None) or self.mapping.get(word.lower(), None)
         if new_word is not None and word[0].isupper():
             new_word = new_word.capitalize()
@@ -47,9 +47,9 @@ class WordReplacementAugmenter(WordAugmenter):
         aug_word_min: int,
         aug_word_max: int,
         aug_word_p: float,
-        mapping: Optional[Union[str, Dict[str, Any]]],
-        priority_words: Optional[List[str]],
-        ignore_words: Optional[List[str]],
+        mapping: str | dict[str, Any] | None,
+        priority_words: list[str] | None,
+        ignore_words: list[str] | None,
     ):
         super().__init__(
             action=Action.SUBSTITUTE,
@@ -67,9 +67,7 @@ class WordReplacementAugmenter(WordAugmenter):
             else set()
         )
 
-    def get_mapping(
-        self, mapping: Optional[Union[str, Dict[str, Any]]]
-    ) -> WordReplacement:
+    def get_mapping(self, mapping: str | dict[str, Any] | None) -> WordReplacement:
         return WordReplacement(mapping)
 
     def substitute(self, data: str) -> str:

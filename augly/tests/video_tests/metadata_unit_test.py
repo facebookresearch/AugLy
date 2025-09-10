@@ -7,7 +7,6 @@
 
 import os
 import unittest
-from typing import List
 from unittest.mock import MagicMock, patch
 
 from augly.utils import Segment
@@ -25,7 +24,7 @@ class MetadataUnitTest(unittest.TestCase):
         self.assertEqual(actual.src_id, expected.src_id, msg=fail_msg)
 
     def assert_equal_segment_lists(
-        self, actual: List[Segment], expected: List[Segment]
+        self, actual: list[Segment], expected: list[Segment]
     ):
         self.assertEqual(
             len(actual), len(expected), f"actuals={actual}, expected={expected}"

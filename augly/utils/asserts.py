@@ -6,7 +6,6 @@
 # LICENSE file in the root directory of this source tree.
 
 import os
-from typing import Tuple
 
 import magic
 from augly.utils.io import pathmgr
@@ -80,7 +79,7 @@ def validate_output_path(output_path: str) -> None:
     assert correct_type and dir_exists, f"Output path invalid: {output_path}"
 
 
-def validate_rgb_color(color: Tuple[int, int, int]) -> None:
+def validate_rgb_color(color: tuple[int, int, int]) -> None:
     correct_len = len(color) == 3
     correct_values = all(0 <= c <= 255 for c in color)
     assert correct_len and correct_values, "Invalid RGB color specified"

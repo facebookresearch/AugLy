@@ -12,7 +12,8 @@ import math
 import os
 import shutil
 import tempfile
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 from augly import audio as audaugs, image as imaugs, utils
@@ -23,9 +24,9 @@ from augly.video.augmenters import cv2 as ac, ffmpeg as af
 
 def add_noise(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     level: int = 25,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Adds noise to a video
@@ -59,9 +60,9 @@ def add_noise(
 
 def apply_lambda(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     aug_function: Callable[..., Any] = helpers.identity_function,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
     **kwargs,
 ) -> str:
     """
@@ -105,9 +106,9 @@ def apply_lambda(
 def audio_swap(
     video_path: str,
     audio_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     offset: float = 0.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Swaps the video audio for the audio passed in provided an offset
@@ -144,9 +145,9 @@ def audio_swap(
 
 def augment_audio(
     video_path: str,
-    output_path: Optional[str] = None,
-    audio_aug_function: Callable[..., Tuple[np.ndarray, int]] = audaugs.apply_lambda,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    output_path: str | None = None,
+    audio_aug_function: Callable[..., tuple[np.ndarray, int]] = audaugs.apply_lambda,
+    metadata: list[dict[str, Any]] | None = None,
     **audio_aug_kwargs,
 ) -> str:
     """
@@ -208,13 +209,13 @@ def augment_audio(
 def blend_videos(
     video_path: str,
     overlay_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     opacity: float = 0.5,
     overlay_size: float = 1.0,
     x_pos: float = 0.0,
     y_pos: float = 0.0,
     use_second_audio: bool = True,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Overlays a video onto another video at position (width * x_pos, height * y_pos)
@@ -270,9 +271,9 @@ def blend_videos(
 
 def blur(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     sigma: float = 1,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Blurs a video
@@ -303,9 +304,9 @@ def blur(
 
 def brightness(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     level: float = 0.15,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Brightens or darkens a video
@@ -339,9 +340,9 @@ def brightness(
 
 def change_aspect_ratio(
     video_path: str,
-    output_path: Optional[str] = None,
-    ratio: Union[float, str] = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    output_path: str | None = None,
+    ratio: float | str = 1.0,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Changes the sample aspect ratio attribute of the video, and resizes the
@@ -376,9 +377,9 @@ def change_aspect_ratio(
 
 def change_video_speed(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     factor: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Changes the speed of the video
@@ -413,11 +414,11 @@ def change_video_speed(
 
 def color_jitter(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     brightness_factor: float = 0,
     contrast_factor: float = 1.0,
     saturation_factor: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Color jitters the video
@@ -460,11 +461,11 @@ def color_jitter(
 
 
 def concat(
-    video_paths: List[str],
-    output_path: Optional[str] = None,
+    video_paths: list[str],
+    output_path: str | None = None,
     src_video_path_index: int = 0,
-    transition: Optional[af.TransitionConfig] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    transition: af.TransitionConfig | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Concatenates videos together. Resizes all other videos to the size of the
@@ -511,9 +512,9 @@ def concat(
 
 def contrast(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     level: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Alters the contrast of a video
@@ -545,12 +546,12 @@ def contrast(
 
 def crop(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     left: float = 0.25,
     top: float = 0.25,
     right: float = 0.75,
     bottom: float = 0.75,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Crops the video
@@ -591,9 +592,9 @@ def crop(
 
 def encoding_quality(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     quality: int = 23,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Alters the encoding quality of a video
@@ -628,9 +629,9 @@ def encoding_quality(
 
 def fps(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     fps: int = 15,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Alters the FPS of a video
@@ -662,8 +663,8 @@ def fps(
 
 def grayscale(
     video_path: str,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Changes a video to be grayscale
@@ -694,8 +695,8 @@ def grayscale(
 
 def hflip(
     video_path: str,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Horizontally flips a video
@@ -725,9 +726,9 @@ def hflip(
 def hstack(
     video_path: str,
     second_video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     use_second_audio: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Horizontally stacks two videos
@@ -761,13 +762,13 @@ def hstack(
 
 def insert_in_background(
     video_path: str,
-    output_path: Optional[str] = None,
-    background_path: Optional[str] = None,
+    output_path: str | None = None,
+    background_path: str | None = None,
     offset_factor: float = 0.0,
-    source_percentage: Optional[float] = None,
-    seed: Optional[int] = None,
-    transition: Optional[af.TransitionConfig] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    source_percentage: float | None = None,
+    seed: int | None = None,
+    transition: af.TransitionConfig | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Puts the video in the middle of the background video
@@ -899,16 +900,16 @@ def insert_in_background_multiple(
     video_path: str,
     output_path: str,
     background_path: str,
-    src_ids: List[str],
-    additional_video_paths: List[str],
-    seed: Optional[int] = None,
+    src_ids: list[str],
+    additional_video_paths: list[str],
+    seed: int | None = None,
     min_source_segment_duration: float = 5.0,
     max_source_segment_duration: float = 20.0,
     min_background_segment_duration: float = 2.0,
     min_result_video_duration: float = 30.0,
     max_result_video_duration: float = 60.0,
-    transition: Optional[af.TransitionConfig] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    transition: af.TransitionConfig | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Places the video (and the additional videos) in the middle of the background video.
@@ -1068,13 +1069,13 @@ def insert_in_background_multiple(
 
 def replace_with_background(
     video_path: str,
-    output_path: Optional[str] = None,
-    background_path: Optional[str] = None,
+    output_path: str | None = None,
+    background_path: str | None = None,
     source_offset: float = 0.0,
     background_offset: float = 0.0,
     source_percentage: float = 0.5,
-    transition: Optional[af.TransitionConfig] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    transition: af.TransitionConfig | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Replaces the beginning and end of the source video with the background video, keeping the
@@ -1215,9 +1216,9 @@ def replace_with_background(
 
 def loop(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     num_loops: int = 0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Loops a video `num_loops` times
@@ -1249,14 +1250,14 @@ def loop(
 
 def meme_format(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     text: str = "LOL",
     font_file: str = utils.MEME_DEFAULT_FONT,
     opacity: float = 1.0,
-    text_color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+    text_color: tuple[int, int, int] = utils.DEFAULT_COLOR,
     caption_height: int = 250,
-    meme_bg_color: Tuple[int, int, int] = utils.WHITE_RGB_COLOR,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    meme_bg_color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Creates a new video that looks like a meme, given text and video
@@ -1311,12 +1312,12 @@ def meme_format(
 def overlay(
     video_path: str,
     overlay_path: str,
-    output_path: Optional[str] = None,
-    overlay_size: Optional[float] = None,
+    output_path: str | None = None,
+    overlay_size: float | None = None,
     x_factor: float = 0.0,
     y_factor: float = 0.0,
     use_overlay_audio: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Overlays media onto the video at position (width * x_factor, height * y_factor)
@@ -1382,11 +1383,11 @@ def overlay(
 
 def overlay_dots(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     num_dots: int = 100,
     dot_type: str = "colored",
     random_movement: bool = True,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
     **kwargs,
 ) -> str:
     """
@@ -1425,13 +1426,13 @@ def overlay_dots(
 
 def overlay_emoji(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     emoji_path: str = utils.EMOJI_PATH,
     x_factor: float = 0.4,
     y_factor: float = 0.4,
     opacity: float = 1.0,
     emoji_size: float = 0.15,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Overlays an emoji onto each frame of a video
@@ -1498,12 +1499,12 @@ def overlay_emoji(
 def overlay_onto_background_video(
     video_path: str,
     background_path: str,
-    output_path: Optional[str] = None,
-    overlay_size: Optional[float] = 0.7,
+    output_path: str | None = None,
+    overlay_size: float | None = 0.7,
     x_factor: float = 0.0,
     y_factor: float = 0.0,
     use_background_audio: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Overlays the video onto a background video, pointed to by background_path.
@@ -1557,12 +1558,12 @@ def overlay_onto_background_video(
 
 def overlay_onto_screenshot(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     template_filepath: str = utils.TEMPLATE_PATH,
     template_bboxes_filepath: str = utils.BBOXES_PATH,
-    max_image_size_pixels: Optional[int] = None,
+    max_image_size_pixels: int | None = None,
     crop_src_to_fit: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Overlays the video onto a screenshot template so it looks like it was
@@ -1614,16 +1615,16 @@ def overlay_onto_screenshot(
 
 def overlay_shapes(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     num_shapes: int = 1,
-    shape_type: Optional[str] = None,
-    colors: Optional[List[Tuple[int, int, int]]] = None,
-    thickness: Optional[int] = None,
-    radius: Optional[float] = None,
+    shape_type: str | None = None,
+    colors: list[tuple[int, int, int]] | None = None,
+    thickness: int | None = None,
+    radius: float | None = None,
     random_movement: bool = True,
-    topleft: Optional[Tuple[float, float]] = None,
-    bottomright: Optional[Tuple[float, float]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    topleft: tuple[float, float] | None = None,
+    bottomright: tuple[float, float] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
     **kwargs,
 ) -> str:
     """
@@ -1681,17 +1682,17 @@ def overlay_shapes(
 
 def overlay_text(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     text_len: int = 10,
-    text_change_nth: Optional[int] = None,
-    fonts: Optional[List[Tuple[Any, Optional[str]]]] = None,
-    fontscales: Optional[Tuple[float, float]] = None,
-    colors: Optional[List[Tuple[int, int, int]]] = None,
-    thickness: Optional[int] = None,
+    text_change_nth: int | None = None,
+    fonts: list[tuple[Any, str | None]] | None = None,
+    fontscales: tuple[float, float] | None = None,
+    colors: list[tuple[int, int, int]] | None = None,
+    thickness: int | None = None,
     random_movement: bool = False,
-    topleft: Optional[Tuple[float, float]] = None,
-    bottomright: Optional[Tuple[float, float]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    topleft: tuple[float, float] | None = None,
+    bottomright: tuple[float, float] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
     **kwargs,
 ) -> str:
     """
@@ -1761,11 +1762,11 @@ def overlay_text(
 
 def pad(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     w_factor: float = 0.25,
     h_factor: float = 0.25,
-    color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    color: tuple[int, int, int] = utils.DEFAULT_COLOR,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Pads the video
@@ -1800,11 +1801,11 @@ def pad(
 
 def perspective_transform_and_shake(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     sigma: float = 50.0,
     shake_radius: float = 0.0,
-    seed: Optional[int] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    seed: int | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Apply a perspective transform to the video so it looks like it was taken
@@ -1841,7 +1842,7 @@ def perspective_transform_and_shake(
     duration = float(helpers.get_video_info(video_path)["duration"])
     rng = np.random.RandomState(seed) if seed is not None else np.random
 
-    def get_dx_dy(frame_number: int) -> Dict:
+    def get_dx_dy(frame_number: int) -> dict:
         u = math.sin(frame_number / duration * math.pi) ** 2
         return {
             "dx": u * rng.normal(0, shake_radius),
@@ -1862,9 +1863,9 @@ def perspective_transform_and_shake(
 
 def pixelization(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     ratio: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Pixelizes the video
@@ -1903,8 +1904,8 @@ def pixelization(
 
 def remove_audio(
     video_path: str,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Removes the audio stream from a video
@@ -1935,12 +1936,12 @@ def remove_audio(
 
 def replace_with_color_frames(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     offset_factor: float = 0.0,
     duration_factor: float = 1.0,
-    color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
-    transition: Optional[af.TransitionConfig] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    color: tuple[int, int, int] = utils.DEFAULT_COLOR,
+    transition: af.TransitionConfig | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Replaces part of the video with frames of the specified color
@@ -2038,10 +2039,10 @@ def replace_with_color_frames(
 
 def resize(
     video_path: str,
-    output_path: Optional[str] = None,
-    height: Union[int, str] = "ih",
-    width: Union[int, str] = "iw",
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    output_path: str | None = None,
+    height: int | str = "ih",
+    width: int | str = "iw",
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Resizes a video
@@ -2076,9 +2077,9 @@ def resize(
 
 def rotate(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     degrees: float = 15.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Rotates a video
@@ -2110,9 +2111,9 @@ def rotate(
 
 def scale(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     factor: float = 0.5,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Alters the resolution of a video
@@ -2143,11 +2144,11 @@ def scale(
 
 def shift(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     x_factor: float = 0.0,
     y_factor: float = 0.0,
-    color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    color: tuple[int, int, int] = utils.DEFAULT_COLOR,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Shifts the original frame position from the center by a vector
@@ -2205,11 +2206,11 @@ def shift(
 
 def time_crop(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     offset_factor: float = 0.0,
     duration_factor: float = 1.0,
     minimum_duration: float = 0.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Crops the video using the specified offset and duration factors
@@ -2252,12 +2253,12 @@ def time_crop(
 
 def time_decimate(
     video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     start_offset_factor: float = 0.0,
     on_factor: float = 0.2,
     off_factor: float = 0.5,
-    transition: Optional[af.TransitionConfig] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    transition: af.TransitionConfig | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Removes evenly sized (off) chunks, and concatenates evenly spaced (on)
@@ -2344,10 +2345,10 @@ def time_decimate(
 
 def trim(
     video_path: str,
-    output_path: Optional[str] = None,
-    start: Optional[float] = None,
-    end: Optional[float] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    output_path: str | None = None,
+    start: float | None = None,
+    end: float | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Trims the video using the specified start and end parameters
@@ -2382,8 +2383,8 @@ def trim(
 
 def vflip(
     video_path: str,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Vertically flips a video
@@ -2413,9 +2414,9 @@ def vflip(
 def vstack(
     video_path: str,
     second_video_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     use_second_audio: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    metadata: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Vertically stacks two videos

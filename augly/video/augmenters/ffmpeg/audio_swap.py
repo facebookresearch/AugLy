@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.utils import pathmgr
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
@@ -21,7 +20,7 @@ class VideoAugmenterByAudioSwap(BaseVidgearFFMPEGAugmenter):
         self.audio_path = pathmgr.get_local_path(audio_path)
         self.offset = offset
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Swaps the audio of a video
 

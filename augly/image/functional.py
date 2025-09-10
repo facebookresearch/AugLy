@@ -12,9 +12,10 @@ import math
 import os
 import pickle
 import random
+from collections.abc import Callable
 from copy import deepcopy
 from itertools import product
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 import numpy as np
 from augly import utils
@@ -25,12 +26,12 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 
 def apply_lambda(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     aug_function: Callable[..., Image.Image] = lambda x: x,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
     **kwargs,
 ) -> Image.Image:
     """
@@ -90,12 +91,12 @@ def apply_lambda(
 
 
 def apply_pil_filter(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    filter_type: Union[Callable, ImageFilter.Filter] = ImageFilter.EDGE_ENHANCE_MORE,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
+    filter_type: Callable | ImageFilter.Filter = ImageFilter.EDGE_ENHANCE_MORE,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Applies a given PIL filter to the input image using `Image.filter()`
@@ -149,12 +150,12 @@ def apply_pil_filter(
 
 
 def blur(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     radius: float = 2.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Blurs the image
@@ -201,12 +202,12 @@ def blur(
 
 
 def brightness(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     factor: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Changes the brightness of the image
@@ -246,12 +247,12 @@ def brightness(
 
 
 def change_aspect_ratio(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     ratio: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Changes the aspect ratio of the image
@@ -302,13 +303,13 @@ def change_aspect_ratio(
 
 
 def clip_image_size(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    min_resolution: Optional[int] = None,
-    max_resolution: Optional[int] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
+    min_resolution: int | None = None,
+    max_resolution: int | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Scales the image up or down if necessary to fit in the given min and max resolution
@@ -377,14 +378,14 @@ def clip_image_size(
 
 
 def color_jitter(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     brightness_factor: float = 1.0,
     contrast_factor: float = 1.0,
     saturation_factor: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Color jitters the image
@@ -435,12 +436,12 @@ def color_jitter(
 
 
 def contrast(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     factor: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Alters the contrast of the image
@@ -488,13 +489,13 @@ def contrast(
 
 
 def convert_color(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    mode: Optional[str] = None,
-    matrix: Union[
-        None,
-        Tuple[float, float, float, float],
-        Tuple[
+    image: str | Image.Image,
+    output_path: str | None = None,
+    mode: str | None = None,
+    matrix: (
+        None
+        | tuple[float, float, float, float]
+        | tuple[
             float,
             float,
             float,
@@ -507,14 +508,14 @@ def convert_color(
             float,
             float,
             float,
-        ],
-    ] = None,
-    dither: Optional[int] = None,
+        ]
+    ) = None,
+    dither: int | None = None,
     palette: int = 0,
     colors: int = 256,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Converts the image in terms of color modes
@@ -569,15 +570,15 @@ def convert_color(
 
 
 def crop(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     x1: float = 0.25,
     y1: float = 0.25,
     x2: float = 0.75,
     y2: float = 0.75,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Crops the image
@@ -642,12 +643,12 @@ def crop(
 
 
 def encoding_quality(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     quality: int = 50,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Changes the JPEG encoding quality level
@@ -696,12 +697,12 @@ def encoding_quality(
 
 
 def grayscale(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     mode: str = "luminosity",
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Changes an image to be grayscale
@@ -762,11 +763,11 @@ def grayscale(
 
 
 def hflip(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Horizontally flips an image
@@ -803,13 +804,13 @@ def hflip(
 
 
 def masked_composite(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    mask: Optional[Union[str, Image.Image]] = None,
-    transform_function: Optional[Callable] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
+    mask: str | Image.Image | None = None,
+    transform_function: Callable | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Applies given augmentation function to the masked area of the image
@@ -875,18 +876,18 @@ def masked_composite(
 
 
 def meme_format(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     text: str = "LOL",
     text_position: str = "top",
     font_file: str = utils.MEME_DEFAULT_FONT,
     opacity: float = 1.0,
-    text_color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+    text_color: tuple[int, int, int] = utils.DEFAULT_COLOR,
     caption_height: int = 250,
-    meme_bg_color: Tuple[int, int, int] = utils.WHITE_RGB_COLOR,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    meme_bg_color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Creates a new image that looks like a meme, given text and an image
@@ -1008,12 +1009,12 @@ def meme_format(
 
 
 def opacity(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     level: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Alter the opacity of an image
@@ -1064,16 +1065,16 @@ def opacity(
 
 
 def overlay_emoji(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     emoji_path: str = utils.EMOJI_PATH,
     opacity: float = 1.0,
     emoji_size: float = 0.15,
     x_pos: float = 0.4,
     y_pos: float = 0.8,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Overlay an emoji onto the original image
@@ -1135,17 +1136,17 @@ def overlay_emoji(
 
 
 def overlay_image(
-    image: Union[str, Image.Image],
-    overlay: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    overlay: str | Image.Image,
+    output_path: str | None = None,
     opacity: float = 1.0,
     overlay_size: float = 1.0,
     x_pos: float = 0.4,
     y_pos: float = 0.4,
     max_visible_opacity: float = 0.75,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Overlays an image onto another image at position (width * x_pos, height * y_pos)
@@ -1228,17 +1229,17 @@ def overlay_image(
 
 
 def overlay_onto_background_image(
-    image: Union[str, Image.Image],
-    background_image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    background_image: str | Image.Image,
+    output_path: str | None = None,
     opacity: float = 1.0,
     overlay_size: float = 1.0,
     x_pos: float = 0.4,
     y_pos: float = 0.4,
     scale_bg: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Overlays the image onto a given background image at position
@@ -1316,16 +1317,16 @@ def overlay_onto_background_image(
 
 
 def overlay_onto_screenshot(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     template_filepath: str = utils.TEMPLATE_PATH,
     template_bboxes_filepath: str = utils.BBOXES_PATH,
-    max_image_size_pixels: Optional[int] = None,
+    max_image_size_pixels: int | None = None,
     crop_src_to_fit: bool = False,
     resize_src_to_match_template: bool = True,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Overlay the image onto a screenshot template so it looks like it was
@@ -1409,17 +1410,17 @@ def overlay_onto_screenshot(
 
 
 def overlay_stripes(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     line_width: float = 0.5,
-    line_color: Tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+    line_color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
     line_angle: float = 0,
     line_density: float = 0.5,
-    line_type: Optional[str] = "solid",
+    line_type: str | None = "solid",
     line_opacity: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Overlay stripe pattern onto the image (by default, white horizontal
@@ -1532,18 +1533,18 @@ def overlay_stripes(
 
 
 def overlay_text(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    text: List[Union[int, List[int]]] = utils.DEFAULT_TEXT_INDICES,
+    image: str | Image.Image,
+    output_path: str | None = None,
+    text: list[int | list[int]] = utils.DEFAULT_TEXT_INDICES,
     font_file: str = utils.FONT_PATH,
     font_size: float = 0.15,
     opacity: float = 1.0,
-    color: Tuple[int, int, int] = utils.RED_RGB_COLOR,
+    color: tuple[int, int, int] = utils.RED_RGB_COLOR,
     x_pos: float = 0.0,
     y_pos: float = 0.5,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Overlay text onto the image (by default, text is randomly overlaid)
@@ -1647,14 +1648,14 @@ def overlay_text(
 def overlay_wrap_text(
     image: Image.Image,
     text: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     min_font_size_ratio: float = 0.02,
     max_font_size_ratio: float = 0.2,
     font_file: str = utils.DEFAULT_TEXT_OVERLAY_FONT_PATH,
-    font_size: Optional[float] = None,
-    color: Optional[tuple[int, int, int]] = None,
-    metadata: Optional[list[dict[str, object]]] = None,
-    random_seed: Optional[int] = None,
+    font_size: float | None = None,
+    color: tuple[int, int, int] | None = None,
+    metadata: list[dict[str, object]] | None = None,
+    random_seed: int | None = None,
 ) -> Image.Image:
     """Randomly overlay a pre-defined text on an image
 
@@ -1755,14 +1756,14 @@ def overlay_wrap_text(
 
 
 def pad(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     w_factor: float = 0.25,
     h_factor: float = 0.25,
-    color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    color: tuple[int, int, int] = utils.DEFAULT_COLOR,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Pads the image
@@ -1827,12 +1828,12 @@ def pad(
 
 
 def pad_square(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
+    color: tuple[int, int, int] = utils.DEFAULT_COLOR,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Pads the shorter edge of the image such that it is now square-shaped
@@ -1888,16 +1889,16 @@ def pad_square(
 
 
 def perspective_transform(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     sigma: float = 50.0,
     dx: float = 0.0,
     dy: float = 0.0,
-    seed: Optional[int] = 42,
+    seed: int | None = 42,
     crop_out_black_border: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Apply a perspective transform to the image so it looks like it was taken
@@ -1993,12 +1994,12 @@ def perspective_transform(
 
 
 def pixelization(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     ratio: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Pixelizes an image
@@ -2048,14 +2049,14 @@ def pixelization(
 
 
 def random_noise(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     mean: float = 0.0,
     var: float = 0.01,
     seed: int = 42,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Adds random noise to the image
@@ -2126,20 +2127,20 @@ def random_noise(
 
 
 def ranking_numbers(
-    image: Union[str, Image.Image],
-    ranking_dict: Dict[Union[int, str], str],
-    output_path: Optional[str] = None,
-    positions: Optional[List[Tuple[int, int]]] = None,
+    image: str | Image.Image,
+    ranking_dict: dict[int | str, str],
+    output_path: str | None = None,
+    positions: list[tuple[int, int]] | None = None,
     font_file: str = utils.MEME_DEFAULT_FONT,
     font_size: float = 0.15,
-    number_color: Union[str, Tuple[int, int, int]] = "white",
-    ranking_color: Union[str, Tuple[int, int, int]] = "yellow",
+    number_color: str | tuple[int, int, int] = "white",
+    ranking_color: str | tuple[int, int, int] = "yellow",
     left_dist: int = 50,
     stroke_width: int = 3,
-    stroke_fill: Tuple[int, int, int] = (0, 0, 0),
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    stroke_fill: tuple[int, int, int] = (0, 0, 0),
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Add ranking numbers to image.
@@ -2273,14 +2274,14 @@ def ranking_numbers(
 
 
 def resize(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    width: Optional[int] = None,
-    height: Optional[int] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
+    width: int | None = None,
+    height: int | None = None,
     resample: Any = Image.BILINEAR,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Resizes an image
@@ -2337,12 +2338,12 @@ def resize(
 
 
 def rotate(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     degrees: float = 15.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Rotates the image
@@ -2401,12 +2402,12 @@ def rotate(
 
 
 def saturation(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     factor: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Alters the saturation of the image
@@ -2453,13 +2454,13 @@ def saturation(
 
 
 def scale(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     factor: float = 0.5,
-    interpolation: Optional[int] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    interpolation: int | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Alters the resolution of an image
@@ -2527,12 +2528,12 @@ def scale(
 
 
 def sharpen(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     factor: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Changes the sharpness of the image
@@ -2571,13 +2572,13 @@ def sharpen(
 
 
 def shuffle_pixels(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     factor: float = 1.0,
     seed: int = 10,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Shuffles the pixels of an image with respect to the shuffling factor. The
@@ -2653,13 +2654,13 @@ def shuffle_pixels(
 
 
 def skew(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     skew_factor: float = 0.5,
     axis: int = 0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Skews an image with respect to its x or y-axis
@@ -2719,14 +2720,14 @@ def skew(
 
 
 def split_and_shuffle(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
     n_columns: int = 3,
     n_rows: int = 3,
     seed: int = 10,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Splits the image into a grid of tiles (determined by n_columns and n_rows) and
@@ -2805,11 +2806,11 @@ def split_and_shuffle(
 
 
 def vflip(
-    image: Union[str, Image.Image],
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-    bboxes: Optional[List[Tuple]] = None,
-    bbox_format: Optional[str] = None,
+    image: str | Image.Image,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
 ) -> Image.Image:
     """
     Vertically flips an image

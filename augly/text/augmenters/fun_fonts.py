@@ -9,7 +9,6 @@
 
 import json
 import random
-from typing import List, Optional, Union
 
 from augly.text.augmenters.utils import detokenize, get_aug_idxes, tokenize
 from augly.utils import pathmgr
@@ -30,7 +29,7 @@ class FunFontsAugmenter(Augmenter):
         aug_p: float,
         vary_fonts: bool,
         fonts_path: str,
-        priority_words: Optional[List[str]],
+        priority_words: list[str] | None,
     ):
         assert granularity in [
             "char",
@@ -58,7 +57,7 @@ class FunFontsAugmenter(Augmenter):
             set(priority_words) if priority_words is not None else priority_words
         )
 
-    def load_fonts(self, fonts_path: str) -> List[Union[str, dict]]:
+    def load_fonts(self, fonts_path: str) -> list[str | dict]:
         """
         Loads the fonts from a json file iopath uri
 
@@ -75,17 +74,17 @@ class FunFontsAugmenter(Augmenter):
         return []
 
     @classmethod
-    def clean(cls, data: Union[List[str], str]) -> Union[str, List[str]]:
+    def clean(cls, data: list[str] | str) -> str | list[str]:
         if isinstance(data, list):
             return [d.strip() for d in data]
 
         return data.strip()
 
     @classmethod
-    def is_duplicate(cls, dataset: List[str], data: str) -> bool:
+    def is_duplicate(cls, dataset: list[str], data: str) -> bool:
         return data in dataset
 
-    def apply_font(self, text: str, font: Union[str, dict], method: str) -> str:
+    def apply_font(self, text: str, font: str | dict, method: str) -> str:
         assert (
             method in Method.getall()
         ), "Expected 'method' to be a value defined in nlpaug.util.method.Method"

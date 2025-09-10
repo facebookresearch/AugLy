@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 import random
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 from augly.audio.transforms import BaseTransform
@@ -40,7 +40,7 @@ Example:
 
 
 class BaseComposition:
-    def __init__(self, transforms: List[BaseTransform], p: float = 1.0):
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
         """
         @param transforms: a list of transforms
 
@@ -61,8 +61,8 @@ class Compose(BaseComposition):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Applies the list of transforms in order to the audio
 
@@ -82,7 +82,7 @@ class Compose(BaseComposition):
 
 
 class OneOf(BaseComposition):
-    def __init__(self, transforms: List[BaseTransform], p: float = 1.0):
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
         """
         @param transforms: a list of transforms to select from; one of which will
             be chosen to be applied to the audio
@@ -98,8 +98,8 @@ class OneOf(BaseComposition):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Applies one of the transforms to the audio (with probability p)
 

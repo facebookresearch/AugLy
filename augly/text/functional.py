@@ -7,8 +7,9 @@
 
 # pyre-unsafe
 
+from collections.abc import Callable
 from copy import deepcopy
-from typing import Any, Callable, Dict, List, Literal, Optional, Union
+from typing import Any, Literal
 
 from augly.text import augmenters as a, utils as txtutils
 from augly.utils import (
@@ -21,11 +22,11 @@ from augly.utils import (
 
 
 def apply_lambda(
-    texts: Union[str, List[str]],
-    aug_function: Callable[..., List[str]] = lambda x: x,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    texts: str | list[str],
+    aug_function: Callable[..., list[str]] = lambda x: x,
+    metadata: list[dict[str, Any]] | None = None,
     **kwargs,
-) -> Union[str, List[str]]:
+) -> str | list[str]:
     """
     Apply a user-defined lambda on a list of text documents
 
@@ -69,13 +70,13 @@ def apply_lambda(
 
 
 def change_case(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     granularity: str = "word",
     cadence: float = 1.0,
     case: str = "random",
-    seed: Optional[int] = 10,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    seed: int | None = 10,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Changes the case (e.g. upper, lower, title) of random chars, words, or the entire
     text
@@ -118,13 +119,13 @@ def change_case(
 
 
 def contractions(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_p: float = 0.3,
-    mapping: Optional[Union[str, Dict[str, Any]]] = CONTRACTIONS_MAPPING,
+    mapping: str | dict[str, Any] | None = CONTRACTIONS_MAPPING,
     max_contraction_length: int = 2,
-    seed: Optional[int] = 10,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    seed: int | None = 10,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Replaces pairs (or longer strings) of words with contractions given a mapping
 
@@ -168,7 +169,7 @@ def contractions(
 
 
 def encode_text(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_min: int,
     aug_max: int,
     aug_p: float,
@@ -176,8 +177,8 @@ def encode_text(
     encoder: Literal["base64", "leetspeak"],
     n: int = 1,
     p: float = 1.0,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """Alters text based on encoding function and based on different granularity levels
     such as the entire text, specific words or characters.
 
@@ -230,9 +231,9 @@ def encode_text(
 
 
 def get_baseline(
-    texts: Union[str, List[str]],
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    texts: str | list[str],
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Generates a baseline by tokenizing and detokenizing the text
 
@@ -259,12 +260,12 @@ def get_baseline(
 
 
 def insert_punctuation_chars(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     granularity: str = "all",
     cadence: float = 1.0,
     vary_chars: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Inserts punctuation characters in each input text
 
@@ -304,13 +305,13 @@ def insert_punctuation_chars(
 
 
 def insert_text(
-    texts: Union[str, List[str]],
-    insert_text: List[str],
+    texts: str | list[str],
+    insert_text: list[str],
     num_insertions: int = 1,
     insertion_location: str = "random",
-    seed: Optional[int] = 10,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    seed: int | None = 10,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Inserts some specified text into the input text a given number of times at a given
     location
@@ -351,12 +352,12 @@ def insert_text(
 
 
 def insert_whitespace_chars(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     granularity: str = "all",
     cadence: float = 1.0,
     vary_chars: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Inserts whitespace characters in each input text
 
@@ -396,12 +397,12 @@ def insert_whitespace_chars(
 
 
 def insert_zero_width_chars(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     granularity: str = "all",
     cadence: float = 1.0,
     vary_chars: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Inserts zero-width characters in each input text
 
@@ -441,15 +442,15 @@ def insert_zero_width_chars(
 
 
 def merge_words(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_word_p: float = 0.3,
     min_char: int = 2,
     aug_word_min: int = 1,
     aug_word_max: int = 1000,
     n: int = 1,
-    priority_words: Optional[List[str]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    priority_words: list[str] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Merges words in the text together
 
@@ -492,11 +493,11 @@ def merge_words(
 
 
 def replace_bidirectional(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     granularity: str = "all",
     split_word: bool = False,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Reverses each word (or part of the word) in each input text and uses
     bidirectional marks to render the text in its original order. It reverses
@@ -532,7 +533,7 @@ def replace_bidirectional(
 
 
 def replace_fun_fonts(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_p: float = 0.3,
     aug_min: int = 1,
     aug_max: int = 10000,
@@ -540,9 +541,9 @@ def replace_fun_fonts(
     vary_fonts: bool = False,
     fonts_path: str = FUN_FONTS_PATH,
     n: int = 1,
-    priority_words: Optional[List[str]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    priority_words: list[str] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Replaces words or characters depending on the granularity with fun fonts applied
 
@@ -590,7 +591,7 @@ def replace_fun_fonts(
 
 
 def replace_similar_chars(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_char_p: float = 0.3,
     aug_word_p: float = 0.3,
     min_char: int = 2,
@@ -599,10 +600,10 @@ def replace_similar_chars(
     aug_word_min: int = 1,
     aug_word_max: int = 1000,
     n: int = 1,
-    mapping_path: Optional[str] = None,
-    priority_words: Optional[List[str]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    mapping_path: str | None = None,
+    priority_words: list[str] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Replaces letters in each text with similar characters
 
@@ -661,7 +662,7 @@ def replace_similar_chars(
 
 
 def replace_similar_unicode_chars(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_char_p: float = 0.3,
     aug_word_p: float = 0.3,
     min_char: int = 2,
@@ -671,9 +672,9 @@ def replace_similar_unicode_chars(
     aug_word_max: int = 1000,
     n: int = 1,
     mapping_path: str = UNICODE_MAPPING_PATH,
-    priority_words: Optional[List[str]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    priority_words: list[str] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Replaces letters in each text with similar unicodes
 
@@ -732,10 +733,10 @@ def replace_similar_unicode_chars(
 
 
 def replace_text(
-    texts: Union[str, List[str]],
-    replace_text: Union[str, Dict[str, str]],
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    texts: str | list[str],
+    replace_text: str | dict[str, str],
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Replaces the input text entirely with some specified text
 
@@ -766,14 +767,14 @@ def replace_text(
 
 
 def replace_upside_down(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_p: float = 0.3,
     aug_min: int = 1,
     aug_max: int = 1000,
     granularity: str = "all",
     n: int = 1,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Flips words in the text upside down depending on the granularity
 
@@ -812,16 +813,16 @@ def replace_upside_down(
 
 
 def replace_words(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_word_p: float = 0.3,
     aug_word_min: int = 1,
     aug_word_max: int = 1000,
     n: int = 1,
-    mapping: Optional[Union[str, Dict[str, Any]]] = None,
-    priority_words: Optional[List[str]] = None,
-    ignore_words: Optional[List[str]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    mapping: str | dict[str, Any] | None = None,
+    priority_words: list[str] | None = None,
+    ignore_words: list[str] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Replaces words in each text based on a given mapping
 
@@ -867,7 +868,7 @@ def replace_words(
 
 
 def simulate_typos(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_char_p: float = 0.3,
     aug_word_p: float = 0.3,
     min_char: int = 2,
@@ -877,11 +878,11 @@ def simulate_typos(
     aug_word_max: int = 1000,
     n: int = 1,
     typo_type: str = "all",
-    misspelling_dict_path: Optional[str] = MISSPELLING_DICTIONARY_PATH,
+    misspelling_dict_path: str | None = MISSPELLING_DICTIONARY_PATH,
     max_typo_length: int = 1,
-    priority_words: Optional[List[str]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    priority_words: list[str] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Simulates typos in each text using misspellings, keyboard distance, and swapping.
     You can specify a typo_type: charmix, which does a combination of character-level
@@ -960,15 +961,15 @@ def simulate_typos(
 
 
 def split_words(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_word_p: float = 0.3,
     min_char: int = 4,
     aug_word_min: int = 1,
     aug_word_max: int = 1000,
     n: int = 1,
-    priority_words: Optional[List[str]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    priority_words: list[str] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Splits words in the text into subwords
 
@@ -1011,16 +1012,16 @@ def split_words(
 
 
 def swap_gendered_words(
-    texts: Union[str, List[str]],
+    texts: str | list[str],
     aug_word_p: float = 0.3,
     aug_word_min: int = 1,
     aug_word_max: int = 1000,
     n: int = 1,
-    mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
-    priority_words: Optional[List[str]] = None,
-    ignore_words: Optional[List[str]] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Union[str, List[str]]:
+    mapping: str | dict[str, str] = GENDERED_WORDS_MAPPING,
+    priority_words: list[str] | None = None,
+    ignore_words: list[str] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> str | list[str]:
     """
     Replaces words in each text based on a provided `mapping`, which can either be a dict
     already constructed mapping words from one gender to another or a file path to a

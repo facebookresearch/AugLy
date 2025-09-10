@@ -7,7 +7,7 @@
 
 # pyre-unsafe
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 
 def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
@@ -111,7 +111,7 @@ def replace_similar_unicode_chars_intensity(
 
 
 def replace_text_intensity(
-    texts: Union[List[str], str], replace_text: Union[Dict[str, str], str], **kwargs
+    texts: list[str] | str, replace_text: dict[str, str] | str, **kwargs
 ) -> float:
     return (
         100.0
@@ -129,7 +129,7 @@ def replace_upside_down_intensity(
 def replace_words_intensity(
     aug_word_p: float,
     aug_word_max: int,
-    mapping: Optional[Union[str, Dict[str, Any]]],
+    mapping: str | dict[str, Any] | None,
     **kwargs,
 ) -> float:
     return 0.0 if not mapping else replace_intensity_helper(aug_word_p, aug_word_max)

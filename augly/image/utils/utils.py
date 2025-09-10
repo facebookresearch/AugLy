@@ -11,7 +11,6 @@ import functools
 import json
 import math
 import os
-from typing import List, Optional, Tuple, Union
 
 import numpy as np
 from augly import utils
@@ -20,7 +19,7 @@ from PIL import Image
 JPEG_EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG"]
 
 
-def validate_and_load_image(image: Union[str, Image.Image]) -> Image.Image:
+def validate_and_load_image(image: str | Image.Image) -> Image.Image:
     """
     If image is a str, loads the image as a PIL Image and returns it. Otherwise,
     we assert that image is a PIL Image and then return it.
@@ -38,7 +37,7 @@ def validate_and_load_image(image: Union[str, Image.Image]) -> Image.Image:
 
 
 def ret_and_save_image(
-    image: Image.Image, output_path: Optional[str], src_mode: Optional[str] = None
+    image: Image.Image, output_path: str | None, src_mode: str | None = None
 ) -> Image.Image:
     if src_mode is not None:
         image = image.convert(src_mode)
@@ -57,7 +56,7 @@ def ret_and_save_image(
 
 
 @functools.lru_cache
-def get_bboxes(template_bboxes_filepath: Optional[str] = None):
+def get_bboxes(template_bboxes_filepath: str | None = None):
     if template_bboxes_filepath is None:
         template_bboxes_filepath = utils.BBOXES_PATH
     local_bbox_path = utils.pathmgr.get_local_path(template_bboxes_filepath)
@@ -65,8 +64,8 @@ def get_bboxes(template_bboxes_filepath: Optional[str] = None):
 
 
 def get_template_and_bbox(
-    template_filepath: str, template_bboxes_filepath: Optional[str]
-) -> Tuple[Image.Image, Tuple[int, int, int, int]]:
+    template_filepath: str, template_bboxes_filepath: str | None
+) -> tuple[Image.Image, tuple[int, int, int, int]]:
     local_template_path = utils.pathmgr.get_local_path(template_filepath)
     template = Image.open(local_template_path)
     bboxes = get_bboxes(template_bboxes_filepath)
@@ -76,7 +75,7 @@ def get_template_and_bbox(
     return template, bbox
 
 
-def rotated_rect_with_max_area(w: int, h: int, angle: float) -> Tuple[float, float]:
+def rotated_rect_with_max_area(w: int, h: int, angle: float) -> tuple[float, float]:
     """
     Computes the width and height of the largest possible axis-aligned
     rectangle (maximal area) within the rotated rectangle
@@ -142,10 +141,10 @@ def scale_template_image(
     src_w: int,
     src_h: int,
     template_image: Image.Image,
-    bbox: Tuple[int, int, int, int],
-    max_image_size_pixels: Optional[int],
+    bbox: tuple[int, int, int, int],
+    max_image_size_pixels: int | None,
     crop: bool,
-) -> Tuple[Image.Image, Tuple[int, int, int, int]]:
+) -> tuple[Image.Image, tuple[int, int, int, int]]:
     """
     Return template_image, and bbox resized to fit the src image. Takes in the
     width & height of the src image plus the bounding box where the src image
@@ -194,7 +193,7 @@ def square_center_crop(src: Image.Image) -> Image.Image:
 
 
 def compute_transform_coeffs(
-    src_coords: List[Tuple[int, int]], dst_coords: List[Tuple[float, float]]
+    src_coords: list[tuple[int, int]], dst_coords: list[tuple[float, float]]
 ) -> np.ndarray:
     """
     Given the starting & desired corner coordinates, computes the

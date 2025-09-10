@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.utils import is_image_file, is_video_file, pathmgr
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
@@ -36,7 +35,7 @@ class VideoAugmenterByOverlay(BaseVidgearFFMPEGAugmenter):
         self.y_factor = y_factor
         self.use_overlay_audio = use_overlay_audio and is_video_file(overlay_path)
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Overlays media onto the video
 

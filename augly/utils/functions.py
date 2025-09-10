@@ -5,7 +5,6 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-from typing import List
 
 from augly.utils.classes import Segment
 
@@ -16,8 +15,8 @@ def compute_time_crop_segments(
     speed_factor: float,
     crop_start: float,
     crop_end: float,
-    new_src_segments: List[Segment],
-    new_dst_segments: List[Segment],
+    new_src_segments: list[Segment],
+    new_dst_segments: list[Segment],
 ) -> None:
     """
     Calculates how the given matching pair src_segment & dst_segment change

@@ -7,13 +7,12 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
 class VideoAugmenterByRemovingAudio(BaseVidgearFFMPEGAugmenter):
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Removes the audio from the video
 

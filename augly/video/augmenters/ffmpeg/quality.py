@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -17,7 +16,7 @@ class VideoAugmenterByQuality(BaseVidgearFFMPEGAugmenter):
         assert 0 <= quality <= 51, "Quality must be a value in the range [0, 51]"
         self.quality = quality
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Alters the quality level of the video
 

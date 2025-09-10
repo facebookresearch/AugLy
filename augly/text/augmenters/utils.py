@@ -8,7 +8,6 @@
 # pyre-unsafe
 
 import re
-from typing import List, Optional, Tuple
 
 import regex
 from augly.utils.libsndfile import install_libsndfile
@@ -174,11 +173,11 @@ UPSIDE_DOWN_CHAR_MAPPING = dict(
 )
 
 
-def tokenize(text: str) -> List[str]:
+def tokenize(text: str) -> list[str]:
     return TOKENIZER_REGEX.findall(text)
 
 
-def detokenize(tokens: List[str]) -> str:
+def detokenize(tokens: list[str]) -> str:
     text = " ".join(tokens)
     text = " " + text + " "
 
@@ -194,14 +193,14 @@ def detokenize(tokens: List[str]) -> str:
     return text.strip()
 
 
-def split_words_on_whitespace(text: str) -> Tuple[List[str], List[str]]:
+def split_words_on_whitespace(text: str) -> tuple[list[str], list[str]]:
     # Beginning and end are treated as whitespace even if they are empty strings
     split_elements = SPLIT_BY_WHITESPACE.split(text)
     # Return words and whitespace separately
     return split_elements[1::2], split_elements[::2]
 
 
-def rejoin_words_and_whitespace(words: List[str], whitespace: List[str]) -> str:
+def rejoin_words_and_whitespace(words: list[str], whitespace: list[str]) -> str:
     # The split regex returns one whitespace element than word
     assert len(whitespace) == len(words) + 1, "Input lengths do not match!"
     # Add a dummy entry to 'words' so we can zip it easily, then drop it
@@ -227,12 +226,12 @@ def validate_augmenter_params(
 
 def get_aug_idxes(
     augmenter: Augmenter,
-    tokens: List[str],
-    filtered_idxes: List[int],
+    tokens: list[str],
+    filtered_idxes: list[int],
     aug_cnt: int,
     mode: str,
-    min_char: Optional[int] = None,
-) -> List[int]:
+    min_char: int | None = None,
+) -> list[int]:
     assert (
         mode in Method.getall()
     ), "Expected 'mode' to be a value defined in nlpaug.util.method.Method"

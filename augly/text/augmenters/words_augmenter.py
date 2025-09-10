@@ -8,7 +8,6 @@
 # pyre-unsafe
 
 import random
-from typing import List, Optional
 
 from augly.text.augmenters.utils import detokenize, get_aug_idxes, tokenize
 from augly.utils.libsndfile import install_libsndfile
@@ -33,7 +32,7 @@ class WordsAugmenter(WordAugmenter):
         aug_word_min: int,
         aug_word_max: int,
         aug_word_p: float,
-        priority_words: Optional[List[str]],
+        priority_words: list[str] | None,
     ):
         assert min_char >= 2, "Expected min_char to be greater than or equal to 2"
 

@@ -9,7 +9,8 @@
 
 import os
 import random
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from collections.abc import Callable
+from typing import Any
 
 from augly import utils
 from augly.image import functional as F
@@ -33,9 +34,9 @@ class BaseTransform:
         self,
         image: Image.Image,
         force: bool = False,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         @param image: PIL Image to be augmented
@@ -68,9 +69,9 @@ class BaseTransform:
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         This function is to be implemented in the child classes.
@@ -97,9 +98,9 @@ class BaseRandomRangeTransform(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         @param image: PIL Image to be augmented
@@ -131,9 +132,9 @@ class BaseRandomRangeTransform(BaseTransform):
     def apply_random_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         This function is to be implemented in the child classes. It has
@@ -182,9 +183,9 @@ class ApplyLambda(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Apply a user-defined lambda on an image
@@ -218,9 +219,7 @@ class ApplyLambda(BaseTransform):
 class ApplyPILFilter(BaseTransform):
     def __init__(
         self,
-        filter_type: Union[
-            Callable, ImageFilter.Filter
-        ] = ImageFilter.EDGE_ENHANCE_MORE,
+        filter_type: Callable | ImageFilter.Filter = ImageFilter.EDGE_ENHANCE_MORE,
         p: float = 1.0,
     ):
         """
@@ -234,9 +233,9 @@ class ApplyPILFilter(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Applies a given PIL filter to the input image using `Image.filter()`
@@ -279,9 +278,9 @@ class Blur(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Blurs the image
@@ -326,9 +325,9 @@ class Brightness(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Alters the brightness of the image
@@ -371,9 +370,9 @@ class ChangeAspectRatio(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Alters the aspect ratio of the image
@@ -406,8 +405,8 @@ class ChangeAspectRatio(BaseTransform):
 class ClipImageSize(BaseTransform):
     def __init__(
         self,
-        min_resolution: Optional[int] = None,
-        max_resolution: Optional[int] = None,
+        min_resolution: int | None = None,
+        max_resolution: int | None = None,
         p: float = 1.0,
     ):
         """
@@ -428,9 +427,9 @@ class ClipImageSize(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Scales the image up or down if necessary to fit in the given min and max
@@ -492,9 +491,9 @@ class ColorJitter(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Color jitters the image
@@ -541,9 +540,9 @@ class Contrast(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Alters the contrast of the image
@@ -576,11 +575,11 @@ class Contrast(BaseTransform):
 class ConvertColor(BaseTransform):
     def __init__(
         self,
-        mode: Optional[str] = None,
-        matrix: Union[
-            None,
-            Tuple[float, float, float, float],
-            Tuple[
+        mode: str | None = None,
+        matrix: (
+            None
+            | tuple[float, float, float, float]
+            | tuple[
                 float,
                 float,
                 float,
@@ -593,9 +592,9 @@ class ConvertColor(BaseTransform):
                 float,
                 float,
                 float,
-            ],
-        ] = None,
-        dither: Optional[int] = None,
+            ]
+        ) = None,
+        dither: int | None = None,
         palette: int = 0,
         colors: int = 256,
         p: float = 1.0,
@@ -629,9 +628,9 @@ class ConvertColor(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Converts the image in terms of color modes
@@ -696,9 +695,9 @@ class Crop(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Crops the image
@@ -744,9 +743,9 @@ class EncodingQuality(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Changes the JPEG encoding quality level
@@ -790,9 +789,9 @@ class Grayscale(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Alters an image to be grayscale
@@ -826,9 +825,9 @@ class HFlip(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Horizontally flips an image
@@ -879,9 +878,9 @@ class MaskedComposite(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Applies given augmentation function to the masked area of the image
@@ -918,9 +917,9 @@ class MemeFormat(BaseTransform):
         text: str = "LOL",
         font_file: str = utils.MEME_DEFAULT_FONT,
         opacity: float = 1.0,
-        text_color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+        text_color: tuple[int, int, int] = utils.DEFAULT_COLOR,
         caption_height: int = 250,
-        meme_bg_color: Tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+        meme_bg_color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
         p: float = 1.0,
     ):
         """
@@ -949,9 +948,9 @@ class MemeFormat(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Creates a new image that looks like a meme, given text and an image
@@ -1000,9 +999,9 @@ class Opacity(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Alters the opacity of an image
@@ -1063,9 +1062,9 @@ class OverlayEmoji(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Overlay an emoji onto the original image
@@ -1102,7 +1101,7 @@ class OverlayEmoji(BaseTransform):
 class OverlayImage(BaseTransform):
     def __init__(
         self,
-        overlay: Union[str, Image.Image],
+        overlay: str | Image.Image,
         opacity: float = 1.0,
         overlay_size: float = 1.0,
         x_pos: float = 0.4,
@@ -1140,9 +1139,9 @@ class OverlayImage(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Overlays an image onto another image at position (width * x_pos, height * y_pos)
@@ -1180,7 +1179,7 @@ class OverlayImage(BaseTransform):
 class OverlayOntoBackgroundImage(BaseTransform):
     def __init__(
         self,
-        background_image: Union[str, Image.Image],
+        background_image: str | Image.Image,
         opacity: float = 1.0,
         overlay_size: float = 1.0,
         x_pos: float = 0.4,
@@ -1219,9 +1218,9 @@ class OverlayOntoBackgroundImage(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Overlays the image onto a given background image at position
@@ -1262,7 +1261,7 @@ class OverlayOntoScreenshot(BaseTransform):
         self,
         template_filepath: str = utils.TEMPLATE_PATH,
         template_bboxes_filepath: str = utils.BBOXES_PATH,
-        max_image_size_pixels: Optional[int] = None,
+        max_image_size_pixels: int | None = None,
         crop_src_to_fit: bool = False,
         resize_src_to_match_template: bool = True,
         p: float = 1.0,
@@ -1299,9 +1298,9 @@ class OverlayOntoScreenshot(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Overlay the image onto a screenshot template so it looks like it was
@@ -1340,10 +1339,10 @@ class OverlayStripes(BaseTransform):
     def __init__(
         self,
         line_width: float = 0.5,
-        line_color: Tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+        line_color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
         line_angle: float = 0,
         line_density: float = 0.5,
-        line_type: Optional[str] = "solid",
+        line_type: str | None = "solid",
         line_opacity: float = 1.0,
         p: float = 1.0,
     ):
@@ -1377,9 +1376,9 @@ class OverlayStripes(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Overlay stripe pattern onto the image (by default, stripes are horizontal)
@@ -1417,11 +1416,11 @@ class OverlayStripes(BaseTransform):
 class OverlayText(BaseTransform):
     def __init__(
         self,
-        text: List[Union[int, List[int]]] = utils.DEFAULT_TEXT_INDICES,
+        text: list[int | list[int]] = utils.DEFAULT_TEXT_INDICES,
         font_file: str = utils.FONT_PATH,
         font_size: float = 0.15,
         opacity: float = 1.0,
-        color: Tuple[int, int, int] = utils.RED_RGB_COLOR,
+        color: tuple[int, int, int] = utils.RED_RGB_COLOR,
         x_pos: float = 0.0,
         y_pos: float = 0.5,
         p: float = 1.0,
@@ -1455,9 +1454,9 @@ class OverlayText(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Overlay text onto the image (by default, text is randomly overlaid)
@@ -1500,9 +1499,9 @@ class OverlayWrapText(BaseTransform):
         min_font_size_ratio: float = 0.02,
         max_font_size_ratio: float = 0.2,
         font_file: str = utils.DEFAULT_TEXT_OVERLAY_FONT_PATH,
-        font_size: Optional[float] = None,
-        color: Optional[tuple[int, int, int]] = None,
-        random_seed: Optional[int] = None,
+        font_size: float | None = None,
+        color: tuple[int, int, int] | None = None,
+        random_seed: int | None = None,
         p: float = 1.0,
     ):
         """Randomly overlay a pre-defined text on an image
@@ -1539,9 +1538,9 @@ class OverlayWrapText(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Randomly overlay a pre-defined text on an image
@@ -1580,7 +1579,7 @@ class Pad(BaseTransform):
         self,
         w_factor: float = 0.25,
         h_factor: float = 0.25,
-        color: Tuple[int, int, int] = utils.DEFAULT_COLOR,
+        color: tuple[int, int, int] = utils.DEFAULT_COLOR,
         p: float = 1.0,
     ):
         """
@@ -1602,9 +1601,9 @@ class Pad(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Pads the image
@@ -1638,7 +1637,7 @@ class Pad(BaseTransform):
 
 class PadSquare(BaseTransform):
     def __init__(
-        self, color: Tuple[int, int, int] = utils.DEFAULT_COLOR, p: float = 1.0
+        self, color: tuple[int, int, int] = utils.DEFAULT_COLOR, p: float = 1.0
     ):
         """
         @param color: color of the padded border in RGB values
@@ -1651,9 +1650,9 @@ class PadSquare(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Pads the shorter edge of the image such that it is now square-shaped
@@ -1689,7 +1688,7 @@ class PerspectiveTransform(BaseTransform):
         sigma: float = 50.0,
         dx: float = 0.0,
         dy: float = 0.0,
-        seed: Optional[int] = 42,
+        seed: int | None = 42,
         p: float = 1.0,
     ):
         """
@@ -1709,9 +1708,9 @@ class PerspectiveTransform(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Apply a perspective transform to the image so it looks like it was taken
@@ -1760,9 +1759,9 @@ class Pixelization(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Pixelizes an image
@@ -1813,9 +1812,9 @@ class RandomNoise(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Adds random noise to the image
@@ -1850,8 +1849,8 @@ class RandomNoise(BaseTransform):
 class Resize(BaseTransform):
     def __init__(
         self,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
         resample: Any = Image.BILINEAR,
         p: float = 1.0,
     ):
@@ -1874,9 +1873,9 @@ class Resize(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Resizes an image
@@ -1922,9 +1921,9 @@ class Rotate(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Rotates the image
@@ -1969,9 +1968,9 @@ class Saturation(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Alters the saturation of an image
@@ -2005,7 +2004,7 @@ class Scale(BaseTransform):
     def __init__(
         self,
         factor: float = 0.5,
-        interpolation: Optional[int] = None,
+        interpolation: int | None = None,
         p: float = 1.0,
     ):
         """
@@ -2025,9 +2024,9 @@ class Scale(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Alters the resolution of an image
@@ -2072,9 +2071,9 @@ class Sharpen(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Alters the sharpness of the image
@@ -2122,9 +2121,9 @@ class ShufflePixels(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Shuffles the pixels of an image with respect to the shuffling factor. The
@@ -2174,9 +2173,9 @@ class Skew(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Skews an image with respect to its x or y-axis
@@ -2229,9 +2228,9 @@ class SplitAndShuffle(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Splits the image into a grid of tiles (determined by n_columns and n_rows) and
@@ -2269,9 +2268,9 @@ class VFlip(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Vertically flips an image
@@ -2331,9 +2330,9 @@ class RandomAspectRatio(BaseRandomRangeTransform):
     def apply_random_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Transform that randomly changes the aspect ratio of an image
@@ -2381,9 +2380,9 @@ class RandomBlur(BaseRandomRangeTransform):
     def apply_random_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Transform that randomly blurs an image
@@ -2431,9 +2430,9 @@ class RandomBrightness(BaseRandomRangeTransform):
     def apply_random_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Transform that randomly changes the brightness of an image
@@ -2468,10 +2467,10 @@ class RandomEmojiOverlay(BaseTransform):
         self,
         emoji_directory: str = utils.SMILEY_EMOJI_DIR,
         opacity: float = 1.0,
-        emoji_size: Union[float, Tuple[float, float]] = 0.15,
-        x_pos: Union[float, Tuple[float, float]] = 0.4,
-        y_pos: Union[float, Tuple[float, float]] = 0.8,
-        seed: Optional[int] = 42,
+        emoji_size: float | tuple[float, float] = 0.15,
+        x_pos: float | tuple[float, float] = 0.4,
+        y_pos: float | tuple[float, float] = 0.8,
+        seed: int | None = 42,
         p: float = 1.0,
     ):
         """
@@ -2506,9 +2505,9 @@ class RandomEmojiOverlay(BaseTransform):
     def apply_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Transform that overlays a random emoji onto an image
@@ -2593,9 +2592,9 @@ class RandomPixelization(BaseRandomRangeTransform):
     def apply_random_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Transform that randomly pixelizes an image
@@ -2641,9 +2640,9 @@ class RandomRotation(BaseRandomRangeTransform):
     def apply_random_transform(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Transform that randomly rotates an image

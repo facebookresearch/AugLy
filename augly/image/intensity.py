@@ -7,7 +7,7 @@
 
 # pyre-unsafe
 
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 import numpy as np
 from augly.image import utils as imutils
@@ -54,7 +54,7 @@ def brightness_intensity(factor: float, **kwargs) -> float:
 
 
 def change_aspect_ratio_intensity(
-    ratio: float, metadata: Dict[str, Any], **kwargs
+    ratio: float, metadata: dict[str, Any], **kwargs
 ) -> float:
     assert (
         isinstance(ratio, (float, int)) and ratio > 0
@@ -67,7 +67,7 @@ def change_aspect_ratio_intensity(
     return min((ratio / max_ratio) * 100.0, 100.0)
 
 
-def clip_image_size_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def clip_image_size_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
@@ -102,7 +102,7 @@ def convert_color_intensity(**kwargs) -> float:
     return 100.0
 
 
-def crop_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def crop_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
@@ -122,7 +122,7 @@ def hflip_intensity(**kwargs) -> float:
 
 
 def masked_composite_intensity(
-    mask: Optional[Union[str, Image.Image]], metadata: Dict[str, Any], **kwargs
+    mask: str | Image.Image | None, metadata: dict[str, Any], **kwargs
 ) -> float:
     if mask is None:
         mask_intensity = 1.0
@@ -149,7 +149,7 @@ def masked_composite_intensity(
     return (aug_intensity * mask_intensity) * 100.0
 
 
-def meme_format_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def meme_format_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
@@ -178,7 +178,7 @@ def overlay_onto_background_image_intensity(
 def overlay_onto_screenshot_intensity(
     template_filepath: str,
     template_bboxes_filepath: str,
-    metadata: Dict[str, Any],
+    metadata: dict[str, Any],
     **kwargs,
 ) -> float:
     _, bbox = imutils.get_template_and_bbox(template_filepath, template_bboxes_filepath)
@@ -193,7 +193,7 @@ def overlay_stripes_intensity(
     line_density: float,
     line_type: str,
     line_opacity: float,
-    metadata: Dict[str, Any],
+    metadata: dict[str, Any],
     **kwargs,
 ) -> float:
     binary_mask = imutils.compute_stripe_mask(
@@ -234,11 +234,11 @@ def overlay_text_intensity(opacity: float, font_size: float, **kwargs) -> float:
     return overlay_media_intensity_helper(opacity, font_size)
 
 
-def pad_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def pad_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
-def pad_square_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def pad_square_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
@@ -274,7 +274,7 @@ def random_noise_intensity(mean: float, var: float, **kwargs) -> float:
     return (mean_intensity * var_intensity) * 100.0
 
 
-def resize_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def resize_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 
 
@@ -357,7 +357,7 @@ def overlay_media_intensity_helper(
     return (opacity * (overlay_content_size**2)) * 100.0
 
 
-def resize_intensity_helper(metadata: Dict[str, Any]) -> float:
+def resize_intensity_helper(metadata: dict[str, Any]) -> float:
     """
     Computes intensity of any transform that resizes the src image. For these
     types of transforms the intensity is defined as the percentage of image

@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List, Union
 
 from augly.text.augmenters.utils import (
     rejoin_words_and_whitespace,
@@ -57,7 +56,7 @@ class BidirectionalAugmenter:
 
         return LTR_OVERRIDE + rejoin_words_and_whitespace(augmented_words, spaces)
 
-    def augment(self, texts: Union[str, List[str]]) -> List[str]:
+    def augment(self, texts: str | list[str]) -> list[str]:
         texts = texts if isinstance(texts, list) else [texts]
 
         if self.granularity == "all":

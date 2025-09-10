@@ -7,8 +7,9 @@
 
 # pyre-unsafe
 
+from collections.abc import Callable
 from copy import deepcopy
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 import numpy as np
 import torch
@@ -24,14 +25,14 @@ from torchaudio.functional import fftconvolve, resample
 
 
 def add_background_noise(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
-    background_audio: Optional[Union[str, np.ndarray]] = None,
+    background_audio: str | np.ndarray | None = None,
     snr_level_db: float = 10.0,
-    seed: Optional[audutils.RNGSeed] = None,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    seed: audutils.RNGSeed | None = None,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Mixes in a background sound into the audio
 
@@ -130,13 +131,13 @@ def add_background_noise(
 
 
 def apply_lambda(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
-    aug_function: Callable[..., Tuple[np.ndarray, int]] = lambda x, y: (x, y),
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
+    aug_function: Callable[..., tuple[np.ndarray, int]] = lambda x, y: (x, y),
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
     **kwargs,
-) -> Tuple[np.ndarray, int]:
+) -> tuple[np.ndarray, int]:
     """
     Apply a user-defined lambda to the audio
 
@@ -182,12 +183,12 @@ def apply_lambda(
 
 
 def change_volume(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     volume_db: float = 0.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Changes the volume of the audio
 
@@ -237,13 +238,13 @@ def change_volume(
 
 
 def clicks(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     seconds_between_clicks: float = 0.5,
     snr_level_db: float = 1.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Adds clicks to the audio at a given regular interval
 
@@ -299,13 +300,13 @@ def clicks(
 
 
 def clip(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     offset_factor: float = 0.0,
     duration_factor: float = 1.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Clips the audio using the specified offset and duration factors
 
@@ -360,14 +361,14 @@ def clip(
 
 
 def harmonic(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     kernel_size: int = 31,
     power: float = 2.0,
     margin: float = 1.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Extracts the harmonic part of the audio
 
@@ -433,12 +434,12 @@ def harmonic(
 
 
 def high_pass_filter(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     cutoff_hz: float = 3000.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Allows audio signals with a frequency higher than the given cutoff to pass
     through and attenuates signals with frequencies lower than the cutoff frequency
@@ -489,14 +490,14 @@ def high_pass_filter(
 
 
 def insert_in_background(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     offset_factor: float = 0.0,
-    background_audio: Optional[Union[str, np.ndarray]] = None,
-    seed: Optional[audutils.RNGSeed] = None,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    background_audio: str | np.ndarray | None = None,
+    seed: audutils.RNGSeed | None = None,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Inserts audio into a background clip in a non-overlapping manner.
 
@@ -570,11 +571,11 @@ def insert_in_background(
 
 
 def invert_channels(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Inverts channels of the audio.
     If the audio has only one channel, no change is applied.
@@ -617,12 +618,12 @@ def invert_channels(
 
 
 def loop(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     n: int = 1,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Loops the audio 'n' times
 
@@ -664,12 +665,12 @@ def loop(
 
 
 def low_pass_filter(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     cutoff_hz: float = 500.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Allows audio signals with a frequency lower than the given cutoff to pass through
     and attenuates signals with frequencies higher than the cutoff frequency
@@ -720,15 +721,15 @@ def low_pass_filter(
 
 
 def normalize(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
-    norm: Optional[float] = np.inf,
+    norm: float | None = np.inf,
     axis: int = 0,
-    threshold: Optional[float] = None,
-    fill: Optional[bool] = None,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    threshold: float | None = None,
+    fill: bool | None = None,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Normalizes the audio array along the chosen axis (norm(audio, axis=axis) == 1)
 
@@ -797,14 +798,14 @@ def normalize(
 
 
 def peaking_equalizer(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     center_hz: float = 500.0,
     q: float = 1.0,
     gain_db: float = -3.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Applies a two-pole peaking equalization filter. The signal-level at and around
     `center_hz` can be increased or decreased, while all other frequencies are unchanged
@@ -867,14 +868,14 @@ def peaking_equalizer(
 
 
 def percussive(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     kernel_size: int = 31,
     power: float = 2.0,
     margin: float = 1.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Extracts the percussive part of the audio
 
@@ -939,12 +940,12 @@ def percussive(
 
 
 def pitch_shift(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     n_steps: float = 1.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Shifts the pitch of the audio by `n_steps`
 
@@ -994,7 +995,7 @@ def pitch_shift(
 
 
 def reverb(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     reverberance: float = 50.0,
     hf_damping: float = 50.0,
@@ -1003,9 +1004,9 @@ def reverb(
     pre_delay: float = 0.0,
     wet_gain: float = 0.0,
     wet_only: bool = False,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Adds reverberation to the audio
 
@@ -1106,12 +1107,12 @@ def reverb(
 
 
 def speed(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     factor: float = 2.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Changes the speed of the audio, affecting pitch as well
 
@@ -1153,12 +1154,12 @@ def speed(
 
 
 def tempo(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     factor: float = 2.0,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Adjusts the tempo of the audio by a given factor
 
@@ -1211,12 +1212,12 @@ def tempo(
 
 
 def time_stretch(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     rate: float = 1.5,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Time-stretches the audio by a fixed rate
 
@@ -1267,11 +1268,11 @@ def time_stretch(
 
 
 def to_mono(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Converts the audio from stereo to mono by averaging samples across channels
 
@@ -1306,14 +1307,14 @@ def to_mono(
 
 
 def fft_convolve(
-    audio: Union[str, np.ndarray],
+    audio: str | np.ndarray,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
     normalize: bool = True,
-    impulse_audio: Optional[Union[str, np.ndarray]] = None,
-    seed: Optional[audutils.RNGSeed] = None,
-    output_path: Optional[str] = None,
-    metadata: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[np.ndarray, int]:
+    impulse_audio: str | np.ndarray | None = None,
+    seed: audutils.RNGSeed | None = None,
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+) -> tuple[np.ndarray, int]:
     """
     Applies a convolution operation to audio using an impulse response as the convolution filter
 

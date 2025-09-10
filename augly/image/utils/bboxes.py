@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 import math
-from typing import Callable, List, Optional, Tuple
+from collections.abc import Callable
 
 import numpy as np
 from augly.image import utils as imutils
@@ -16,8 +16,8 @@ from PIL import Image, ImageDraw
 
 
 def crop_bboxes_helper(
-    bbox: Tuple, x1: float, y1: float, x2: float, y2: float, **kwargs
-) -> Tuple:
+    bbox: tuple, x1: float, y1: float, x2: float, y2: float, **kwargs
+) -> tuple:
     """
     If part of the bbox was cropped out in the x-axis, the left/right side will now be
     0/1 respectively; otherwise the fraction x1 is cut off from the left & x2 from the
@@ -33,7 +33,7 @@ def crop_bboxes_helper(
     )
 
 
-def hflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
+def hflip_bboxes_helper(bbox: tuple, **kwargs) -> tuple:
     """
     When the src image is horizontally flipped, the bounding box also gets horizontally
     flipped
@@ -43,8 +43,8 @@ def hflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
 
 
 def meme_format_bboxes_helper(
-    bbox: Tuple, src_w: int, src_h: int, caption_height: int, **kwargs
-) -> Tuple:
+    bbox: tuple, src_w: int, src_h: int, caption_height: int, **kwargs
+) -> tuple:
     """
     The src image is offset vertically by caption_height pixels, so we normalize that to
     get the y offset, add that to the upper & lower coordinates, & renormalize with the
@@ -57,8 +57,8 @@ def meme_format_bboxes_helper(
 
 
 def overlay_onto_background_image_bboxes_helper(
-    bbox: Tuple, overlay_size: float, x_pos: float, y_pos: float, **kwargs
-) -> Tuple:
+    bbox: tuple, overlay_size: float, x_pos: float, y_pos: float, **kwargs
+) -> tuple:
     """
     The src image is overlaid on the dst image offset by (`x_pos`, `y_pos`) & with a
     size of `overlay_size` (all relative to the dst image dimensions). So the bounding
@@ -76,14 +76,14 @@ def overlay_onto_background_image_bboxes_helper(
 
 
 def overlay_image_bboxes_helper(
-    bbox: Tuple,
+    bbox: tuple,
     opacity: float,
     overlay_size: float,
     x_pos: float,
     y_pos: float,
     max_visible_opacity: float,
     **kwargs,
-) -> Tuple:
+) -> tuple:
     """
     We made a few decisions for this augmentation about how bboxes are defined:
     1. If `opacity` < `max_visible_opacity` (default 0.75, can be specified by the user),
@@ -127,7 +127,7 @@ def overlay_image_bboxes_helper(
 
 
 def overlay_onto_screenshot_bboxes_helper(
-    bbox: Tuple,
+    bbox: tuple,
     src_w: int,
     src_h: int,
     template_filepath: str,
@@ -136,7 +136,7 @@ def overlay_onto_screenshot_bboxes_helper(
     max_image_size_pixels: int,
     crop_src_to_fit: bool,
     **kwargs,
-) -> Tuple:
+) -> tuple:
     """
     We transform the bbox by applying all the same transformations as are applied in the
     `overlay_onto_screenshot` function, each of which is mentioned below in comments
@@ -219,7 +219,7 @@ def overlay_onto_screenshot_bboxes_helper(
     return left / template_w, upper / template_h, right / template_w, lower / template_h
 
 
-def pad_bboxes_helper(bbox: Tuple, w_factor: float, h_factor: float, **kwargs) -> Tuple:
+def pad_bboxes_helper(bbox: tuple, w_factor: float, h_factor: float, **kwargs) -> tuple:
     """
     The src image is padded horizontally with w_factor * src_w, so the bbox gets shifted
     over by w_factor and then renormalized over the new width. Vertical padding is
@@ -236,7 +236,7 @@ def pad_bboxes_helper(bbox: Tuple, w_factor: float, h_factor: float, **kwargs) -
     )
 
 
-def pad_square_bboxes_helper(bbox: Tuple, src_w: int, src_h: int, **kwargs) -> Tuple:
+def pad_square_bboxes_helper(bbox: tuple, src_w: int, src_h: int, **kwargs) -> tuple:
     """
     In pad_square, pad is called with w_factor & h_factor computed as follows, so we can
     use the `pad_bboxes_helper` function to transform the bbox
@@ -252,23 +252,23 @@ def pad_square_bboxes_helper(bbox: Tuple, src_w: int, src_h: int, **kwargs) -> T
 
 
 def perspective_transform_bboxes_helper(
-    bbox: Tuple,
+    bbox: tuple,
     src_w: int,
     src_h: int,
     sigma: float,
     dx: float,
     dy: float,
     crop_out_black_border: bool,
-    seed: Optional[int],
+    seed: int | None,
     **kwargs,
-) -> Tuple:
+) -> tuple:
     """
     Computes the bbox that encloses the bbox in the perspective transformed image. Also
     uses the `crop_bboxes_helper` function since the image is cropped if
     `crop_out_black_border` is True.
     """
 
-    def transform(x: float, y: float, a: List[float]) -> Tuple:
+    def transform(x: float, y: float, a: list[float]) -> tuple:
         """
         Transforms a point in the image given the perspective transform matrix; we will
         use this to transform the bounding box corners. Based on PIL source code:
@@ -280,8 +280,8 @@ def perspective_transform_bboxes_helper(
         )
 
     def get_perspective_transform(
-        src_coords: List[Tuple[int, int]], dst_coords: List[Tuple[int, int]]
-    ) -> List[float]:
+        src_coords: list[tuple[int, int]], dst_coords: list[tuple[int, int]]
+    ) -> list[float]:
         """
         Computes the transformation matrix used for the perspective transform with
         the given src & dst corner coordinates. Based on OpenCV source code:
@@ -360,8 +360,8 @@ def perspective_transform_bboxes_helper(
 
 
 def rotate_bboxes_helper(
-    bbox: Tuple, src_w: int, src_h: int, degrees: float, **kwargs
-) -> Tuple:
+    bbox: tuple, src_w: int, src_h: int, degrees: float, **kwargs
+) -> tuple:
     """
     Computes the bbox that encloses the rotated bbox in the rotated image. This code was
     informed by looking at the source code for PIL.Image.rotate
@@ -379,13 +379,13 @@ def rotate_bboxes_helper(
     # Top left, upper right, lower right, & lower left corner coefficients (in pixels)
     bbox_corners = [(left, upper), (right, upper), (right, lower), (left, lower)]
 
-    def transform(x: int, y: int, matrix: List[float]) -> Tuple[float, float]:
+    def transform(x: int, y: int, matrix: list[float]) -> tuple[float, float]:
         (a, b, c, d, e, f) = matrix
         return a * x + b * y + c, d * x + e * y + f
 
     def get_enclosing_bbox(
-        corners: List[Tuple[int, int]], rotation_matrix: List[float]
-    ) -> Tuple[int, int, int, int]:
+        corners: list[tuple[int, int]], rotation_matrix: list[float]
+    ) -> tuple[int, int, int, int]:
         rotated_corners = [transform(x, y, rotation_matrix) for x, y in corners]
         xs, ys = zip(*rotated_corners)
         return (
@@ -452,12 +452,12 @@ def rotate_bboxes_helper(
 
 
 def spatial_bbox_helper(
-    bbox: Tuple[float, float, float, float],
+    bbox: tuple[float, float, float, float],
     src_w: int,
     src_h: int,
     aug_function: Callable,
     **kwargs,
-) -> Tuple:
+) -> tuple:
     """
     Computes the bbox that encloses the transformed bbox in the image transformed by
     `aug_function`. This helper can be used to compute the transformed bbox for any
@@ -482,7 +482,7 @@ def spatial_bbox_helper(
     return (min_x / aug_w, min_y / aug_h, max_x / aug_w, max_y / aug_h)
 
 
-def vflip_bboxes_helper(bbox: Tuple, **kwargs) -> Tuple:
+def vflip_bboxes_helper(bbox: tuple, **kwargs) -> tuple:
     """
     Analogous to hflip, when the src image is vertically flipped, the bounding box also
     gets vertically flipped

@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -17,7 +16,7 @@ class VideoAugmenterByBrightness(BaseVidgearFFMPEGAugmenter):
         assert -1.0 <= level <= 1.0, "Level must be a value in the range [-1.0, 1.0]"
         self.level = level
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Changes the brightness level of the video
 

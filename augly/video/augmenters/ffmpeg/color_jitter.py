@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -30,7 +29,7 @@ class VideoAugmenterByColorJitter(BaseVidgearFFMPEGAugmenter):
         self.contrast_level = contrast_level
         self.saturation_level = saturation_level
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Color jitters the video
 

@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -17,7 +16,7 @@ class VideoAugmenterByFPSChange(BaseVidgearFFMPEGAugmenter):
         assert fps > 0, "FPS must be greater than zero"
         self.fps = fps
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Changes the frame rate of the video
 

@@ -9,7 +9,8 @@
 
 import inspect
 import random
-from typing import Any, Callable, Dict, List, Literal, Optional, Union
+from collections.abc import Callable
+from typing import Any, Literal
 
 from augly.text import functional as F
 from augly.utils import (
@@ -35,11 +36,11 @@ class BaseTransform:
 
     def __call__(
         self,
-        texts: Union[str, List[str]],
+        texts: str | list[str],
         force: bool = False,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
         **kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         @param texts: a string or a list of text documents to be augmented
 
@@ -66,7 +67,7 @@ class BaseTransform:
 
         return self.apply_transform(texts, metadata, **self.get_aug_kwargs(**kwargs))
 
-    def get_aug_kwargs(self, **kwargs) -> Dict[str, Any]:
+    def get_aug_kwargs(self, **kwargs) -> dict[str, Any]:
         """
         @param kwargs: any kwargs that were passed into __call__() intended to override
             the instance variables set in __init__() when calling the augmentation
@@ -86,10 +87,10 @@ class BaseTransform:
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         This function is to be implemented in the child classes. From this function, call
         the augmentation function, passing in 'texts', 'metadata', & the given
@@ -117,7 +118,7 @@ Example:
 class ApplyLambda(BaseTransform):
     def __init__(
         self,
-        aug_function: Callable[..., List[str]] = lambda x: x,
+        aug_function: Callable[..., list[str]] = lambda x: x,
         p: float = 1.0,
         **kwargs,
     ):
@@ -137,10 +138,10 @@ class ApplyLambda(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Apply a user-defined lambda on a list of text documents
 
@@ -165,7 +166,7 @@ class ChangeCase(BaseTransform):
         granularity: str = "word",
         cadence: float = 1.0,
         case: str = "random",
-        seed: Optional[int] = 10,
+        seed: int | None = 10,
         p: float = 1.0,
     ):
         """
@@ -193,10 +194,10 @@ class ChangeCase(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Changes the case (e.g. upper, lower, title) of random chars, words, or the entire
         text
@@ -219,9 +220,9 @@ class Contractions(BaseTransform):
     def __init__(
         self,
         aug_p: float = 0.3,
-        mapping: Optional[Union[str, Dict[str, Any]]] = CONTRACTIONS_MAPPING,
+        mapping: str | dict[str, Any] | None = CONTRACTIONS_MAPPING,
         max_contraction_length: int = 2,
-        seed: Optional[int] = 10,
+        seed: int | None = 10,
         p: float = 1.0,
     ):
         """
@@ -248,10 +249,10 @@ class Contractions(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Replaces pairs (or longer strings) of words with contractions given a mapping
 
@@ -305,10 +306,10 @@ class EncodeTextTransform(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List]:
+    ) -> str | list:
         """
         Encodes the text in base64
 
@@ -331,10 +332,10 @@ class EncodeTextTransform(BaseTransform):
 class GetBaseline(BaseTransform):
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Generates a baseline by tokenizing and detokenizing the text
 
@@ -380,10 +381,10 @@ class InsertPunctuationChars(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Inserts punctuation characters in each input text
 
@@ -406,7 +407,7 @@ class InsertText(BaseTransform):
         self,
         num_insertions: int = 1,
         insertion_location: str = "random",
-        seed: Optional[int] = 10,
+        seed: int | None = 10,
         p: float = 1.0,
     ):
         """
@@ -428,10 +429,10 @@ class InsertText(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Inserts some specified text into the input text a given number of times at a
         given location
@@ -477,10 +478,10 @@ class InsertWhitespaceChars(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Inserts whitespace characters in each input text
 
@@ -526,10 +527,10 @@ class InsertZeroWidthChars(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Inserts zero-width characters in each input text
 
@@ -555,7 +556,7 @@ class MergeWords(BaseTransform):
         aug_word_min: int = 1,
         aug_word_max: int = 1000,
         n: int = 1,
-        priority_words: Optional[List[str]] = None,
+        priority_words: list[str] | None = None,
         p: float = 1.0,
     ):
         """
@@ -584,10 +585,10 @@ class MergeWords(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Merges words in the text together
 
@@ -627,10 +628,10 @@ class ReplaceBidirectional(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Reverses each word (or part of the word) in each input text and uses
         bidirectional marks to render the text in its original order. It reverses
@@ -660,7 +661,7 @@ class ReplaceFunFonts(BaseTransform):
         vary_fonts: bool = False,
         fonts_path: str = FUN_FONTS_PATH,
         n: int = 1,
-        priority_words: Optional[List[str]] = None,
+        priority_words: list[str] | None = None,
         p: float = 1.0,
     ):
         """
@@ -696,10 +697,10 @@ class ReplaceFunFonts(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Replaces words or characters depending on the granularity with fun fonts applied
 
@@ -728,8 +729,8 @@ class ReplaceSimilarChars(BaseTransform):
         aug_word_min: int = 1,
         aug_word_max: int = 1000,
         n: int = 1,
-        mapping_path: Optional[str] = None,
-        priority_words: Optional[List[str]] = None,
+        mapping_path: str | None = None,
+        priority_words: list[str] | None = None,
         p: float = 1.0,
     ):
         """
@@ -770,10 +771,10 @@ class ReplaceSimilarChars(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Replaces letters in each text with similar characters
 
@@ -803,7 +804,7 @@ class ReplaceSimilarUnicodeChars(BaseTransform):
         aug_word_max: int = 1000,
         n: int = 1,
         mapping_path: str = UNICODE_MAPPING_PATH,
-        priority_words: Optional[List[str]] = None,
+        priority_words: list[str] | None = None,
         p: float = 1.0,
     ):
         """
@@ -844,10 +845,10 @@ class ReplaceSimilarUnicodeChars(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Replaces letters in each text with similar unicodes
 
@@ -868,7 +869,7 @@ class ReplaceSimilarUnicodeChars(BaseTransform):
 class ReplaceText(BaseTransform):
     def __init__(
         self,
-        replace_text: Union[str, Dict[str, str]],
+        replace_text: str | dict[str, str],
         p: float = 1.0,
     ):
         """
@@ -882,10 +883,10 @@ class ReplaceText(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Replaces the input text entirely with some specified text
 
@@ -935,10 +936,10 @@ class ReplaceUpsideDown(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Flips words in the text upside down depending on the granularity
 
@@ -963,9 +964,9 @@ class ReplaceWords(BaseTransform):
         aug_word_min: int = 1,
         aug_word_max: int = 1000,
         n: int = 1,
-        mapping: Optional[Union[str, Dict[str, Any]]] = None,
-        priority_words: Optional[List[str]] = None,
-        ignore_words: Optional[List[str]] = None,
+        mapping: str | dict[str, Any] | None = None,
+        priority_words: list[str] | None = None,
+        ignore_words: list[str] | None = None,
         p: float = 1.0,
     ):
         """
@@ -998,10 +999,10 @@ class ReplaceWords(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Replaces words in each text based on a given mapping
 
@@ -1031,9 +1032,9 @@ class SimulateTypos(BaseTransform):
         aug_word_max: int = 1000,
         n: int = 1,
         typo_type: str = "all",
-        misspelling_dict_path: Optional[str] = MISSPELLING_DICTIONARY_PATH,
+        misspelling_dict_path: str | None = MISSPELLING_DICTIONARY_PATH,
         max_typo_length: int = 1,
-        priority_words: Optional[List[str]] = None,
+        priority_words: list[str] | None = None,
         p: float = 1.0,
     ):
         """
@@ -1089,10 +1090,10 @@ class SimulateTypos(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Simulates typos in each text using misspellings, keyboard distance, and swapping.
         You can specify a typo_type: charmix, which does a combination of character-level
@@ -1123,7 +1124,7 @@ class SplitWords(BaseTransform):
         aug_word_min: int = 1,
         aug_word_max: int = 1000,
         n: int = 1,
-        priority_words: Optional[List[str]] = None,
+        priority_words: list[str] | None = None,
         p: float = 1.0,
     ):
         """
@@ -1152,10 +1153,10 @@ class SplitWords(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Splits words in the text into subwords
 
@@ -1180,9 +1181,9 @@ class SwapGenderedWords(BaseTransform):
         aug_word_min: int = 1,
         aug_word_max: int = 1000,
         n: int = 1,
-        mapping: Union[str, Dict[str, str]] = GENDERED_WORDS_MAPPING,
-        priority_words: Optional[List[str]] = None,
-        ignore_words: Optional[List[str]] = None,
+        mapping: str | dict[str, str] = GENDERED_WORDS_MAPPING,
+        priority_words: list[str] | None = None,
+        ignore_words: list[str] | None = None,
         p: float = 1.0,
     ):
         """
@@ -1216,10 +1217,10 @@ class SwapGenderedWords(BaseTransform):
 
     def apply_transform(
         self,
-        texts: Union[str, List[str]],
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        texts: str | list[str],
+        metadata: list[dict[str, Any]] | None = None,
         **aug_kwargs,
-    ) -> Union[str, List[str]]:
+    ) -> str | list[str]:
         """
         Replaces words in each text based on a provided `mapping`, which can either be a
         dict already constructed mapping words from one gender to another or a file path

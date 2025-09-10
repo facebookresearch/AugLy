@@ -25,8 +25,8 @@ import os
 import random
 import shutil
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Iterator, List, Optional, Tuple
 
 import cv2
 import numpy as np
@@ -39,8 +39,8 @@ class BaseCV2Augmenter(ABC):
         self,
         num_dist: int = 0,
         random_movement: bool = True,
-        topleft: Optional[Tuple[float, float]] = None,
-        bottomright: Optional[Tuple[float, float]] = None,
+        topleft: tuple[float, float] | None = None,
+        bottomright: tuple[float, float] | None = None,
         **kwargs,
     ):
         assert type(random_movement) == bool, "Random movement must be set to a boolean"
@@ -105,7 +105,7 @@ class BaseCV2Augmenter(ABC):
         """
         raise NotImplementedError("Implement apply_augmentation method")
 
-    def get_origins(self, index: int) -> Tuple[float, float]:
+    def get_origins(self, index: int) -> tuple[float, float]:
         if self.random_movement:
             return next(self.origins)
 
@@ -113,9 +113,9 @@ class BaseCV2Augmenter(ABC):
 
     @staticmethod
     def random_origins(
-        topleft: Optional[Tuple[float, float]],
-        bottomright: Optional[Tuple[float, float]],
-    ) -> Iterator[Tuple[float, float]]:
+        topleft: tuple[float, float] | None,
+        bottomright: tuple[float, float] | None,
+    ) -> Iterator[tuple[float, float]]:
         top, left = topleft or (0.01, 0.01)
         bottom, right = bottomright or (0.99, 0.99)
         while True:
@@ -124,7 +124,7 @@ class BaseCV2Augmenter(ABC):
     @staticmethod
     def moving_origins(
         x_start: float, y_val: float, x_min: float, x_max: float
-    ) -> Iterator[Tuple[float, float]]:
+    ) -> Iterator[tuple[float, float]]:
         x_curr = x_start
         while True:
             yield x_curr, y_val
@@ -133,8 +133,8 @@ class BaseCV2Augmenter(ABC):
 
     @staticmethod
     def random_colors(
-        colors: Optional[List[Tuple[int, int, int]]],
-    ) -> Iterator[Tuple[int, int, int]]:
+        colors: list[tuple[int, int, int]] | None,
+    ) -> Iterator[tuple[int, int, int]]:
         if colors is not None:
             assert type(colors) == list, "Expected type 'List' for colors variable"
             for color in colors:

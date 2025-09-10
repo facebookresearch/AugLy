@@ -9,7 +9,7 @@
 
 import random
 import shutil
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from augly.video.helpers import validate_input_and_output_paths
 from augly.video.transforms import VidAugBaseClass
@@ -41,7 +41,7 @@ Example:
 
 
 class BaseComposition(VidAugBaseClass):
-    def __init__(self, transforms: List[VidAugBaseClass], p: float = 1.0):
+    def __init__(self, transforms: list[VidAugBaseClass], p: float = 1.0):
         """
         @param transforms: a list of transforms
 
@@ -60,9 +60,9 @@ class Compose(BaseComposition):
     def __call__(
         self,
         video_path: str,
-        output_path: Optional[str] = None,
-        seed: Optional[int] = None,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        output_path: str | None = None,
+        seed: int | None = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Applies the list of transforms in order to the video
@@ -97,7 +97,7 @@ class Compose(BaseComposition):
 
 
 class OneOf(BaseComposition):
-    def __init__(self, transforms: List[VidAugBaseClass], p: float = 1.0):
+    def __init__(self, transforms: list[VidAugBaseClass], p: float = 1.0):
         """
         @param transforms: a list of transforms to select from; one of which will
             be chosen to be applied to the video
@@ -112,9 +112,9 @@ class OneOf(BaseComposition):
     def __call__(
         self,
         video_path: str,
-        output_path: Optional[str] = None,
-        seed: Optional[int] = None,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        output_path: str | None = None,
+        seed: int | None = None,
+        metadata: list[dict[str, Any]] | None = None,
     ) -> str:
         """
         Applies one of the transforms to the video (with probability p)

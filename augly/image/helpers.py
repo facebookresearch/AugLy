@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 import random
-from typing import Callable, List, Tuple
+from collections.abc import Callable
 
 import numpy as np
 from PIL import Image, ImageFont
@@ -41,7 +41,7 @@ def fit_text_in_bbox(
     font_size: int,
     min_font_size: int,
     rand: random.Random,
-) -> Tuple[int, int, List[str], int, ImageFont.FreeTypeFont]:
+) -> tuple[int, int, list[str], int, ImageFont.FreeTypeFont]:
     """Fits text into a bounding box by adjusting font size and x-coordinate
 
     @param text: Text to fit into bounding box
@@ -101,7 +101,7 @@ def fit_text_in_bbox(
 
 def wrap_text_for_image_overlay(
     text: str, font: ImageFont.FreeTypeFont, max_width: int
-) -> List[str]:
+) -> list[str]:
     """Wraps text around an image
 
     @param text (str): Text to wrap

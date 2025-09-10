@@ -8,7 +8,6 @@
 # pyre-unsafe
 
 import json
-from typing import List, Optional
 
 from augly.text.augmenters.utils import (
     detokenize,
@@ -34,7 +33,7 @@ class MisspellingReplacement:
         with open(local_misspelling_dict_path) as json_file:
             self.dictionary = json.load(json_file)
 
-    def replace(self, word: str) -> Optional[List[str]]:
+    def replace(self, word: str) -> list[str] | None:
         return self.dictionary.get(word, None) or self.dictionary.get(
             word.lower(), None
         )
@@ -59,9 +58,9 @@ class TypoAugmenter(WordAugmenter):
         aug_word_max: int,
         aug_word_p: float,
         typo_type: str,
-        misspelling_dict_path: Optional[str],
+        misspelling_dict_path: str | None,
         max_typo_length: int,
-        priority_words: Optional[List[str]],
+        priority_words: list[str] | None,
     ):
         validate_augmenter_params(
             aug_char_min,
@@ -195,5 +194,5 @@ class TypoAugmenter(WordAugmenter):
 
         return detokenize(results)
 
-    def _tokenizer(self, text: str) -> List[str]:
+    def _tokenizer(self, text: str) -> list[str]:
         return tokenize(text)

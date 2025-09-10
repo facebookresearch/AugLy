@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List, Optional
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_video_info
@@ -16,8 +15,8 @@ from augly.video.helpers import get_video_info
 class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
     def __init__(
         self,
-        start: Optional[float] = None,
-        end: Optional[float] = None,
+        start: float | None = None,
+        end: float | None = None,
         offset_factor: float = 0.0,
         duration_factor: float = 1.0,
         minimum_duration: float = 0.0,
@@ -46,7 +45,7 @@ class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
             self.duration_factor = duration_factor
             self.minimum_duration = minimum_duration
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Trims the video
 

@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 import random
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from augly.text.transforms import BaseTransform
 
@@ -39,7 +39,7 @@ Example:
 
 
 class BaseComposition(BaseTransform):
-    def __init__(self, transforms: List[BaseTransform], p: float = 1.0):
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
         """
         @param transforms: a list of transforms
 
@@ -57,10 +57,10 @@ class BaseComposition(BaseTransform):
 class Compose(BaseComposition):
     def __call__(
         self,
-        texts: Union[str, List[str]],
-        seed: Optional[int] = None,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Union[str, List[str]]:
+        texts: str | list[str],
+        seed: int | None = None,
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> str | list[str]:
         """
         Applies the list of transforms in order to the text
 
@@ -86,7 +86,7 @@ class Compose(BaseComposition):
 
 
 class OneOf(BaseComposition):
-    def __init__(self, transforms: List[BaseTransform], p: float = 1.0):
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
         """
         @param transforms: a list of transforms to select from; one of which will
             be chosen to be applied to the text
@@ -100,11 +100,11 @@ class OneOf(BaseComposition):
 
     def __call__(
         self,
-        texts: Union[str, List[str]],
+        texts: str | list[str],
         force: bool = False,
-        seed: Optional[int] = None,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Union[str, List[str]]:
+        seed: int | None = None,
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> str | list[str]:
         """
         @param texts: a string or a list of text documents to be augmented
 

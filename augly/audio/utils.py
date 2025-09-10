@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 import numbers
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Union
 
 import numpy as np
 import torch
@@ -29,8 +29,8 @@ Segment = utils.Segment
 
 
 def validate_and_load_audio(
-    audio: Union[str, np.ndarray], sample_rate: int = utils.DEFAULT_SAMPLE_RATE
-) -> Tuple[np.ndarray, int]:
+    audio: str | np.ndarray, sample_rate: int = utils.DEFAULT_SAMPLE_RATE
+) -> tuple[np.ndarray, int]:
     """
     If audio is a str, loads the audio as an np.ndarray and returns that & the
     audio's sample rate (returned by librosa.load()). If audio is an np.ndarray,
@@ -54,9 +54,9 @@ def validate_and_load_audio(
 
 def ret_and_save_audio(
     audio: np.ndarray,
-    output_path: Optional[str],
+    output_path: str | None,
     sample_rate: int = utils.DEFAULT_SAMPLE_RATE,
-) -> Tuple[np.ndarray, int]:
+) -> tuple[np.ndarray, int]:
     if output_path is not None:
         utils.validate_output_path(output_path)
 
@@ -75,7 +75,7 @@ def ret_and_save_audio(
     return audio, sample_rate
 
 
-def check_random_state(seed: Optional[RNGSeed]) -> RNG:
+def check_random_state(seed: RNGSeed | None) -> RNG:
     """
     Turn seed into a np.random.RandomState instance
 
@@ -98,7 +98,7 @@ def check_random_state(seed: Optional[RNGSeed]) -> RNG:
 
 
 def get_metadata(
-    metadata: Optional[List[Dict[str, Any]]],
+    metadata: list[dict[str, Any]] | None,
     function_name: str,
     audio: np.ndarray,
     sample_rate: int,
@@ -142,13 +142,13 @@ def get_metadata(
 
 def compute_changed_segments(
     name: str,
-    src_segments: List[Segment],
-    dst_segments: List[Segment],
+    src_segments: list[Segment],
+    dst_segments: list[Segment],
     src_duration: float,
     dst_duration: float,
     speed_factor: float,
     **kwargs,
-) -> Tuple[List[Segment], List[Segment]]:
+) -> tuple[list[Segment], list[Segment]]:
     """
     This function performs the logic of computing the new matching segments based
     on the old ones, for the set of transforms that temporally change the video.
@@ -198,9 +198,9 @@ def compute_segments(
     name: str,
     src_duration: float,
     dst_duration: float,
-    metadata: List[Dict[str, Any]],
+    metadata: list[dict[str, Any]],
     **kwargs,
-) -> Tuple[List[Segment], List[Segment]]:
+) -> tuple[list[Segment], list[Segment]]:
     speed_factor = 1.0
     if not metadata:
         src_segments = [Segment(0.0, src_duration)]

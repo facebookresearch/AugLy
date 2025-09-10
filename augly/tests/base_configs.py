@@ -6,8 +6,8 @@
 # LICENSE file in the root directory of this source tree.
 
 import os
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Optional, Sequence, Tuple
 
 from augly.utils import TEST_URI
 
@@ -19,7 +19,7 @@ class BaseAugConfig:
     input_files: Sequence[str]
     input_file_index: int = 0
 
-    def get_input_path(self, input_file_index: Optional[int] = None) -> Tuple[str, str]:
+    def get_input_path(self, input_file_index: int | None = None) -> tuple[str, str]:
         if input_file_index is None:
             input_file_index = self.input_file_index
 

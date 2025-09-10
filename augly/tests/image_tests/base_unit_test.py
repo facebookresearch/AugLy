@@ -8,7 +8,8 @@
 import os
 import tempfile
 import unittest
-from typing import Any, Callable, Dict, List, Optional
+from collections.abc import Callable
+from typing import Any
 
 import imagehash
 from augly.tests import ImageAugConfig
@@ -24,9 +25,9 @@ def are_equal_images(a: Image.Image, b: Image.Image) -> bool:
 
 
 def are_equal_metadata(
-    actual_meta: List[Dict[str, Any]],
-    expected_meta: List[Dict[str, Any]],
-    exclude_keys: Optional[List[str]],
+    actual_meta: list[dict[str, Any]],
+    expected_meta: list[dict[str, Any]],
+    exclude_keys: list[str] | None,
 ) -> bool:
     if actual_meta == expected_meta:
         return True
@@ -108,7 +109,7 @@ class BaseImageUnitTest(unittest.TestCase):
         self,
         transform_class: Callable[..., Image.Image],
         fname: str,
-        metadata_exclude_keys: Optional[List[str]] = None,
+        metadata_exclude_keys: list[str] | None = None,
         check_mode: bool = True,
     ):
         metadata = []

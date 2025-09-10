@@ -8,7 +8,6 @@
 # pyre-unsafe
 
 import math
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -18,7 +17,7 @@ class VideoAugmenterByRotation(BaseVidgearFFMPEGAugmenter):
         assert isinstance(degrees, (float, int)), "Expected 'degrees' to be a number"
         self.degrees = degrees
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Rotates the video
 

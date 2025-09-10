@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 from abc import abstractmethod
-from typing import List, Literal, Union
+from typing import Literal
 
 from augly.text.augmenters.utils import detokenize, get_aug_idxes, tokenize
 from nlpaug.augmenter.word import Augmenter
@@ -43,7 +43,7 @@ class EncodeTextAugmentation(Augmenter):
         self.granularity = granularity
 
     @classmethod
-    def clean(cls, data: Union[str, List[str], None]) -> Union[str, List[str]]:
+    def clean(cls, data: str | list[str] | None) -> str | list[str]:
         if isinstance(data, str):
             return data
         elif isinstance(data, list):
@@ -58,7 +58,7 @@ class EncodeTextAugmentation(Augmenter):
             return str(data)
 
     @classmethod
-    def is_duplicate(cls, dataset: List[str], data: str) -> bool:
+    def is_duplicate(cls, dataset: list[str], data: str) -> bool:
         return data in dataset
 
     @abstractmethod

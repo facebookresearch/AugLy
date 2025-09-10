@@ -7,13 +7,12 @@
 
 # pyre-unsafe
 
-from typing import List, Union
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
 class VideoAugmenterByResize(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, height: Union[int, str] = "ih", width: Union[int, str] = "iw"):
+    def __init__(self, height: int | str = "ih", width: int | str = "iw"):
         """
         Constructor. See https://trac.ffmpeg.org/wiki/Scaling for height and width options.
 
@@ -24,7 +23,7 @@ class VideoAugmenterByResize(BaseVidgearFFMPEGAugmenter):
         self.new_h = height
         self.new_w = width
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Resizes the video
 

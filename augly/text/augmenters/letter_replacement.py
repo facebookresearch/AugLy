@@ -8,7 +8,6 @@
 # pyre-unsafe
 
 import json
-from typing import List, Optional
 
 from augly.text.augmenters.utils import (
     get_aug_idxes,
@@ -27,7 +26,7 @@ from nlpaug.util import Action, Method  # @manual
 
 
 class CharReplacement:
-    def __init__(self, mapping_path: Optional[str]):
+    def __init__(self, mapping_path: str | None):
         if mapping_path:
             local_mapping_path = pathmgr.get_local_path(mapping_path)
             with open(local_mapping_path) as json_file:
@@ -35,7 +34,7 @@ class CharReplacement:
         else:
             self.mapping = LETTER_CHAR_MAPPING
 
-    def replace(self, character: str) -> List[str]:
+    def replace(self, character: str) -> list[str]:
         return (
             self.mapping[character.lower()]
             if character.lower() in self.mapping
@@ -55,8 +54,8 @@ class LetterReplacementAugmenter(CharAugmenter):
         aug_word_min: int,
         aug_word_max: int,
         aug_word_p: float,
-        mapping_path: Optional[str],
-        priority_words: Optional[List[str]],
+        mapping_path: str | None,
+        priority_words: list[str] | None,
     ):
         validate_augmenter_params(
             aug_char_min,
@@ -83,7 +82,7 @@ class LetterReplacementAugmenter(CharAugmenter):
             set(priority_words) if priority_words is not None else priority_words
         )
 
-    def get_mapping(self, mapping_path: Optional[str]) -> CharReplacement:
+    def get_mapping(self, mapping_path: str | None) -> CharReplacement:
         return CharReplacement(mapping_path)
 
     def substitute(self, data: str) -> str:

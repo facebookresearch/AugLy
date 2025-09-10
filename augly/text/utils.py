@@ -9,15 +9,15 @@
 
 import json
 from copy import deepcopy
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from augly import utils
 from augly.text import intensity as txtintensity
 
 
 def get_func_kwargs(
-    metadata: Optional[List[Dict[str, Any]]], local_kwargs: Dict[str, Any], **kwargs
-) -> Dict[str, Any]:
+    metadata: list[dict[str, Any]] | None, local_kwargs: dict[str, Any], **kwargs
+) -> dict[str, Any]:
     if metadata is None:
         return {}
     func_kwargs = deepcopy(local_kwargs)
@@ -27,10 +27,10 @@ def get_func_kwargs(
 
 
 def get_metadata(
-    metadata: Optional[List[Dict[str, Any]]],
+    metadata: list[dict[str, Any]] | None,
     function_name: str,
-    texts: Optional[List[str]] = None,
-    aug_texts: Optional[Union[List[str], str]] = None,
+    texts: list[str] | None = None,
+    aug_texts: list[str] | str | None = None,
     **kwargs,
 ) -> None:
     if metadata is None:
@@ -62,17 +62,17 @@ def get_metadata(
     )(**intensity_kwargs)
 
 
-def get_gendered_words_mapping(mapping: Union[str, Dict[str, str]]) -> Dict[str, str]:
+def get_gendered_words_mapping(mapping: str | dict[str, str]) -> dict[str, str]:
     """
     Note: The `swap_gendered_words` augmentation, including this logic, was originally
     written by Adina Williams and has been used in influential work, e.g.
     https://arxiv.org/pdf/2005.00614.pdf
     """
     assert isinstance(
-        mapping, (str, Dict)
+        mapping, (str, dict)
     ), "Mapping must be either a dict or filepath to a mapping of gendered words"
 
-    if isinstance(mapping, Dict):
+    if isinstance(mapping, dict):
         return mapping
 
     if isinstance(mapping, str):

@@ -19,7 +19,6 @@ import os
 import shutil
 import tempfile
 from abc import ABC, abstractmethod
-from typing import List, Optional
 
 from augly.video.helpers import validate_input_and_output_paths
 from vidgear.gears import WriteGear
@@ -27,7 +26,7 @@ from vidgear.gears import WriteGear
 
 class BaseVidgearFFMPEGAugmenter(ABC):
     def add_augmenter(
-        self, video_path: str, output_path: Optional[str] = None, **kwargs
+        self, video_path: str, output_path: str | None = None, **kwargs
     ) -> None:
         """
         Applies the specific augmentation to the video
@@ -53,7 +52,7 @@ class BaseVidgearFFMPEGAugmenter(ABC):
             writer.close()
 
     @abstractmethod
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Constructs the FFMPEG command for VidGear
 
@@ -67,17 +66,17 @@ class BaseVidgearFFMPEGAugmenter(ABC):
         raise NotImplementedError("Implement get_command method")
 
     @staticmethod
-    def input_fmt(video_path: str) -> List[str]:
+    def input_fmt(video_path: str) -> list[str]:
         return ["-y", "-i", video_path]
 
     @staticmethod
-    def output_fmt(output_path: str) -> List[str]:
+    def output_fmt(output_path: str) -> list[str]:
         return ["-preset", "ultrafast", output_path]
 
     @staticmethod
     def standard_filter_fmt(
-        video_path: str, filters: List[str], output_path: str
-    ) -> List[str]:
+        video_path: str, filters: list[str], output_path: str
+    ) -> list[str]:
         return [
             *BaseVidgearFFMPEGAugmenter.input_fmt(video_path),
             "-vf",

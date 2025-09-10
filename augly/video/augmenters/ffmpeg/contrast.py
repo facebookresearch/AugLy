@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -19,7 +18,7 @@ class VideoAugmenterByContrast(BaseVidgearFFMPEGAugmenter):
         ), "Level must be a value in the range [-1000, 1000]"
         self.level = level
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Changes the contrast level of the video
 

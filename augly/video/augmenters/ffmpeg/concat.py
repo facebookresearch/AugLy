@@ -11,7 +11,6 @@ import logging
 from dataclasses import dataclass
 from enum import Enum
 from math import ceil
-from typing import List, Optional
 
 from augly.utils import pathmgr
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
@@ -57,9 +56,9 @@ class TransitionConfig:
 class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
     def __init__(
         self,
-        video_paths: List[str],
+        video_paths: list[str],
         src_video_path_index: int,
-        transition: Optional[TransitionConfig] = None,
+        transition: TransitionConfig | None = None,
     ):
         assert len(video_paths) > 0, "Please provide at least one input video"
         assert all(
@@ -84,10 +83,10 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
 
     def _create_null_transition_filters(
         self,
-        video_streams: List[str],
-        audio_streams: List[str],
+        video_streams: list[str],
+        audio_streams: list[str],
         process_audio: bool,
-    ) -> List[str]:
+    ) -> list[str]:
         if process_audio:
             # Interleave the video and audio streams.
             all_streams = [
@@ -105,12 +104,12 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
 
     def _create_transition_filters(
         self,
-        video_streams: List[str],
-        audio_streams: List[str],
+        video_streams: list[str],
+        audio_streams: list[str],
         process_audio: bool,
         out_video: str = "[v]",
         out_audio: str = "[a]",
-    ) -> List[str]:
+    ) -> list[str]:
         if self.transition is None:
             return self._create_null_transition_filters(
                 video_streams, audio_streams, process_audio
@@ -177,7 +176,7 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
 
         return concat_filters
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Concatenates multiple videos together on both channels, if present.
         If any of the input files does not have an audio stream, then audio will not be processed.

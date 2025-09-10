@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 import random
-from typing import Iterator, List, Optional, Tuple
+from collections.abc import Iterator
 
 import cv2
 import numpy as np
@@ -19,13 +19,13 @@ class VideoDistractorByShapes(BaseCV2Augmenter):
     def __init__(
         self,
         num_shapes: int,
-        shape_type: Optional[str] = None,
-        colors: Optional[List[Tuple[int, int, int]]] = None,
-        thickness: Optional[int] = None,
-        radius: Optional[float] = None,
+        shape_type: str | None = None,
+        colors: list[tuple[int, int, int]] | None = None,
+        thickness: int | None = None,
+        radius: float | None = None,
         random_movement: bool = True,
-        topleft: Optional[Tuple[float, float]] = None,
-        bottomright: Optional[Tuple[float, float]] = None,
+        topleft: tuple[float, float] | None = None,
+        bottomright: tuple[float, float] | None = None,
         **kwargs,
     ) -> None:
         assert num_shapes > 0, "Number of shapes must be greater than zero"
@@ -82,7 +82,7 @@ class VideoDistractorByShapes(BaseCV2Augmenter):
         return distract_frame
 
     @staticmethod
-    def random_shape_type(shape_type: Optional[str]) -> Iterator[str]:
+    def random_shape_type(shape_type: str | None) -> Iterator[str]:
         shapes = ["circle", "rectangle"]
 
         while True:
@@ -91,12 +91,12 @@ class VideoDistractorByShapes(BaseCV2Augmenter):
             )
 
     @staticmethod
-    def random_thickness(thickness: Optional[int]) -> Iterator[int]:
+    def random_thickness(thickness: int | None) -> Iterator[int]:
         while True:
             yield thickness or random.randint(-1, 5)
 
     @staticmethod
-    def random_radius(radius: Optional[float]) -> Iterator[float]:
+    def random_radius(radius: float | None) -> Iterator[float]:
         if radius:
             radius = radius if radius < 0.5 else radius / 2
         while True:

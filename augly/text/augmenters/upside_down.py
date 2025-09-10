@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List, Union
 
 from augly.text.augmenters.utils import (
     detokenize,
@@ -54,14 +53,14 @@ class UpsideDownAugmenter(Augmenter):
         )
 
     @classmethod
-    def clean(cls, data: Union[List[str], str]) -> Union[str, List[str]]:
+    def clean(cls, data: list[str] | str) -> str | list[str]:
         if isinstance(data, list):
             return [d.strip() for d in data]
 
         return data.strip()
 
     @classmethod
-    def is_duplicate(cls, dataset: List[str], data: str) -> bool:
+    def is_duplicate(cls, dataset: list[str], data: str) -> bool:
         return data in dataset
 
     def flip_text(self, text: str) -> str:

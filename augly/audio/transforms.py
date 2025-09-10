@@ -8,7 +8,8 @@
 # pyre-unsafe
 
 import random
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 from augly import utils
@@ -33,9 +34,9 @@ class BaseTransform:
         self,
         audio: np.ndarray,
         sample_rate: int = utils.DEFAULT_SAMPLE_RATE,
-        metadata: Optional[List[Dict[str, Any]]] = None,
+        metadata: list[dict[str, Any]] | None = None,
         force: bool = False,
-    ) -> Tuple[np.ndarray, int]:
+    ) -> tuple[np.ndarray, int]:
         """
         @param audio: the audio array to be augmented
 
@@ -62,8 +63,8 @@ class BaseTransform:
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         This function is to be implemented in the child classes.
         From this function, call the augmentation function with the
@@ -91,9 +92,9 @@ Example:
 class AddBackgroundNoise(BaseTransform):
     def __init__(
         self,
-        background_audio: Optional[Union[str, np.ndarray]] = None,
+        background_audio: str | np.ndarray | None = None,
         snr_level_db: float = 10.0,
-        seed: Optional[RNGSeed] = None,
+        seed: RNGSeed | None = None,
         p: float = 1.0,
     ):
         """
@@ -117,8 +118,8 @@ class AddBackgroundNoise(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Mixes in a background sound into the audio
 
@@ -145,7 +146,7 @@ class AddBackgroundNoise(BaseTransform):
 class ApplyLambda(BaseTransform):
     def __init__(
         self,
-        aug_function: Callable[..., Tuple[np.ndarray, int]] = lambda x, y: (x, y),
+        aug_function: Callable[..., tuple[np.ndarray, int]] = lambda x, y: (x, y),
         p: float = 1.0,
     ):
         """
@@ -162,8 +163,8 @@ class ApplyLambda(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Apply a user-defined lambda to the audio
 
@@ -195,8 +196,8 @@ class ChangeVolume(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Changes the volume of the audio
 
@@ -228,8 +229,8 @@ class Clicks(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Adds clicks to the audio at a given regular interval
 
@@ -269,8 +270,8 @@ class Clip(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Clips the audio using the specified offset and duration factors
 
@@ -319,8 +320,8 @@ class Harmonic(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Extracts the harmonic part of the audio
 
@@ -359,8 +360,8 @@ class HighPassFilter(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Allows audio signals with a frequency higher than the given cutoff to pass
         through and attenuates signals with frequencies lower than the cutoff frequency
@@ -382,8 +383,8 @@ class InsertInBackground(BaseTransform):
     def __init__(
         self,
         offset_factor: float = 0.0,
-        background_audio: Optional[Union[str, np.ndarray]] = None,
-        seed: Optional[RNGSeed] = None,
+        background_audio: str | np.ndarray | None = None,
+        seed: RNGSeed | None = None,
         p: float = 1.0,
     ):
         """
@@ -408,8 +409,8 @@ class InsertInBackground(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Non-overlapping insert audio in a background audio.
 
@@ -438,8 +439,8 @@ class InvertChannels(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Inverts the channels of the audio.
 
@@ -470,8 +471,8 @@ class Loop(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Loops the audio 'n' times
 
@@ -504,8 +505,8 @@ class LowPassFilter(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Allows audio signals with a frequency lower than the given cutoff to pass through
         and attenuates signals with frequencies higher than the cutoff frequency
@@ -526,10 +527,10 @@ class LowPassFilter(BaseTransform):
 class Normalize(BaseTransform):
     def __init__(
         self,
-        norm: Optional[float] = np.inf,
+        norm: float | None = np.inf,
         axis: int = 0,
-        threshold: Optional[float] = None,
-        fill: Optional[bool] = None,
+        threshold: float | None = None,
+        fill: bool | None = None,
         p: float = 1.0,
     ):
         """
@@ -560,8 +561,8 @@ class Normalize(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Normalizes the audio array along the chosen axis (norm(audio, axis=axis) == 1)
 
@@ -614,8 +615,8 @@ class PeakingEqualizer(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Applies a two-pole peaking equalization filter. The signal-level at and around
         `center_hz` can be increased or decreased, while all other frequencies are unchanged
@@ -661,8 +662,8 @@ class Percussive(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Extracts the percussive part of the audio
 
@@ -700,8 +701,8 @@ class PitchShift(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Shifts the pitch of the audio by `n_steps`
 
@@ -774,8 +775,8 @@ class Reverb(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Adds reverberation to the audio
 
@@ -818,8 +819,8 @@ class Speed(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Changes the speed of the audio, affecting pitch as well
 
@@ -852,8 +853,8 @@ class Tempo(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Adjusts the tempo of the audio by a given factor
 
@@ -884,8 +885,8 @@ class TimeStretch(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Time-stretches the audio by a fixed rate
 
@@ -907,8 +908,8 @@ class ToMono(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Converts the audio from stereo to mono by averaging samples across channels
 
@@ -929,8 +930,8 @@ class FFTConvolve(BaseTransform):
     def __init__(
         self,
         normalize: bool = True,
-        impulse_audio: Optional[Union[str, np.ndarray]] = None,
-        seed: Optional[RNGSeed] = None,
+        impulse_audio: str | np.ndarray | None = None,
+        seed: RNGSeed | None = None,
         p: float = 1.0,
     ):
         """
@@ -952,8 +953,8 @@ class FFTConvolve(BaseTransform):
         self,
         audio: np.ndarray,
         sample_rate: int,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-    ) -> Tuple[np.ndarray, int]:
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> tuple[np.ndarray, int]:
         """
         Applies a convolution to input tensor using given filter using FFT
 

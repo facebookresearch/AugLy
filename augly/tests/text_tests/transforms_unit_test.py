@@ -11,14 +11,14 @@ import os
 import random
 import unittest
 from copy import deepcopy
-from typing import Any, Dict, List
+from typing import Any
 
 from augly import text as txtaugs
 from augly.utils import TEXT_METADATA_PATH
 
 
 def are_equal_metadata(
-    actual_meta: List[Dict[str, Any]], expected_meta: List[Dict[str, Any]]
+    actual_meta: list[dict[str, Any]], expected_meta: list[dict[str, Any]]
 ) -> bool:
     if actual_meta == expected_meta:
         return True
@@ -66,7 +66,7 @@ class TransformsTextUnitTest(unittest.TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        with open(TEXT_METADATA_PATH, "r") as f:
+        with open(TEXT_METADATA_PATH) as f:
             cls.expected_metadata = json.load(f)
 
         cls.texts = ["The quick brown 'fox' couldn't jump over the green, grassy hill."]

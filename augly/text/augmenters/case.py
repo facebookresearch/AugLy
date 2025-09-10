@@ -8,7 +8,6 @@
 # pyre-unsafe
 
 import math
-from typing import List, Optional, Union
 
 import numpy as np
 from augly.text.augmenters.utils import (
@@ -18,11 +17,11 @@ from augly.text.augmenters.utils import (
 
 
 class CaseChanger:
-    def __init__(self, case: str, seed: Optional[int]):
+    def __init__(self, case: str, seed: int | None):
         self.rng = np.random.RandomState(seed) if seed is not None else np.random
         self.case = case
 
-    def change(self, text: str, case: Optional[str] = None) -> str:
+    def change(self, text: str, case: str | None = None) -> str:
         case = case or self.case
         if case == "lower":
             return text.lower()
@@ -49,7 +48,7 @@ class CaseAugmenter:
         case: str,
         granularity: str,
         cadence: float = 1.0,
-        seed: Optional[int] = 10,
+        seed: int | None = 10,
     ):
         assert granularity in {
             "char",
@@ -90,7 +89,7 @@ class CaseAugmenter:
         ]
         return rejoin_words_and_whitespace(augmented_words, spaces)
 
-    def augment(self, texts: Union[str, List[str]]) -> List[str]:
+    def augment(self, texts: str | list[str]) -> list[str]:
         texts = texts if isinstance(texts, list) else [texts]
 
         if self.granularity == "all":

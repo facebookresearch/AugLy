@@ -8,7 +8,6 @@
 # pyre-unsafe
 
 from random import Random
-from typing import List, Optional, Union
 
 
 class InsertTextAugmenter:
@@ -21,7 +20,7 @@ class InsertTextAugmenter:
         self,
         num_insertions: int = 1,
         insertion_location: str = "random",
-        seed: Optional[int] = 10,
+        seed: int | None = 10,
     ):
         VALID_LOCATIONS = {"prepend", "append", "random"}
         assert (
@@ -35,9 +34,9 @@ class InsertTextAugmenter:
 
     def augment(
         self,
-        texts: Union[str, List[str]],
-        insert_text: List[str],
-    ) -> List[str]:
+        texts: str | list[str],
+        insert_text: list[str],
+    ) -> list[str]:
         transformed_texts = []
         for text in texts:
             transformed_text = text

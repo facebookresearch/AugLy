@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.utils import pathmgr
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
@@ -30,7 +29,7 @@ class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
         self.use_second_audio = use_second_audio
         self.orientation = orientation
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Stacks two videos together
 

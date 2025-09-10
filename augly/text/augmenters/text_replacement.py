@@ -7,8 +7,6 @@
 
 # pyre-unsafe
 
-from typing import Dict, List, Union
-
 
 class TextReplacementAugmenter:
     """
@@ -17,16 +15,16 @@ class TextReplacementAugmenter:
 
     def augment(
         self,
-        texts: Union[str, List[str]],
-        replace_text: Union[str, Dict[str, str]],
-    ) -> Union[str, List[str]]:
+        texts: str | list[str],
+        replace_text: str | dict[str, str],
+    ) -> str | list[str]:
         return (
             [self.replace(text, replace_text) for text in texts]
             if isinstance(texts, list)
             else self.replace(texts, replace_text)
         )
 
-    def replace(self, text: str, replace_text: Union[str, Dict[str, str]]) -> str:
+    def replace(self, text: str, replace_text: str | dict[str, str]) -> str:
         return (
             replace_text.get(text, text)
             if isinstance(replace_text, dict)

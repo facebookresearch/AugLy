@@ -7,7 +7,8 @@
 
 # pyre-unsafe
 
-from typing import Any, Callable, Dict, Optional, Tuple
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 
@@ -39,7 +40,7 @@ def add_background_noise_intensity(snr_level_db: float = 10.0, **kwargs) -> floa
 
 
 def apply_lambda_intensity(
-    aug_function: Callable[..., Tuple[np.ndarray, int]],
+    aug_function: Callable[..., tuple[np.ndarray, int]],
     **kwargs,
 ) -> float:
     intensity_func = globals().get(f"{aug_function}_intensity")
@@ -95,14 +96,14 @@ def high_pass_filter_intensity(cutoff_hz: float = 3000.0, **kwargs) -> float:
     return min((cutoff_hz / max_cutoff_hz_val) * 100.0, 100.0)
 
 
-def insert_in_background_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def insert_in_background_intensity(metadata: dict[str, Any], **kwargs) -> float:
     bg_to_src_duration_ratio = (
         metadata["dst_duration"] - metadata["src_duration"]
     ) / metadata["dst_duration"]
     return bg_to_src_duration_ratio * 100.0
 
 
-def invert_channels_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def invert_channels_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return 0.0 if metadata["src_num_channels"] == 1 else 100.0
 
 
@@ -122,7 +123,7 @@ def low_pass_filter_intensity(cutoff_hz: float = 500.0, **kwargs) -> float:
     return min(((max_cutoff_hz_val - cutoff_hz) / max_cutoff_hz_val) * 100.0, 100.0)
 
 
-def normalize_intensity(norm: Optional[float] = np.inf, **kwargs) -> float:
+def normalize_intensity(norm: float | None = np.inf, **kwargs) -> float:
     return 100.0 if norm else 0.0
 
 
@@ -212,7 +213,7 @@ def time_stretch_intensity(rate: float = 1.5, **kwargs) -> float:
     return min((speed_change_rate / max_rate_val) * 100.0, 100.0)
 
 
-def to_mono_intensity(metadata: Dict[str, Any], **kwargs) -> float:
+def to_mono_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return 0.0 if metadata["src_num_channels"] == 1 else 100.0
 
 

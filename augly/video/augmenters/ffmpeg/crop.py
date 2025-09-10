@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 from augly.video.helpers import get_video_info
@@ -25,7 +24,7 @@ class VideoAugmenterByCrop(BaseVidgearFFMPEGAugmenter):
         self.right = right
         self.bottom = bottom
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Crops the video
 

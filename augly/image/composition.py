@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 import random
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from augly.image.transforms import BaseTransform
 from PIL import Image
@@ -41,7 +41,7 @@ Example:
 
 
 class BaseComposition:
-    def __init__(self, transforms: List[BaseTransform], p: float = 1.0):
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
         """
         @param transforms: a list of transforms
 
@@ -61,9 +61,9 @@ class Compose(BaseComposition):
     def __call__(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Applies the list of transforms in order to the image
@@ -96,7 +96,7 @@ class Compose(BaseComposition):
 
 
 class OneOf(BaseComposition):
-    def __init__(self, transforms: List[BaseTransform], p: float = 1.0):
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
         """
         @param transforms: a list of transforms to select from; one of which
             will be chosen to be applied to the media
@@ -111,9 +111,9 @@ class OneOf(BaseComposition):
     def __call__(
         self,
         image: Image.Image,
-        metadata: Optional[List[Dict[str, Any]]] = None,
-        bboxes: Optional[List[Tuple]] = None,
-        bbox_format: Optional[str] = None,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
     ) -> Image.Image:
         """
         Applies one of the transforms to the image

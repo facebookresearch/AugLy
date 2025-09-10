@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -17,7 +16,7 @@ class VideoAugmenterByBlur(BaseVidgearFFMPEGAugmenter):
         assert sigma >= 0, "Sigma cannot be a negative number"
         self.sigma = sigma
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Blurs the video
 

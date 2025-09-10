@@ -7,7 +7,6 @@
 
 import os
 from distutils import spawn
-from typing import Tuple
 
 FFMPEG_PATH = os.environ.get("AUGLY_FFMPEG_PATH", None)
 FFPROBE_PATH = os.environ.get("AUGLY_FFPROBE_PATH", None)
@@ -28,5 +27,5 @@ assert FFMPEG_PATH is not None and FFPROBE_PATH is not None, ffmpeg_paths_error.
 )
 
 
-def get_conditional_for_skipping_video_tests() -> Tuple[bool, str]:
+def get_conditional_for_skipping_video_tests() -> tuple[bool, str]:
     return (True, "We currently do not need to skip any video tests")

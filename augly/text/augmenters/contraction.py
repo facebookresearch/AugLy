@@ -8,7 +8,7 @@
 # pyre-unsafe
 
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import numpy as np
 from augly.text.augmenters.utils import detokenize, tokenize
@@ -16,17 +16,17 @@ from augly.utils import pathmgr
 
 
 class ContractionMapping:
-    def __init__(self, mapping: Optional[Union[str, Dict[str, Any]]]):
+    def __init__(self, mapping: str | dict[str, Any] | None):
         if isinstance(mapping, str):
             local_mapping_path = pathmgr.get_local_path(mapping)
             with open(local_mapping_path) as json_file:
                 self.mapping = {k.lower(): v for k, v in json.load(json_file).items()}
-        elif isinstance(mapping, Dict):
+        elif isinstance(mapping, dict):
             self.mapping = mapping
         else:
             self.mapping = {}
 
-    def replace(self, text: str) -> Optional[str]:
+    def replace(self, text: str) -> str | None:
         new_text = self.mapping.get(text.lower(), None)
         if new_text is not None and text[0].isupper():
             new_text = new_text.capitalize()
@@ -39,9 +39,9 @@ class ContractionAugmenter:
     def __init__(
         self,
         aug_p: float,
-        mapping: Optional[Union[str, Dict[str, Any]]],
+        mapping: str | dict[str, Any] | None,
         max_contraction_length: int = 2,
-        seed: Optional[int] = 10,
+        seed: int | None = 10,
     ):
         assert max_contraction_length >= 2, "Must set 'max_contraction_length' >= 2"
         self.aug_p = aug_p
@@ -49,9 +49,7 @@ class ContractionAugmenter:
         self.max_contraction_length = max_contraction_length
         self.rng = np.random.RandomState(seed) if seed is not None else np.random
 
-    def get_mapping(
-        self, mapping: Optional[Union[str, Dict[str, Any]]]
-    ) -> ContractionMapping:
+    def get_mapping(self, mapping: str | dict[str, Any] | None) -> ContractionMapping:
         return ContractionMapping(mapping)
 
     def substitute_contractions(self, text: str) -> str:
@@ -88,6 +86,6 @@ class ContractionAugmenter:
 
         return detokenize(results)
 
-    def augment(self, texts: Union[str, List[str]]) -> List[str]:
+    def augment(self, texts: str | list[str]) -> list[str]:
         texts_list = [texts] if isinstance(texts, str) else texts
         return [self.substitute_contractions(text) for text in texts_list]

@@ -7,7 +7,6 @@
 
 # pyre-unsafe
 
-from typing import List
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
@@ -18,7 +17,7 @@ class VideoAugmenterByLoops(BaseVidgearFFMPEGAugmenter):
         assert num_loops >= 0, "Number of loops cannot be a negative number"
         self.num_loops = num_loops
 
-    def get_command(self, video_path: str, output_path: str) -> List[str]:
+    def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
         Loops the video `num_loops` times
 
