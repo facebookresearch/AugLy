@@ -12,6 +12,7 @@ import math
 import os
 import pickle
 import random
+import string
 from collections.abc import Callable
 from copy import deepcopy
 from itertools import product
@@ -1530,6 +1531,119 @@ def overlay_stripes(
     )
 
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+
+
+def overlay_random_text(
+    image: str | Image.Image,
+    output_path: str | None = None,
+    scale_factor: float = 0.5,
+    font_size: int = 50,
+    font_file: str = utils.MONTSERRAT_FONT,
+    max_text_length: int = 30,
+    seed: int | None = None,
+    text_color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+    outline_color: tuple[int, int, int] = (0, 0, 0),
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
+) -> Image.Image:
+    """
+    Overlays random text with an outline at a random position on the image
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param scale_factor: the factor to determine the number of characters in the text,
+        must be between 0 and 1. Higher values create longer text
+
+    @param font_size: the fixed size of the font in pixels
+
+    @param font_file: iopath uri to the .ttf font file
+
+    @param max_text_length: maximum length of the randomly generated text
+
+    @param seed: if provided, this will set the random seed to ensure consistency
+        between runs
+
+    @param text_color: color of the text in RGB values
+
+    @param outline_color: color of the text outline in RGB values
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    assert 0 < scale_factor <= 1.0, "scale_factor must be a value in the range (0, 1]"
+    assert font_size > 0, "font_size must be positive"
+    assert max_text_length > 0, "max_text_length must be positive"
+    utils.validate_rgb_color(text_color)
+    utils.validate_rgb_color(outline_color)
+
+    image = imutils.validate_and_load_image(image)
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+
+    if seed is None:
+        seed = random.randint(0, 100000)
+
+    random.seed(seed)
+
+    length = int(max_text_length * scale_factor)
+    text = "".join(random.choices(string.ascii_letters + string.digits, k=length))
+
+    num_line_breaks = random.randint(1, min(3, length - 2)) if length > 2 else 0
+    if num_line_breaks > 0:
+        break_positions = sorted(random.sample(range(1, length), num_line_breaks))
+        for i, pos in enumerate(break_positions):
+            text = text[: pos + i] + "\n" + text[pos + i :]
+
+    image_copy = image.copy()
+    width, height = image.size
+    draw = ImageDraw.Draw(image_copy)
+
+    local_font_path = utils.pathmgr.get_local_path(font_file)
+    font = ImageFont.truetype(local_font_path, font_size)
+
+    bbox = draw.textbbox((0, 0), text, font=font)
+    text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
+
+    max_x = max(0, width - text_width)
+    max_y = max(0, height - text_height)
+    text_x = random.randint(0, max_x) if max_x > 0 else 0
+    text_y = random.randint(0, max_y) if max_y > 0 else 0
+
+    for dx in [-1, 0, 1]:
+        for dy in [-1, 0, 1]:
+            if dx != 0 or dy != 0:
+                draw.text(
+                    (text_x + dx, text_y + dy), text, font=font, fill=outline_color
+                )
+
+    draw.text((text_x, text_y), text, font=font, fill=text_color)
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="overlay_random_text",
+        aug_image=image_copy,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(image_copy, output_path, src_mode)
 
 
 def overlay_text(
