@@ -67,7 +67,7 @@ class BaseTransform(VidAugBaseClass):
 
         @returns: the path to the augmented video
         """
-        assert type(force) == bool, "Expected type bool for variable `force`"
+        assert isinstance(force, bool), "Expected type bool for variable `force`"
 
         if not force and random.random() > self.p:
             return video_path
