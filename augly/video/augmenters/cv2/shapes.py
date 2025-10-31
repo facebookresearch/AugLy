@@ -33,8 +33,8 @@ class VideoDistractorByShapes(BaseCV2Augmenter):
             "circle",
             "rectangle",
         ], "Shape type must be set to None or to 'circle' or 'rectangle'"
-        assert (
-            thickness is None or type(thickness) == int
+        assert thickness is None or isinstance(
+            thickness, int
         ), "Invalid thickness provided: must be set to None or an integer"
 
         super().__init__(num_shapes, random_movement, topleft, bottomright, **kwargs)
