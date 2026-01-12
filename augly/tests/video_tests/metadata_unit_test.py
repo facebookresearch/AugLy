@@ -12,7 +12,6 @@ from unittest.mock import MagicMock, patch
 from augly.utils import Segment
 from augly.utils.base_paths import ASSETS_BASE_DIR
 from augly.video import helpers
-
 from augly.video.augmenters import ffmpeg as af
 
 
