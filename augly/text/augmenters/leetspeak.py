@@ -20,7 +20,7 @@ class LeetSpeak(EncodeTextAugmentation):
         aug_max: int,
         aug_p: float,
         granularity: Literal["all", "word", "char"],
-    ):
+    ) -> None:
         super().__init__(
             name="LeetSpeak",
             aug_min=aug_min,
