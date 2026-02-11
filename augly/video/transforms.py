@@ -2348,7 +2348,9 @@ class RandomAspectRatio(BaseRandomRangeTransform):
 
 
 class RandomBlur(BaseRandomRangeTransform):
-    def __init__(self, min_sigma: float = 0.0, max_sigma: float = 10.0, p: float = 1.0):
+    def __init__(
+        self, min_sigma: float = 0.0, max_sigma: float = 10.0, p: float = 1.0
+    ) -> None:
         """
         @param min_sigma: the lower value on the range of blur values to choose from.
             The larger the radius, the blurrier the video
