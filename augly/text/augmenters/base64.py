@@ -20,7 +20,7 @@ class Base64(EncodeTextAugmentation):
         aug_max: int,
         aug_p: float,
         granularity: Literal["all", "word", "char"],
-    ):
+    ) -> None:
         super().__init__(
             name="Base64",
             aug_min=aug_min,
