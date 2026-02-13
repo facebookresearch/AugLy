@@ -24,7 +24,7 @@ class EncodeTextAugmentation(Augmenter):
         aug_p: float,
         granularity: Literal["all", "word", "char"],
         encoder: Literal["base64", "leetspeak"],
-    ):
+    ) -> None:
         assert granularity in {
             "all",
             "word",
