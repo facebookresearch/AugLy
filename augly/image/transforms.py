@@ -2206,6 +2206,101 @@ class Skew(BaseTransform):
         )
 
 
+class Collage(BaseTransform):
+    def __init__(
+        self,
+        n_columns: int = 2,
+        color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+        p: float = 1.0,
+    ):
+        """
+        @param n_columns: number of columns in the collage grid. The number of rows
+            is determined automatically based on the number of images
+
+        @param color: background color of the collage in RGB values, visible if the
+            images do not perfectly fill the grid
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.n_columns = n_columns
+        self.color = color
+
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
+    ) -> Image.Image:
+        """
+        Creates a collage from a list of images arranged in a grid.
+        Note: when used as a transform class, pass a list of images directly
+        to F.collage.
+
+        @param image: PIL Image to be augmented (used as a single-element list)
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.collage(
+            [image],
+            n_columns=self.n_columns,
+            color=self.color,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
+
+
+class HStack(BaseTransform):
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
+    ) -> Image.Image:
+        """
+        Horizontally stacks images. Note: when used as a transform class with a
+        single image, this is effectively a no-op.
+
+        @param image: PIL Image to be augmented (used as a single-element list
+            with a copy)
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.hstack(
+            [image, image],
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
+
+
 class SplitAndShuffle(BaseTransform):
     def __init__(
         self, n_columns: int = 3, n_rows: int = 3, seed: int = 10, p: float = 1.0
@@ -2293,6 +2388,43 @@ class VFlip(BaseTransform):
         """
         return F.vflip(
             image,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
+
+
+class VStack(BaseTransform):
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
+    ) -> Image.Image:
+        """
+        Vertically stacks images. Note: when used as a transform class with a
+        single image, this is effectively a no-op.
+
+        @param image: PIL Image to be augmented (used as a single-element list
+            with a copy)
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.vstack(
+            [image, image],
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,

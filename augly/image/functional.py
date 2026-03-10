@@ -2919,6 +2919,150 @@ def split_and_shuffle(
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)
 
 
+def collage(
+    images: list[str | Image.Image],
+    output_path: str | None = None,
+    n_columns: int = 2,
+    color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
+) -> Image.Image:
+    """
+    Creates a collage from a list of images arranged in a grid
+
+    @param images: a list of paths to images or variables of type PIL.Image.Image
+        to be arranged into a collage
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param n_columns: number of columns in the collage grid. The number of rows
+        is determined automatically based on the number of images
+
+    @param color: background color of the collage in RGB values, visible if the
+        images do not perfectly fill the grid
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    assert len(images) >= 1, "Expected at least one image"
+    assert n_columns > 0, "Expected 'n_columns' to be a positive integer"
+    utils.validate_rgb_color(color)
+
+    loaded_images = [imutils.validate_and_load_image(img) for img in images]
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    func_kwargs.pop("images", None)
+    func_kwargs["image"] = loaded_images[0]
+    src_mode = loaded_images[0].mode
+
+    n_rows = math.ceil(len(loaded_images) / n_columns)
+
+    # Determine the cell size based on the maximum dimensions across all images
+    cell_width = max(img.width for img in loaded_images)
+    cell_height = max(img.height for img in loaded_images)
+
+    collage_width = cell_width * n_columns
+    collage_height = cell_height * n_rows
+
+    aug_image = Image.new("RGB", (collage_width, collage_height), color)
+
+    for i, img in enumerate(loaded_images):
+        col = i % n_columns
+        row = i // n_columns
+        # Center each image within its cell
+        x_offset = col * cell_width + (cell_width - img.width) // 2
+        y_offset = row * cell_height + (cell_height - img.height) // 2
+        aug_image.paste(img, (x_offset, y_offset))
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="collage",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+
+
+def hstack(
+    images: list[str | Image.Image],
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
+) -> Image.Image:
+    """
+    Horizontally stacks a list of images
+
+    @param images: a list of paths to images or variables of type PIL.Image.Image
+        to be stacked horizontally (left to right)
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    assert len(images) >= 2, "Expected at least two images to stack"
+
+    loaded_images = [imutils.validate_and_load_image(img) for img in images]
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    func_kwargs.pop("images", None)
+    func_kwargs["image"] = loaded_images[0]
+    src_mode = loaded_images[0].mode
+
+    # Resize all images to the same height (max height) while preserving aspect ratios
+    max_height = max(img.height for img in loaded_images)
+    resized = []
+    for img in loaded_images:
+        if img.height != max_height:
+            new_width = int(img.width * max_height / img.height)
+            img = img.resize((new_width, max_height))
+        resized.append(img)
+
+    total_width = sum(img.width for img in resized)
+    aug_image = Image.new("RGB", (total_width, max_height))
+
+    x_offset = 0
+    for img in resized:
+        aug_image.paste(img, (x_offset, 0))
+        x_offset += img.width
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="hstack",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+
+
 def vflip(
     image: str | Image.Image,
     output_path: str | None = None,
@@ -2955,5 +3099,71 @@ def vflip(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     src_mode = image.mode
     imutils.get_metadata(metadata=metadata, function_name="vflip", **func_kwargs)
+
+    return imutils.ret_and_save_image(aug_image, output_path, src_mode)
+
+
+def vstack(
+    images: list[str | Image.Image],
+    output_path: str | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
+) -> Image.Image:
+    """
+    Vertically stacks a list of images
+
+    @param images: a list of paths to images or variables of type PIL.Image.Image
+        to be stacked vertically (top to bottom)
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be appended
+        to the inputted list. If set to None, no metadata will be appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired. If
+        provided, this list will be modified in place such that each bounding box is
+        transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+        specify `bbox_format` if `bboxes` is provided. Supported bbox_format values are
+        "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    assert len(images) >= 2, "Expected at least two images to stack"
+
+    loaded_images = [imutils.validate_and_load_image(img) for img in images]
+
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    func_kwargs.pop("images", None)
+    func_kwargs["image"] = loaded_images[0]
+    src_mode = loaded_images[0].mode
+
+    # Resize all images to the same width (max width) while preserving aspect ratios
+    max_width = max(img.width for img in loaded_images)
+    resized = []
+    for img in loaded_images:
+        if img.width != max_width:
+            new_height = int(img.height * max_width / img.width)
+            img = img.resize((max_width, new_height))
+        resized.append(img)
+
+    total_height = sum(img.height for img in resized)
+    aug_image = Image.new("RGB", (max_width, total_height))
+
+    y_offset = 0
+    for img in resized:
+        aug_image.paste(img, (0, y_offset))
+        y_offset += img.height
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="vstack",
+        aug_image=aug_image,
+        **func_kwargs,
+    )
 
     return imutils.ret_and_save_image(aug_image, output_path, src_mode)

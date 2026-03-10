@@ -35,6 +35,10 @@ def apply_pil_filter_intensity(**kwargs) -> float:
     return 100.0
 
 
+def collage_intensity(**kwargs) -> float:
+    return 100.0
+
+
 def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
     intensity_func = globals().get(f"{aug_function}_intensity")
     return intensity_func(**kwargs) if intensity_func else 100.0
@@ -118,6 +122,10 @@ def grayscale_intensity(**kwargs) -> float:
 
 
 def hflip_intensity(**kwargs) -> float:
+    return 100.0
+
+
+def hstack_intensity(**kwargs) -> float:
     return 100.0
 
 
@@ -323,6 +331,10 @@ def split_and_shuffle_intensity(n_columns: int, n_rows: int, **kwargs) -> float:
 
 
 def vflip_intensity(**kwargs) -> float:
+    return 100.0
+
+
+def vstack_intensity(**kwargs) -> float:
     return 100.0
 
 

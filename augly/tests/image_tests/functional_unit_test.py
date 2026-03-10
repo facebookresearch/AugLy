@@ -50,8 +50,22 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
     def test_grayscale(self):
         self.evaluate_function(imaugs.grayscale)
 
+    def test_collage(self):
+        img = self.img.copy()
+        result = imaugs.collage([img, img, img, img], n_columns=2)
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.width, img.width * 2)
+        self.assertEqual(result.height, img.height * 2)
+
     def test_hflip(self):
         self.evaluate_function(imaugs.hflip)
+
+    def test_hstack(self):
+        img = self.img.copy()
+        result = imaugs.hstack([img, img])
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.width, img.width * 2)
+        self.assertEqual(result.height, img.height)
 
     def test_masked_composite(self):
         self.evaluate_function(
@@ -147,6 +161,13 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
 
     def test_vflip(self):
         self.evaluate_function(imaugs.vflip)
+
+    def test_vstack(self):
+        img = self.img.copy()
+        result = imaugs.vstack([img, img])
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.width, img.width)
+        self.assertEqual(result.height, img.height * 2)
 
 
 if __name__ == "__main__":
