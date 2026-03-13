@@ -205,6 +205,36 @@ class TransformsImageUnitTest(BaseImageUnitTest):
     def test_Rotate(self):
         self.evaluate_class(imaugs.Rotate(), fname="rotate")
 
+    def test_Rotate_expand(self):
+        # Verify Rotate transform with expand=True produces an expanded image
+        transform = imaugs.Rotate(degrees=30.0, expand=True)
+        result = transform(self.img)
+        self.assertGreater(
+            result.width * result.height,
+            self.img.width * self.img.height,
+        )
+
+    def test_Rotate_expand_with_fill_color(self):
+        # Verify Rotate transform with expand=True and fill_color
+        fill_color = (255, 255, 255)
+        transform = imaugs.Rotate(degrees=45.0, expand=True, fill_color=fill_color)
+        result = transform(self.img)
+        corner_pixel = result.getpixel((0, 0))
+        self.assertEqual(corner_pixel[:3], fill_color)
+
+    def test_RandomRotation_expand(self):
+        # Verify RandomRotation with expand=True
+        random.seed(0)
+        transform = imaugs.RandomRotation(
+            min_degrees=30.0, max_degrees=60.0, expand=True
+        )
+        result = transform(self.img)
+        # Expanded result should be larger than original for non-zero rotation
+        self.assertGreater(
+            result.width * result.height,
+            self.img.width * self.img.height,
+        )
+
     def test_Saturation(self):
         self.evaluate_class(imaugs.Saturation(factor=0.5), fname="saturation")
 

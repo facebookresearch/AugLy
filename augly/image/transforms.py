@@ -1908,15 +1908,32 @@ class Resize(BaseTransform):
 
 
 class Rotate(BaseTransform):
-    def __init__(self, degrees: float = 15.0, p: float = 1.0):
+    def __init__(
+        self,
+        degrees: float = 15.0,
+        expand: bool = False,
+        fill_color: tuple[int, int, int] | None = None,
+        p: float = 1.0,
+    ):
         """
         @param degrees: the amount of degrees that the original image will be rotated
             counter clockwise
+
+        @param expand: if True, the output image is expanded to contain the entire
+            rotated image with empty areas filled using `fill_color`. If False
+            (default), the rotated image is center-cropped to the largest rectangle
+            that does not include any fill area
+
+        @param fill_color: an optional RGB color tuple used to fill the area outside
+            the rotated image when `expand` is True. Has no effect when `expand` is
+            False. Defaults to None (black)
 
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
         self.degrees = degrees
+        self.expand = expand
+        self.fill_color = fill_color
 
     def apply_transform(
         self,
@@ -1947,6 +1964,8 @@ class Rotate(BaseTransform):
         return F.rotate(
             image,
             degrees=self.degrees,
+            expand=self.expand,
+            fill_color=self.fill_color,
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,
@@ -2758,16 +2777,32 @@ class RandomPixelization(BaseRandomRangeTransform):
 
 class RandomRotation(BaseRandomRangeTransform):
     def __init__(
-        self, min_degrees: float = 0.0, max_degrees: float = 180.0, p: float = 1.0
+        self,
+        min_degrees: float = 0.0,
+        max_degrees: float = 180.0,
+        expand: bool = False,
+        fill_color: tuple[int, int, int] | None = None,
+        p: float = 1.0,
     ):
         """
         @param min_degrees: the lower value on the range of degree values to choose from
 
         @param max_degrees: the upper value on the range of degree values to choose from
 
+        @param expand: if True, the output image is expanded to contain the entire
+            rotated image with empty areas filled using `fill_color`. If False
+            (default), the rotated image is center-cropped to the largest rectangle
+            that does not include any fill area
+
+        @param fill_color: an optional RGB color tuple used to fill the area outside
+            the rotated image when `expand` is True. Has no effect when `expand` is
+            False. Defaults to None (black)
+
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(min_degrees, max_degrees, p)
+        self.expand = expand
+        self.fill_color = fill_color
 
     def apply_random_transform(
         self,
@@ -2798,6 +2833,8 @@ class RandomRotation(BaseRandomRangeTransform):
         return F.rotate(
             image,
             degrees=self.chosen_value,
+            expand=self.expand,
+            fill_color=self.fill_color,
             metadata=metadata,
             bboxes=bboxes,
             bbox_format=bbox_format,

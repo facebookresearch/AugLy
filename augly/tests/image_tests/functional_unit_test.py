@@ -141,6 +141,104 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
     def test_rotate(self):
         self.evaluate_function(imaugs.rotate)
 
+    def test_rotate_default_matches_no_expand(self):
+        # Setup: rotate with default params and with explicit expand=False
+        default_result = imaugs.rotate(self.img, degrees=30.0)
+        no_expand_result = imaugs.rotate(self.img, degrees=30.0, expand=False)
+
+        # Assert: both should produce identical output
+        self.assertEqual(default_result.size, no_expand_result.size)
+        self.assertEqual(
+            list(default_result.getdata()), list(no_expand_result.getdata())
+        )
+
+    def test_rotate_expand(self):
+        # Setup: rotate with and without expand
+        degrees = 30.0
+        no_expand_result = imaugs.rotate(self.img, degrees=degrees, expand=False)
+        expand_result = imaugs.rotate(self.img, degrees=degrees, expand=True)
+
+        # Assert: expanded image should be larger than center-cropped image
+        self.assertGreater(
+            expand_result.width * expand_result.height,
+            no_expand_result.width * no_expand_result.height,
+        )
+        # Assert: expanded dimensions should match expected rotated bounding box
+        import math
+
+        rad = math.radians(degrees)
+        expected_w = int(
+            self.img.width * abs(math.cos(rad)) + self.img.height * abs(math.sin(rad))
+        )
+        expected_h = int(
+            self.img.width * abs(math.sin(rad)) + self.img.height * abs(math.cos(rad))
+        )
+        self.assertAlmostEqual(expand_result.width, expected_w, delta=2)
+        self.assertAlmostEqual(expand_result.height, expected_h, delta=2)
+
+    def test_rotate_expand_with_fill_color(self):
+        # Setup: rotate with expand and a white fill color
+        degrees = 45.0
+        fill_color = (255, 255, 255)
+        result = imaugs.rotate(
+            self.img,
+            degrees=degrees,
+            expand=True,
+            fill_color=fill_color,
+        )
+
+        # Assert: result should be a valid PIL Image
+        self.assertIsInstance(result, Image.Image)
+        # Assert: corner pixel should be the fill color (corners are outside the
+        # rotated image area)
+        corner_pixel = result.getpixel((0, 0))
+        self.assertEqual(corner_pixel[:3], fill_color)
+
+    def test_rotate_expand_false_ignores_fill_color(self):
+        # Setup: rotate without expand, passing fill_color which should be ignored
+        degrees = 15.0
+        result_no_fill = imaugs.rotate(self.img, degrees=degrees, expand=False)
+        result_with_fill = imaugs.rotate(
+            self.img,
+            degrees=degrees,
+            expand=False,
+            fill_color=(255, 0, 0),
+        )
+
+        # Assert: both should produce identical output (fill_color has no effect
+        # when expand=False because the image is center-cropped)
+        self.assertEqual(result_no_fill.size, result_with_fill.size)
+        self.assertEqual(
+            list(result_no_fill.getdata()), list(result_with_fill.getdata())
+        )
+
+    def test_rotate_zero_degrees_expand(self):
+        # Setup: rotate by 0 degrees with expand=True
+        result = imaugs.rotate(self.img, degrees=0.0, expand=True)
+
+        # Assert: should return an image with same dimensions as input
+        self.assertEqual(result.size, self.img.size)
+
+    def test_rotate_invalid_expand_type(self):
+        # Assert: passing non-boolean expand should raise AssertionError
+        with self.assertRaises(AssertionError):
+            imaugs.rotate(self.img, degrees=15.0, expand="yes")
+
+    def test_rotate_invalid_fill_color(self):
+        # Assert: passing invalid fill_color should raise AssertionError
+        with self.assertRaises(AssertionError):
+            imaugs.rotate(self.img, degrees=15.0, expand=True, fill_color="red")
+        with self.assertRaises(AssertionError):
+            imaugs.rotate(self.img, degrees=15.0, expand=True, fill_color=(1, 2))
+
+    def test_rotate_90_degrees_expand(self):
+        # Setup: rotate by 90 degrees with expand=True
+        result = imaugs.rotate(self.img, degrees=90.0, expand=True)
+
+        # Assert: width and height should be swapped (for non-square images)
+        self.assertEqual(result.width, self.img.height)
+        self.assertEqual(result.height, self.img.width)
+
     def test_saturation(self):
         self.evaluate_function(imaugs.saturation, factor=0.5)
 

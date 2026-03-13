@@ -2455,6 +2455,8 @@ def rotate(
     image: str | Image.Image,
     output_path: str | None = None,
     degrees: float = 15.0,
+    expand: bool = False,
+    fill_color: tuple[int, int, int] | None = None,
     metadata: list[dict[str, Any]] | None = None,
     bboxes: list[tuple] | None = None,
     bbox_format: str | None = None,
@@ -2471,6 +2473,15 @@ def rotate(
     @param degrees: the amount of degrees that the original image will be rotated
         counter clockwise
 
+    @param expand: if True, the output image is expanded to contain the entire
+        rotated image with empty areas filled using `fill_color`. If False
+        (default), the rotated image is center-cropped to the largest rectangle
+        that does not include any fill area
+
+    @param fill_color: an optional RGB color tuple used to fill the area outside
+        the rotated image when `expand` is True. Has no effect when `expand` is
+        False. Defaults to None (black)
+
     @param metadata: if set to be a list, metadata about the function execution
         including its name, the source & dest width, height, etc. will be appended
         to the inputted list. If set to None, no metadata will be appended or returned
@@ -2486,24 +2497,41 @@ def rotate(
     @returns: the augmented PIL Image
     """
     assert type(degrees) in [float, int], "Degrees must be an integer or a float"
+    assert type(expand) is bool, "Expand must be a boolean"
+    assert fill_color is None or (
+        isinstance(fill_color, tuple)
+        and len(fill_color) == 3
+        and all(isinstance(c, int) for c in fill_color)
+    ), "fill_color must be None or a tuple of 3 integers (R, G, B)"
 
     image = imutils.validate_and_load_image(image)
 
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     src_mode = image.mode
 
-    rotated_image = image.rotate(degrees, expand=True)
-
-    center_x, center_y = rotated_image.width / 2, rotated_image.height / 2
-    wr, hr = imutils.rotated_rect_with_max_area(image.width, image.height, degrees)
-    aug_image = rotated_image.crop(
-        (
-            int(center_x - wr / 2),
-            int(center_y - hr / 2),
-            int(center_x + wr / 2),
-            int(center_y + hr / 2),
-        )
+    rotated_image = image.rotate(
+        degrees,
+        expand=True,
+        fillcolor=fill_color if expand else None,
     )
+
+    if expand:
+        aug_image = rotated_image
+    else:
+        center_x, center_y = rotated_image.width / 2, rotated_image.height / 2
+        wr, hr = imutils.rotated_rect_with_max_area(
+            image.width,
+            image.height,
+            degrees,
+        )
+        aug_image = rotated_image.crop(
+            (
+                int(center_x - wr / 2),
+                int(center_y - hr / 2),
+                int(center_x + wr / 2),
+                int(center_y + hr / 2),
+            )
+        )
 
     imutils.get_metadata(
         metadata=metadata,
