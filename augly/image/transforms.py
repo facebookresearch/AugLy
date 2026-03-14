@@ -1746,7 +1746,7 @@ class PerspectiveTransform(BaseTransform):
 
 
 class Pixelization(BaseTransform):
-    def __init__(self, ratio: float = 1.0, p: float = 1.0):
+    def __init__(self, ratio: float = 1.0, p: float = 1.0) -> None:
         """
         @param ratio: smaller values result in a more pixelated image, 1.0 indicates
             no change, and any value above one doesn't have a noticeable effect
@@ -2025,7 +2025,7 @@ class Scale(BaseTransform):
         factor: float = 0.5,
         interpolation: int | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param scale_factor: the ratio by which the image should be down-scaled
             or upscaled
