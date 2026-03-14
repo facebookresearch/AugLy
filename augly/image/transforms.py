@@ -266,7 +266,7 @@ class ApplyPILFilter(BaseTransform):
 
 
 class Blur(BaseTransform):
-    def __init__(self, radius: float = 2.0, p: float = 1.0):
+    def __init__(self, radius: float = 2.0, p: float = 1.0) -> None:
         """
         @param radius: the larger the radius, the blurrier the image
 
@@ -1345,7 +1345,7 @@ class OverlayStripes(BaseTransform):
         line_type: str | None = "solid",
         line_opacity: float = 1.0,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param line_width: the width of individual stripes as a float value ranging
             from 0 to 1. Defaults to 0.5
