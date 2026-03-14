@@ -468,7 +468,7 @@ class ColorJitter(BaseTransform):
         contrast_factor: float = 1.0,
         saturation_factor: float = 1.0,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param brightness_factor: a brightness factor below 1.0 darkens the image,
             a factor of 1.0 does not alter the image, and a factor greater than 1.0
