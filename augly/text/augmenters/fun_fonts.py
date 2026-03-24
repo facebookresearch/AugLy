@@ -30,7 +30,7 @@ class FunFontsAugmenter(Augmenter):
         vary_fonts: bool,
         fonts_path: str,
         priority_words: list[str] | None,
-    ):
+    ) -> None:
         assert granularity in [
             "char",
             "word",

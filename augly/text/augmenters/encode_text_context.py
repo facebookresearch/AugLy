@@ -12,7 +12,7 @@ from augly.text.augmenters.encode_text_strategy import EncodeTextAugmentation
 
 
 class EncodeText:
-    def __init__(self, encoder: EncodeTextAugmentation):
+    def __init__(self, encoder: EncodeTextAugmentation) -> None:
         self.encoder = encoder
 
     def augmenter(self, input_string: list[str] | str) -> list[str] | str:
