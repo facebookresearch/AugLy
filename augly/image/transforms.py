@@ -1574,6 +1574,143 @@ class OverlayWrapText(BaseTransform):
         )
 
 
+class OverlayRandomTextWithBackground(BaseTransform):
+    def __init__(
+        self,
+        scale_factor: float = 0.5,
+        font_size: int = 40,
+        font_file: str | list[str] | None = None,
+        seed: int | None = None,
+        text_color: tuple[int, int, int] | None = None,
+        box_color: tuple[int, int, int] | None = None,
+        box_opacity: float = 0.9,
+        padding: int = 15,
+        placement: str = "bottom",
+        text_rotation: float = 0.0,
+        bold: bool = False,
+        stroke_width: int = 0,
+        box_bg_mode: str = "solid",
+        gradient_direction: str = "horizontal",
+        gradient_end_color: tuple[int, int, int] | None = None,
+        num_overlays: int = 1,
+        phrases: list[str] | None = None,
+        p: float = 1.0,
+    ):
+        """
+        @param scale_factor: controls font size scaling relative to the base
+            font_size, must be in (0, 1]
+
+        @param font_size: base font size in pixels before scale_factor is applied
+
+        @param font_file: iopath uri to a .ttf font file, or a list of font
+            file paths to randomly select from. If None, defaults to the
+            bundled Montserrat font
+
+        @param seed: if provided, this will set the random seed to ensure
+            consistency between runs
+
+        @param text_color: color of the text in RGB values. If None, a random
+            color scheme is chosen
+
+        @param box_color: color of the background box in RGB values. If None,
+            a random color scheme is chosen
+
+        @param box_opacity: opacity of the background box, in [0.0, 1.0]
+
+        @param padding: padding in pixels around the text inside the box
+
+        @param placement: where to place the text overlay. One of "bottom",
+            "top", "center", or "random"
+
+        @param text_rotation: rotation angle in degrees, clamped to [-45, 45]
+
+        @param bold: if True, simulates bold text via stroke_width
+
+        @param stroke_width: direct stroke control; overrides bold when > 0
+
+        @param box_bg_mode: background mode, "solid" or "gradient"
+
+        @param gradient_direction: "horizontal" or "vertical"
+
+        @param gradient_end_color: end color for gradient; None auto-darkens
+
+        @param num_overlays: number of text overlays to place
+
+        @param phrases: list of text phrases to randomly select from. If None,
+            defaults to built-in clickbait phrases
+
+        @param p: the probability of the transform being applied; default value is 1.0
+        """
+        super().__init__(p)
+        self.scale_factor = scale_factor
+        self.font_size = font_size
+        self.font_file = font_file
+        self.seed = seed
+        self.text_color = text_color
+        self.box_color = box_color
+        self.box_opacity = box_opacity
+        self.padding = padding
+        self.placement = placement
+        self.text_rotation = text_rotation
+        self.bold = bold
+        self.stroke_width = stroke_width
+        self.box_bg_mode = box_bg_mode
+        self.gradient_direction = gradient_direction
+        self.gradient_end_color = gradient_end_color
+        self.num_overlays = num_overlays
+        self.phrases = phrases
+
+    def apply_transform(
+        self,
+        image: Image.Image,
+        metadata: list[dict[str, Any]] | None = None,
+        bboxes: list[tuple] | None = None,
+        bbox_format: str | None = None,
+    ) -> Image.Image:
+        """
+        Overlays social-media-style text with a background box on the image
+
+        @param image: PIL Image to be augmented
+
+        @param metadata: if set to be a list, metadata about the function execution
+            including its name, the source & dest width, height, etc. will be appended to
+            the inputted list. If set to None, no metadata will be appended or returned
+
+        @param bboxes: a list of bounding boxes can be passed in here if desired. If
+            provided, this list will be modified in place such that each bounding box is
+            transformed according to this function
+
+        @param bbox_format: signifies what bounding box format was used in `bboxes`. Must
+            specify `bbox_format` if `bboxes` is provided. Supported bbox_format values
+            are "pascal_voc", "pascal_voc_norm", "coco", and "yolo"
+
+        @returns: Augmented PIL Image
+        """
+        return F.overlay_random_text_with_background(
+            image,
+            scale_factor=self.scale_factor,
+            font_size=self.font_size,
+            font_file=self.font_file,
+            seed=self.seed,
+            text_color=self.text_color,
+            box_color=self.box_color,
+            box_opacity=self.box_opacity,
+            padding=self.padding,
+            placement=self.placement,
+            text_rotation=self.text_rotation,
+            bold=self.bold,
+            stroke_width=self.stroke_width,
+            box_bg_mode=self.box_bg_mode,
+            gradient_direction=self.gradient_direction,
+            gradient_end_color=self.gradient_end_color,
+            num_overlays=self.num_overlays,
+            phrases=self.phrases,
+            metadata=metadata,
+            bboxes=bboxes,
+            bbox_format=bbox_format,
+        )
+
+
 class Pad(BaseTransform):
     def __init__(
         self,

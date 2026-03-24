@@ -36,6 +36,7 @@ from augly.utils.base_paths import (
 from augly.utils.classes import Segment
 from augly.utils.constants import (
     BBOXES_PATH,
+    CLICKBAIT_PHRASES,
     CONTRACTIONS_MAPPING,
     DEFAULT_COLOR,
     DEFAULT_FRAME_RATE,
@@ -54,6 +55,7 @@ from augly.utils.constants import (
     RED_RGB_COLOR,
     SILENT_AUDIO_PATH,
     SMILEY_EMOJI_DIR,
+    SOCIAL_MEDIA_OVERLAY_FONTS,
     SUPPORTED_LINE_TYPES,
     UNICODE_MAPPING_PATH,
     WHITE_RGB_COLOR,
@@ -78,6 +80,7 @@ __all__ = [
     "TEST_URI",
     "VIDEO_METADATA_PATH",
     "BBOXES_PATH",
+    "CLICKBAIT_PHRASES",
     "CONTRACTIONS_MAPPING",
     "CATALOG_CATEGORIES",
     "CATALOG_LANGUAGE_FAMILIES",
@@ -96,6 +99,7 @@ __all__ = [
     "GENDERED_WORDS_MAPPING",
     "IMG_MASK_PATH",
     "MEME_DEFAULT_FONT",
+    "SOCIAL_MEDIA_OVERLAY_FONTS",
     "MISSPELLING_DICTIONARY_PATH",
     "RED_RGB_COLOR",
     "SILENT_AUDIO_PATH",

@@ -61,6 +61,45 @@ FONT_PATH = os.path.join(FONTS_DIR, "NotoNaskhArabic-Regular.ttf")
 DEFAULT_TEXT_OVERLAY_FONT_PATH = os.path.join(FONTS_DIR, "Allura-Regular.ttf")
 MEME_DEFAULT_FONT = os.path.join(FONTS_DIR, "Raleway-ExtraBold.ttf")
 
+SOCIAL_MEDIA_OVERLAY_FONTS = [
+    os.path.join(FONTS_DIR, "Montserrat-ExtraBoldItalic.ttf"),
+    os.path.join(FONTS_DIR, "CourierPrime-Bold.ttf"),
+    os.path.join(FONTS_DIR, "Barlow-SemiBold.ttf"),
+    os.path.join(FONTS_DIR, "Dekko-Regular.ttf"),
+    os.path.join(FONTS_DIR, "Arapey-Italic.ttf"),
+    os.path.join(FONTS_DIR, "OldStandardTT-Regular.ttf"),
+    os.path.join(FONTS_DIR, "CosmopolitanScriptRegular.otf"),
+]
+
+# default clickbait phrases for overlay_random_text_with_background
+CLICKBAIT_PHRASES = [
+    "BREAKING: THIS CHANGES EVERYTHING",
+    "YOU WON'T BELIEVE WHAT HAPPENED NEXT",
+    "SHARE IF YOU AGREE",
+    "THIS IS WHAT THEY DON'T WANT YOU TO SEE",
+    "EVERYONE NEEDS TO SEE THIS",
+    "THIS WILL SHOCK YOU",
+    "SPREAD THIS BEFORE IT'S DELETED",
+    "THE TRUTH THEY'RE HIDING",
+    "TAG SOMEONE WHO NEEDS TO SEE THIS",
+    "THIS IS HUGE - SHARE NOW",
+    "WAIT FOR IT...",
+    "THIS SAYS IT ALL",
+    "LET THAT SINK IN",
+    "READ THAT AGAIN",
+    "SAY IT LOUDER FOR THE PEOPLE IN THE BACK",
+    "NOT A SINGLE LIE DETECTED",
+    "THIS RIGHT HERE",
+    "NEVER FORGET THIS",
+    "SCREENSHOT THIS BEFORE IT'S GONE",
+    "THE MEDIA WON'T SHOW YOU THIS",
+    "LIKE AND SHARE IF YOU SUPPORT THIS",
+    "BET YOU WON'T SHARE THIS",
+    "THEY TRIED TO HIDE THIS FROM US",
+    "WAKE UP PEOPLE",
+    "THIS NEEDS TO GO VIRAL",
+]
+
 # text augmentation assets
 CONTRACTIONS_MAPPING = os.path.join(TEXT_DIR, "contractions.json")
 FUN_FONTS_PATH = os.path.join(TEXT_DIR, "fun_fonts.json")

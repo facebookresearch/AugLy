@@ -23,7 +23,7 @@ from augly import utils
 from augly.image import utils as imutils
 from augly.image.helpers import fit_text_in_bbox
 from augly.image.utils.bboxes import spatial_bbox_helper
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 
 def apply_lambda(
@@ -1639,6 +1639,411 @@ def overlay_random_text(
     imutils.get_metadata(
         metadata=metadata,
         function_name="overlay_random_text",
+        aug_image=image_copy,
+        **func_kwargs,
+    )
+
+    return imutils.ret_and_save_image(image_copy, output_path, src_mode)
+
+
+def _draw_box(
+    draw: ImageDraw.ImageDraw,
+    target: Image.Image,
+    box_coords: list[int],
+    corner_radius: int,
+    box_color_with_alpha: tuple[int, int, int, int],
+    box_color: tuple[int, int, int],
+    box_bg_mode: str,
+    gradient_direction: str,
+    gradient_end_color: tuple[int, int, int] | None,
+    box_opacity: float,
+) -> None:
+    if box_bg_mode == "gradient":
+        x0, y0, x1, y1 = box_coords
+        bw = x1 - x0
+        bh = y1 - y0
+        if bw <= 0 or bh <= 0:
+            return
+
+        end_color = gradient_end_color
+        if end_color is None:
+            end_color = (
+                max(0, int(box_color[0] * 0.6)),
+                max(0, int(box_color[1] * 0.6)),
+                max(0, int(box_color[2] * 0.6)),
+            )
+
+        alpha = int(255 * box_opacity)
+        grad_img = Image.new("RGBA", (bw, bh), (0, 0, 0, 0))
+
+        if gradient_direction == "horizontal":
+            for col in range(bw):
+                t = col / max(1, bw - 1)
+                r = int(box_color[0] + (end_color[0] - box_color[0]) * t)
+                g = int(box_color[1] + (end_color[1] - box_color[1]) * t)
+                b = int(box_color[2] + (end_color[2] - box_color[2]) * t)
+                for row in range(bh):
+                    grad_img.putpixel((col, row), (r, g, b, alpha))
+        else:
+            for row in range(bh):
+                t = row / max(1, bh - 1)
+                r = int(box_color[0] + (end_color[0] - box_color[0]) * t)
+                g = int(box_color[1] + (end_color[1] - box_color[1]) * t)
+                b = int(box_color[2] + (end_color[2] - box_color[2]) * t)
+                for col in range(bw):
+                    grad_img.putpixel((col, row), (r, g, b, alpha))
+
+        if corner_radius > 0:
+            mask = Image.new("L", (bw, bh), 0)
+            mask_draw = ImageDraw.Draw(mask)
+            mask_draw.rounded_rectangle([0, 0, bw, bh], radius=corner_radius, fill=255)
+            grad_img.putalpha(ImageChops.multiply(grad_img.split()[3], mask))
+
+        target.paste(grad_img, (x0, y0), grad_img)
+    else:
+        if corner_radius > 0:
+            draw.rounded_rectangle(
+                box_coords, radius=corner_radius, fill=box_color_with_alpha
+            )
+        else:
+            draw.rectangle(box_coords, fill=box_color_with_alpha)
+
+
+def overlay_random_text_with_background(
+    image: str | Image.Image,
+    output_path: str | None = None,
+    scale_factor: float = 0.5,
+    font_size: int = 40,
+    font_file: str | list[str] | None = None,
+    seed: int | None = None,
+    text_color: tuple[int, int, int] | None = None,
+    box_color: tuple[int, int, int] | None = None,
+    box_opacity: float = 0.9,
+    padding: int = 15,
+    placement: str = "bottom",
+    text_rotation: float = 0.0,
+    bold: bool = False,
+    stroke_width: int = 0,
+    box_bg_mode: str = "solid",
+    gradient_direction: str = "horizontal",
+    gradient_end_color: tuple[int, int, int] | None = None,
+    num_overlays: int = 1,
+    phrases: list[str] | None = None,
+    metadata: list[dict[str, Any]] | None = None,
+    bboxes: list[tuple] | None = None,
+    bbox_format: str | None = None,
+) -> Image.Image:
+    """
+    Overlays social-media-style text with a background box on the image,
+    simulating viral post / clickbait overlays
+
+    @param image: the path to an image or a variable of type PIL.Image.Image
+        to be augmented
+
+    @param output_path: the path in which the resulting image will be stored.
+        If None, the resulting PIL Image will still be returned
+
+    @param scale_factor: controls font size scaling relative to the base
+        font_size, must be in (0, 1]
+
+    @param font_size: base font size in pixels before scale_factor is applied
+
+    @param font_file: iopath uri to a .ttf font file, or a list of font file
+        paths to randomly select from per overlay. If None, defaults to the
+        bundled Montserrat font
+
+    @param seed: if provided, this will set the random seed to ensure
+        consistency between runs
+
+    @param text_color: color of the text in RGB values. If None, a random
+        color scheme is chosen
+
+    @param box_color: color of the background box in RGB values. If None, a
+        random color scheme is chosen (black by default in most schemes)
+
+    @param box_opacity: opacity of the background box, in [0.0, 1.0]
+
+    @param padding: padding in pixels around the text inside the box
+
+    @param placement: where to place the text overlay. One of "bottom",
+        "top", "center", or "random"
+
+    @param text_rotation: rotation angle in degrees, clamped to [-45, 45]
+
+    @param bold: if True, simulates bold text via stroke_width
+
+    @param stroke_width: direct stroke control; overrides bold when > 0
+
+    @param box_bg_mode: background mode for the box, "solid" or "gradient"
+
+    @param gradient_direction: "horizontal" or "vertical", only used when
+        box_bg_mode is "gradient"
+
+    @param gradient_end_color: end color for gradient; None auto-darkens
+        box_color by 40%
+
+    @param num_overlays: number of text overlays to place on the image
+
+    @param phrases: list of text phrases to randomly select from. If None,
+        defaults to built-in clickbait phrases from utils.CLICKBAIT_PHRASES
+
+    @param metadata: if set to be a list, metadata about the function execution
+        including its name, the source & dest width, height, etc. will be
+        appended to the inputted list. If set to None, no metadata will be
+        appended or returned
+
+    @param bboxes: a list of bounding boxes can be passed in here if desired.
+        If provided, this list will be modified in place such that each bounding
+        box is transformed according to this function
+
+    @param bbox_format: signifies what bounding box format was used in
+        `bboxes`. Must specify `bbox_format` if `bboxes` is provided.
+        Supported bbox_format values are "pascal_voc", "pascal_voc_norm",
+        "coco", and "yolo"
+
+    @returns: the augmented PIL Image
+    """
+    assert 0 < scale_factor <= 1.0, "scale_factor must be a value in the range (0, 1]"
+    assert font_size > 0, "font_size must be positive"
+    assert (
+        0.0 <= box_opacity <= 1.0
+    ), "box_opacity must be a value in the range [0.0, 1.0]"
+    assert padding >= 0, "padding must be non-negative"
+    assert placement in (
+        "bottom",
+        "top",
+        "center",
+        "random",
+    ), "placement must be one of 'bottom', 'top', 'center', 'random'"
+    assert box_bg_mode in (
+        "solid",
+        "gradient",
+    ), "box_bg_mode must be 'solid' or 'gradient'"
+    assert gradient_direction in (
+        "horizontal",
+        "vertical",
+    ), "gradient_direction must be 'horizontal' or 'vertical'"
+    assert num_overlays >= 1, "num_overlays must be at least 1"
+    assert stroke_width >= 0, "stroke_width must be non-negative"
+    text_rotation = max(-45.0, min(45.0, float(text_rotation)))
+    if text_color is not None:
+        utils.validate_rgb_color(text_color)
+    if box_color is not None:
+        utils.validate_rgb_color(box_color)
+    if gradient_end_color is not None:
+        utils.validate_rgb_color(gradient_end_color)
+
+    image = imutils.validate_and_load_image(image)
+    func_kwargs = imutils.get_func_kwargs(metadata, locals())
+    src_mode = image.mode
+
+    if seed is None:
+        seed = random.randint(0, 100000)
+    random.seed(seed)
+
+    if font_file is None:
+        font_file = utils.SOCIAL_MEDIA_OVERLAY_FONTS
+
+    font_files = font_file if isinstance(font_file, list) else [font_file]
+
+    if phrases is None:
+        phrases = utils.CLICKBAIT_PHRASES
+
+    _COLOR_SCHEMES = [
+        ((255, 223, 0), (0, 0, 0)),
+        ((255, 255, 255), (0, 0, 0)),
+        ((255, 255, 0), (0, 0, 0)),
+        ((255, 200, 0), (0, 0, 0)),
+        ((0, 0, 0), (255, 255, 255)),
+    ]
+    _COLOR_WEIGHTS = [0.5, 0.3, 0.1, 0.05, 0.05]
+
+    effective_stroke = 0
+    if stroke_width > 0:
+        effective_stroke = stroke_width
+    elif bold:
+        actual_font_size_for_bold = int(font_size * (0.7 + scale_factor * 1.3))
+        effective_stroke = max(1, actual_font_size_for_bold // 20)
+
+    image_copy = image.copy().convert("RGBA")
+    width, height = image.size
+    overlay = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+
+    max_coverage = 0.5
+    max_total_height = int(height * max_coverage)
+    max_per_overlay_height = max_total_height // num_overlays
+    base_font_size = int(font_size * (0.7 + scale_factor * 1.3))
+
+    for overlay_idx in range(num_overlays):
+        cur_font_file = random.choice(font_files)
+        local_font_path = utils.pathmgr.get_local_path(cur_font_file)
+
+        text = random.choice(phrases)
+
+        cur_text_color = text_color
+        cur_box_color = box_color
+        if cur_text_color is None or cur_box_color is None:
+            chosen_text, chosen_box = random.choices(
+                _COLOR_SCHEMES, weights=_COLOR_WEIGHTS
+            )[0]
+            if cur_text_color is None:
+                cur_text_color = chosen_text
+            if cur_box_color is None:
+                cur_box_color = chosen_box
+
+        max_width = int(width * 0.75)
+        actual_font_size = base_font_size
+        font = ImageFont.truetype(local_font_path, actual_font_size)
+        lines: list[str] = [text]
+
+        for try_size in range(actual_font_size, max(5, actual_font_size - 30), -1):
+            font = ImageFont.truetype(local_font_path, try_size)
+            words = text.split()
+            lines = []
+            current_line: list[str] = []
+            for word in words:
+                test_line = " ".join(current_line + [word])
+                tb = draw.textbbox((0, 0), test_line, font=font)
+                if tb[2] - tb[0] <= max_width:
+                    current_line.append(word)
+                else:
+                    if current_line:
+                        lines.append(" ".join(current_line))
+                    current_line = [word]
+            if current_line:
+                lines.append(" ".join(current_line))
+
+            max_lines = max(2, min(4, len(lines)))
+            if len(lines) > max_lines:
+                all_words = " ".join(lines).split()
+                words_per_line = max(1, len(all_words) // max_lines)
+                lines = []
+                for i in range(0, len(all_words), words_per_line):
+                    lines.append(" ".join(all_words[i : i + words_per_line]))
+
+            wrapped_text = "\n".join(lines)
+            bbox = draw.textbbox((0, 0), wrapped_text, font=font)
+            text_height = bbox[3] - bbox[1]
+            total_block_height = text_height + 2 * padding
+            if total_block_height <= max_per_overlay_height:
+                actual_font_size = try_size
+                break
+
+        bbox = draw.textbbox((0, 0), "\n".join(lines), font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+        total_block_height = min(text_height + 2 * padding, max_per_overlay_height)
+
+        single_line_bbox = draw.textbbox((0, 0), "Ay", font=font)
+        line_height = single_line_bbox[3] - single_line_bbox[1]
+        line_spacing = int(line_height * 0.15)
+
+        text_y = height - text_height - 2 * padding
+        if placement == "bottom":
+            if num_overlays > 1:
+                text_y = height - total_block_height * (num_overlays - overlay_idx)
+        elif placement == "top":
+            text_y = padding + overlay_idx * total_block_height
+        elif placement == "center":
+            total_stack = total_block_height * num_overlays
+            stack_start = (height - total_stack) // 2
+            text_y = stack_start + overlay_idx * total_block_height + padding
+        elif placement == "random":
+            max_y = max(0, height - text_height - 2 * padding)
+            text_y = random.randint(0, max_y)
+
+        horizontal_padding = padding + random.randint(10, 20)
+        box_x_start = (width - text_width - 2 * horizontal_padding) // 2
+        box_x_end = box_x_start + text_width + 2 * horizontal_padding
+
+        if placement == "bottom" and num_overlays == 1:
+            box_y_end = height
+        else:
+            box_y_end = text_y + text_height + padding
+
+        box_coords = [box_x_start, text_y - padding, box_x_end, box_y_end]
+
+        corner_radius = random.choice([0, 0, 0, 8])
+        box_color_with_alpha = (*cur_box_color, int(255 * box_opacity))
+        text_color_with_alpha = (*cur_text_color, 255)
+
+        if text_rotation != 0.0:
+            local_w = box_x_end - box_x_start
+            local_h = box_y_end - (text_y - padding)
+            tmp = Image.new("RGBA", (local_w, local_h), (0, 0, 0, 0))
+            tmp_draw = ImageDraw.Draw(tmp)
+
+            local_box = [0, 0, local_w, local_h]
+            _draw_box(
+                tmp_draw,
+                tmp,
+                local_box,
+                corner_radius,
+                box_color_with_alpha,
+                cur_box_color,
+                box_bg_mode,
+                gradient_direction,
+                gradient_end_color,
+                box_opacity,
+            )
+
+            local_text_y = padding
+            for line in lines:
+                line_bbox = draw.textbbox((0, 0), line, font=font)
+                line_w = line_bbox[2] - line_bbox[0]
+                line_x = (local_w - line_w) // 2
+                tmp_draw.text(
+                    (line_x, local_text_y),
+                    line,
+                    font=font,
+                    fill=text_color_with_alpha,
+                    stroke_width=effective_stroke,
+                    stroke_fill=text_color_with_alpha if effective_stroke > 0 else None,
+                )
+                local_text_y += line_height + line_spacing
+
+            rotated = tmp.rotate(-text_rotation, expand=True, resample=Image.BICUBIC)
+            orig_cx = box_x_start + local_w // 2
+            orig_cy = (text_y - padding) + local_h // 2
+            paste_x = orig_cx - rotated.width // 2
+            paste_y = orig_cy - rotated.height // 2
+            overlay.paste(rotated, (paste_x, paste_y), rotated)
+        else:
+            _draw_box(
+                draw,
+                overlay,
+                box_coords,
+                corner_radius,
+                box_color_with_alpha,
+                cur_box_color,
+                box_bg_mode,
+                gradient_direction,
+                gradient_end_color,
+                box_opacity,
+            )
+
+            current_y = text_y
+            for line in lines:
+                line_bbox = draw.textbbox((0, 0), line, font=font)
+                line_w = line_bbox[2] - line_bbox[0]
+                line_x = (width - line_w) // 2
+                draw.text(
+                    (line_x, current_y),
+                    line,
+                    font=font,
+                    fill=text_color_with_alpha,
+                    stroke_width=effective_stroke,
+                    stroke_fill=text_color_with_alpha if effective_stroke > 0 else None,
+                )
+                current_y += line_height + line_spacing
+
+    image_copy = Image.alpha_composite(image_copy, overlay)
+    image_copy = image_copy.convert(src_mode)
+
+    imutils.get_metadata(
+        metadata=metadata,
+        function_name="overlay_random_text_with_background",
         aug_image=image_copy,
         **func_kwargs,
     )

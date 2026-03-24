@@ -242,6 +242,24 @@ def overlay_text_intensity(opacity: float, font_size: float, **kwargs) -> float:
     return overlay_media_intensity_helper(opacity, font_size)
 
 
+def overlay_random_text_with_background_intensity(
+    box_opacity: float,
+    scale_factor: float,
+    num_overlays: int = 1,
+    text_rotation: float = 0.0,
+    bold: bool = False,
+    stroke_width: int = 0,
+    **kwargs,
+) -> float:
+    base = overlay_media_intensity_helper(box_opacity, scale_factor)
+    overlay_factor = min(num_overlays / 5.0, 1.0)
+    rotation_factor = abs(text_rotation) / 45.0
+    bold_factor = 0.1 if (bold or stroke_width > 0) else 0.0
+    return min(
+        base + overlay_factor * 20 + rotation_factor * 10 + bold_factor * 10, 100.0
+    )
+
+
 def pad_intensity(metadata: dict[str, Any], **kwargs) -> float:
     return resize_intensity_helper(metadata)
 

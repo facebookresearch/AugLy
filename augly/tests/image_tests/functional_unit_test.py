@@ -110,6 +110,111 @@ class FunctionalImageUnitTest(BaseImageUnitTest):
         text_indices = [5, 3, 1, 2, 1000, 221]
         self.evaluate_function(imaugs.overlay_text, text=text_indices)
 
+    def test_overlay_random_text_with_background(self):
+        result = imaugs.overlay_random_text_with_background(self.img, seed=42)
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_with_custom_colors(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img,
+            seed=42,
+            text_color=(255, 255, 255),
+            box_color=(0, 0, 0),
+            box_opacity=0.8,
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_placement_top(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img, seed=42, placement="top"
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_placement_center(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img, seed=42, placement="center"
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_placement_random(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img, seed=42, placement="random"
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_rotation(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img, seed=42, text_rotation=15.0
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_bold(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img, seed=42, bold=True
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_stroke_width(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img, seed=42, stroke_width=3
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_gradient(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img, seed=42, box_bg_mode="gradient"
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_gradient_vertical(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img,
+            seed=42,
+            box_bg_mode="gradient",
+            gradient_direction="vertical",
+            gradient_end_color=(100, 100, 100),
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_num_overlays(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img, seed=42, num_overlays=2
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_all_features(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img,
+            seed=42,
+            placement="top",
+            text_rotation=10.0,
+            bold=True,
+            box_bg_mode="gradient",
+            num_overlays=2,
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
+    def test_overlay_random_text_with_background_custom_phrases(self):
+        result = imaugs.overlay_random_text_with_background(
+            self.img,
+            seed=42,
+            phrases=["CUSTOM TEXT ONE", "CUSTOM TEXT TWO"],
+        )
+        self.assertIsInstance(result, Image.Image)
+        self.assertEqual(result.size, self.img.size)
+
     def test_overlay_wrap_text(self):
         text = "Testing if the function can wrap this awesome text and not go out of bounds"
         self.evaluate_function(
