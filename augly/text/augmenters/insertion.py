@@ -58,7 +58,7 @@ class InsertionAugmenter:
         granularity: str,
         cadence: float = 1.0,
         vary_chars: bool = False,
-    ):
+    ) -> None:
         char_types = set(CHARACTER_TYPES.keys())
         assert char_type in char_types, f"Must set 'char_type' to one of: {char_types}"
         assert granularity in {

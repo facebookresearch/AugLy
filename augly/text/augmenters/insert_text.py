@@ -21,7 +21,7 @@ class InsertTextAugmenter:
         num_insertions: int = 1,
         insertion_location: str = "random",
         seed: int | None = 10,
-    ):
+    ) -> None:
         VALID_LOCATIONS = {"prepend", "append", "random"}
         assert (
             insertion_location in VALID_LOCATIONS
