@@ -27,7 +27,7 @@ Base Classes for Transforms
 
 
 class BaseTransform:
-    def __init__(self, p: float = 1.0):
+    def __init__(self, p: float = 1.0) -> None:
         """
         @param p: the probability of the transform being applied; default value is 1.0
         """
@@ -1036,7 +1036,7 @@ class SimulateTypos(BaseTransform):
         max_typo_length: int = 1,
         priority_words: list[str] | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param aug_char_p: probability of letters to be replaced in each word;
             This is only applicable for keyboard distance and swapping
