@@ -5,14 +5,14 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
 class VideoAugmenterByLoops(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, num_loops: int):
+    def __init__(self, num_loops: int) -> None:
         assert type(num_loops) == int, "Number of loops must be an integer"
         assert num_loops >= 0, "Number of loops cannot be a negative number"
         self.num_loops = num_loops
