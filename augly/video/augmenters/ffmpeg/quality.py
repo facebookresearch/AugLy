@@ -12,7 +12,7 @@ from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmen
 
 
 class VideoAugmenterByQuality(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, quality: int):
+    def __init__(self, quality: int) -> None:
         assert 0 <= quality <= 51, "Quality must be a value in the range [0, 51]"
         self.quality = quality
 
