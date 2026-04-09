@@ -14,7 +14,9 @@ from augly.video.helpers import get_video_info
 
 
 class VideoAugmenterByPadding(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, w_factor: float, h_factor: float, color: tuple[int, int, int]):
+    def __init__(
+        self, w_factor: float, h_factor: float, color: tuple[int, int, int]
+    ) -> None:
         assert w_factor >= 0, "w_factor cannot be a negative number"
         assert h_factor >= 0, "h_factor cannot be a negative number"
         validate_rgb_color(color)
