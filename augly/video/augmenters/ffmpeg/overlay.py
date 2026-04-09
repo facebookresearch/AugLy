@@ -20,7 +20,7 @@ class VideoAugmenterByOverlay(BaseVidgearFFMPEGAugmenter):
         x_factor: float,
         y_factor: float,
         use_overlay_audio: bool,
-    ):
+    ) -> None:
         assert is_image_file(overlay_path) or is_video_file(
             overlay_path
         ), "Overlaid media type not supported: please overlay either an image or video"

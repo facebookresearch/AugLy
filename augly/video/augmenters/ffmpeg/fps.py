@@ -12,7 +12,7 @@ from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmen
 
 
 class VideoAugmenterByFPSChange(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, fps: int):
+    def __init__(self, fps: int) -> None:
         assert fps > 0, "FPS must be greater than zero"
         self.fps = fps
 
