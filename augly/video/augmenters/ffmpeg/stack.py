@@ -16,7 +16,7 @@ from augly.video.helpers import get_video_info, has_audio_stream
 class VideoAugmenterByStack(BaseVidgearFFMPEGAugmenter):
     def __init__(
         self, second_video_path: str, use_second_audio: bool, orientation: str
-    ):
+    ) -> None:
         assert (
             type(use_second_audio) == bool
         ), "Expected a boolean value for use_second_audio"
