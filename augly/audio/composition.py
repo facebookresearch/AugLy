@@ -40,7 +40,7 @@ Example:
 
 
 class BaseComposition:
-    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0) -> None:
         """
         @param transforms: a list of transforms
 
@@ -82,7 +82,7 @@ class Compose(BaseComposition):
 
 
 class OneOf(BaseComposition):
-    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0) -> None:
         """
         @param transforms: a list of transforms to select from; one of which will
             be chosen to be applied to the audio
