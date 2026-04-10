@@ -17,7 +17,7 @@ from augly.text.augmenters.utils import (
 
 
 class CaseChanger:
-    def __init__(self, case: str, seed: int | None):
+    def __init__(self, case: str, seed: int | None) -> None:
         self.rng = np.random.RandomState(seed) if seed is not None else np.random
         self.case = case
 
@@ -49,7 +49,7 @@ class CaseAugmenter:
         granularity: str,
         cadence: float = 1.0,
         seed: int | None = 10,
-    ):
+    ) -> None:
         assert granularity in {
             "char",
             "word",
