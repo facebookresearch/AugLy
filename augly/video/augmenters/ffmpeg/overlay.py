@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 
 from augly.utils import is_image_file, is_video_file, pathmgr
@@ -14,6 +14,11 @@ from augly.video.helpers import get_video_info, has_audio_stream
 
 
 class VideoAugmenterByOverlay(BaseVidgearFFMPEGAugmenter):
+    overlay_path: str
+    x_factor: float
+    y_factor: float
+    use_overlay_audio: bool
+
     def __init__(
         self,
         overlay_path: str,
