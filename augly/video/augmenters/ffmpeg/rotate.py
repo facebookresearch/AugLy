@@ -13,7 +13,7 @@ from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmen
 
 
 class VideoAugmenterByRotation(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, degrees: float):
+    def __init__(self, degrees: float) -> None:
         assert isinstance(degrees, (float, int)), "Expected 'degrees' to be a number"
         self.degrees = degrees
 

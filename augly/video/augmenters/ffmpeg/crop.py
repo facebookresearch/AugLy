@@ -13,7 +13,7 @@ from augly.video.helpers import get_video_info
 
 
 class VideoAugmenterByCrop(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, left: float, top: float, right: float, bottom: float):
+    def __init__(self, left: float, top: float, right: float, bottom: float) -> None:
         assert 0.0 <= left <= 1.0, "Left must be a value in the range [0.0, 1.0]"
         assert 0.0 <= top <= 1.0, "Top must be a value in the range [0.0, 1.0]"
         assert left < right <= 1.0, "Right must be a value in the range (left, 1.0]"
