@@ -28,7 +28,7 @@ from nlpaug.util import Action, Method  # @manual
 
 
 class MisspellingReplacement:
-    def __init__(self, misspelling_dict_path: str):
+    def __init__(self, misspelling_dict_path: str) -> None:
         local_misspelling_dict_path = pathmgr.get_local_path(misspelling_dict_path)
         with open(local_misspelling_dict_path) as json_file:
             self.dictionary = json.load(json_file)
@@ -61,7 +61,7 @@ class TypoAugmenter(WordAugmenter):
         misspelling_dict_path: str | None,
         max_typo_length: int,
         priority_words: list[str] | None,
-    ):
+    ) -> None:
         validate_augmenter_params(
             aug_char_min,
             aug_char_max,
