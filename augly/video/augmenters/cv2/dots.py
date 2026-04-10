@@ -5,9 +5,10 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import logging
+from typing import Any
 
 import cv2
 import numpy as np
@@ -15,13 +16,13 @@ from augly.video.augmenters.cv2.base_augmenter import BaseCV2Augmenter
 from augly.video.augmenters.cv2.shapes import VideoDistractorByShapes
 
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
 class VideoDistractorByDots(BaseCV2Augmenter):
     def __init__(
-        self, num_dots: int, dot_type: str, random_movement: bool = True, **kwargs
+        self, num_dots: int, dot_type: str, random_movement: bool = True, **kwargs: Any
     ) -> None:
         assert num_dots > 0, "Number of dots must be greater than zero"
         assert dot_type in [
@@ -33,7 +34,7 @@ class VideoDistractorByDots(BaseCV2Augmenter):
 
         self.num_dots = num_dots
         self.dot_type = dot_type
-        self.shapes_distractor = None
+        self.shapes_distractor: VideoDistractorByShapes | None = None
 
         if self.dot_type == "colored":
             self.shapes_distractor = VideoDistractorByShapes(
@@ -67,7 +68,7 @@ class VideoDistractorByDots(BaseCV2Augmenter):
         return distract_frame
 
     # overrides abstract method of base class
-    def apply_augmentation(self, raw_frame: np.ndarray, **kwargs) -> np.ndarray:
+    def apply_augmentation(self, raw_frame: np.ndarray, **kwargs: Any) -> np.ndarray:
         """
         Adds random dot distracts (in various colors and positions) to each frame
 
@@ -80,6 +81,7 @@ class VideoDistractorByDots(BaseCV2Augmenter):
         ), "VideoDistractorByDots only accepts RGB images"
 
         if self.dot_type == "colored":
+            assert self.shapes_distractor is not None
             return self.shapes_distractor.apply_augmentation(raw_frame, **kwargs)
 
         return self.add_blurred_dots(raw_frame)
