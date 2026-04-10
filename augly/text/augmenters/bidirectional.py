@@ -26,7 +26,7 @@ class BidirectionalAugmenter:
     Preserves whitespace, including newlines.
     """
 
-    def __init__(self, granularity: str, split_word: bool = False):
+    def __init__(self, granularity: str, split_word: bool = False) -> None:
         assert granularity in [
             "word",
             "all",

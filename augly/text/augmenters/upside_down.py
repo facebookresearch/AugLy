@@ -31,7 +31,9 @@ def _flip(c: str) -> str:
 class UpsideDownAugmenter(Augmenter):
     """Augmenter that flips the text"""
 
-    def __init__(self, granularity: str, aug_min: int, aug_max: int, aug_p: float):
+    def __init__(
+        self, granularity: str, aug_min: int, aug_max: int, aug_p: float
+    ) -> None:
         assert granularity in [
             "char",
             "word",
