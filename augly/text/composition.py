@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import random
 from typing import Any
@@ -39,7 +39,7 @@ Example:
 
 
 class BaseComposition(BaseTransform):
-    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0) -> None:
         """
         @param transforms: a list of transforms
 
@@ -86,7 +86,9 @@ class Compose(BaseComposition):
 
 
 class OneOf(BaseComposition):
-    def __init__(self, transforms: list[BaseTransform], p: float = 1.0):
+    transform_probs: list[float]
+
+    def __init__(self, transforms: list[BaseTransform], p: float = 1.0) -> None:
         """
         @param transforms: a list of transforms to select from; one of which will
             be chosen to be applied to the text
