@@ -12,7 +12,7 @@ from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmen
 
 
 class VideoAugmenterByNoise(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, level: int):
+    def __init__(self, level: int) -> None:
         assert 0 <= level <= 100, "Level must be a value in the range [0, 100]"
         self.level = level
 

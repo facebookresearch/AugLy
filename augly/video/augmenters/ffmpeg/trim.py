@@ -20,7 +20,7 @@ class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
         offset_factor: float = 0.0,
         duration_factor: float = 1.0,
         minimum_duration: float = 0.0,
-    ):
+    ) -> None:
         assert start is None or start >= 0, "Start cannot be a negative number"
         assert (
             end is None or (start is not None and end > start) or end > 0
