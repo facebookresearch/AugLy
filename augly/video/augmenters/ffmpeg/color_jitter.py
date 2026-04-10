@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
@@ -14,7 +14,7 @@ from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmen
 class VideoAugmenterByColorJitter(BaseVidgearFFMPEGAugmenter):
     def __init__(
         self, brightness_level: float, contrast_level: float, saturation_level: float
-    ):
+    ) -> None:
         assert (
             -1.0 <= brightness_level <= 1.0
         ), "Brightness factor must be a value in the range [-1.0, 1.0]"
