@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import json
 from copy import deepcopy
@@ -16,7 +16,7 @@ from augly.text import intensity as txtintensity
 
 
 def get_func_kwargs(
-    metadata: list[dict[str, Any]] | None, local_kwargs: dict[str, Any], **kwargs
+    metadata: list[dict[str, Any]] | None, local_kwargs: dict[str, Any], **kwargs: Any
 ) -> dict[str, Any]:
     if metadata is None:
         return {}
@@ -31,7 +31,7 @@ def get_metadata(
     function_name: str,
     texts: list[str] | None = None,
     aug_texts: list[str] | str | None = None,
-    **kwargs,
+    **kwargs: Any,
 ) -> None:
     if metadata is None:
         return
