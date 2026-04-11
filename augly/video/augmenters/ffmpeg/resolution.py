@@ -5,14 +5,14 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
 class VideoAugmenterByResolution(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, resolution: float):
+    def __init__(self, resolution: float) -> None:
         assert (
             isinstance(resolution, (int, float)) and resolution > 0.0
         ), "Invalid resolution: scale factor must be positive"
