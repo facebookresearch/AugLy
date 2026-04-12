@@ -5,14 +5,14 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
 
 
 class VideoAugmenterByResize(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, height: int | str = "ih", width: int | str = "iw"):
+    def __init__(self, height: int | str = "ih", width: int | str = "iw") -> None:
         """
         Constructor. See https://trac.ffmpeg.org/wiki/Scaling for height and width options.
 
