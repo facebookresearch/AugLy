@@ -26,7 +26,7 @@ from nlpaug.util import Action, Method  # @manual
 
 
 class CharReplacement:
-    def __init__(self, mapping_path: str | None):
+    def __init__(self, mapping_path: str | None) -> None:
         if mapping_path:
             local_mapping_path = pathmgr.get_local_path(mapping_path)
             with open(local_mapping_path) as json_file:
@@ -56,7 +56,7 @@ class LetterReplacementAugmenter(CharAugmenter):
         aug_word_p: float,
         mapping_path: str | None,
         priority_words: list[str] | None,
-    ):
+    ) -> None:
         validate_augmenter_params(
             aug_char_min,
             aug_char_max,
