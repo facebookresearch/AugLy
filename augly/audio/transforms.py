@@ -23,7 +23,7 @@ Base Classes for Transforms
 
 
 class BaseTransform:
-    def __init__(self, p: float = 1.0):
+    def __init__(self, p: float = 1.0) -> None:
         """
         @param p: the probability of the transform being applied; default value is 1.0
         """
@@ -148,7 +148,7 @@ class ApplyLambda(BaseTransform):
         self,
         aug_function: Callable[..., tuple[np.ndarray, int]] = lambda x, y: (x, y),
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param aug_function: the augmentation function to be applied onto the audio
             (should expect the audio np.ndarray & sample rate int as input, and return
