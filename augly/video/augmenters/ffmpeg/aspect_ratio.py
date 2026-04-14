@@ -14,7 +14,7 @@ from augly.video.helpers import get_video_info
 
 
 class VideoAugmenterByAspectRatio(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, ratio: float | str):
+    def __init__(self, ratio: float | str) -> None:
         assert (isinstance(ratio, str) and len(ratio.split(":")) == 2) or (
             isinstance(ratio, (int, float)) and ratio > 0
         ), "Aspect ratio must be a valid string ratio or a positive number"

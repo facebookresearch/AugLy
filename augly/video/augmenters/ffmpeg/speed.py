@@ -12,7 +12,7 @@ from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmen
 
 
 class VideoAugmenterBySpeed(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, factor: float):
+    def __init__(self, factor: float) -> None:
         assert factor > 0, "Factor must be greater than zero"
         self.factor = factor
 
