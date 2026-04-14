@@ -12,7 +12,7 @@ from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmen
 
 
 class VideoAugmenterByBrightness(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, level: float):
+    def __init__(self, level: float) -> None:
         assert -1.0 <= level <= 1.0, "Level must be a value in the range [-1.0, 1.0]"
         self.level = level
 
