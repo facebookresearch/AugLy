@@ -240,7 +240,7 @@ class ApplyLambda(BaseTransform):
 
 
 class AudioSwap(BaseTransform):
-    def __init__(self, audio_path: str, offset: float = 0.0, p: float = 1.0):
+    def __init__(self, audio_path: str, offset: float = 0.0, p: float = 1.0) -> None:
         """
         @param audio_path: the iopath uri to the audio you'd like to swap with the
             video's audio
@@ -2431,7 +2431,7 @@ class RandomBrightness(BaseRandomRangeTransform):
 class RandomContrast(BaseRandomRangeTransform):
     def __init__(
         self, min_factor: float = -5.0, max_factor: float = 5.0, p: float = 1.0
-    ):
+    ) -> None:
         """
         @param min_factor: the lower value on the range of contrast values to choose
             from. The lower the factor, the less contrast
