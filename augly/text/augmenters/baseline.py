@@ -20,7 +20,7 @@ from nlpaug.util import Action  # @manual
 class BaselineAugmenter(WordAugmenter):
     """Baseline augmenter that serves as comparison with the original text"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(action=Action.SUBSTITUTE)
 
     def substitute(self, data: str) -> str:

@@ -33,7 +33,7 @@ class WordsAugmenter(WordAugmenter):
         aug_word_max: int,
         aug_word_p: float,
         priority_words: list[str] | None,
-    ):
+    ) -> None:
         assert min_char >= 2, "Expected min_char to be greater than or equal to 2"
 
         super().__init__(
