@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import json
 
@@ -26,6 +26,8 @@ from nlpaug.util import Action, Method  # @manual
 
 
 class CharReplacement:
+    mapping: dict[str, list[str]]
+
     def __init__(self, mapping_path: str | None) -> None:
         if mapping_path:
             local_mapping_path = pathmgr.get_local_path(mapping_path)
@@ -44,6 +46,9 @@ class CharReplacement:
 
 class LetterReplacementAugmenter(CharAugmenter):
     """Augmenter that replaces letters with similar mappings"""
+
+    letter_mapping: CharReplacement
+    priority_words: set[str] | None
 
     def __init__(
         self,
