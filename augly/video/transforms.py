@@ -196,8 +196,8 @@ class ApplyLambda(BaseTransform):
         self,
         aug_function: Callable[..., str] = identity_function,
         p: float = 1.0,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> None:
         """
         @param aug_function: the augmentation function to be applied onto the video
             (should expect a video path and output path as input and output the
@@ -2615,7 +2615,7 @@ class RandomFPS(BaseRandomRangeTransform):
 
 
 class RandomNoise(BaseRandomRangeTransform):
-    def __init__(self, min_level: int = 0, max_level: int = 50, p: float = 1.0):
+    def __init__(self, min_level: int = 0, max_level: int = 50, p: float = 1.0) -> None:
         """
         @param min_level: the lower value on the range of noise strength level
             values to choose from. 0 indicates no change, allowed range is [0, 100]
