@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 
 from augly.video.augmenters.ffmpeg.base_augmenter import BaseVidgearFFMPEGAugmenter
@@ -13,6 +13,12 @@ from augly.video.helpers import get_video_info
 
 
 class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
+    start: float | None
+    end: float | None
+    offset_factor: float | None
+    duration_factor: float | None
+    minimum_duration: float
+
     def __init__(
         self,
         start: float | None = None,
@@ -60,12 +66,17 @@ class VideoAugmenterByTrim(BaseVidgearFFMPEGAugmenter):
         duration = float(video_info["duration"])
 
         if self.start is None and self.end is None:
-            self.start = self.offset_factor * duration
+            assert self.offset_factor is not None
+            assert self.duration_factor is not None
+            offset_factor = self.offset_factor
+            duration_factor = self.duration_factor
+            start = offset_factor * duration
             duration = min(
-                max(self.minimum_duration, self.duration_factor * duration),
-                duration - self.start,
+                max(self.minimum_duration, duration_factor * duration),
+                duration - start,
             )
-            self.end = self.start + duration
+            self.start = start
+            self.end = start + duration
         elif self.start is None:
             self.start = 0
         elif self.end is None:
