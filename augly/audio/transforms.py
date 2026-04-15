@@ -96,7 +96,7 @@ class AddBackgroundNoise(BaseTransform):
         snr_level_db: float = 10.0,
         seed: RNGSeed | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param background_audio: the path to the background audio or a variable of type
             np.ndarray containing the background audio. If set to `None`, the background
@@ -458,7 +458,7 @@ class InvertChannels(BaseTransform):
 
 
 class Loop(BaseTransform):
-    def __init__(self, n: int = 1, p: float = 1.0):
+    def __init__(self, n: int = 1, p: float = 1.0) -> None:
         """
         @param n: the number of times the audio will be looped
 
