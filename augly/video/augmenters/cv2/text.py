@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import pickle
 import random
@@ -20,7 +20,7 @@ from augly.video.augmenters.cv2.base_augmenter import BaseCV2Augmenter
 from PIL import Image, ImageDraw, ImageFont
 
 
-CV2_FONTS = [
+CV2_FONTS: list[int] = [
     cv2.FONT_HERSHEY_SIMPLEX,
     cv2.FONT_HERSHEY_PLAIN,
     cv2.FONT_HERSHEY_DUPLEX,
@@ -33,6 +33,12 @@ CV2_FONTS = [
 
 
 class VideoDistractorByText(BaseCV2Augmenter):
+    texts: Iterator[list[float]]
+    fonts: Iterator[tuple[Any, list[str]]]
+    fontscales: Iterator[float]
+    colors: Iterator[tuple[int, int, int]]
+    thickness: Iterator[int]
+
     def __init__(
         self,
         text_len: int,
@@ -44,7 +50,7 @@ class VideoDistractorByText(BaseCV2Augmenter):
         random_movement: bool = False,
         topleft: tuple[float, float] | None = None,
         bottomright: tuple[float, float] | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         assert text_len > 0, "Text length must be greater than zero"
         assert (
@@ -73,7 +79,7 @@ class VideoDistractorByText(BaseCV2Augmenter):
     def random_texts(
         self, text_len: int, text_change_nth: int | None
     ) -> Iterator[list[float]]:
-        def random_text(n):
+        def random_text(n: int) -> list[float]:
             return [random.random() for _ in range(n)]
 
         iframe = 0
@@ -112,7 +118,7 @@ class VideoDistractorByText(BaseCV2Augmenter):
             yield thickness or random.randint(2, 5)
 
     # overrides abstract method of base class
-    def apply_augmentation(self, raw_frame: np.ndarray, **kwargs) -> np.ndarray:
+    def apply_augmentation(self, raw_frame: np.ndarray, **kwargs: Any) -> np.ndarray:
         """
         Adds text distracts (in various colors, fonts, and positions) to each frame
 
