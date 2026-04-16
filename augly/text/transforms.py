@@ -732,7 +732,7 @@ class ReplaceSimilarChars(BaseTransform):
         mapping_path: str | None = None,
         priority_words: list[str] | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param aug_char_p: probability of letters to be replaced in each word
 
@@ -1185,7 +1185,7 @@ class SwapGenderedWords(BaseTransform):
         priority_words: list[str] | None = None,
         ignore_words: list[str] | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param aug_word_p: probability of words to be augmented
 
