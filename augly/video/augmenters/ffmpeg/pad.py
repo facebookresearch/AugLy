@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 
 from augly.utils import validate_rgb_color
@@ -23,7 +23,7 @@ class VideoAugmenterByPadding(BaseVidgearFFMPEGAugmenter):
 
         self.w_factor = w_factor
         self.h_factor = h_factor
-        self.hex_color = "%02x%02x%02x" % color
+        self.hex_color: str = "%02x%02x%02x" % color
 
     def get_command(self, video_path: str, output_path: str) -> list[str]:
         """
