@@ -343,7 +343,7 @@ class BlendVideos(BaseTransform):
         y_pos: float = 0.0,
         use_second_audio: bool = True,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param overlay_path: the path to the video that will be overlaid onto the
             background video
@@ -1917,7 +1917,7 @@ class ReplaceWithColorFrames(BaseTransform):
 class Resize(BaseTransform):
     def __init__(
         self, height: int | None = None, width: int | None = None, p: float = 1.0
-    ):
+    ) -> None:
         """
         @param height: the height in which the video should be resized to. If None,
             the original video height will be used
