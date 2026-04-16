@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import random
 
@@ -43,7 +43,7 @@ class WordsAugmenter(WordAugmenter):
             aug_p=aug_word_p,
         )
         self.min_char = min_char
-        self.priority_words = (
+        self.priority_words: set[str] | None = (
             set(priority_words) if priority_words is not None else priority_words
         )
 
