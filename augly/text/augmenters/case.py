@@ -5,9 +5,10 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import math
+import types
 
 import numpy as np
 from augly.text.augmenters.utils import (
@@ -18,7 +19,9 @@ from augly.text.augmenters.utils import (
 
 class CaseChanger:
     def __init__(self, case: str, seed: int | None) -> None:
-        self.rng = np.random.RandomState(seed) if seed is not None else np.random
+        self.rng: np.random.RandomState | types.ModuleType = (
+            np.random.RandomState(seed) if seed is not None else np.random
+        )
         self.case = case
 
     def change(self, text: str, case: str | None = None) -> str:
