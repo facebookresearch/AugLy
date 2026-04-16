@@ -59,7 +59,7 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         video_paths: list[str],
         src_video_path_index: int,
         transition: TransitionConfig | None = None,
-    ):
+    ) -> None:
         assert len(video_paths) > 0, "Please provide at least one input video"
         assert all(
             pathmgr.exists(video_path) for video_path in video_paths

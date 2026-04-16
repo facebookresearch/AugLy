@@ -14,7 +14,7 @@ from augly.video.helpers import get_audio_info, get_video_info
 
 
 class VideoAugmenterByAudioSwap(BaseVidgearFFMPEGAugmenter):
-    def __init__(self, audio_path: str, offset: float):
+    def __init__(self, audio_path: str, offset: float) -> None:
         assert offset >= 0, "Offset cannot be a negative number"
 
         self.audio_path = pathmgr.get_local_path(audio_path)
