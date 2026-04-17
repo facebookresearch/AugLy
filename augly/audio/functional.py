@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 from collections.abc import Callable
 from copy import deepcopy
@@ -136,7 +136,7 @@ def apply_lambda(
     aug_function: Callable[..., tuple[np.ndarray, int]] = lambda x, y: (x, y),
     output_path: str | None = None,
     metadata: list[dict[str, Any]] | None = None,
-    **kwargs,
+    **kwargs: Any,
 ) -> tuple[np.ndarray, int]:
     """
     Apply a user-defined lambda to the audio
