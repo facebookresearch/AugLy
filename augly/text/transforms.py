@@ -121,7 +121,7 @@ class ApplyLambda(BaseTransform):
         aug_function: Callable[..., list[str]] = lambda x: x,
         p: float = 1.0,
         **kwargs,
-    ):
+    ) -> None:
         """
         @param aug_function: the augmentation function to be applied onto the text
             (should expect a list of text documents as input and return a list of
@@ -224,7 +224,7 @@ class Contractions(BaseTransform):
         max_contraction_length: int = 2,
         seed: int | None = 10,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param aug_p: the probability that each pair (or longer string) of words will be
             replaced with the corresponding contraction, if there is one in the mapping
