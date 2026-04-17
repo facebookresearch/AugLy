@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import random
 import shutil
@@ -41,7 +41,7 @@ Example:
 
 
 class BaseComposition(VidAugBaseClass):
-    def __init__(self, transforms: list[VidAugBaseClass], p: float = 1.0):
+    def __init__(self, transforms: list[VidAugBaseClass], p: float = 1.0) -> None:
         """
         @param transforms: a list of transforms
 
@@ -97,7 +97,7 @@ class Compose(BaseComposition):
 
 
 class OneOf(BaseComposition):
-    def __init__(self, transforms: list[VidAugBaseClass], p: float = 1.0):
+    def __init__(self, transforms: list[VidAugBaseClass], p: float = 1.0) -> None:
         """
         @param transforms: a list of transforms to select from; one of which will
             be chosen to be applied to the video
@@ -107,7 +107,7 @@ class OneOf(BaseComposition):
         super().__init__(transforms, p)
         transform_probs = [t.p for t in transforms]
         probs_sum = sum(transform_probs)
-        self.transform_probs = [t / probs_sum for t in transform_probs]
+        self.transform_probs: list[float] = [t / probs_sum for t in transform_probs]
 
     def __call__(
         self,
