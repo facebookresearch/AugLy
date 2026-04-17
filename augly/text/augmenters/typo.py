@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import json
 
@@ -28,6 +28,8 @@ from nlpaug.util import Action, Method  # @manual
 
 
 class MisspellingReplacement:
+    dictionary: dict[str, list[str]]
+
     def __init__(self, misspelling_dict_path: str) -> None:
         local_misspelling_dict_path = pathmgr.get_local_path(misspelling_dict_path)
         with open(local_misspelling_dict_path) as json_file:
@@ -47,6 +49,11 @@ class TypoAugmenter(WordAugmenter):
     keyboard; misspelling, which replaces words with misspellings defined in a dictionary
     file; or all, which will apply a random combination of all 4
     """
+
+    augmenters: list[RandomCharAug | KeyboardAug]
+    model: MisspellingReplacement | None
+    max_typo_length: int
+    priority_words: set[str] | None
 
     def __init__(
         self,
