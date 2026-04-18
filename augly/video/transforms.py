@@ -1083,7 +1083,7 @@ class MemeFormat(BaseTransform):
         caption_height: int = 250,
         meme_bg_color: tuple[int, int, int] = utils.WHITE_RGB_COLOR,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param text: the text to be overlaid/used in the meme. note: if using a very
             long string, please add in newline characters such that the text remains
@@ -1468,7 +1468,7 @@ class OverlayShapes(BaseTransform):
         bottomright: tuple[float, float] | None = None,
         metadata: list[dict[str, Any]] | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param num_shapes: the number of shapes to add to each frame
 
