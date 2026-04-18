@@ -120,7 +120,7 @@ class ApplyLambda(BaseTransform):
         self,
         aug_function: Callable[..., list[str]] = lambda x: x,
         p: float = 1.0,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         """
         @param aug_function: the augmentation function to be applied onto the text
@@ -409,7 +409,7 @@ class InsertText(BaseTransform):
         insertion_location: str = "random",
         seed: int | None = 10,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param num_insertions: the number of times to sample from insert_text and insert
 
