@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 from copy import deepcopy
 from typing import Any
@@ -22,7 +22,7 @@ def get_func_kwargs(
     metadata: list[dict[str, Any]] | None,
     local_kwargs: dict[str, Any],
     video_path: str,
-    **kwargs,
+    **kwargs: Any,
 ) -> dict[str, Any]:
     if metadata is None:
         return {}
@@ -98,7 +98,7 @@ def compute_insert_in_background_multiple_segments(
     transition_duration: float,
     new_src_segments: list[Segment],
     new_dst_segments: list[Segment],
-    **kwargs,
+    **kwargs: Any,
 ) -> None:
     n = len(src_segment_starts)
     assert n == len(
@@ -140,7 +140,7 @@ def compute_time_decimate_segments(
     transition_duration: float,
     new_src_segments: list[Segment],
     new_dst_segments: list[Segment],
-    **kwargs,
+    **kwargs: Any,
 ) -> None:
     start_offset = src_duration * kwargs["start_offset_factor"]
     on_segment = src_duration * kwargs["on_factor"]
@@ -179,7 +179,7 @@ def compute_time_decimate_segments(
         dst_offset = new_dst_segments[-1].end
 
 
-def get_transition_duration(kwargs):
+def get_transition_duration(kwargs: dict[str, Any]) -> float:
     transition = kwargs.get("transition")
     if transition:
         return transition.duration
@@ -194,7 +194,7 @@ def compute_changed_segments(
     src_duration: float,
     dst_duration: float,
     speed_factor: float,
-    **kwargs,
+    **kwargs: Any,
 ) -> tuple[list[Segment], list[Segment]]:
     """
     This function performs the logic of computing the new matching segments based
@@ -358,7 +358,7 @@ def compute_segments(
     src_duration: float,
     dst_duration: float,
     metadata: list[dict[str, Any]],
-    **kwargs,
+    **kwargs: Any,
 ) -> tuple[list[Segment], list[Segment]]:
     """
     Compute matching pairs of src_segment -> dst_segment, given the kwargs of the
@@ -416,7 +416,7 @@ def get_metadata(
     output_path: str | None,
     src_video_info: dict[str, Any],
     src_fps: float | None,
-    **kwargs,
+    **kwargs: Any,
 ) -> None:
     if metadata is None:
         return
