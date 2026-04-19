@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import math
 import random
@@ -67,7 +67,7 @@ class InsertionAugmenter:
         }, "Must set 'granularity' to either 'word' or 'all'."
         assert cadence >= 1.0, "Must set 'cadence' to be no less than 1.0."
 
-        self.char_set = CHARACTER_TYPES[char_type]
+        self.char_set: list[str] = CHARACTER_TYPES[char_type]
         self.granularity = granularity
         self.cadence = cadence
         self.vary_chars = vary_chars
