@@ -2310,7 +2310,9 @@ Example:
 
 
 class RandomAspectRatio(BaseRandomRangeTransform):
-    def __init__(self, min_ratio: float = 0.5, max_ratio: float = 2.0, p: float = 1.0):
+    def __init__(
+        self, min_ratio: float = 0.5, max_ratio: float = 2.0, p: float = 1.0
+    ) -> None:
         """
         @param min_ratio: the lower value on the range of aspect ratio values to choose
             from, i.e. the width/height ratio
