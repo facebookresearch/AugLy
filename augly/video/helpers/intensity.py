@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 from typing import Any
 
@@ -31,7 +31,7 @@ is assumed in the intensity function below.
 """
 
 
-def add_noise_intensity(level: int, **kwargs) -> float:
+def add_noise_intensity(level: int, **kwargs: Any) -> float:
     assert (
         isinstance(level, (float, int)) and 0 <= level <= 100
     ), "level must be a number in [0, 100]"
@@ -39,24 +39,26 @@ def add_noise_intensity(level: int, **kwargs) -> float:
     return (level / 100) * 100.0
 
 
-def apply_lambda_intensity(aug_function: str, **kwargs) -> float:
+def apply_lambda_intensity(aug_function: str, **kwargs: Any) -> float:
     intensity_func = globals().get(f"{aug_function}_intensity")
     return intensity_func(**kwargs) if intensity_func else 100.0
 
 
-def audio_swap_intensity(offset: float, **kwargs) -> float:
+def audio_swap_intensity(offset: float, **kwargs: Any) -> float:
     return (1.0 - offset) * 100.0
 
 
-def augment_audio_intensity(audio_metadata: list[dict[str, Any]], **kwargs) -> float:
+def augment_audio_intensity(
+    audio_metadata: list[dict[str, Any]], **kwargs: Any
+) -> float:
     return audio_metadata[0]["intensity"]
 
 
-def blend_videos_intensity(opacity: float, overlay_size: float, **kwargs) -> float:
+def blend_videos_intensity(opacity: float, overlay_size: float, **kwargs: Any) -> float:
     return imint.overlay_media_intensity_helper(opacity, overlay_size)
 
 
-def blur_intensity(sigma: int, **kwargs) -> float:
+def blur_intensity(sigma: int, **kwargs: Any) -> float:
     assert (
         isinstance(sigma, (float, int)) and sigma >= 0
     ), "sigma must be a non-negative number"
@@ -65,7 +67,7 @@ def blur_intensity(sigma: int, **kwargs) -> float:
     return min((sigma / max_sigma) * 100.0, 100.0)
 
 
-def brightness_intensity(level: float, **kwargs) -> float:
+def brightness_intensity(level: float, **kwargs: Any) -> float:
     assert (
         isinstance(level, (float, int)) and -1 <= level <= 1
     ), "level must be a number in [-1, 1]"
@@ -74,7 +76,7 @@ def brightness_intensity(level: float, **kwargs) -> float:
 
 
 def change_aspect_ratio_intensity(
-    ratio: float, metadata: dict[str, Any], **kwargs
+    ratio: float, metadata: dict[str, Any], **kwargs: Any
 ) -> float:
     assert (
         isinstance(ratio, (float, int)) and ratio > 0
@@ -86,7 +88,7 @@ def change_aspect_ratio_intensity(
     return min((ratio_change / max_ratio_change) * 100.0, 100.0)
 
 
-def change_video_speed_intensity(factor: float, **kwargs) -> float:
+def change_video_speed_intensity(factor: float, **kwargs: Any) -> float:
     assert (
         isinstance(factor, (float, int)) and factor > 0
     ), "factor must be a positive number"
@@ -99,7 +101,10 @@ def change_video_speed_intensity(factor: float, **kwargs) -> float:
 
 
 def color_jitter_intensity(
-    brightness_factor: float, contrast_factor: float, saturation_factor: float, **kwargs
+    brightness_factor: float,
+    contrast_factor: float,
+    saturation_factor: float,
+    **kwargs: Any,
 ) -> float:
     assert (
         isinstance(brightness_factor, (float, int)) and -1 <= brightness_factor <= 1
@@ -117,11 +122,11 @@ def color_jitter_intensity(
     return (brightness_intensity * contrast_intensity * saturation_intensity) * 100.0
 
 
-def concat_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def concat_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
-def contrast_intensity(level: float, **kwargs) -> float:
+def contrast_intensity(level: float, **kwargs: Any) -> float:
     assert (
         isinstance(level, (float, int)) and -1000 <= level <= 1000
     ), "level must be a number in [-1000, 1000]"
@@ -129,55 +134,58 @@ def contrast_intensity(level: float, **kwargs) -> float:
     return (abs(level) / 1000) * 100.0
 
 
-def crop_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def crop_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
-def encoding_quality_intensity(quality: int, **kwargs) -> float:
+def encoding_quality_intensity(quality: int, **kwargs: Any) -> float:
     assert (
         isinstance(quality, int) and 0 <= quality <= 51
     ), "quality must be a number in [0, 51]"
     return (quality / 51) * 100.0
 
 
-def fps_intensity(fps: int, metadata: dict[str, Any], **kwargs) -> float:
+def fps_intensity(fps: int, metadata: dict[str, Any], **kwargs: Any) -> float:
     assert isinstance(fps, (float, int)), "fps must be a number"
 
     src_fps = metadata["src_fps"]
     return min(((src_fps - fps) / src_fps) * 100.0, 100.0)
 
 
-def grayscale_intensity(**kwargs) -> float:
+def grayscale_intensity(**kwargs: Any) -> float:
     return 100.0
 
 
-def hflip_intensity(**kwargs) -> float:
+def hflip_intensity(**kwargs: Any) -> float:
     return 100.0
 
 
-def hstack_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def hstack_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
-def identity_function_intensity(**kwargs) -> float:
+def identity_function_intensity(**kwargs: Any) -> float:
     return 0.0
 
 
-def insert_in_background_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def insert_in_background_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
-def loop_intensity(num_loops: int, **kwargs) -> float:
+def loop_intensity(num_loops: int, **kwargs: Any) -> float:
     max_num_loops = 100
     return min((num_loops / max_num_loops) * 100.0, 100.0)
 
 
-def meme_format_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def meme_format_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
 def overlay_intensity(
-    overlay_size: float | None, overlay_path: str, metadata: dict[str, Any], **kwargs
+    overlay_size: float | None,
+    overlay_path: str,
+    metadata: dict[str, Any],
+    **kwargs: Any,
 ) -> float:
     assert overlay_size is None or (
         isinstance(overlay_size, (float, int)) and 0 < overlay_size <= 1
@@ -195,13 +203,13 @@ def overlay_intensity(
     return min((overlay_area / src_area) * 100.0, 100.0)
 
 
-def overlay_dots_intensity(num_dots: int, **kwargs) -> float:
+def overlay_dots_intensity(num_dots: int, **kwargs: Any) -> float:
     max_num_dots = 10000
     return min((num_dots / max_num_dots) * 100.0, 100.0)
 
 
 def overlay_emoji_intensity(
-    emoji_size: float, opacity: float, metadata: dict[str, Any], **kwargs
+    emoji_size: float, opacity: float, metadata: dict[str, Any], **kwargs: Any
 ) -> float:
     assert (
         isinstance(emoji_size, (float, int)) and 0 <= emoji_size <= 1
@@ -219,7 +227,7 @@ def overlay_emoji_intensity(
 
 
 def overlay_onto_background_video_intensity(
-    overlay_size: float | None, metadata: dict[str, Any], **kwargs
+    overlay_size: float | None, metadata: dict[str, Any], **kwargs: Any
 ) -> float:
     if overlay_size is not None:
         return (1 - overlay_size**2) * 100.0
@@ -233,7 +241,7 @@ def overlay_onto_screenshot_intensity(
     template_filepath: str,
     template_bboxes_filepath: str,
     metadata: dict[str, Any],
-    **kwargs,
+    **kwargs: Any,
 ) -> float:
     _, bbox = imutils.get_template_and_bbox(template_filepath, template_bboxes_filepath)
     bbox_area = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
@@ -245,7 +253,7 @@ def overlay_shapes_intensity(
     topleft: tuple[float, float] | None,
     bottomright: tuple[float, float] | None,
     num_shapes: int,
-    **kwargs,
+    **kwargs: Any,
 ) -> float:
     return distractor_overlay_intensity_helper(topleft, bottomright, num_shapes)
 
@@ -253,17 +261,17 @@ def overlay_shapes_intensity(
 def overlay_text_intensity(
     topleft: tuple[float, float] | None,
     bottomright: tuple[float, float] | None,
-    **kwargs,
+    **kwargs: Any,
 ) -> float:
     return distractor_overlay_intensity_helper(topleft, bottomright, 1)
 
 
-def pad_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def pad_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
 def perspective_transform_and_shake_intensity(
-    sigma: float, shake_radius: float, **kwargs
+    sigma: float, shake_radius: float, **kwargs: Any
 ) -> float:
     assert (
         isinstance(sigma, (float, int)) and sigma >= 0
@@ -279,19 +287,19 @@ def perspective_transform_and_shake_intensity(
     return min((sigma_intensity * shake_radius_intensity) * 100.0, 100.0)
 
 
-def pixelization_intensity(ratio: float, **kwargs) -> float:
+def pixelization_intensity(ratio: float, **kwargs: Any) -> float:
     assert (
         isinstance(ratio, (float, int)) and 0 <= ratio <= 1
     ), "ratio must be a number in [0, 1]"
     return (1 - ratio) * 100.0
 
 
-def remove_audio_intensity(**kwargs) -> float:
+def remove_audio_intensity(**kwargs: Any) -> float:
     return 100.0
 
 
 def insert_in_background_multiple_intensity(
-    metadata: dict[str, Any], **kwargs
+    metadata: dict[str, Any], **kwargs: Any
 ) -> float:
     """
     The intensity is calculated as the percentage of the result video
@@ -304,7 +312,7 @@ def insert_in_background_multiple_intensity(
     return inserted / dst_duration
 
 
-def replace_with_background_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def replace_with_background_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     """
     The intensity of replace_with_background is the fraction of the source video duration
     that was replaced with background. Because the overall duration of the video is preserved,
@@ -320,7 +328,7 @@ def replace_with_background_intensity(metadata: dict[str, Any], **kwargs) -> flo
 
 
 def replace_with_color_frames_intensity(
-    duration_factor: float, offset_factor: float, **kwargs
+    duration_factor: float, offset_factor: float, **kwargs: Any
 ) -> float:
     assert (
         isinstance(duration_factor, (float, int)) and 0 <= duration_factor <= 1
@@ -334,11 +342,11 @@ def replace_with_color_frames_intensity(
     return min(duration_factor, 1 - offset_factor) * 100.0
 
 
-def resize_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def resize_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
-def rotate_intensity(degrees: float, **kwargs) -> float:
+def rotate_intensity(degrees: float, **kwargs: Any) -> float:
     assert isinstance(degrees, (float, int)), "degrees must be a number"
 
     max_degrees_val = 180
@@ -346,7 +354,7 @@ def rotate_intensity(degrees: float, **kwargs) -> float:
     return (degrees / max_degrees_val) * 100.0
 
 
-def scale_intensity(factor: float, **kwargs) -> float:
+def scale_intensity(factor: float, **kwargs: Any) -> float:
     assert (
         isinstance(factor, (float, int)) and factor > 0
     ), "factor must be a positive number"
@@ -358,7 +366,7 @@ def scale_intensity(factor: float, **kwargs) -> float:
     return min((scale_factor / max_factor_val) * 100.0, 100.0)
 
 
-def shift_intensity(x_factor: float, y_factor: float, **kwargs) -> float:
+def shift_intensity(x_factor: float, y_factor: float, **kwargs: Any) -> float:
     assert (
         isinstance(x_factor, (float, int))
         and 0 <= x_factor <= 1
@@ -369,23 +377,23 @@ def shift_intensity(x_factor: float, y_factor: float, **kwargs) -> float:
     return (1 - x_factor) * (1 - y_factor) * 100.0
 
 
-def time_crop_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def time_crop_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
-def time_decimate_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def time_decimate_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
-def trim_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def trim_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return time_crop_or_pad_intensity_helper(metadata)
 
 
-def vflip_intensity(**kwargs) -> float:
+def vflip_intensity(**kwargs: Any) -> float:
     return 100.0
 
 
-def vstack_intensity(metadata: dict[str, Any], **kwargs) -> float:
+def vstack_intensity(metadata: dict[str, Any], **kwargs: Any) -> float:
     return imint.resize_intensity_helper(metadata)
 
 
@@ -393,7 +401,7 @@ def distractor_overlay_intensity_helper(
     topleft: tuple[float, float] | None,
     bottomright: tuple[float, float] | None,
     num_overlay_content: int,
-    **kwargs,
+    **kwargs: Any,
 ) -> float:
     """
     Computes intensity of any distractor-type transform, which adds some kind
