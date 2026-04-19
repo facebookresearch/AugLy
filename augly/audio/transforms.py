@@ -491,7 +491,7 @@ class Loop(BaseTransform):
 
 
 class LowPassFilter(BaseTransform):
-    def __init__(self, cutoff_hz: float = 500.0, p: float = 1.0):
+    def __init__(self, cutoff_hz: float = 500.0, p: float = 1.0) -> None:
         """
         @param cutoff_hz: frequency (in Hz) where signals with higher frequencies will
             begin to be reduced by 6dB per octave (doubling in frequency) above this point
