@@ -757,7 +757,7 @@ class Crop(BaseTransform):
 
 
 class EncodingQuality(BaseTransform):
-    def __init__(self, quality: int = 23, p: float = 1.0):
+    def __init__(self, quality: int = 23, p: float = 1.0) -> None:
         """
         @param quality: CRF scale is 0–51, where 0 is lossless, 23 is the default,
             and 51 is worst quality possible. A lower value generally leads to higher
