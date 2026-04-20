@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import json
 import random
@@ -21,6 +21,9 @@ from nlpaug.util import Action, Method  # @manual
 
 
 class FunFontsAugmenter(Augmenter):
+    fonts: list[str | dict[str, str]]
+    priority_words: set[str] | None
+
     def __init__(
         self,
         granularity: str,
@@ -57,7 +60,7 @@ class FunFontsAugmenter(Augmenter):
             set(priority_words) if priority_words is not None else priority_words
         )
 
-    def load_fonts(self, fonts_path: str) -> list[str | dict]:
+    def load_fonts(self, fonts_path: str) -> list[str | dict[str, str]]:
         """
         Loads the fonts from a json file iopath uri
 
@@ -84,7 +87,7 @@ class FunFontsAugmenter(Augmenter):
     def is_duplicate(cls, dataset: list[str], data: str) -> bool:
         return data in dataset
 
-    def apply_font(self, text: str, font: str | dict, method: str) -> str:
+    def apply_font(self, text: str, font: str | dict[str, str], method: str) -> str:
         assert (
             method in Method.getall()
         ), "Expected 'method' to be a value defined in nlpaug.util.method.Method"
