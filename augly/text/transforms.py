@@ -558,7 +558,7 @@ class MergeWords(BaseTransform):
         n: int = 1,
         priority_words: list[str] | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param aug_word_p: probability of words to be augmented
 
