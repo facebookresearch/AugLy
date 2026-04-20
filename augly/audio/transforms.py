@@ -215,7 +215,7 @@ class ChangeVolume(BaseTransform):
 
 
 class Clicks(BaseTransform):
-    def __init__(self, seconds_between_clicks: float = 0.5, p: float = 1.0):
+    def __init__(self, seconds_between_clicks: float = 0.5, p: float = 1.0) -> None:
         """
         @param seconds_between_clicks: the amount of time between each click that will
             be added to the audio, in seconds
@@ -688,7 +688,7 @@ class Percussive(BaseTransform):
 
 
 class PitchShift(BaseTransform):
-    def __init__(self, n_steps: float = 1.0, p: float = 1.0):
+    def __init__(self, n_steps: float = 1.0, p: float = 1.0) -> None:
         """
         @param n_steps: each step is equal to one semitone
 
