@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import random
 from collections.abc import Callable
@@ -182,7 +182,7 @@ class ApplyLambda(BaseTransform):
 
 
 class ChangeVolume(BaseTransform):
-    def __init__(self, volume_db: float = 0.0, p: float = 1.0):
+    def __init__(self, volume_db: float = 0.0, p: float = 1.0) -> None:
         """
         @param volume_db: the decibel amount by which to either increase (positive
             value) or decrease (negative value) the volume of the audio
@@ -252,7 +252,7 @@ class Clicks(BaseTransform):
 class Clip(BaseTransform):
     def __init__(
         self, offset_factor: float = 0.0, duration_factor: float = 1.0, p: float = 1.0
-    ):
+    ) -> None:
         """
         @param offset_factor: start point of the crop relative to the audio duration
             (this parameter is multiplied by the audio duration)
@@ -301,7 +301,7 @@ class Harmonic(BaseTransform):
         power: float = 2.0,
         margin: float = 1.0,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param kernel_size: kernel size for the median filters
 
@@ -346,7 +346,7 @@ class Harmonic(BaseTransform):
 
 
 class HighPassFilter(BaseTransform):
-    def __init__(self, cutoff_hz: float = 3000.0, p: float = 1.0):
+    def __init__(self, cutoff_hz: float = 3000.0, p: float = 1.0) -> None:
         """
         @param cutoff_hz: frequency (in Hz) where signals with lower frequencies will
             begin to be reduced by 6dB per octave (doubling in frequency) below this point
@@ -386,7 +386,7 @@ class InsertInBackground(BaseTransform):
         background_audio: str | np.ndarray | None = None,
         seed: RNGSeed | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param offset_factor: start point of the crop relative to the background duration
             (this parameter is multiplied by the background duration)
@@ -532,7 +532,7 @@ class Normalize(BaseTransform):
         threshold: float | None = None,
         fill: bool | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param norm: the type of norm to compute:
             - np.inf: maximum absolute value
@@ -554,8 +554,10 @@ class Normalize(BaseTransform):
         @param p: the probability of the transform being applied; default value is 1.0
         """
         super().__init__(p)
-        self.norm, self.axis = norm, axis
-        self.threshold, self.fill = threshold, fill
+        self.norm: float | None = norm
+        self.axis: int = axis
+        self.threshold: float | None = threshold
+        self.fill: bool | None = fill
 
     def apply_transform(
         self,
@@ -594,7 +596,7 @@ class PeakingEqualizer(BaseTransform):
         q: float = 1.0,
         gain_db: float = -3.0,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param center_hz: point in the frequency spectrum at which EQ is applied
 
@@ -643,7 +645,7 @@ class Percussive(BaseTransform):
         power: float = 2.0,
         margin: float = 1.0,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param kernel_size: kernel size for the median filters
 
@@ -730,7 +732,7 @@ class Reverb(BaseTransform):
         wet_gain: float = 0.0,
         wet_only: bool = False,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param reverberance: (%) sets the length of the reverberation tail. This
             determines how long the reverberation continues for after the original
@@ -805,7 +807,7 @@ class Reverb(BaseTransform):
 
 
 class Speed(BaseTransform):
-    def __init__(self, factor: float = 2.0, p: float = 1.0):
+    def __init__(self, factor: float = 2.0, p: float = 1.0) -> None:
         """
         @param factor: the speed factor. If rate > 1 the audio will be sped up by that
             factor; if rate < 1 the audio will be slowed down by that factor
@@ -838,7 +840,7 @@ class Speed(BaseTransform):
 
 
 class Tempo(BaseTransform):
-    def __init__(self, factor: float = 2.0, p: float = 1.0):
+    def __init__(self, factor: float = 2.0, p: float = 1.0) -> None:
         """
         @param factor: the tempo factor. If rate > 1 the audio will be sped up by that
             factor; if rate < 1 the audio will be slowed down by that factor, without
@@ -872,7 +874,7 @@ class Tempo(BaseTransform):
 
 
 class TimeStretch(BaseTransform):
-    def __init__(self, rate: float = 1.5, p: float = 1.0):
+    def __init__(self, rate: float = 1.5, p: float = 1.0) -> None:
         """
         @param rate: the time stretch factor
 
@@ -933,7 +935,7 @@ class FFTConvolve(BaseTransform):
         impulse_audio: str | np.ndarray | None = None,
         seed: RNGSeed | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param normalize: if True, normalize the output to the maximum amplitude
 
