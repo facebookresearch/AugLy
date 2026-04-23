@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 import json
 from typing import Any
@@ -16,7 +16,9 @@ from augly.utils import pathmgr
 
 
 class ContractionMapping:
-    def __init__(self, mapping: str | dict[str, Any] | None):
+    mapping: dict[str, Any]
+
+    def __init__(self, mapping: str | dict[str, Any] | None) -> None:
         if isinstance(mapping, str):
             local_mapping_path = pathmgr.get_local_path(mapping)
             with open(local_mapping_path) as json_file:
@@ -36,13 +38,17 @@ class ContractionMapping:
 class ContractionAugmenter:
     """Augmenter that replaces words based on a given mapping"""
 
+    contraction_mapping: ContractionMapping
+    # pyre-ignore[4]: np.random module and RandomState share the needed interface
+    rng: np.random.RandomState
+
     def __init__(
         self,
         aug_p: float,
         mapping: str | dict[str, Any] | None,
         max_contraction_length: int = 2,
         seed: int | None = 10,
-    ):
+    ) -> None:
         assert max_contraction_length >= 2, "Must set 'max_contraction_length' >= 2"
         self.aug_p = aug_p
         self.contraction_mapping = self.get_mapping(mapping)
