@@ -2081,7 +2081,7 @@ class Shift(BaseTransform):
 class TimeCrop(BaseTransform):
     def __init__(
         self, offset_factor: float = 0.0, duration_factor: float = 1.0, p: float = 1.0
-    ):
+    ) -> None:
         """
         @param offset_factor: start point of the crop relative to the video duration
             (this parameter is multiplied by the video duration)
@@ -2738,7 +2738,7 @@ class RandomRotation(BaseRandomRangeTransform):
 class RandomVideoSpeed(BaseRandomRangeTransform):
     def __init__(
         self, min_factor: float = 0.25, max_factor: float = 4.0, p: float = 1.0
-    ):
+    ) -> None:
         """
         @param min_factor: the lower value on the range of speed values to choose
             from. A factor less than one will slow down the video, a factor equal to
