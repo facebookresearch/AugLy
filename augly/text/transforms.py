@@ -168,7 +168,7 @@ class ChangeCase(BaseTransform):
         case: str = "random",
         seed: int | None = 10,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param granularity: 'all' (case of the entire text is changed), 'word' (case of
             random words is changed), or 'char' (case of random chars is changed)
@@ -506,7 +506,7 @@ class InsertZeroWidthChars(BaseTransform):
         cadence: float = 1.0,
         vary_chars: bool = False,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param granularity: 'all' or 'word' -- if 'word', a new char is picked
             and the cadence resets for each word in the text
