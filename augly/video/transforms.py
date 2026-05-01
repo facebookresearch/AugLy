@@ -25,7 +25,7 @@ Base Classes for Transforms
 
 
 class VidAugBaseClass:
-    def __init__(self, p: float = 1.0):
+    def __init__(self, p: float = 1.0) -> None:
         """
         @param p: the probability of the transform being applied; default value is 1.0
         """
@@ -2390,7 +2390,9 @@ class RandomBlur(BaseRandomRangeTransform):
 
 
 class RandomBrightness(BaseRandomRangeTransform):
-    def __init__(self, min_level: float = -1.0, max_level: float = 1.0, p: float = 1.0):
+    def __init__(
+        self, min_level: float = -1.0, max_level: float = 1.0, p: float = 1.0
+    ) -> None:
         """
         @param min_level: the lower value on the range of brightness values to choose
             from. The lower the factor, the darker the video
