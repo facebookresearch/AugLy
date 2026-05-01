@@ -41,8 +41,8 @@ class BaseCV2Augmenter(ABC):
         random_movement: bool = True,
         topleft: tuple[float, float] | None = None,
         bottomright: tuple[float, float] | None = None,
-        **kwargs,
-    ):
+        **kwargs: object,
+    ) -> None:
         assert type(random_movement) == bool, "Random movement must be set to a boolean"
 
         assert topleft is None or all(
