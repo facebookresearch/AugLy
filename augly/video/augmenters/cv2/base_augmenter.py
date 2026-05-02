@@ -5,7 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-unsafe
+# pyre-strict
 
 """
 Implementation of base class for video distractors
@@ -35,6 +35,8 @@ from augly.video.helpers import extract_frames_to_dir
 
 
 class BaseCV2Augmenter(ABC):
+    origins: Iterator[tuple[float, float]] | list[Iterator[tuple[float, float]]]
+
     def __init__(
         self,
         num_dist: int = 0,
@@ -68,7 +70,7 @@ class BaseCV2Augmenter(ABC):
                 for y_val in y_vals
             ]
 
-    def augment(self, video_temp_path: str, fps: float, **kwargs) -> str:
+    def augment(self, video_temp_path: str, fps: float, **kwargs: object) -> str:
         """
         Augment a set of frames by adding distractors to each by mapping each
         frame with `apply_augmentation` method
@@ -95,7 +97,7 @@ class BaseCV2Augmenter(ABC):
         return aug_frame_temp_dir
 
     @abstractmethod
-    def apply_augmentation(self, raw_frame: np.ndarray, **kwargs) -> np.ndarray:
+    def apply_augmentation(self, raw_frame: np.ndarray, **kwargs: object) -> np.ndarray:
         """
         Applies the specific augmentation to a single frame
 
@@ -106,10 +108,10 @@ class BaseCV2Augmenter(ABC):
         raise NotImplementedError("Implement apply_augmentation method")
 
     def get_origins(self, index: int) -> tuple[float, float]:
-        if self.random_movement:
-            return next(self.origins)
-
-        return next(self.origins[index])
+        origins = self.origins
+        if isinstance(origins, list):
+            return next(origins[index])
+        return next(origins)
 
     @staticmethod
     def random_origins(
