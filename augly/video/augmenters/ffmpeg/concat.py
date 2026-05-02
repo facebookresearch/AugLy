@@ -5,6 +5,8 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+# pyre-strict
+
 import logging
 from dataclasses import dataclass
 from enum import Enum
@@ -16,7 +18,7 @@ from augly.video.helpers import get_video_info, has_audio_stream
 from dataclasses_json import dataclass_json
 
 
-log = logging.getLogger(__name__)
+log: logging.Logger = logging.getLogger(__name__)
 
 
 class TransitionEffect(Enum):
@@ -52,6 +54,13 @@ class TransitionConfig:
 
 
 class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
+    video_paths: list[str]
+    src_video_path_index: int
+    height: int
+    width: int
+    sample_aspect_ratio: str
+    transition: TransitionConfig | None
+
     def __init__(
         self,
         video_paths: list[str],
@@ -74,7 +83,7 @@ class VideoAugmenterByConcat(BaseVidgearFFMPEGAugmenter):
         self.width = ceil(video_info["width"] / 2) * 2
         log.info("Width=%d height=%d", self.width, self.height)
 
-        self.sample_aspect_ratio = video_info.get("sample_aspect_ratio", "1")
+        self.sample_aspect_ratio = str(video_info.get("sample_aspect_ratio", "1"))
         log.info("Aspect ratio=%s", self.sample_aspect_ratio)
 
         self.transition = transition
