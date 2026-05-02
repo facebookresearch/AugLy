@@ -477,7 +477,7 @@ class Brightness(BaseTransform):
 
 
 class ChangeAspectRatio(BaseTransform):
-    def __init__(self, ratio: float = 1.0, p: float = 1.0):
+    def __init__(self, ratio: float = 1.0, p: float = 1.0) -> None:
         """
         @param ratio: aspect ratio, i.e. width/height, of the new video
 
