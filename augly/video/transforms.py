@@ -438,7 +438,7 @@ class Blur(BaseTransform):
 
 
 class Brightness(BaseTransform):
-    def __init__(self, level: float = 0.15, p: float = 1.0):
+    def __init__(self, level: float = 0.15, p: float = 1.0) -> None:
         """
         @param level: the value must be a float value in range -1.0 to 1.0, where a
             negative value darkens and positive brightens
@@ -1149,7 +1149,7 @@ class Overlay(BaseTransform):
         use_overlay_audio: bool = False,
         metadata: list[dict[str, Any]] | None = None,
         p: float = 1.0,
-    ):
+    ) -> None:
         """
         @param overlay_path: the path to the media (image or video) that will be
             overlaid onto the video
