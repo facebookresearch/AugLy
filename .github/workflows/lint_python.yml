@@ -4,6 +4,10 @@ on:
     branches: main
   push:
     branches: main
+
+permissions:
+  contents: read
+
 jobs:
   lint_python:
     runs-on: ubuntu-latest
