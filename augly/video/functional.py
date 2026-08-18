@@ -821,7 +821,6 @@ def insert_in_background(
     video_duration = float(video_info["duration"])
     width, height = video_info["width"], video_info["height"]
 
-    # pyrefly: ignore [bad-argument-type]
     rng = np.random.RandomState(seed) if seed is not None else np.random
 
     video_paths = []
@@ -956,7 +955,6 @@ def insert_in_background_multiple(
             src_ids
         ), "src_ids need to be specified for the main video and all additional videos."
     func_kwargs = helpers.get_func_kwargs(metadata, locals(), video_path)
-    # pyrefly: ignore [bad-argument-type]
     rng = np.random.RandomState(seed) if seed is not None else np.random
 
     local_path = utils.pathmgr.get_local_path(video_path)
@@ -1842,7 +1840,6 @@ def perspective_transform_and_shake(
     )
 
     duration = float(helpers.get_video_info(video_path)["duration"])
-    # pyrefly: ignore [bad-argument-type]
     rng = np.random.RandomState(seed) if seed is not None else np.random
 
     def get_dx_dy(frame_number: int) -> dict:

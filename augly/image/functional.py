@@ -2485,7 +2485,6 @@ def perspective_transform(
     func_kwargs = imutils.get_func_kwargs(metadata, locals())
     src_mode = image.mode
 
-    # pyrefly: ignore [bad-argument-type]
     rng = np.random.RandomState(seed) if seed is not None else np.random
     width, height = image.size
 
@@ -2633,7 +2632,6 @@ def random_noise(
     src_mode = image.mode
 
     if seed is not None:
-        # pyrefly: ignore [bad-argument-type]
         np.random.seed(seed=seed)
 
     np_image = np.asarray(image).astype(np.float32)
@@ -3179,7 +3177,6 @@ def shuffle_pixels(
 
     @returns: the augmented PIL Image
     """
-    # pyrefly: ignore [bad-argument-type]
     np.random.seed(seed)
 
     image = imutils.validate_and_load_image(image)
@@ -3334,7 +3331,6 @@ def split_and_shuffle(
 
     @returns: the augmented PIL Image
     """
-    # pyrefly: ignore [bad-argument-type]
     np.random.seed(seed)
 
     image = imutils.validate_and_load_image(image)

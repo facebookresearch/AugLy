@@ -128,7 +128,6 @@ def add_background_noise(
             function_name="add_background_noise",
             dst_audio=aug_audio,
             dst_sample_rate=sample_rate,
-            # pyre-fixme[61]: `func_kwargs` may not be initialized here.
             **func_kwargs,
         )
 

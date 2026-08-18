@@ -53,7 +53,7 @@ class ContractionAugmenter:
         self.aug_p = aug_p
         self.contraction_mapping = self.get_mapping(mapping)
         self.max_contraction_length = max_contraction_length
-        # pyrefly: ignore [bad-argument-type, bad-assignment]
+        # pyrefly: ignore [bad-assignment]
         self.rng = np.random.RandomState(seed) if seed is not None else np.random
 
     def get_mapping(self, mapping: str | dict[str, Any] | None) -> ContractionMapping:

@@ -1951,7 +1951,6 @@ class Resize(BaseTransform):
         @returns: the path to the augmented video
         """
         return F.resize(
-            # pyrefly: ignore [bad-argument-type]
             video_path,
             output_path,
             # pyrefly: ignore [bad-argument-type]
@@ -2352,7 +2351,6 @@ class RandomAspectRatio(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.change_aspect_ratio(
-            # pyrefly: ignore [bad-argument-type]
             video_path,
             output_path,
             # pyrefly: ignore [bad-argument-type]
@@ -2397,7 +2395,6 @@ class RandomBlur(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.blur(
-            # pyrefly: ignore [bad-argument-type]
             video_path,
             output_path,
             # pyrefly: ignore [bad-argument-type]
@@ -2486,7 +2483,6 @@ class RandomContrast(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.contrast(
-            # pyrefly: ignore [bad-argument-type]
             video_path,
             output_path,
             # pyrefly: ignore [bad-argument-type]
@@ -2679,7 +2675,6 @@ class RandomNoise(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.add_noise(
-            # pyrefly: ignore [bad-argument-type]
             video_path,
             output_path,
             # pyrefly: ignore [bad-argument-type]
@@ -2768,7 +2763,6 @@ class RandomRotation(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.rotate(
-            # pyrefly: ignore [bad-argument-type]
             video_path,
             output_path,
             # pyrefly: ignore [bad-argument-type]
@@ -2817,7 +2811,6 @@ class RandomVideoSpeed(BaseRandomRangeTransform):
         @returns: the path to the augmented video
         """
         return F.change_video_speed(
-            # pyrefly: ignore [bad-argument-type]
             video_path,
             output_path,
             # pyrefly: ignore [bad-argument-type]

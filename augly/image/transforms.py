@@ -2822,32 +2822,30 @@ class RandomEmojiOverlay(BaseTransform):
         """
         assert isinstance(self.emoji_size, (float, int)) or (
             isinstance(self.emoji_size, tuple)
-            and self.emoji_size[0] < self.emoji_size[1]  # pyre-ignore
+            and self.emoji_size[0] < self.emoji_size[1]
         ), "emoji_size must be a float or a tuple [low, high) to sample the value from"
         assert isinstance(self.x_pos, (float, int)) or (
-            isinstance(self.x_pos, tuple)
-            and self.x_pos[0] < self.x_pos[1]  # pyre-ignore
+            isinstance(self.x_pos, tuple) and self.x_pos[0] < self.x_pos[1]
         ), "x_pos must be a float or a tuple [low, high) to sample the value from"
         assert isinstance(self.y_pos, (float, int)) or (
-            isinstance(self.y_pos, tuple)
-            and self.y_pos[0] < self.y_pos[1]  # pyre-ignore
+            isinstance(self.y_pos, tuple) and self.y_pos[0] < self.y_pos[1]
         ), "y_pos must be a float or a tuple [low, high) to sample the value from"
 
         if self.seed is not None:
             random.seed(self.seed)
 
         emoji_size = float(
-            random.uniform(self.emoji_size[0], self.emoji_size[1])  # pyre-ignore
+            random.uniform(self.emoji_size[0], self.emoji_size[1])
             if isinstance(self.emoji_size, tuple)
             else self.emoji_size
         )
         x_pos = float(
-            random.uniform(self.x_pos[0], self.x_pos[1])  # pyre-ignore
+            random.uniform(self.x_pos[0], self.x_pos[1])
             if isinstance(self.x_pos, tuple)
             else self.x_pos
         )
         y_pos = float(
-            random.uniform(self.y_pos[0], self.y_pos[1])  # pyre-ignore
+            random.uniform(self.y_pos[0], self.y_pos[1])
             if isinstance(self.y_pos, tuple)
             else self.y_pos
         )
