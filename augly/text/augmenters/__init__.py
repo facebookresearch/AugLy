@@ -5,7 +5,6 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-# pyre-strict
 
 from augly.text.augmenters.base64 import Base64
 from augly.text.augmenters.baseline import BaselineAugmenter
