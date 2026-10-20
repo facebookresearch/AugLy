@@ -755,7 +755,6 @@ def grayscale(
         elif mode == "average":
             np_image = np.asarray(image).astype(np.float32)
             np_image = np.average(np_image, axis=2)
-            # pyrefly: ignore [bad-argument-type]
             aug_image = Image.fromarray(np.uint8(np_image))
         aug_image = aug_image.convert(mode="RGB")
 
@@ -1523,7 +1522,6 @@ def overlay_stripes(
         )
         binary_mask *= perpendicular_mask
 
-    # pyrefly: ignore [bad-argument-type]
     mask = Image.fromarray(np.uint8(binary_mask * line_opacity * 255))
 
     foreground = Image.new("RGB", image.size, line_color)
@@ -2648,7 +2646,6 @@ def random_noise(
 
     noisy_image *= 255.0
 
-    # pyrefly: ignore [bad-argument-type]
     aug_image = Image.fromarray(np.uint8(noisy_image))
 
     imutils.get_metadata(

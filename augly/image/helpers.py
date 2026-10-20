@@ -28,7 +28,6 @@ def aug_np_wrapper(
 
     @param **kwargs: the input attributes to be passed into the augmentation function
     """
-    # pyrefly: ignore [bad-argument-type]
     pil_image = Image.fromarray(image)
     aug_image = aug_function(pil_image, **kwargs)
     return np.array(aug_image)
