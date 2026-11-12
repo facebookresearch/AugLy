@@ -1096,7 +1096,7 @@ def reverb(
     )
 
     aug_audio = aug_audio.numpy()
-    if audio.shape[0] == 1:
+    if audio.shape[0] == 1 and aug_audio.shape[0] == 1:
         aug_audio = aug_audio.reshape((aug_audio.shape[-1],))
 
     if metadata is not None:

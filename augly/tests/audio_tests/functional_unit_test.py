@@ -7,6 +7,8 @@
 
 import unittest
 
+import numpy as np
+
 from augly import audio as audaugs
 from augly.tests.audio_tests.base_unit_test import BaseAudioUnitTest
 
@@ -63,6 +65,14 @@ class FunctionalAudioUnitTest(BaseAudioUnitTest):
 
     def test_reverb(self):
         self.evaluate_function(audaugs.reverb, reverberance=100.0)
+
+    def test_reverb_single_channel_array(self) -> None:
+        audio = np.random.RandomState(0).uniform(-1, 1, (1, 10000))
+        for stereo_depth, shape in [(0.0, (10000,)), (100.0, (2, 10000))]:
+            with self.subTest(stereo_depth=stereo_depth):
+                result, sample_rate = audaugs.reverb(audio, stereo_depth=stereo_depth)
+                self.assertEqual(result.shape, shape)
+                self.assertEqual(sample_rate, 44100)
 
     def test_speed(self):
         self.evaluate_function(audaugs.speed, factor=3.0)
